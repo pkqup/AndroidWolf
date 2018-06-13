@@ -1,10 +1,9 @@
-package com.android.androidwolf.abase;
+package com.android.alcoholwolf.abase;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
-import com.android.androidwolf.R;
-import com.pkqup.commonlibrary.util.SizeUtils;
+import com.android.alcoholwolf.R;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -13,5 +12,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
     }
 }

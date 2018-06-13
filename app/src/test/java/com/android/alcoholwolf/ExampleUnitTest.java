@@ -1,4 +1,4 @@
-package com.android.androidwolf;
+package com.android.alcoholwolf;
 
 import org.junit.Test;
 

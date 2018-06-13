@@ -3,25 +3,83 @@ apply plugin: 'com.android.application'
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.android.androidwolf"
+        applicationId "com.android.alcoholwolf"
         minSdkVersion 15
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
+        flavorDimensions "versionCode"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+    signingConfigs {
+        release {
+            keyAlias 'alcohol'
+            keyPassword '123456'
+            storeFile file('../alcohol.jks')
+            storePassword '123456'
+        }
+    }
+
     buildTypes {
         release {
+            //是否启用代码混淆
             minifyEnabled false
+            //移除无用的Resource
+            shrinkResources false
+            //资源文件对齐
+            zipAlignEnabled true
+            //代码混淆使用的配置文件
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            //签名
+            signingConfig signingConfigs.release
+            ndk {
+                abiFilters "armeabi", "armeabi-v7a", "x86"
+            }
+            //多渠道打包配置
+            applicationVariants.all { variant ->
+                variant.outputs.all { output ->
+                    outputFileName = "AlcoholWolf_${variant.productFlavors[0].name}_${defaultConfig.versionCode}_${new Date().format("yyyyMMddHHmm")}.apk"
+                }
+            }
         }
+        debug {
+            minifyEnabled false
+            debuggable true
+            signingConfig signingConfigs.release
+            ndk {
+                abiFilters "armeabi", "armeabi-v7a", "x86"
+            }
+        }
+    }
+
+    productFlavors {
+        TGB {
+            manifestPlaceholders = [WOLF_CHANNEL: "1.1"]
+            buildConfigField "String", "CHANNEL", "\"1.1\""
+        }
+
+        Android {
+            manifestPlaceholders = [WOLF_CHANNEL: "2.2"]
+            buildConfigField "String", "CHANNEL", "\"2.2\""
+        }
+    }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/ASL2.0'
+        pickFirst 'AndroidManifest.xml'
     }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'com.android.support:appcompat-v7:27.1.1'
-    implementation 'com.android.support.constraint:constraint-layout:1.1.1'
+    implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
