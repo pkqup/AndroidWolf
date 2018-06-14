@@ -14,7 +14,7 @@ android {
     }
     signingConfigs {
         release {
-            keyAlias 'alcohol'
+            keyAlias 'alcoholwolf'
             keyPassword '123456'
             storeFile file('../alcohol.jks')
             storePassword '123456'
