@@ -3,7 +3,6 @@
     package="com.android.alcoholwolf">
 
 
-
     <application
         android:name="com.pkqup.commonlibrary.abase.MyApplication"
         android:allowBackup="true"

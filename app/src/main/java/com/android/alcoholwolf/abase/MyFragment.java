@@ -13,12 +13,6 @@ public class MyFragment extends BaseFragment {
 
     private TextView tv_fragment;
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = super.onCreateView(inflater, container, savedInstanceState);
-
-        return view;
-    }
 
     @Override
     public void getContentView(LayoutInflater inflater, ViewGroup contentView) {

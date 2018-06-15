@@ -3,14 +3,37 @@ package com.android.alcoholwolf.abase;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.android.alcoholwolf.R;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.pkqup.commonlibrary.abase.BaseActivity;
+import com.pkqup.commonlibrary.glide.GlideApp;
+import com.pkqup.commonlibrary.glide.GlideUtils;
 
 
 public class MainActivity extends BaseActivity {
+
+    String[] images =
+            new String[]{"http://img.my.csdn.net/uploads/201407/26/1406383299_1976.jpg",
+                    "http://img.my.csdn.net/uploads/201407/26/1406383291_6518.jpg",
+                    "http://img.my.csdn.net/uploads/201407/26/1406383291_8239.jpg",
+                    "http://img.my.csdn.net/uploads/201407/26/1406383290_9329.jpg",
+                    "http://img.my.csdn.net/uploads/201407/26/1406383290_1042.jpg",
+                    "http://img.my.csdn.net/uploads/201407/26/1406383275_3977.jpg",
+                    "http://img.my.csdn.net/uploads/201407/26/1406383265_8550.jpg",
+                    "http://img.my.csdn.net/uploads/201407/26/1406383264_3954.jpg",
+                    "http://img.my.csdn.net/uploads/201407/26/1406383264_4787.jpg",
+                    "http://img.my.csdn.net/uploads/201407/26/1406383264_8243.jpg",
+                    "http://img.my.csdn.net/uploads/201407/26/1406383248_3693.jpg",};
+
+    String url1 = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1497688355699&di=ea69a930b82ce88561c635089995e124&imgtype=0&src=http%3A%2F%2Fcms-bucket.nosdn.127.net%2Ff84e566bcf654b3698363409fbd676ef20161119091503.jpg";
+    String url2 = "http://img1.imgtn.bdimg.com/it/u=4027212837,1228313366&fm=23&gp=0.jpg";
+
+    private ImageView imageView1;
+    private ImageView imageView2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +47,7 @@ public class MainActivity extends BaseActivity {
     public void setTitleView() {
         titleName.setText("主页");
         titleImgRight.setVisibility(View.GONE);
+
     }
 
     private void initView() {
@@ -42,6 +66,12 @@ public class MainActivity extends BaseActivity {
                 ft.commit();
             }
         });
+
+        imageView1 = findViewById(R.id.image1);
+        imageView2 = findViewById(R.id.image2);
+
+        GlideUtils.loadImage(this, url1, imageView1);
+        GlideUtils.loadImage(this, url1, imageView2);
     }
 
     private void initData() {
