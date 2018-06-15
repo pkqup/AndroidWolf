@@ -7,14 +7,26 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.android.alcoholwolf.R;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
+import com.android.alcoholwolf.net.User;
+import com.android.alcoholwolf.net.WeiXinNewsBean;
+import com.android.alcoholwolf.net.WeiXinService;
 import com.pkqup.commonlibrary.abase.BaseActivity;
-import com.pkqup.commonlibrary.glide.GlideApp;
 import com.pkqup.commonlibrary.glide.GlideUtils;
+import com.pkqup.commonlibrary.net.HttpUtils;
+import com.socks.library.KLog;
+
+import io.reactivex.Observer;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
+import io.reactivex.schedulers.Schedulers;
 
 
 public class MainActivity extends BaseActivity {
+
+    private static String BASE_URL = "http://api.tianapi.com/";
+    public static String WEIXIN_API_KEY = "9a69200c6e0880962216a8a917b59bda";
+    private static final int PAGE_NUM = 10;
+    private int page = 1;
 
     String[] images =
             new String[]{"http://img.my.csdn.net/uploads/201407/26/1406383299_1976.jpg",
@@ -90,8 +102,60 @@ public class MainActivity extends BaseActivity {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
+
+
             }
         }).start();
+
+/*        HttpUtils.getInstance().getmRetrofit().create(WeiXinService.class).getWeixinHorList(WEIXIN_API_KEY, PAGE_NUM, page,new User("名字","10"))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<WeiXinNewsBean>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(WeiXinNewsBean weiXinNewsBean) {
+                        KLog.e(weiXinNewsBean.getCode() + " ---- " + weiXinNewsBean.getMsg());
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        KLog.e(e.toString());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });*/
+
+        HttpUtils.getInstance().getmRetrofit().create(WeiXinService.class).getPost(new User("名字","10"))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<WeiXinNewsBean>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(WeiXinNewsBean weiXinNewsBean) {
+                        KLog.e(weiXinNewsBean.getCode() + " ---- " + weiXinNewsBean.getMsg());
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        KLog.e(e.toString());
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
     }
 
 }
