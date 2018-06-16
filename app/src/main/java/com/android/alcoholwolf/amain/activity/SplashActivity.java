@@ -1,4 +1,4 @@
-package com.android.alcoholwolf.abase;
+package com.android.alcoholwolf.amain.activity;
 
 import android.content.Intent;
 import android.os.Bundle;

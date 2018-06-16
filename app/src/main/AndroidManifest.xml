@@ -4,7 +4,7 @@
 
 
     <application
-        android:name="com.pkqup.commonlibrary.abase.MyApplication"
+        android:name=".abase.BaseApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -15,9 +15,8 @@
             android:name="WOLF_CHANNEL"
             android:value="${WOLF_CHANNEL}" />
 
-
         <activity
-            android:name="com.android.alcoholwolf.abase.SplashActivity"
+            android:name=".amain.activity.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Flash.Theme"
             android:windowSoftInputMode="adjustUnspecified|stateHidden">
@@ -29,7 +28,13 @@
         </activity>
 
         <activity
-            android:name="com.android.alcoholwolf.abase.MainActivity"
+            android:name=".amain.activity.MainActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+
+        <activity
+            android:name=".cart.CartActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden" />
 

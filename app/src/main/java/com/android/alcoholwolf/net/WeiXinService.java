@@ -15,7 +15,7 @@ public interface WeiXinService {
 
     @GET("wxnew")
     Observable<WeiXinNewsBean> getWeixinHorList(@Query("key") String apikey,
-                                                @Query("num") int num, @Query("page") int page, @Body User user);
+                                                @Query("num") int num, @Query("page") int page);
 
     @POST("wxnew")
     Observable<WeiXinNewsBean> getPost(@Body User user);
