@@ -16,14 +16,25 @@ import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.socks.library.KLog;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+
 public class BaseApplication extends MultiDexApplication {
 
     @Override
     public void onCreate() {
         super.onCreate();
         AppUtils.init(this);
+        initRealm();
         CrashHandler.getInstance().init(this);
         KLog.init(AppUtils.isDebug());
+    }
+
+    private void initRealm() {
+        Realm.init(this);
+        RealmConfiguration config = new RealmConfiguration.Builder().
+                name("MyRealm.realm").deleteRealmIfMigrationNeeded().build();
+        Realm.setDefaultConfiguration(config);
     }
 
     static {

@@ -8,9 +8,11 @@ import android.view.ViewGroup;
 
 import com.android.alcoholwolf.R;
 import com.android.alcoholwolf.abase.BaseFragment;
+import com.android.alcoholwolf.amain.bean.RealmBean;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.pkqup.commonlibrary.net.bean.Result;
+import com.pkqup.commonlibrary.realm.RealmUtils;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -90,6 +92,12 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     public void initData() {
+
+        RealmBean realmBean = new RealmBean();
+        realmBean.setAge("10");
+        realmBean.setName("名字");
+
+        RealmUtils.add(realmBean);
 
     }
 
