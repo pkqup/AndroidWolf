@@ -44,7 +44,6 @@ public class BaseApplication extends MultiDexApplication {
             public RefreshHeader createRefreshHeader(Context context, RefreshLayout layout) {
                 ClassicsHeader classicsHeader = new ClassicsHeader(context);
                 classicsHeader.setEnableLastTime(false);//隐藏更新时间
-                classicsHeader.setBackgroundResource(R.color.gray_fc);//设置下拉刷新布局的背景颜色
                 return classicsHeader;
             }
         });
@@ -54,7 +53,6 @@ public class BaseApplication extends MultiDexApplication {
             public RefreshFooter createRefreshFooter(Context context, RefreshLayout layout) {
                 //指定为经典Footer，默认是 BallPulseFooter
                 ClassicsFooter classicsFooter = new ClassicsFooter(context);
-                classicsFooter.setBackgroundResource(R.color.gray_fc);//设置上拉加载更多布局的背景颜色
                 return classicsFooter;
             }
         });

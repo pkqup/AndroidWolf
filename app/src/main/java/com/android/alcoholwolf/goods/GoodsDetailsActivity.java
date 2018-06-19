@@ -7,7 +7,6 @@ import android.support.v4.view.ViewPager;
 import com.android.alcoholwolf.R;
 import com.android.alcoholwolf.abase.BaseActivity;
 import com.android.alcoholwolf.abase.BaseFragmentAdapter;
-import com.android.alcoholwolf.amain.fragment.HomeFragment;
 import com.flyco.tablayout.SlidingTabLayout;
 
 import java.util.ArrayList;
@@ -45,13 +44,14 @@ public class GoodsDetailsActivity extends BaseActivity {
 
     private void initView() {
         mFragments = new ArrayList<>();
-        mFragments.add(new HomeFragment());
-        mFragments.add(new HomeFragment());
-        mFragments.add(new HomeFragment());
+        mFragments.add(new GoodsSlideFragment());
+        mFragments.add(new GoodsWebFragment());
+        mFragments.add(new GoodsCommentFragment());
 
         fragmentAdapter = new BaseFragmentAdapter(getSupportFragmentManager());
         fragmentAdapter.setLists(mFragments);
-        tab.setViewPager(view_pager);
+        view_pager.setAdapter(fragmentAdapter);
+        tab.setViewPager(view_pager,mTitles);
         view_pager.setCurrentItem(0);
     }
 
