@@ -61,6 +61,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         layoutInflater.inflate(layoutResID, contentView, true);
     }
 
+    public void hideTitleView(){
+        titleView.setVisibility(View.GONE);
+    }
+
+
     public void showContentView() {
         contentView.setVisibility(View.VISIBLE);
         loadingView.setVisibility(View.GONE);

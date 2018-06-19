@@ -37,6 +37,10 @@
             android:name=".cart.CartActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity
+            android:name=".goods.GoodsDetailsActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
 
     </application>
 

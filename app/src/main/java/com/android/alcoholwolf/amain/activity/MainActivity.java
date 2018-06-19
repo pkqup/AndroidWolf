@@ -1,5 +1,6 @@
 package com.android.alcoholwolf.amain.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.android.alcoholwolf.amain.fragment.AuctionFragment;
 import com.android.alcoholwolf.amain.fragment.ClassFragment;
 import com.android.alcoholwolf.amain.fragment.HomeFragment;
 import com.android.alcoholwolf.amain.fragment.UserFragment;
+import com.android.alcoholwolf.goods.GoodsDetailsActivity;
 import com.pkqup.commonlibrary.view.MyViewPager;
 
 import java.util.ArrayList;
@@ -127,6 +129,7 @@ public class MainActivity extends BaseActivity {
                     setPageFragment(2);
                     break;
                 case R.id.tab_four:
+                    startActivity(new Intent(MainActivity.this, GoodsDetailsActivity.class));
                     break;
                 case R.id.tab_five:
                     setPageFragment(3);

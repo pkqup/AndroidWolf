@@ -1,6 +1,5 @@
 package com.android.alcoholwolf.amain.bean;
 
-import java.io.Serializable;
 
 import io.realm.RealmObject;
 
