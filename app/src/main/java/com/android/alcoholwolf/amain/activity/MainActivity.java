@@ -1,6 +1,5 @@
 package com.android.alcoholwolf.amain.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
@@ -13,10 +12,10 @@ import com.android.alcoholwolf.R;
 import com.android.alcoholwolf.abase.BaseActivity;
 import com.android.alcoholwolf.abase.BaseFragmentAdapter;
 import com.android.alcoholwolf.amain.fragment.AuctionFragment;
+import com.android.alcoholwolf.amain.fragment.CartFragment;
 import com.android.alcoholwolf.amain.fragment.ClassFragment;
 import com.android.alcoholwolf.amain.fragment.HomeFragment;
 import com.android.alcoholwolf.amain.fragment.UserFragment;
-import com.android.alcoholwolf.goods.GoodsDetailsActivity;
 import com.pkqup.commonlibrary.view.MyViewPager;
 
 import java.util.ArrayList;
@@ -55,6 +54,8 @@ public class MainActivity extends BaseActivity {
     RelativeLayout tabFour;
     @BindView(R.id.tab_four_image)
     ImageView tabFourImage;
+    @BindView(R.id.tab_four_text)
+    TextView tabFourText;
     @BindView(R.id.tv_cart_num)
     TextView tvCartNum;
 
@@ -94,12 +95,14 @@ public class MainActivity extends BaseActivity {
         imageViews.add(tabOneImage);
         imageViews.add(tabTwoImage);
         imageViews.add(tabThreeImage);
+        imageViews.add(tabFourImage);
         imageViews.add(tabFiveImage);
 
         textViews = new ArrayList<>();
         textViews.add(tabOneText);
         textViews.add(tabTwoText);
         textViews.add(tabThreeText);
+        textViews.add(tabFourText);
         textViews.add(tabFiveText);
     }
 
@@ -108,6 +111,7 @@ public class MainActivity extends BaseActivity {
         fragments.add(new HomeFragment());
         fragments.add(new ClassFragment());
         fragments.add(new AuctionFragment());
+        fragments.add(new CartFragment());
         fragments.add(new UserFragment());
         myFragmentAdapter = new BaseFragmentAdapter(getSupportFragmentManager());
         myFragmentAdapter.setLists(fragments);
@@ -129,10 +133,10 @@ public class MainActivity extends BaseActivity {
                     setPageFragment(2);
                     break;
                 case R.id.tab_four:
-                    startActivity(new Intent(MainActivity.this, GoodsDetailsActivity.class));
+                    setPageFragment(3);
                     break;
                 case R.id.tab_five:
-                    setPageFragment(3);
+                    setPageFragment(4);
                     break;
             }
         }
@@ -140,7 +144,7 @@ public class MainActivity extends BaseActivity {
 
 
     private void setPageFragment(int position) {
-        viewPager.setCurrentItem(position,true);
+        viewPager.setCurrentItem(position,false);
         for (int i = 0; i < imageViews.size(); i++) {
             if (position == i) {
                 imageViews.get(i).setSelected(true);

@@ -1,4 +1,4 @@
-package com.android.alcoholwolf.goods;
+package com.android.alcoholwolf.goods.fragment;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;

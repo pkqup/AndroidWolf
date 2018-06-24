@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -19,7 +20,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     public RelativeLayout titleView;
     public ImageView titleImgLeft;
     public TextView titleName;
-    public ImageView titleImgRight;
+    public ImageView titleImgRightOne;
+    public ImageView titleImgRightTwo;
+
+    public RelativeLayout titleSearchView;
+    public EditText titleSearchEdit;
+
 
     public RelativeLayout contentView;//内容
     public RelativeLayout loadingView;//加载
@@ -31,7 +37,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        super.setContentView(R.layout.activity_base);
+        super.setContentView(R.layout.abase_activity);
         findView();
         setTitleView();
     }
@@ -40,7 +46,10 @@ public abstract class BaseActivity extends AppCompatActivity {
         titleView = findViewById(R.id.title_view);
         titleImgLeft = findViewById(R.id.img_title_left);
         titleName = findViewById(R.id.tv_title);
-        titleImgRight = findViewById(R.id.img_title_right);
+        titleImgRightOne = findViewById(R.id.img_title_right);
+        titleImgRightTwo = findViewById(R.id.img_title_right_change);
+        titleSearchView = findViewById(R.id.rl_title_search);
+        titleSearchEdit = findViewById(R.id.et_title_search);
 
         contentView = findViewById(R.id.content_view);
         loadingView = findViewById(R.id.loading_view);

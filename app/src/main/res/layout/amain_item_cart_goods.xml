@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:background="@color/bg_white">
+
+    <CheckBox
+        android:id="@+id/choice_goods"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="15dp" />
+
+    <ImageView
+        android:id="@+id/img_pic"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/choice_goods"
+        android:background="@color/bg_red" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/img_pic"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="15dp"
+        android:layout_toRightOf="@id/img_pic"
+        android:singleLine="true"
+        android:text="法国红酒"
+        android:textColor="@color/t_black"
+        android:textSize="@dimen/sp_mid" />
+
+    <TextView
+        android:id="@+id/tv_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_name"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="8dp"
+        android:layout_toRightOf="@id/img_pic"
+        android:singleLine="true"
+        android:text="￥50000.00"
+        android:textColor="@color/t_black"
+        android:textSize="@dimen/sp_mid" />
+
+
+    <TextView
+        android:id="@+id/tv_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/img_pic"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="15dp"
+        android:layout_toRightOf="@id/img_pic"
+        android:singleLine="true"
+        android:text="750ML"
+        android:textColor="@color/t_gray"
+        android:textSize="@dimen/sp_small" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignParentBottom="true"
+        android:background="@color/bg_gray" />
+
+</RelativeLayout>

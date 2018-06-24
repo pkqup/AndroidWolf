@@ -22,7 +22,7 @@ public abstract class BaseFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.fragment_base, null);
+        rootView = inflater.inflate(R.layout.abase_fragment, null);
         findView();
         getContentView(inflater, contentView);
         initView();

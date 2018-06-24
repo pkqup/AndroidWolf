@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="150dp">
+
+    <ImageView
+        android:id="@+id/img_pic"
+        android:layout_width="100dp"
+        android:layout_height="130dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="15dp"
+        android:background="@color/bg_red"
+        android:scaleType="centerCrop" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/img_pic"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="15dp"
+        android:layout_toRightOf="@id/img_pic"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textColor="@color/t_black"
+        android:textSize="@dimen/sp_big"
+        tools:text="法国凡特纳酒庄 全都是系列 康帝德干白葡萄酒 750ML" />
+
+    <TextView
+        android:id="@+id/tv_country"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_name"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="8dp"
+        android:layout_toRightOf="@id/img_pic"
+        android:background="@color/bg_gray"
+        android:paddingBottom="2dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="2dp"
+        tools:text="法国"
+        android:textColor="@color/t_black"
+        android:textSize="@dimen/sp_small" />
+
+    <TextView
+        android:id="@+id/tv_year"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_name"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="8dp"
+        android:layout_toRightOf="@id/tv_country"
+        android:background="@color/bg_gray"
+        android:paddingBottom="2dp"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:paddingTop="2dp"
+        tools:text="92年"
+        android:textColor="@color/t_black"
+        android:textSize="@dimen/sp_small" />
+
+    <TextView
+        android:id="@+id/tv_new_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_country"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="8dp"
+        android:layout_toRightOf="@id/img_pic"
+        tools:text="￥50000.00"
+        android:textColor="@color/t_red"
+        android:textSize="@dimen/sp_big" />
+
+    <TextView
+        android:id="@+id/tv_old_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_country"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="8dp"
+        android:layout_toRightOf="@id/tv_new_price"
+        android:singleLine="true"
+        tools:text="￥60000.00"
+        android:visibility="gone"
+        android:textColor="@color/t_gray"
+        android:textSize="@dimen/sp_big" />
+
+    <TextView
+        android:id="@+id/tv_high_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_country"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="9dp"
+        android:layout_toRightOf="@id/tv_new_price"
+        android:singleLine="true"
+        android:paddingLeft="15dp"
+        android:paddingRight="15dp"
+        android:paddingBottom="2dp"
+        android:paddingTop="2dp"
+        android:background="@drawable/bg_stroke_orange"
+        android:text="最高出价:￥60000.00"
+        android:textColor="@color/t_orange"
+        android:textSize="@dimen/sp_small" />
+
+
+    <TextView
+        android:id="@+id/tv_attention"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/img_pic"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/img_pic"
+        android:textColor="@color/t_gray"
+        android:textSize="@dimen/sp_small"
+        tools:text="300人关注" />
+
+    <TextView
+        android:id="@+id/tv_evaluate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/img_pic"
+        android:layout_marginLeft="20dp"
+        android:layout_toRightOf="@id/tv_attention"
+        android:textColor="@color/t_gray"
+        android:textSize="@dimen/sp_small"
+        tools:text="30条评价" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@color/line" />
+
+</RelativeLayout>

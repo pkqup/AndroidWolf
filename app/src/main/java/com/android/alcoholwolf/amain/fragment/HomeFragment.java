@@ -11,7 +11,7 @@ import com.android.alcoholwolf.abase.BaseFragment;
 import com.android.alcoholwolf.amain.bean.RealmBean;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.pkqup.commonlibrary.net.bean.Result;
+import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.pkqup.commonlibrary.realm.RealmUtils;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -102,14 +102,14 @@ public class HomeFragment extends BaseFragment {
     }
 
 
-    public class HomeAdapter extends BaseQuickAdapter<Result, BaseViewHolder> {
+    public class HomeAdapter extends BaseQuickAdapter<ResultBean, BaseViewHolder> {
 
-        public HomeAdapter(int layoutResId, List<Result> data) {
+        public HomeAdapter(int layoutResId, List<ResultBean> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, Result item) {
+        protected void convert(BaseViewHolder helper, ResultBean item) {
             helper.setText(R.id.tv_name, helper.getAdapterPosition() + "");
         }
     }
