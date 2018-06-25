@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <include layout="@layout/activity_base_title_view" />
+    <include layout="@layout/abase_activity_title_view" />
 
     <RelativeLayout
         android:id="@+id/content_view"
@@ -14,15 +14,15 @@
     </RelativeLayout>
 
     <include
-        layout="@layout/activity_base_loading_view"
+        layout="@layout/abase_activity_loading_view"
         android:visibility="gone" />
 
     <include
-        layout="@layout/activity_base_empty_view"
+        layout="@layout/abase_activity_empty_view"
         android:visibility="gone" />
 
     <include
-        layout="@layout/activity_base_error_view"
+        layout="@layout/abase_activity_error_view"
         android:visibility="gone" />
 
 </LinearLayout>

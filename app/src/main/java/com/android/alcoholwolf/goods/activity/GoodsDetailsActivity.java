@@ -1,4 +1,4 @@
-package com.android.alcoholwolf.goods;
+package com.android.alcoholwolf.goods.activity;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -7,6 +7,9 @@ import android.support.v4.view.ViewPager;
 import com.android.alcoholwolf.R;
 import com.android.alcoholwolf.abase.BaseActivity;
 import com.android.alcoholwolf.abase.BaseFragmentAdapter;
+import com.android.alcoholwolf.goods.fragment.GoodsCommentFragment;
+import com.android.alcoholwolf.goods.fragment.GoodsSlideFragment;
+import com.android.alcoholwolf.goods.fragment.GoodsWebFragment;
 import com.flyco.tablayout.SlidingTabLayout;
 
 import java.util.ArrayList;

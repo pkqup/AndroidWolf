@@ -1,4 +1,4 @@
-package com.android.alcoholwolf.goods;
+package com.android.alcoholwolf.goods.fragment;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
