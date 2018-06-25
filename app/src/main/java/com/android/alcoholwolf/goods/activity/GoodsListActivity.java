@@ -3,12 +3,16 @@ package com.android.alcoholwolf.goods.activity;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.alcoholwolf.R;
@@ -30,6 +34,11 @@ import butterknife.BindView;
  * @Describe:
  */
 public class GoodsListActivity extends BaseActivity {
+
+    @BindView(R.id.drawerLayout)
+    DrawerLayout drawerLayout;
+    @BindView(R.id.right_view)
+    LinearLayout rightView;
 
     @BindView(R.id.tv_all)
     TextView tv_all;
@@ -65,8 +74,35 @@ public class GoodsListActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.goods_activity_list);
+        initDrawerLayout();
         initView();
         initData();
+    }
+
+    private void initDrawerLayout() {
+        drawerLayout.closeDrawer(Gravity.END);
+        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.END);
+        drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.END);
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+            }
+        });
+        ViewGroup.LayoutParams layoutParams = rightView.getLayoutParams();
+        layoutParams.width = SizeUtils.getScreenWidth() - SizeUtils.dp2px(100);
+        rightView.setLayoutParams(layoutParams);
     }
 
     @Override
@@ -78,14 +114,14 @@ public class GoodsListActivity extends BaseActivity {
     }
 
     private void initView() {
+        titleImgLeft.setOnClickListener(onClickListener);
+        titleImgRightOne.setOnClickListener(onClickListener);
+        titleImgRightTwo.setOnClickListener(onClickListener);
         tv_all.setOnClickListener(onClickListener);
         tv_new.setOnClickListener(onClickListener);
         tv_price.setOnClickListener(onClickListener);
         tv_class.setOnClickListener(onClickListener);
         tv_filter.setOnClickListener(onClickListener);
-        titleImgLeft.setOnClickListener(onClickListener);
-        titleImgRightOne.setOnClickListener(onClickListener);
-        titleImgRightTwo.setOnClickListener(onClickListener);
 
         lists = new ArrayList<>();
         linearAdapter = new LinearAdapter(R.layout.amain_item_goods_list_linear, lists);
@@ -100,9 +136,9 @@ public class GoodsListActivity extends BaseActivity {
             GoodsListInfoBean goodsListInfoBean = new GoodsListInfoBean();
             lists.add(goodsListInfoBean);
         }
-        if(listType){
+        if (listType) {
             linearAdapter.setNewData(lists);
-        }else{
+        } else {
             gridAdapter.setNewData(lists);
         }
     }
@@ -112,6 +148,7 @@ public class GoodsListActivity extends BaseActivity {
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.img_title_left:
+                    checkBack();
                     break;
                 case R.id.img_title_right:
                     break;
@@ -127,10 +164,12 @@ public class GoodsListActivity extends BaseActivity {
                 case R.id.tv_class:
                     break;
                 case R.id.tv_filter:
+                    showDrawerLayout();
                     break;
             }
         }
     };
+
 
     private void changeListType() {
         if (listType) {
@@ -164,7 +203,6 @@ public class GoodsListActivity extends BaseActivity {
 
         @Override
         protected void convert(BaseViewHolder helper, GoodsListInfoBean item) {
-
             ImageView imaPic = helper.getView(R.id.img_pic);
             ViewGroup.LayoutParams layoutParams = imaPic.getLayoutParams();
             int picWidth = (SizeUtils.getScreenWidth() - SizeUtils.dp2px(40)) / 2;
@@ -174,4 +212,33 @@ public class GoodsListActivity extends BaseActivity {
         }
     }
 
+
+    private void checkBack() {
+        if (drawerLayout.isDrawerOpen(Gravity.END)) {
+            drawerLayout.closeDrawer(Gravity.END);
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.END);
+        } else {
+            finish();
+        }
+    }
+
+    private void showDrawerLayout() {
+        if (drawerLayout.isDrawerOpen(Gravity.END)) {
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.END);
+            drawerLayout.closeDrawer(Gravity.END);
+        } else {
+            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, Gravity.END);
+            drawerLayout.openDrawer(Gravity.END);
+        }
+    }
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            checkBack();
+            return true;
+        }
+        return true;
+    }
 }

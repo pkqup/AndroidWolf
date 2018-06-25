@@ -1,5 +1,6 @@
 package com.android.alcoholwolf.amain.activity;
 
+import android.Manifest;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.amap.api.location.AMapLocation;
 import com.android.alcoholwolf.R;
 import com.android.alcoholwolf.abase.BaseActivity;
 import com.android.alcoholwolf.abase.BaseFragmentAdapter;
@@ -16,7 +18,11 @@ import com.android.alcoholwolf.amain.fragment.CartFragment;
 import com.android.alcoholwolf.amain.fragment.ClassFragment;
 import com.android.alcoholwolf.amain.fragment.HomeFragment;
 import com.android.alcoholwolf.amain.fragment.UserFragment;
+import com.android.alcoholwolf.util.LocationUtils;
+import com.pkqup.commonlibrary.util.PermissionUtils;
 import com.pkqup.commonlibrary.view.MyViewPager;
+import com.socks.library.KLog;
+import com.yanzhenjie.permission.PermissionListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,8 +81,41 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.amain_activity_main);
+        requestPermission();
         initView();
         initData();
+    }
+
+    private void requestPermission() {
+        PermissionUtils.PermissionForStart(this, new PermissionListener() {
+            @Override
+            public void onSucceed(int requestCode, List<String> grantPermissions) {
+                for (String grantPermission : grantPermissions) {
+                    if (grantPermission.equals(Manifest.permission.ACCESS_FINE_LOCATION) ||
+                            grantPermission.equals(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                        //开启定位
+                        new LocationUtils().startLocation(new LocationUtils.LocationCallBack() {
+                            @Override
+                            public void locationSuccess(AMapLocation aMapLocation) {
+                                KLog.e("location_success");
+                            }
+
+                            @Override
+                            public void locationFail() {
+                                KLog.e("location_fail");
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onFailed(int requestCode, List<String> deniedPermissions) {
+                for (String grantPermission : deniedPermissions) {
+                    KLog.e(grantPermission);
+                }
+            }
+        });
     }
 
     @Override
@@ -144,7 +183,7 @@ public class MainActivity extends BaseActivity {
 
 
     private void setPageFragment(int position) {
-        viewPager.setCurrentItem(position,false);
+        viewPager.setCurrentItem(position, false);
         for (int i = 0; i < imageViews.size(); i++) {
             if (position == i) {
                 imageViews.get(i).setSelected(true);

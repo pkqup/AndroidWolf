@@ -7,7 +7,6 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.alcoholwolf.R;
 import com.android.alcoholwolf.abase.BaseActivity;
@@ -20,12 +19,9 @@ import com.pkqup.commonlibrary.view.tagview.FlowTagLayout;
 import com.pkqup.commonlibrary.view.tagview.OnTagClickListener;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
-import io.realm.RealmObject;
-import io.realm.RealmResults;
 
 /**
  * @CreatedbBy: liucun on 2018/6/24.
@@ -104,7 +100,7 @@ public class SearchActivity extends BaseActivity {
         tagHot.setOnTagClickListener(new OnTagClickListener() {
             @Override
             public void onItemClick(FlowTagLayout parent, View view, int position) {
-                ToastUtils.showShortToast(hotLists.get(position).getName());
+                ToastUtils.showShort(hotLists.get(position).getName());
             }
         });
 
