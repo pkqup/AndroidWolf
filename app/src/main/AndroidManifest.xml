@@ -11,10 +11,6 @@
         android:largeHeap="true"
         android:theme="@style/AppTheme">
 
-        <meta-data
-            android:name="WOLF_CHANNEL"
-            android:value="${WOLF_CHANNEL}" />
-
         <activity
             android:name=".amain.activity.SplashActivity"
             android:screenOrientation="portrait"
@@ -41,6 +37,18 @@
             android:name=".goods.GoodsDetailsActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden" />
+
+        <!--渠道-->
+        <meta-data
+            android:name="WOLF_CHANNEL"
+            android:value="${WOLF_CHANNEL}" />
+
+        <!--高德地图key-->
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="029dc531fe0c93b534114f1b1c178899"/>
+        <!--高德地图定位服务-->
+        <service android:name="com.amap.api.location.APSService"/>
 
     </application>
 

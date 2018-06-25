@@ -6,16 +6,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.amap.api.location.AMapLocation;
 import com.android.alcoholwolf.R;
 import com.android.alcoholwolf.abase.BaseFragment;
 import com.android.alcoholwolf.amain.bean.RealmBean;
+import com.android.alcoholwolf.util.LocationUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.pkqup.commonlibrary.net.bean.Result;
 import com.pkqup.commonlibrary.realm.RealmUtils;
+import com.pkqup.commonlibrary.util.PermissionUtils;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.socks.library.KLog;
+import com.yanzhenjie.permission.PermissionListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,6 +45,37 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void initView() {
         View headerView = View.inflate(getActivity(), R.layout.amain_item_home_header, null);
+        headerView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new LocationUtils().startLocation(new LocationUtils.LocationCallBack() {
+                    @Override
+                    public void locationSuccess(AMapLocation aMapLocation) {
+                        KLog.e("locationsuccess");
+                    }
+
+                    @Override
+                    public void locationFail() {
+                        KLog.e("locationfail");
+                    }
+                });
+                PermissionUtils.PermissionForStart(getActivity(), new PermissionListener() {
+                    @Override
+                    public void onSucceed(int requestCode, List<String> grantPermissions) {
+                        for (String grantPermission : grantPermissions) {
+                            KLog.e(grantPermission);
+                        }
+                    }
+
+                    @Override
+                    public void onFailed(int requestCode, List<String> deniedPermissions) {
+                        for (String grantPermission : deniedPermissions) {
+                            KLog.e(grantPermission);
+                        }
+                    }
+                });
+            }
+        });
 
         lists = new ArrayList();
         listView = rootView.findViewById(R.id.listView);

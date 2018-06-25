@@ -88,6 +88,9 @@ dependencies {
     implementation project (':common:commonlibrary')
 
     //依赖注入
-    api 'com.jakewharton:butterknife:8.8.1'
+    implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
+
+    //高德地图定位
+    implementation 'com.amap.api:location:4.0.1'
 }
