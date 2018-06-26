@@ -1,1 +1,3 @@
-include ':app',':common:commonlibrary'
+include ':app',
+        ':common:commonlibrary',
+        ':common:imagepicker'

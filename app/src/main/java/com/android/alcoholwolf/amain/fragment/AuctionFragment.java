@@ -5,12 +5,16 @@ import android.view.ViewGroup;
 
 import com.android.alcoholwolf.R;
 import com.android.alcoholwolf.abase.BaseFragment;
+import com.pkqup.commonlibrary.view.TimerTextView;
 
 /**
  * @CreatedbBy: liucun on 2018/6/16.
  * @Describe: 竞拍
  */
 public class AuctionFragment extends BaseFragment {
+
+    private TimerTextView timerTextView;
+
     @Override
     public void getContentView(LayoutInflater inflater, ViewGroup container) {
         inflater.inflate(R.layout.amain_fragment_auction,container,true);
@@ -18,7 +22,10 @@ public class AuctionFragment extends BaseFragment {
 
     @Override
     public void initView() {
+        timerTextView = rootView.findViewById(R.id.timeTextView);
 
+        timerTextView.setTime(1,55,3);
+        timerTextView.start();
     }
 
     @Override
