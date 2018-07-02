@@ -4,7 +4,7 @@ apply plugin: 'realm-android'
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.android.alcoholwolf"
+        applicationId "com.chunlangjiu.app"
         minSdkVersion 15
         targetSdkVersion 27
         versionCode 1
