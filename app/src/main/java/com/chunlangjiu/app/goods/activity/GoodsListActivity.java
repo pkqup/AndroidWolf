@@ -123,7 +123,19 @@ public class GoodsListActivity extends BaseActivity {
 
         lists = new ArrayList<>();
         linearAdapter = new LinearAdapter(R.layout.amain_item_goods_list_linear, lists);
+        linearAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                GoodsDetailsActivity.startGoodsDetailsActivity(GoodsListActivity.this,"");
+            }
+        });
         gridAdapter = new GridAdapter(R.layout.amain_item_goods_list_grid, lists);
+        gridAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                GoodsDetailsActivity.startGoodsDetailsActivity(GoodsListActivity.this,"");
+            }
+        });
         recycle_view.setLayoutManager(new LinearLayoutManager(this));
         recycle_view.setAdapter(linearAdapter);
     }
@@ -148,9 +160,9 @@ public class GoodsListActivity extends BaseActivity {
                 case R.id.img_title_left:
                     checkBack();
                     break;
-                case R.id.img_title_right:
+                case R.id.img_title_right_one:
                     break;
-                case R.id.img_title_right_change:
+                case R.id.img_title_right_two:
                     changeListType();
                     break;
                 case R.id.tv_all:

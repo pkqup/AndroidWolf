@@ -1,8 +1,11 @@
 package com.chunlangjiu.app.goods.activity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
@@ -31,6 +34,23 @@ public class GoodsDetailsActivity extends BaseActivity {
     private List<Fragment> mFragments;
 
 
+    private View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.img_title_left:
+                    finish();
+                    break;
+            }
+        }
+    };
+
+    public static void startGoodsDetailsActivity(Activity activity, String goodsId) {
+        Intent intent = new Intent(activity, GoodsDetailsActivity.class);
+        intent.putExtra("goodsId", goodsId);
+        activity.startActivity(intent);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +61,8 @@ public class GoodsDetailsActivity extends BaseActivity {
 
     @Override
     public void setTitleView() {
-        hideTitleView();
+        titleName.setText("商品详情");
+        titleImgLeft.setOnClickListener(onClickListener);
     }
 
 

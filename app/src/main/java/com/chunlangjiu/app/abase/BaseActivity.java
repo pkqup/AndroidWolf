@@ -2,7 +2,6 @@ package com.chunlangjiu.app.abase;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -46,8 +45,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         titleView = findViewById(R.id.title_view);
         titleImgLeft = findViewById(R.id.img_title_left);
         titleName = findViewById(R.id.tv_title);
-        titleImgRightOne = findViewById(R.id.img_title_right);
-        titleImgRightTwo = findViewById(R.id.img_title_right_change);
+        titleImgRightOne = findViewById(R.id.img_title_right_one);
+        titleImgRightTwo = findViewById(R.id.img_title_right_two);
         titleSearchView = findViewById(R.id.rl_title_search);
         titleSearchEdit = findViewById(R.id.et_title_search);
 
@@ -66,8 +65,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     public abstract void setTitleView();
 
     private void addSubContentView(int layoutResID) {
-        LayoutInflater layoutInflater = getLayoutInflater();
-        layoutInflater.inflate(layoutResID, contentView, true);
+        getLayoutInflater().inflate(layoutResID, contentView, true);
     }
 
     public void hideTitleView(){
