@@ -41,6 +41,9 @@ public class GoodsDetailsActivity extends BaseActivity {
                 case R.id.img_title_left:
                     finish();
                     break;
+                case R.id.img_title_right_one:
+                    startActivity(new Intent(GoodsDetailsActivity.this, ShopMainActivity.class));
+                    break;
             }
         }
     };
@@ -63,6 +66,7 @@ public class GoodsDetailsActivity extends BaseActivity {
     public void setTitleView() {
         titleName.setText("商品详情");
         titleImgLeft.setOnClickListener(onClickListener);
+        titleImgRightOne.setOnClickListener(onClickListener);
     }
 
 
@@ -75,12 +79,11 @@ public class GoodsDetailsActivity extends BaseActivity {
         fragmentAdapter = new BaseFragmentAdapter(getSupportFragmentManager());
         fragmentAdapter.setLists(mFragments);
         view_pager.setAdapter(fragmentAdapter);
-        tab.setViewPager(view_pager,mTitles);
+        tab.setViewPager(view_pager, mTitles);
         view_pager.setCurrentItem(0);
     }
 
     private void initData() {
-
 
 
     }

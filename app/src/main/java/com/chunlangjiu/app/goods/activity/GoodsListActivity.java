@@ -68,6 +68,18 @@ public class GoodsListActivity extends BaseActivity {
         activity.startActivity(intent);
     }
 
+
+    @Override
+    public void setTitleView() {
+        titleImgRightTwo.setVisibility(View.VISIBLE);
+        secondClassId = getIntent().getStringExtra("secondClassId");
+        secondClassName = getIntent().getStringExtra("secondClassName");
+        titleName.setText(secondClassName);
+        titleImgLeft.setOnClickListener(onClickListener);
+        titleImgRightOne.setOnClickListener(onClickListener);
+        titleImgRightTwo.setOnClickListener(onClickListener);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,18 +115,8 @@ public class GoodsListActivity extends BaseActivity {
         rightView.setLayoutParams(layoutParams);
     }
 
-    @Override
-    public void setTitleView() {
-        titleImgRightTwo.setVisibility(View.VISIBLE);
-        secondClassId = getIntent().getStringExtra("secondClassId");
-        secondClassName = getIntent().getStringExtra("secondClassName");
-        titleName.setText(secondClassName);
-    }
 
     private void initView() {
-        titleImgLeft.setOnClickListener(onClickListener);
-        titleImgRightOne.setOnClickListener(onClickListener);
-        titleImgRightTwo.setOnClickListener(onClickListener);
         tv_all.setOnClickListener(onClickListener);
         tv_new.setOnClickListener(onClickListener);
         tv_price.setOnClickListener(onClickListener);
