@@ -3,6 +3,7 @@ package com.chunlangjiu.app.abase;
 import android.content.Context;
 import android.support.multidex.MultiDexApplication;
 
+import com.chunlangjiu.app.net.ApiUtils;
 import com.pkqup.commonlibrary.crash.CrashHandler;
 import com.pkqup.commonlibrary.util.AppUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -24,6 +25,7 @@ public class BaseApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         AppUtils.init(this);
+        ApiUtils.getInstance().init();
         initRealm();
         CrashHandler.getInstance().init(this);
         KLog.init(AppUtils.isDebug());

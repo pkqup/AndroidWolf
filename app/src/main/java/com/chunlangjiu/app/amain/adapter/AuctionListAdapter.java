@@ -26,7 +26,6 @@ public class AuctionListAdapter extends BaseQuickAdapter<AuctionGoodsBean, BaseV
 
     public static class MyViewHolder extends BaseViewHolder {
 
-
         public MyViewHolder(View itemView) {
             super(itemView);
         }

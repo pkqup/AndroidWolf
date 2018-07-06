@@ -19,7 +19,7 @@ import butterknife.BindView;
 
 /**
  * @CreatedbBy: liucun on 2018/7/5
- * @Describe:
+ * @Describe: 卖家主页
  */
 public class ShopMainActivity extends BaseActivity {
 
