@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
@@ -22,6 +23,8 @@ import butterknife.BindView;
 
 public class GoodsDetailsActivity extends BaseActivity {
 
+    @BindView(R.id.img_back)
+    ImageView imgBack;
 
     @BindView(R.id.tab)
     SlidingTabLayout tab;
@@ -38,11 +41,8 @@ public class GoodsDetailsActivity extends BaseActivity {
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
-                case R.id.img_title_left:
+                case R.id.img_back:
                     finish();
-                    break;
-                case R.id.img_title_right_one:
-                    startActivity(new Intent(GoodsDetailsActivity.this, ShopMainActivity.class));
                     break;
             }
         }
@@ -64,13 +64,13 @@ public class GoodsDetailsActivity extends BaseActivity {
 
     @Override
     public void setTitleView() {
-        titleName.setText("商品详情");
-        titleImgLeft.setOnClickListener(onClickListener);
-        titleImgRightOne.setOnClickListener(onClickListener);
+      hideTitleView();
     }
 
 
     private void initView() {
+        imgBack.setOnClickListener(onClickListener);
+
         mFragments = new ArrayList<>();
         mFragments.add(new GoodsSlideFragment());
         mFragments.add(new GoodsWebFragment());
