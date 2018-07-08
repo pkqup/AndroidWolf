@@ -1,12 +1,21 @@
 package com.chunlangjiu.app.user.activity;
 
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
 import com.chunlangjiu.app.net.ApiUtils;
+import com.chunlangjiu.app.user.bean.AddressListBean;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.BindView;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
@@ -17,6 +26,12 @@ import io.reactivex.schedulers.Schedulers;
  * @Describe:
  */
 public class AddressListActivity extends BaseActivity {
+
+    @BindView(R.id.recyclerView)
+    RecyclerView recyclerView;
+
+    private AddressAdapter addressAdapter;
+    private List<AddressListBean> lists;
 
     private CompositeDisposable disposable;
 
@@ -35,7 +50,10 @@ public class AddressListActivity extends BaseActivity {
     }
 
     private void initView() {
-
+        lists  = new ArrayList<>();
+        addressAdapter = new AddressAdapter(R.layout.goods_item_comment_list,lists);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(addressAdapter);
     }
 
     private void initData() {
@@ -66,4 +84,15 @@ public class AddressListActivity extends BaseActivity {
         disposable.clear();
     }
 
+
+    public class AddressAdapter extends BaseQuickAdapter<AddressListBean, BaseViewHolder> {
+        public AddressAdapter(int layoutResId, List<AddressListBean> data) {
+            super(layoutResId, data);
+        }
+
+        @Override
+        protected void convert(BaseViewHolder helper, AddressListBean item) {
+
+        }
+    }
 }

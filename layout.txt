@@ -1,0 +1,7 @@
+        <com.pkqup.commonlibrary.view.CircleImageView
+            android:id="@+id/img_store"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            app:civ_BorderColor="@color/transparent"
+            app:civ_BorderWidth="1dp"
+            android:src="@color/bg_red" />
