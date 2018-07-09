@@ -82,7 +82,6 @@ public class HomeFragment extends BaseFragment {
 
     private void initBannerView() {
         bannerUrls = new ArrayList<>();
-        bannerUrls.add("http://img1.imgtn.bdimg.com/it/u=4027212837,1228313366&fm=23&gp=0.jpg");
         bannerUrls.add(images[0]);
         bannerUrls.add(images[1]);
         bannerUrls.add(images[2]);

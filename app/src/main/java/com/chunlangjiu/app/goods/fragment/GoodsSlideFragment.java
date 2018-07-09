@@ -24,10 +24,7 @@ public class GoodsSlideFragment extends BaseFragment {
     @Override
     public void initView() {
         verticalSlide = rootView.findViewById(R.id.dragLayout);
-    }
 
-    @Override
-    public void initData() {
         try {
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
             topFragment = new GoodsDetailsFragment();
@@ -39,12 +36,16 @@ public class GoodsSlideFragment extends BaseFragment {
             e.printStackTrace();
         }
 
-
         verticalSlide.setOnShowNextPageListener(new VerticalSlide.OnShowNextPageListener() {
             @Override
             public void onShowNextPage(int type) {
                 ((GoodsDetailsFragment) topFragment).setDragText(type == 0 ? "继续下拉查看商品简介" : "继续拖动查看图文详情");
             }
         });
+    }
+
+    @Override
+    public void initData() {
+
     }
 }

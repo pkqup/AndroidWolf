@@ -26,13 +26,13 @@
 
         <com.flyco.tablayout.SlidingTabLayout
             android:id="@+id/tab"
-            android:layout_width="240dp"
+            android:layout_width="180dp"
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
             tl:tl_indicator_color="#000000"
             tl:tl_indicator_height="2dp"
             tl:tl_indicator_width_equal_title="true"
-            tl:tl_tab_width="80dp"
+            tl:tl_tab_width="60dp"
             tl:tl_textAllCaps="true"
             tl:tl_textBold="BOTH"
             tl:tl_textSelectColor="#000000"
