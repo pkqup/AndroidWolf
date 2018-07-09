@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseFragment;
 import com.pkqup.commonlibrary.view.verticalview.VerticalSlide;
+import com.socks.library.KLog;
 
 public class GoodsSlideFragment extends BaseFragment {
 
@@ -33,17 +34,17 @@ public class GoodsSlideFragment extends BaseFragment {
             transaction.replace(R.id.first, topFragment);
             bottomFragment = new GoodsWebFragment();
             transaction.replace(R.id.second, bottomFragment);
-
-            verticalSlide.setOnShowNextPageListener(new VerticalSlide.OnShowNextPageListener() {
-                @Override
-                public void onShowNextPage(int type) {
-                    ((GoodsDetailsFragment)topFragment).setDragText(type==0?"下拉，查看商品简介":"继续拖动，查看图文详情");
-                }
-            });
             transaction.commit();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+
+        verticalSlide.setOnShowNextPageListener(new VerticalSlide.OnShowNextPageListener() {
+            @Override
+            public void onShowNextPage(int type) {
+                ((GoodsDetailsFragment) topFragment).setDragText(type == 0 ? "继续下拉查看商品简介" : "继续拖动查看图文详情");
+            }
+        });
     }
 }

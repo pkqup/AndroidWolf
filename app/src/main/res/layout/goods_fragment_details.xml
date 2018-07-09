@@ -347,7 +347,7 @@
                 android:layout_height="wrap_content"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
-                android:text="继续拖动查看更多商品详情"
+                android:text="继续拖动查看图文详情"
                 android:textColor="@color/t_black"
                 android:textSize="13sp" />
 

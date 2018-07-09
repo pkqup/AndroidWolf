@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_gray"
@@ -19,6 +18,7 @@
             android:background="@color/bg_user">
 
             <ImageView
+                android:id="@+id/imgSetting"
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_alignParentRight="true"
@@ -43,11 +43,12 @@
                 android:layout_below="@id/imgHead"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
-                android:text="姓名"
                 android:textColor="@color/t_white"
-                android:textSize="@dimen/sp_big" />
+                android:textSize="@dimen/sp_big"
+                tools:text="姓名" />
 
             <TextView
+                android:id="@+id/tvAccountType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/imgHead"
@@ -59,9 +60,9 @@
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:paddingTop="1dp"
-                android:text="个人"
                 android:textColor="@color/bg_user"
-                android:textSize="@dimen/sp_mid" />
+                android:textSize="@dimen/sp_mid"
+                tools:text="个人" />
 
             <LinearLayout
                 android:id="@+id/llAuth"
@@ -111,6 +112,7 @@
                 android:orientation="horizontal">
 
                 <LinearLayout
+                    android:id="@+id/llCanUseMoney"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -121,9 +123,9 @@
                         android:id="@+id/tvCanUseMoney"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="5000.00"
                         android:textColor="@color/t_white"
-                        android:textSize="24sp" />
+                        android:textSize="24sp"
+                        tools:text="5000.00" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -135,6 +137,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/llNotUseMoney"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -145,9 +148,9 @@
                         android:id="@+id/tvNotUseMoney"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="1000.00"
                         android:textColor="@color/t_white"
-                        android:textSize="24sp" />
+                        android:textSize="24sp"
+                        tools:text="1000.00" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -161,9 +164,10 @@
                 <View
                     android:layout_width="1px"
                     android:layout_height="50dp"
-                    android:background="@color/bg_white" />
+                    android:background="#AAFFFFFF" />
 
                 <LinearLayout
+                    android:id="@+id/llMessageNum"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -174,9 +178,9 @@
                         android:id="@+id/tvMessageNum"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="1"
                         android:textColor="@color/t_white"
-                        android:textSize="24sp" />
+                        android:textSize="24sp"
+                        tools:text="1" />
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -190,6 +194,7 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/rlOrderManager"
             android:layout_width="match_parent"
             android:layout_height="44dp"
             android:background="@color/bg_white">
@@ -201,11 +206,11 @@
                 android:layout_marginLeft="15dp"
                 android:text="订单管理"
                 android:textColor="@color/t_black"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
 
             <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="25dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="15dp"
@@ -218,21 +223,21 @@
             android:background="@color/bg_gray" />
 
         <LinearLayout
+            android:id="@+id/llBuyOrder"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:background="@color/bg_white"
             android:orientation="horizontal">
 
-
             <RelativeLayout
-                android:id="@+id/rlOrderPay"
+                android:id="@+id/rlOrderOne"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/imgOrderPayIcon"
+                    android:id="@+id/imgOrderOne"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_centerHorizontal="true"
@@ -240,9 +245,10 @@
                     android:src="@mipmap/icon_user_place" />
 
                 <TextView
+                    android:id="@+id/tvOrderOne"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/imgOrderPayIcon"
+                    android:layout_below="@id/imgOrderOne"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
                     android:text="待付款"
@@ -250,29 +256,30 @@
                     android:textSize="@dimen/sp_mid" />
 
                 <TextView
-                    android:id="@+id/tvOrderPayNum"
+                    android:id="@+id/tvOrderOneNum"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginLeft="-15dp"
                     android:layout_marginTop="8dp"
-                    android:layout_toRightOf="@id/imgOrderPayIcon"
+                    android:layout_toRightOf="@id/imgOrderOne"
                     android:background="@drawable/cart_num_bg"
                     android:gravity="center"
-                    android:text="12"
                     android:textColor="@color/t_white"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    tools:text="1" />
 
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/rlOrderGet"
+                android:id="@+id/rlOrderTwo"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/imgOrderGetIcon"
+                    android:id="@+id/imgOrderTwo"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_centerHorizontal="true"
@@ -280,9 +287,10 @@
                     android:src="@mipmap/icon_user_place" />
 
                 <TextView
+                    android:id="@+id/tvOrderTwo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/imgOrderGetIcon"
+                    android:layout_below="@id/imgOrderTwo"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
                     android:text="待收货"
@@ -290,29 +298,30 @@
                     android:textSize="@dimen/sp_mid" />
 
                 <TextView
-                    android:id="@+id/tvOrderGetNum"
+                    android:id="@+id/tvOrderTwoNum"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginLeft="-15dp"
                     android:layout_marginTop="8dp"
-                    android:layout_toRightOf="@id/imgOrderGetIcon"
+                    android:layout_toRightOf="@id/imgOrderTwo"
                     android:background="@drawable/cart_num_bg"
                     android:gravity="center"
-                    android:text="12"
                     android:textColor="@color/t_white"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    tools:text="1" />
 
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/rlOrderEvaluate"
+                android:id="@+id/rlOrderThree"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/imgOrderEvaluateIcon"
+                    android:id="@+id/imgOrderThree"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_centerHorizontal="true"
@@ -320,9 +329,10 @@
                     android:src="@mipmap/icon_user_place" />
 
                 <TextView
+                    android:id="@+id/tvOrderThree"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/imgOrderEvaluateIcon"
+                    android:layout_below="@id/imgOrderThree"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
                     android:text="待评价"
@@ -330,29 +340,30 @@
                     android:textSize="@dimen/sp_mid" />
 
                 <TextView
-                    android:id="@+id/tvOrderEvaluateNum"
+                    android:id="@+id/tvOrderThreeNum"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginLeft="-15dp"
                     android:layout_marginTop="8dp"
-                    android:layout_toRightOf="@id/imgOrderEvaluateIcon"
+                    android:layout_toRightOf="@id/imgOrderThree"
                     android:background="@drawable/cart_num_bg"
                     android:gravity="center"
-                    android:text="12"
                     android:textColor="@color/t_white"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    tools:text="1" />
 
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/rlOrderAfter"
+                android:id="@+id/rlOrderFour"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/imgOrderAfterIcon"
+                    android:id="@+id/imgOrderFour"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_centerHorizontal="true"
@@ -360,9 +371,10 @@
                     android:src="@mipmap/icon_user_place" />
 
                 <TextView
+                    android:id="@+id/tvOrderFour"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/imgOrderAfterIcon"
+                    android:layout_below="@id/imgOrderFour"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
                     android:text="售后订单"
@@ -370,29 +382,30 @@
                     android:textSize="@dimen/sp_mid" />
 
                 <TextView
-                    android:id="@+id/tvOrderAfterNum"
+                    android:id="@+id/tvOrderFourNum"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginLeft="-15dp"
                     android:layout_marginTop="8dp"
-                    android:layout_toRightOf="@id/imgOrderAfterIcon"
+                    android:layout_toRightOf="@id/imgOrderFour"
                     android:background="@drawable/cart_num_bg"
                     android:gravity="center"
-                    android:text="12"
                     android:textColor="@color/t_white"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    tools:text="1" />
 
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/rlOrderAll"
+                android:id="@+id/rlOrderFive"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/imgOrderAllIcon"
+                    android:id="@+id/imgOrderFive"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_centerHorizontal="true"
@@ -400,9 +413,10 @@
                     android:src="@mipmap/icon_user_place" />
 
                 <TextView
+                    android:id="@+id/tvOrderFive"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/imgOrderAllIcon"
+                    android:layout_below="@id/imgOrderFive"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
                     android:text="全部订单"
@@ -410,22 +424,206 @@
                     android:textSize="@dimen/sp_mid" />
 
                 <TextView
-                    android:id="@+id/tvOrderAllNum"
+                    android:id="@+id/tvOrderFiveNum"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginLeft="-15dp"
                     android:layout_marginTop="8dp"
-                    android:layout_toRightOf="@id/imgOrderAllIcon"
+                    android:layout_toRightOf="@id/imgOrderFive"
                     android:background="@drawable/cart_num_bg"
                     android:gravity="center"
-                    android:text="12"
                     android:textColor="@color/t_white"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    tools:text="1" />
 
             </RelativeLayout>
         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/llSellOrder"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="@color/bg_white"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:id="@+id/rlSellOrderOne"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/imgSellOrderOne"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="18dp"
+                    android:src="@mipmap/icon_user_place" />
+
+                <TextView
+                    android:id="@+id/tvSellOrderOne"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/imgSellOrderOne"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:text="待付款"
+                    android:textColor="@color/t_black"
+                    android:textSize="@dimen/sp_mid" />
+
+                <TextView
+                    android:id="@+id/tvSellOrderOneNum"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="-15dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_toRightOf="@id/imgSellOrderOne"
+                    android:background="@drawable/cart_num_bg"
+                    android:gravity="center"
+                    android:textColor="@color/t_white"
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    tools:text="1" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rlSellOrderTwo"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/imgSellOrderTwo"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="18dp"
+                    android:src="@mipmap/icon_user_place" />
+
+                <TextView
+                    android:id="@+id/tvSellOrderTwo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/imgSellOrderTwo"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:text="待发货"
+                    android:textColor="@color/t_black"
+                    android:textSize="@dimen/sp_mid" />
+
+                <TextView
+                    android:id="@+id/tvSellOrderTwoNum"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="-15dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_toRightOf="@id/imgSellOrderTwo"
+                    android:background="@drawable/cart_num_bg"
+                    android:gravity="center"
+                    android:textColor="@color/t_white"
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    tools:text="1" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rlSellOrderThree"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/imgSellOrderThree"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="18dp"
+                    android:src="@mipmap/icon_user_place" />
+
+                <TextView
+                    android:id="@+id/tvSellOrderThree"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/imgSellOrderThree"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:text="售后订单"
+                    android:textColor="@color/t_black"
+                    android:textSize="@dimen/sp_mid" />
+
+                <TextView
+                    android:id="@+id/tvSellOrderThreeNum"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="-15dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_toRightOf="@id/imgSellOrderThree"
+                    android:background="@drawable/cart_num_bg"
+                    android:gravity="center"
+                    android:textColor="@color/t_white"
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    tools:text="1" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rlSellOrderFour"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/imgSellOrderFour"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="18dp"
+                    android:src="@mipmap/icon_user_place" />
+
+                <TextView
+                    android:id="@+id/tvSellOrderFour"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/imgSellOrderFour"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:text="全部订单"
+                    android:textColor="@color/t_black"
+                    android:textSize="@dimen/sp_mid" />
+
+                <TextView
+                    android:id="@+id/tvSellOrderFourNum"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="-15dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_toRightOf="@id/imgSellOrderFour"
+                    android:background="@drawable/cart_num_bg"
+                    android:gravity="center"
+                    android:textColor="@color/t_white"
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    tools:text="1" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"/>
+
+        </LinearLayout>
 
         <RelativeLayout
+            android:id="@+id/rlAuctionManager"
             android:layout_width="match_parent"
             android:layout_height="44dp"
             android:layout_marginTop="10dp"
@@ -438,11 +636,11 @@
                 android:layout_marginLeft="15dp"
                 android:text="竞拍订单"
                 android:textColor="@color/t_black"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
 
             <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="25dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="15dp"
@@ -455,21 +653,21 @@
             android:background="@color/bg_gray" />
 
         <LinearLayout
+            android:id="@+id/llBuyAuction"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:background="@color/bg_white"
             android:orientation="horizontal">
 
-
             <RelativeLayout
-                android:id="@+id/rlAuctionPay"
+                android:id="@+id/rlAuctionOne"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/imgAuctionPayIcon"
+                    android:id="@+id/imgAuctionOne"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_centerHorizontal="true"
@@ -477,9 +675,10 @@
                     android:src="@mipmap/icon_user_place" />
 
                 <TextView
+                    android:id="@+id/tvAuctionOne"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/imgAuctionPayIcon"
+                    android:layout_below="@id/imgAuctionOne"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
                     android:text="待付定金"
@@ -487,29 +686,30 @@
                     android:textSize="@dimen/sp_mid" />
 
                 <TextView
-                    android:id="@+id/tvAuctionPayNum"
+                    android:id="@+id/tvAuctionOneNum"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginLeft="-15dp"
                     android:layout_marginTop="8dp"
-                    android:layout_toRightOf="@id/imgAuctionPayIcon"
+                    android:layout_toRightOf="@id/imgAuctionOne"
                     android:background="@drawable/cart_num_bg"
                     android:gravity="center"
-                    android:text="12"
                     android:textColor="@color/t_white"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    tools:text="1" />
 
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/rlAuctionIng"
+                android:id="@+id/rlAuctionTwo"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/imgAuctionIngIcon"
+                    android:id="@+id/imgAuctionTwo"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_centerHorizontal="true"
@@ -517,9 +717,10 @@
                     android:src="@mipmap/icon_user_place" />
 
                 <TextView
+                    android:id="@+id/tvAuctionTwo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/imgAuctionIngIcon"
+                    android:layout_below="@id/imgAuctionTwo"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
                     android:text="竞拍中"
@@ -527,29 +728,30 @@
                     android:textSize="@dimen/sp_mid" />
 
                 <TextView
-                    android:id="@+id/tvAuctionIngNum"
+                    android:id="@+id/tvAuctionTwoNum"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginLeft="-15dp"
                     android:layout_marginTop="8dp"
-                    android:layout_toRightOf="@id/imgAuctionIngIcon"
+                    android:layout_toRightOf="@id/imgAuctionTwo"
                     android:background="@drawable/cart_num_bg"
                     android:gravity="center"
-                    android:text="12"
                     android:textColor="@color/t_white"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    tools:text="1" />
 
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/rlAuctionWin"
+                android:id="@+id/rlAuctionThree"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/imgAuctionWinIcon"
+                    android:id="@+id/imgAuctionThree"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_centerHorizontal="true"
@@ -557,9 +759,10 @@
                     android:src="@mipmap/icon_user_place" />
 
                 <TextView
+                    android:id="@+id/tvAuctionThree"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/imgAuctionWinIcon"
+                    android:layout_below="@id/imgAuctionThree"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
                     android:text="已中标"
@@ -567,29 +770,30 @@
                     android:textSize="@dimen/sp_mid" />
 
                 <TextView
-                    android:id="@+id/tvAuctionWinNum"
+                    android:id="@+id/tvAuctionThreeNum"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginLeft="-15dp"
                     android:layout_marginTop="8dp"
-                    android:layout_toRightOf="@id/imgAuctionWinIcon"
+                    android:layout_toRightOf="@id/imgAuctionThree"
                     android:background="@drawable/cart_num_bg"
                     android:gravity="center"
-                    android:text="12"
                     android:textColor="@color/t_white"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    tools:text="1" />
 
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/rlAuctionLose"
+                android:id="@+id/rlAuctionFour"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/imgAuctionLoseIcon"
+                    android:id="@+id/imgAuctionFour"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_centerHorizontal="true"
@@ -597,9 +801,10 @@
                     android:src="@mipmap/icon_user_place" />
 
                 <TextView
+                    android:id="@+id/tvAuctionFour"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/imgAuctionLoseIcon"
+                    android:layout_below="@id/imgAuctionFour"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
                     android:text="落标"
@@ -607,29 +812,30 @@
                     android:textSize="@dimen/sp_mid" />
 
                 <TextView
-                    android:id="@+id/tvAuctionLoseNum"
+                    android:id="@+id/tvAuctionFourNum"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginLeft="-15dp"
                     android:layout_marginTop="8dp"
-                    android:layout_toRightOf="@id/imgAuctionLoseIcon"
+                    android:layout_toRightOf="@id/imgAuctionFour"
                     android:background="@drawable/cart_num_bg"
                     android:gravity="center"
-                    android:text="12"
                     android:textColor="@color/t_white"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    tools:text="1" />
 
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/rlAuctionGet"
+                android:id="@+id/rlAuctionFive"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/imgAuctionGetIcon"
+                    android:id="@+id/imgAuctionFive"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_centerHorizontal="true"
@@ -637,9 +843,10 @@
                     android:src="@mipmap/icon_user_place" />
 
                 <TextView
+                    android:id="@+id/tvAuctionFive"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/imgAuctionGetIcon"
+                    android:layout_below="@id/imgAuctionFive"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
                     android:text="全部订单"
@@ -647,22 +854,205 @@
                     android:textSize="@dimen/sp_mid" />
 
                 <TextView
-                    android:id="@+id/tvAuctionGetNum"
+                    android:id="@+id/tvAuctionFiveNum"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginLeft="-15dp"
                     android:layout_marginTop="8dp"
-                    android:layout_toRightOf="@id/imgAuctionGetIcon"
+                    android:layout_toRightOf="@id/imgAuctionFive"
                     android:background="@drawable/cart_num_bg"
                     android:gravity="center"
-                    android:text="12"
                     android:textColor="@color/t_white"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    tools:text="1" />
             </RelativeLayout>
         </LinearLayout>
+        <LinearLayout
+            android:id="@+id/llSellAuction"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:background="@color/bg_white"
+            android:orientation="horizontal">
 
+            <RelativeLayout
+                android:id="@+id/rlSellAuctionOne"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/imgSellAuctionOne"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="18dp"
+                    android:src="@mipmap/icon_user_place" />
+
+                <TextView
+                    android:id="@+id/tvSellAuctionOne"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/imgSellAuctionOne"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:text="待付定金"
+                    android:textColor="@color/t_black"
+                    android:textSize="@dimen/sp_mid" />
+
+                <TextView
+                    android:id="@+id/tvSellAuctionOneNum"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="-15dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_toRightOf="@id/imgSellAuctionOne"
+                    android:background="@drawable/cart_num_bg"
+                    android:gravity="center"
+                    android:textColor="@color/t_white"
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    tools:text="1" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rlSellAuctionTwo"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/imgSellAuctionTwo"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="18dp"
+                    android:src="@mipmap/icon_user_place" />
+
+                <TextView
+                    android:id="@+id/tvSellAuctionTwo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/imgSellAuctionTwo"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:text="竞拍中"
+                    android:textColor="@color/t_black"
+                    android:textSize="@dimen/sp_mid" />
+
+                <TextView
+                    android:id="@+id/tvSellAuctionTwoNum"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="-15dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_toRightOf="@id/imgSellAuctionTwo"
+                    android:background="@drawable/cart_num_bg"
+                    android:gravity="center"
+                    android:textColor="@color/t_white"
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    tools:text="1" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rlSellAuctionThree"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/imgSellAuctionThree"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="18dp"
+                    android:src="@mipmap/icon_user_place" />
+
+                <TextView
+                    android:id="@+id/tvSellAuctionThree"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/imgSellAuctionThree"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:text="已中标"
+                    android:textColor="@color/t_black"
+                    android:textSize="@dimen/sp_mid" />
+
+                <TextView
+                    android:id="@+id/tvSellAuctionThreeNum"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="-15dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_toRightOf="@id/imgSellAuctionThree"
+                    android:background="@drawable/cart_num_bg"
+                    android:gravity="center"
+                    android:textColor="@color/t_white"
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    tools:text="1" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rlSellAuctionFour"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/imgSellAuctionFour"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="18dp"
+                    android:src="@mipmap/icon_user_place" />
+
+                <TextView
+                    android:id="@+id/tvSellAuctionFour"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/imgSellAuctionFour"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:text="落标"
+                    android:textColor="@color/t_black"
+                    android:textSize="@dimen/sp_mid" />
+
+                <TextView
+                    android:id="@+id/tvSellAuctionFourNum"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="-15dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_toRightOf="@id/imgSellAuctionFour"
+                    android:background="@drawable/cart_num_bg"
+                    android:gravity="center"
+                    android:textColor="@color/t_white"
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    tools:text="1" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"/>
+
+        </LinearLayout>
 
         <RelativeLayout
+            android:id="@+id/rlGoodsManager"
             android:layout_width="match_parent"
             android:layout_height="44dp"
             android:layout_marginTop="10dp"
@@ -675,28 +1065,29 @@
                 android:layout_marginLeft="15dp"
                 android:text="商品管理"
                 android:textColor="@color/t_black"
-                android:textSize="20sp" />
+                android:textSize="18sp" />
 
             <ImageView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="25dp"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginRight="15dp"
                 android:src="@mipmap/right_arrow" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_alignParentBottom="true"
+                android:background="@color/bg_gray" />
         </RelativeLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/bg_gray" />
-
         <LinearLayout
+            android:id="@+id/llGoodsContent"
             android:layout_width="match_parent"
             android:layout_height="100dp"
             android:background="@color/bg_white"
             android:orientation="horizontal">
-
 
             <RelativeLayout
                 android:id="@+id/rlAddGoods"
@@ -759,9 +1150,10 @@
                     android:layout_toRightOf="@id/imgSellGoods"
                     android:background="@drawable/cart_num_bg"
                     android:gravity="center"
-                    android:text="12"
                     android:textColor="@color/t_white"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    tools:text="1" />
 
             </RelativeLayout>
 
@@ -799,9 +1191,10 @@
                     android:layout_toRightOf="@id/imgAuctionGoods"
                     android:background="@drawable/cart_num_bg"
                     android:gravity="center"
-                    android:text="12"
                     android:textColor="@color/t_white"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    tools:text="1" />
 
             </RelativeLayout>
 
@@ -839,7 +1232,8 @@
                     android:layout_toRightOf="@id/imgWareHouseGoods"
                     android:background="@drawable/cart_num_bg"
                     android:gravity="center"
-                    android:text="12"
+                    tools:text="1"
+                    android:visibility="gone"
                     android:textColor="@color/t_white"
                     android:textSize="10sp" />
 
@@ -879,7 +1273,8 @@
                     android:layout_toRightOf="@id/imgCheckGoods"
                     android:background="@drawable/cart_num_bg"
                     android:gravity="center"
-                    android:text="12"
+                    tools:text="1"
+                    android:visibility="gone"
                     android:textColor="@color/t_white"
                     android:textSize="10sp" />
             </RelativeLayout>
@@ -1077,12 +1472,9 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1" />
-
-
         </LinearLayout>
 
+
     </LinearLayout>
-
-
 </ScrollView>
 

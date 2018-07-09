@@ -1,7 +1,9 @@
-        <com.pkqup.commonlibrary.view.CircleImageView
-            android:id="@+id/img_store"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            app:civ_BorderColor="@color/transparent"
-            app:civ_BorderWidth="1dp"
-            android:src="@color/bg_red" />
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imgHead"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="40dp"
+                android:src="@color/bg_red"
+                app:civ_border_color="@color/bg_white"
+                app:civ_border_width="2dp" />
