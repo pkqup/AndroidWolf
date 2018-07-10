@@ -1,14 +1,22 @@
 package com.chunlangjiu.app.goods.activity;
 
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
+import com.chunlangjiu.app.amain.bean.CartGoodsBean;
+import com.chunlangjiu.app.goods.adapter.ConfirmOrderGoodsAdapter;
+import com.chunlangjiu.app.goods.bean.OrderGoodsBean;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 
@@ -18,9 +26,10 @@ import butterknife.BindView;
  */
 public class ConfirmOrderActivity extends BaseActivity {
 
+    @BindView(R.id.scrollView)
+    ScrollView scrollView;
     @BindView(R.id.rlNoAddress)
     RelativeLayout rlNoAddress;
-
     @BindView(R.id.rlHasAddress)
     RelativeLayout rlHasAddress;
     @BindView(R.id.tvAddressName)
@@ -46,6 +55,9 @@ public class ConfirmOrderActivity extends BaseActivity {
     @BindView(R.id.tvCommit)
     TextView tvCommit;
 
+    private List<OrderGoodsBean> lists;
+    private ConfirmOrderGoodsAdapter orderGoodsAdapter;
+
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -67,5 +79,33 @@ public class ConfirmOrderActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.goods_activity_confirm_order);
+        initView();
+    }
+
+    private void initView() {
+        lists = new ArrayList<>();
+        orderGoodsAdapter = new ConfirmOrderGoodsAdapter(this, lists);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(orderGoodsAdapter);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setNestedScrollingEnabled(false);
+
+        for (int i = 0; i < 8; i++) {
+            OrderGoodsBean goodsBean = new OrderGoodsBean();
+            if (i == 0 || i == 4) {
+                goodsBean.setItemType(OrderGoodsBean.ITEM_STORE);
+            } else {
+                goodsBean.setItemType(OrderGoodsBean.ITEM_GOODS);
+            }
+            lists.add(goodsBean);
+            orderGoodsAdapter.setNewData(lists);
+        }
+
+        scrollView.post(new Runnable() {
+            @Override
+            public void run() {
+                scrollView.scrollTo(0, 0);
+            }
+        });
     }
 }

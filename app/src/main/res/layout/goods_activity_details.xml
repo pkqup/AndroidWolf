@@ -57,7 +57,13 @@
     <RelativeLayout
         android:id="@+id/rlBottom"
         android:layout_width="match_parent"
-        android:layout_height="48dp">
+        android:layout_height="48dp"
+        android:background="@color/bg_white">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/bg_gray" />
 
         <TextView
             android:id="@+id/tvBuy"
@@ -101,6 +107,11 @@
 
             </RelativeLayout>
 
+            <View
+                android:layout_width="1px"
+                android:layout_height="match_parent"
+                android:background="@color/bg_gray" />
+
             <RelativeLayout
                 android:id="@+id/rlCollect"
                 android:layout_width="0dp"
@@ -114,6 +125,11 @@
                     android:src="@mipmap/icon_user_place" />
 
             </RelativeLayout>
+
+            <View
+                android:layout_width="1px"
+                android:layout_height="match_parent"
+                android:background="@color/bg_gray" />
 
             <RelativeLayout
                 android:id="@+id/rlCart"
@@ -140,6 +156,7 @@
                     android:gravity="center"
                     android:textColor="@color/t_white"
                     android:textSize="10sp"
+                    android:visibility="gone"
                     tools:text="1" />
 
             </RelativeLayout>

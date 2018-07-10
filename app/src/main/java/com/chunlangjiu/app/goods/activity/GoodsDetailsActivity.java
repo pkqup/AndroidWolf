@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
@@ -31,6 +33,22 @@ public class GoodsDetailsActivity extends BaseActivity {
     @BindView(R.id.view_pager)
     ViewPager view_pager;
 
+    @BindView(R.id.rlBottom)
+    RelativeLayout rlBottom;
+    @BindView(R.id.tvBuy)
+    TextView tvBuy;
+    @BindView(R.id.tvAddCart)
+    TextView tvAddCart;
+
+    @BindView(R.id.rlChat)
+    RelativeLayout rlChat;
+    @BindView(R.id.rlCollect)
+    RelativeLayout rlCollect;
+    @BindView(R.id.rlCart)
+    RelativeLayout rlCart;
+    @BindView(R.id.tvCartNum)
+    TextView tvCartNum;
+
     private BaseFragmentAdapter fragmentAdapter;
 
     private final String[] mTitles = {"商品", "详情", "评价"};
@@ -42,6 +60,10 @@ public class GoodsDetailsActivity extends BaseActivity {
             switch (view.getId()) {
                 case R.id.img_back:
                     finish();
+                    break;
+                case R.id.tvBuy://立即购买
+                    startActivity(new Intent(GoodsDetailsActivity.this, ConfirmOrderActivity.class
+                    ));
                     break;
             }
         }
@@ -63,7 +85,7 @@ public class GoodsDetailsActivity extends BaseActivity {
 
     @Override
     public void setTitleView() {
-      hideTitleView();
+        hideTitleView();
     }
 
     private void initView() {
@@ -77,6 +99,12 @@ public class GoodsDetailsActivity extends BaseActivity {
         view_pager.setAdapter(fragmentAdapter);
         tab.setViewPager(view_pager, mTitles);
         view_pager.setCurrentItem(0);
+
+        tvBuy.setOnClickListener(onClickListener);
+        tvAddCart.setOnClickListener(onClickListener);
+        rlChat.setOnClickListener(onClickListener);
+        rlCollect.setOnClickListener(onClickListener);
+        rlCart.setOnClickListener(onClickListener);
     }
 
     private void initData() {
