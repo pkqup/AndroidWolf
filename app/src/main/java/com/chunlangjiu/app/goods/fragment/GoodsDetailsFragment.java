@@ -1,5 +1,6 @@
 package com.chunlangjiu.app.goods.fragment;
 
+import android.app.ActionBar;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -202,6 +203,8 @@ public class GoodsDetailsFragment extends BaseFragment {
         recommendAdapter = new RecommendAdapter(R.layout.goods_item_recommend, recommendLists);
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         recyclerView.setAdapter(recommendAdapter);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setNestedScrollingEnabled(false);
     }
 
     private void initWebViewData() {
@@ -219,10 +222,18 @@ public class GoodsDetailsFragment extends BaseFragment {
             ImageView imgPic = helper.getView(R.id.img_pic);
             ViewGroup.LayoutParams layoutParams = imgPic.getLayoutParams();
             int screenWidth = SizeUtils.getScreenWidth();
-            int picWidth = (screenWidth - SizeUtils.dp2px(60)) / 3;
-            layoutParams.height = picWidth * 2;
+            int picWidth = (screenWidth - SizeUtils.dp2px(45)) / 3;
+            layoutParams.height = picWidth * 7/6;
             layoutParams.width = picWidth;
             imgPic.setLayoutParams(layoutParams);
+
+            TextView tv_name = helper.getView(R.id.tv_name);
+            ViewGroup.LayoutParams nameLayoutParams = tv_name.getLayoutParams();
+            nameLayoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            nameLayoutParams.width = picWidth;
+            tv_name.setLayoutParams(nameLayoutParams);
+            helper.setText(R.id.tv_name,"拉菲庄园红酒拉菲庄园红酒");
+            helper.setText(R.id.tv_price,"￥500.00");
         }
     }
 }

@@ -9,19 +9,29 @@
         android:id="@+id/img_pic"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="5dp"
         android:background="@color/bg_red"
         android:scaleType="centerCrop" />
 
     <TextView
         android:id="@+id/tv_name"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
         android:layout_marginTop="8dp"
+        android:ellipsize="end"
+        android:maxLines="2"
         android:textColor="@color/t_gray"
         android:textSize="@dimen/sp_mid"
         tools:text="拉菲庄园" />
 
+    <TextView
+        android:id="@+id/tv_price"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textColor="@color/t_red"
+        android:textSize="@dimen/sp_mid"
+        tools:text="￥500.00" />
 </LinearLayout>
