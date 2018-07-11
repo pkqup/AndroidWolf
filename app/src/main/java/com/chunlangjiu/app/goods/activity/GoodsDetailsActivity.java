@@ -15,7 +15,6 @@ import com.chunlangjiu.app.abase.BaseActivity;
 import com.chunlangjiu.app.abase.BaseFragmentAdapter;
 import com.chunlangjiu.app.goods.fragment.GoodsCommentFragment;
 import com.chunlangjiu.app.goods.fragment.GoodsDetailsFragment;
-import com.chunlangjiu.app.goods.fragment.GoodsSlideFragment;
 import com.chunlangjiu.app.goods.fragment.GoodsWebFragment;
 import com.flyco.tablayout.SlidingTabLayout;
 

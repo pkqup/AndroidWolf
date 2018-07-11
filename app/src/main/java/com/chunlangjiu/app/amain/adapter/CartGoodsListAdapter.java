@@ -36,13 +36,13 @@ public class CartGoodsListAdapter extends BaseQuickAdapter<CartGoodsBean, BaseVi
 
 
     @Override
-    protected void convert(BaseViewHolder helper, CartGoodsBean item) {
-        switch (helper.getItemViewType()) {
+    protected void convert(BaseViewHolder viewHolder, CartGoodsBean item) {
+        switch (viewHolder.getItemViewType()) {
             case CartGoodsBean.ITEM_STORE:
-                if (helper.getAdapterPosition() == 0) {
-                    helper.setVisible(R.id.view_line, false);
+                if (viewHolder.getAdapterPosition() == 0) {
+                    viewHolder.setVisible(R.id.view_line, false);
                 } else {
-                    helper.setVisible(R.id.view_line, true);
+                    viewHolder.setVisible(R.id.view_line, true);
                 }
                 break;
             case CartGoodsBean.ITEM_GOODS:
