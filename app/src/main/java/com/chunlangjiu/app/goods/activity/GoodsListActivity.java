@@ -20,12 +20,20 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
 import com.chunlangjiu.app.amain.bean.GoodsListInfoBean;
+import com.chunlangjiu.app.net.ApiUtils;
+import com.pkqup.commonlibrary.net.bean.ResultBean;
+import com.pkqup.commonlibrary.net.exception.ApiException;
 import com.pkqup.commonlibrary.util.SizeUtils;
+import com.pkqup.commonlibrary.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @CreatedbBy: liucun on 2018/6/23.
@@ -57,9 +65,10 @@ public class GoodsListActivity extends BaseActivity {
     private LinearAdapter linearAdapter;
     private GridAdapter gridAdapter;
 
-
     private String secondClassId;
     private String secondClassName;
+
+    private CompositeDisposable disposable;
 
     public static void startGoodsListActivity(Activity activity, String secondClassId, String secondClassName) {
         Intent intent = new Intent(activity, GoodsListActivity.class);
@@ -128,14 +137,14 @@ public class GoodsListActivity extends BaseActivity {
         linearAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                GoodsDetailsActivity.startGoodsDetailsActivity(GoodsListActivity.this,"");
+                GoodsDetailsActivity.startGoodsDetailsActivity(GoodsListActivity.this, "");
             }
         });
         gridAdapter = new GridAdapter(R.layout.amain_item_goods_list_grid, lists);
         gridAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                GoodsDetailsActivity.startGoodsDetailsActivity(GoodsListActivity.this,"");
+                GoodsDetailsActivity.startGoodsDetailsActivity(GoodsListActivity.this, "");
             }
         });
         recycle_view.setLayoutManager(new LinearLayoutManager(this));
@@ -143,6 +152,7 @@ public class GoodsListActivity extends BaseActivity {
     }
 
     private void initData() {
+        disposable = new CompositeDisposable();
         lists.clear();
         for (int i = 0; i < 30; i++) {
             GoodsListInfoBean goodsListInfoBean = new GoodsListInfoBean();
@@ -153,6 +163,26 @@ public class GoodsListActivity extends BaseActivity {
         } else {
             gridAdapter.setNewData(lists);
         }
+
+        disposable.add(ApiUtils.getInstance().getApiService().getAddressList("")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean>() {
+                    @Override
+                    public void accept(ResultBean resultBean) throws Exception {
+
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        if (throwable instanceof ApiException) {
+                            ApiException apiException = (ApiException) throwable;
+                            if (apiException.getCode() == ApiException.NO_NETWORK) {
+                                ToastUtils.showShort(apiException.getMessage());
+                            }
+                        }
+                    }
+                }));
     }
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {

@@ -13,12 +13,14 @@ import retrofit2.http.POST;
  */
 public interface ApiService {
 
-    @POST
+    @POST(".")
     @FormUrlEncoded
     Flowable<ResultBean> test(@Field("field") String field);
 
 
-    @POST
+    @POST(".")
     @FormUrlEncoded
     Flowable<ResultBean> getAddressList(@Field("field") String field);
+
+
 }
