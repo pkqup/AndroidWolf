@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="160dp">
+
+    <ImageView
+        android:id="@+id/imgStore"
+        android:layout_width="130dp"
+        android:layout_height="130dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="15dp"
+        android:background="@color/bg_red" />
+
+
+    <TextView
+        android:id="@+id/tvName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="17dp"
+        android:layout_toRightOf="@id/imgStore"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:textColor="@color/t_black"
+        android:textSize="@dimen/sp_big"
+        tools:text="酒庄名字酒庄名字酒庄名字酒庄名字" />
+
+    <TextView
+        android:id="@+id/tvDesc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvName"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="6dp"
+        android:layout_toRightOf="@id/imgStore"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:textColor="@color/t_gray"
+        android:textSize="@dimen/sp_mid"
+        tools:text="酒庄简介酒庄简介酒庄简介酒庄简介酒庄简介酒庄简介酒庄简介酒庄简介" />
+
+
+    <TextView
+        android:id="@+id/tvPhone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="17dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_toRightOf="@id/imgStore"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:textColor="@color/t_black"
+        android:textSize="@dimen/sp_mid"
+        tools:text="电话：0000 3333 9988" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@color/line" />
+</RelativeLayout>

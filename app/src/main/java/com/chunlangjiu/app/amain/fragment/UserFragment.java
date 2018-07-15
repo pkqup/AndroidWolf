@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseFragment;
 import com.chunlangjiu.app.goods.activity.SearchActivity;
+import com.chunlangjiu.app.store.activity.StoreListActivity;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -115,6 +116,7 @@ public class UserFragment extends BaseFragment {
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.imgSetting:
+                    startActivity(new Intent(getActivity(), StoreListActivity.class));
                     break;
                 case R.id.tvChangeType:// 切换买/卖家中心
                     break;
