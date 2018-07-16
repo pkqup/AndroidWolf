@@ -7,7 +7,19 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:background="@color/bg_gray" />
+
+    <TextView
+        android:id="@+id/tvAddAddress"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/bg_red"
+        android:gravity="center"
+        android:text="添加地址"
+        android:textColor="@color/t_white"
+        android:textSize="@dimen/sp_big_x" />
 
 </LinearLayout>

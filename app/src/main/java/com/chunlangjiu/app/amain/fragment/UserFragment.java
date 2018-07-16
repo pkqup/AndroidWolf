@@ -13,6 +13,7 @@ import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseFragment;
 import com.chunlangjiu.app.goods.activity.SearchActivity;
 import com.chunlangjiu.app.store.activity.StoreListActivity;
+import com.chunlangjiu.app.user.activity.AddressListActivity;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -185,6 +186,7 @@ public class UserFragment extends BaseFragment {
                 case R.id.rlVip:// 会员资料
                     break;
                 case R.id.rlAddress:// 地址管理
+                    startActivity(new Intent(getActivity(), AddressListActivity.class));
                     break;
                 case R.id.rlBankCard:// 银行卡管理
                     break;
