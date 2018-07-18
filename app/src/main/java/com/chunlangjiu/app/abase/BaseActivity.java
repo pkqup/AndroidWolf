@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chunlangjiu.app.R;
 import com.pkqup.commonlibrary.dialog.CommonLoadingDialog;
 
@@ -25,13 +26,18 @@ public abstract class BaseActivity extends AppCompatActivity {
     public RelativeLayout titleSearchView;
     public EditText titleSearchEdit;
 
-
     public RelativeLayout contentView;//内容
     public RelativeLayout loadingView;//加载
     public RelativeLayout emptyView;//空态
     public RelativeLayout errorView;//加载失败
 
     public CommonLoadingDialog loadingDialog;
+
+    private View emptyListView;
+    private View errorListView;
+    private TextView tvEmpty;
+    private TextView tvError;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +60,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         loadingView = findViewById(R.id.loading_view);
         emptyView = findViewById(R.id.empty_view);
         errorView = findViewById(R.id.error_view);
+
+        emptyListView = View.inflate(this, R.layout.abase_activity_empty_view, null);
+        errorListView = View.inflate(this, R.layout.abase_activity_error_view, null);
+        tvEmpty = emptyListView.findViewById(R.id.tvEmpty);
+        tvError = emptyListView.findViewById(R.id.tvError);
     }
 
     @Override
@@ -68,7 +79,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         getLayoutInflater().inflate(layoutResID, contentView, true);
     }
 
-    public void hideTitleView(){
+    public void hideTitleView() {
         titleView.setVisibility(View.GONE);
     }
 
@@ -115,4 +126,13 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
 
+    public void setEmptyListView(BaseQuickAdapter baseQuickAdapter, String content) {
+        baseQuickAdapter.setEmptyView(emptyListView);
+        tvEmpty.setText(content);
+    }
+
+    public void setErrorListView(BaseQuickAdapter baseQuickAdapter, String content) {
+        baseQuickAdapter.setEmptyView(emptyListView);
+        tvError.setText(content);
+    }
 }

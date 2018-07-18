@@ -106,7 +106,6 @@ public class UserFragment extends BaseFragment {
     /*其他*/
     private RelativeLayout rlMoneyManager;
     private RelativeLayout rlCollect;
-    private RelativeLayout rlInviteCode;
     private RelativeLayout rlVip;
     private RelativeLayout rlAddress;
     private RelativeLayout rlBankCard;
@@ -180,8 +179,6 @@ public class UserFragment extends BaseFragment {
                 case R.id.rlMoneyManager:// 资金管理
                     break;
                 case R.id.rlCollect:// 我的收藏
-                    break;
-                case R.id.rlInviteCode:// 我的邀请码
                     break;
                 case R.id.rlVip:// 会员资料
                     break;
@@ -303,13 +300,11 @@ public class UserFragment extends BaseFragment {
 
         rlMoneyManager = rootView.findViewById(R.id.rlMoneyManager);
         rlCollect = rootView.findViewById(R.id.rlCollect);
-        rlInviteCode = rootView.findViewById(R.id.rlInviteCode);
         rlVip = rootView.findViewById(R.id.rlVip);
         rlAddress = rootView.findViewById(R.id.rlAddress);
         rlBankCard = rootView.findViewById(R.id.rlBankCard);
         rlMoneyManager.setOnClickListener(onClickListener);
         rlCollect.setOnClickListener(onClickListener);
-        rlInviteCode.setOnClickListener(onClickListener);
         rlVip.setOnClickListener(onClickListener);
         rlAddress.setOnClickListener(onClickListener);
         rlBankCard.setOnClickListener(onClickListener);

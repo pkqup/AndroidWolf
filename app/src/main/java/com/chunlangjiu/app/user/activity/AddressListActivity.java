@@ -94,9 +94,11 @@ public class AddressListActivity extends BaseActivity {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        showErrorView();
+//                        showErrorView();
                     }
                 }));
+
+         setEmptyListView(addressAdapter,"您没有添加过地址，请添加一个吧");
     }
 
 
