@@ -147,8 +147,7 @@ public class CityPickerDialogFragment extends AppCompatDialogFragment implements
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-//        mContentView = inflater.inflate(R.layout.cp_dialog_city_picker, container, false);
-        mContentView=  View.inflate(getContext().getApplicationContext(), R.layout.cp_dialog_city_picker, null);
+        mContentView = inflater.inflate(R.layout.cp_dialog_city_picker, container, false);
 
         mRecyclerView = mContentView.findViewById(R.id.cp_city_recyclerview);
         mLayoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
