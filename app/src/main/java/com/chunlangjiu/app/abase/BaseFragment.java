@@ -29,11 +29,13 @@ public abstract class BaseFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.abase_fragment, null);
-        findView();
-        getContentView(inflater, contentView);
-        initView();
-        initData();
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.abase_fragment, null);
+            findView();
+            getContentView(inflater, contentView);
+            initView();
+            initData();
+        }
         return rootView;
     }
 

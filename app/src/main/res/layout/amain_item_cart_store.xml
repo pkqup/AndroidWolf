@@ -24,7 +24,7 @@
             android:layout_marginLeft="15dp" />
 
 
-        <com.pkqup.commonlibrary.view.CircleImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/img_store"
             android:layout_width="36dp"
             android:layout_height="36dp"

@@ -22,7 +22,7 @@
                 android:layout_marginLeft="15dp"
                 android:text="账号密码"
                 android:textColor="@color/t_black"
-                android:textSize="@dimen/sp_big" />
+                android:textSize="@dimen/sp_mid" />
 
             <TextView
                 android:id="@+id/tvAccountPsw"
@@ -35,7 +35,7 @@
                 android:gravity="center_vertical"
                 android:text="未设置"
                 android:textColor="@color/t_gray"
-                android:textSize="@dimen/sp_big" />
+                android:textSize="@dimen/sp_mid" />
 
             <ImageView
                 android:layout_width="20dp"
@@ -62,7 +62,7 @@
                 android:layout_marginLeft="15dp"
                 android:text="支付密码"
                 android:textColor="@color/t_black"
-                android:textSize="@dimen/sp_big" />
+                android:textSize="@dimen/sp_mid" />
 
             <TextView
                 android:id="@+id/tvPayPsw"
@@ -75,7 +75,7 @@
                 android:gravity="center_vertical"
                 android:text="未设置"
                 android:textColor="@color/t_gray"
-                android:textSize="@dimen/sp_big" />
+                android:textSize="@dimen/sp_mid" />
 
             <ImageView
                 android:layout_width="20dp"
@@ -103,7 +103,7 @@
                 android:layout_marginLeft="15dp"
                 android:text="关于醇狼"
                 android:textColor="@color/t_black"
-                android:textSize="@dimen/sp_big" />
+                android:textSize="@dimen/sp_mid" />
 
 
             <ImageView
@@ -126,7 +126,7 @@
         android:gravity="center"
         android:text="退出登录"
         android:textColor="@color/t_white"
-        android:textSize="@dimen/sp_big_x" />
+        android:textSize="@dimen/sp_big" />
 
 
 </RelativeLayout>

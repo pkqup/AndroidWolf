@@ -5,7 +5,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.chunlangjiu.app"
-        minSdkVersion 19
+        minSdkVersion 16
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -87,6 +87,7 @@ dependencies {
 
     implementation project (':common:commonlibrary')
     implementation project (':common:imagepicker')
+    implementation project (':citypicker')
 
     //依赖注入
     implementation 'com.jakewharton:butterknife:8.8.1'

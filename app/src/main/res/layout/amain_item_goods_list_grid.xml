@@ -35,7 +35,7 @@
             android:ellipsize="end"
             android:singleLine="true"
             android:textColor="@color/t_black"
-            android:textSize="@dimen/sp_big"
+            android:textSize="@dimen/sp_mid"
             tools:text="法国凡特纳酒庄 全都是系列 康帝德干白葡萄酒 750ML" />
 
         <TextView
@@ -79,7 +79,7 @@
             android:layout_below="@id/tv_country"
             android:layout_marginTop="8dp"
             android:textColor="@color/t_red"
-            android:textSize="@dimen/sp_big"
+            android:textSize="@dimen/sp_mid"
             tools:text="￥50000.00" />
 
         <TextView
@@ -91,7 +91,7 @@
             android:layout_marginTop="4dp"
             android:singleLine="true"
             android:textColor="@color/t_gray"
-            android:textSize="@dimen/sp_big"
+            android:textSize="@dimen/sp_mid"
             android:visibility="visible"
             tools:text="￥60000.00" />
 

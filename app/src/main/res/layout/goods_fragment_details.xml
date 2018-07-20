@@ -50,7 +50,7 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginTop="8dp"
                 android:textColor="@color/t_red"
-                android:textSize="@dimen/sp_mid"
+                android:textSize="@dimen/sp_small"
                 tools:text="￥5000.00" />
 
             <TextView
@@ -61,7 +61,7 @@
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="8dp"
                 android:textColor="@color/t_black"
-                android:textSize="@dimen/sp_mid"
+                android:textSize="@dimen/sp_small"
                 tools:text="法国红酒" />
 
             <LinearLayout
@@ -120,7 +120,7 @@
                     android:layout_height="wrap_content"
                     android:text="说明"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_mid" />
+                    android:textSize="@dimen/sp_small" />
 
                 <TextView
                     android:id="@+id/tvDesc"
@@ -158,7 +158,7 @@
                     android:layout_toRightOf="@id/imgStore"
                     android:text="店铺名"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_mid" />
+                    android:textSize="@dimen/sp_small" />
 
                 <TextView
                     android:id="@+id/tvStoreDesc"
@@ -202,7 +202,7 @@
                     android:layout_marginLeft="15dp"
                     android:text="商家评价(500)"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_mid" />
+                    android:textSize="@dimen/sp_small" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -244,7 +244,7 @@
                     android:layout_marginLeft="15dp"
                     android:text="推荐商品"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_mid" />
+                    android:textSize="@dimen/sp_small" />
 
             </RelativeLayout>
 

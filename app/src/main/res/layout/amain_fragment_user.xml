@@ -44,7 +44,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
                 android:textColor="@color/t_white"
-                android:textSize="@dimen/sp_big"
+                android:textSize="@dimen/sp_mid"
                 tools:text="姓名" />
 
             <TextView
@@ -61,7 +61,7 @@
                 android:paddingRight="5dp"
                 android:paddingTop="1dp"
                 android:textColor="@color/bg_user"
-                android:textSize="@dimen/sp_mid"
+                android:textSize="@dimen/sp_small"
                 tools:text="个人" />
 
             <LinearLayout
@@ -85,7 +85,7 @@
                     android:paddingTop="2dp"
                     android:text="切换到卖家中心"
                     android:textColor="@color/t_white"
-                    android:textSize="@dimen/sp_big" />
+                    android:textSize="@dimen/sp_mid" />
 
                 <TextView
                     android:id="@+id/tvAuthRealName"
@@ -100,7 +100,7 @@
                     android:paddingTop="2dp"
                     android:text="实名认证"
                     android:textColor="@color/t_white"
-                    android:textSize="@dimen/sp_big" />
+                    android:textSize="@dimen/sp_mid" />
             </LinearLayout>
 
             <LinearLayout
@@ -133,7 +133,7 @@
                         android:layout_marginTop="5dp"
                         android:text="可用余额"
                         android:textColor="#AAFFFFFF"
-                        android:textSize="@dimen/sp_big" />
+                        android:textSize="@dimen/sp_mid" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -158,7 +158,7 @@
                         android:layout_marginTop="5dp"
                         android:text="冻结余额"
                         android:textColor="#AAFFFFFF"
-                        android:textSize="@dimen/sp_big" />
+                        android:textSize="@dimen/sp_mid" />
                 </LinearLayout>
 
                 <View
@@ -188,7 +188,7 @@
                         android:layout_marginTop="5dp"
                         android:text="我的消息"
                         android:textColor="#AAFFFFFF"
-                        android:textSize="@dimen/sp_big" />
+                        android:textSize="@dimen/sp_mid" />
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
@@ -253,7 +253,7 @@
                     android:layout_marginTop="10dp"
                     android:text="待付款"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_mid" />
+                    android:textSize="@dimen/sp_small" />
 
                 <TextView
                     android:id="@+id/tvOrderOneNum"
@@ -295,7 +295,7 @@
                     android:layout_marginTop="10dp"
                     android:text="待收货"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_mid" />
+                    android:textSize="@dimen/sp_small" />
 
                 <TextView
                     android:id="@+id/tvOrderTwoNum"
@@ -337,7 +337,7 @@
                     android:layout_marginTop="10dp"
                     android:text="待评价"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_mid" />
+                    android:textSize="@dimen/sp_small" />
 
                 <TextView
                     android:id="@+id/tvOrderThreeNum"
@@ -379,7 +379,7 @@
                     android:layout_marginTop="10dp"
                     android:text="售后订单"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_mid" />
+                    android:textSize="@dimen/sp_small" />
 
                 <TextView
                     android:id="@+id/tvOrderFourNum"
@@ -421,7 +421,7 @@
                     android:layout_marginTop="10dp"
                     android:text="全部订单"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_mid" />
+                    android:textSize="@dimen/sp_small" />
 
                 <TextView
                     android:id="@+id/tvOrderFiveNum"
@@ -470,7 +470,7 @@
                     android:layout_marginTop="10dp"
                     android:text="待付款"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_mid" />
+                    android:textSize="@dimen/sp_small" />
 
                 <TextView
                     android:id="@+id/tvSellOrderOneNum"
@@ -512,7 +512,7 @@
                     android:layout_marginTop="10dp"
                     android:text="待发货"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_mid" />
+                    android:textSize="@dimen/sp_small" />
 
                 <TextView
                     android:id="@+id/tvSellOrderTwoNum"
@@ -554,7 +554,7 @@
                     android:layout_marginTop="10dp"
                     android:text="售后订单"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_mid" />
+                    android:textSize="@dimen/sp_small" />
 
                 <TextView
                     android:id="@+id/tvSellOrderThreeNum"
@@ -596,7 +596,7 @@
                     android:layout_marginTop="10dp"
                     android:text="全部订单"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_mid" />
+                    android:textSize="@dimen/sp_small" />
 
                 <TextView
                     android:id="@+id/tvSellOrderFourNum"
@@ -683,7 +683,7 @@
                     android:layout_marginTop="10dp"
                     android:text="待付定金"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_mid" />
+                    android:textSize="@dimen/sp_small" />
 
                 <TextView
                     android:id="@+id/tvAuctionOneNum"
@@ -725,7 +725,7 @@
                     android:layout_marginTop="10dp"
                     android:text="竞拍中"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_mid" />
+                    android:textSize="@dimen/sp_small" />
 
                 <TextView
                     android:id="@+id/tvAuctionTwoNum"
@@ -767,7 +767,7 @@
                     android:layout_marginTop="10dp"
                     android:text="已中标"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_mid" />
+                    android:textSize="@dimen/sp_small" />
 
                 <TextView
                     android:id="@+id/tvAuctionThreeNum"
@@ -809,7 +809,7 @@
                     android:layout_marginTop="10dp"
                     android:text="落标"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_mid" />
+                    android:textSize="@dimen/sp_small" />
 
                 <TextView
                     android:id="@+id/tvAuctionFourNum"
@@ -851,7 +851,7 @@
                     android:layout_marginTop="10dp"
                     android:text="全部订单"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_mid" />
+                    android:textSize="@dimen/sp_small" />
 
                 <TextView
                     android:id="@+id/tvAuctionFiveNum"
@@ -899,7 +899,7 @@
                     android:layout_marginTop="10dp"
                     android:text="待付定金"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_mid" />
+                    android:textSize="@dimen/sp_small" />
 
                 <TextView
                     android:id="@+id/tvSellAuctionOneNum"
@@ -941,7 +941,7 @@
                     android:layout_marginTop="10dp"
                     android:text="竞拍中"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_mid" />
+                    android:textSize="@dimen/sp_small" />
 
                 <TextView
                     android:id="@+id/tvSellAuctionTwoNum"
@@ -983,7 +983,7 @@
                     android:layout_marginTop="10dp"
                     android:text="已中标"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_mid" />
+                    android:textSize="@dimen/sp_small" />
 
                 <TextView
                     android:id="@+id/tvSellAuctionThreeNum"
@@ -1025,7 +1025,7 @@
                     android:layout_marginTop="10dp"
                     android:text="落标"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_mid" />
+                    android:textSize="@dimen/sp_small" />
 
                 <TextView
                     android:id="@+id/tvSellAuctionFourNum"
@@ -1112,7 +1112,7 @@
                     android:layout_marginTop="10dp"
                     android:text="添加商品"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_mid" />
+                    android:textSize="@dimen/sp_small" />
 
             </RelativeLayout>
 
@@ -1139,7 +1139,7 @@
                     android:layout_marginTop="10dp"
                     android:text="在售商品"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_mid" />
+                    android:textSize="@dimen/sp_small" />
 
                 <TextView
                     android:id="@+id/tvSellGoodsNum"
@@ -1180,7 +1180,7 @@
                     android:layout_marginTop="10dp"
                     android:text="竞拍商品"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_mid" />
+                    android:textSize="@dimen/sp_small" />
 
                 <TextView
                     android:id="@+id/tvAuctionGoodsNum"
@@ -1221,7 +1221,7 @@
                     android:layout_marginTop="10dp"
                     android:text="仓库商品"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_mid" />
+                    android:textSize="@dimen/sp_small" />
 
                 <TextView
                     android:id="@+id/tvWareHouseGoodsNum"
@@ -1262,7 +1262,7 @@
                     android:layout_marginTop="10dp"
                     android:text="审核商品"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_mid" />
+                    android:textSize="@dimen/sp_small" />
 
                 <TextView
                     android:id="@+id/tvCheckGoodsNum"
@@ -1341,7 +1341,7 @@
                     android:layout_marginTop="10dp"
                     android:text="资金管理"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_mid" />
+                    android:textSize="@dimen/sp_small" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -1367,7 +1367,7 @@
                     android:layout_marginTop="10dp"
                     android:text="我的收藏"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_mid" />
+                    android:textSize="@dimen/sp_small" />
 
             </RelativeLayout>
 
@@ -1394,7 +1394,7 @@
                     android:layout_marginTop="10dp"
                     android:text="银行卡管理"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_mid" />
+                    android:textSize="@dimen/sp_small" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -1420,7 +1420,7 @@
                     android:layout_marginTop="10dp"
                     android:text="会员资料"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_mid" />
+                    android:textSize="@dimen/sp_small" />
 
             </RelativeLayout>
 
@@ -1447,7 +1447,7 @@
                     android:layout_marginTop="10dp"
                     android:text="地址管理"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_mid" />
+                    android:textSize="@dimen/sp_small" />
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>

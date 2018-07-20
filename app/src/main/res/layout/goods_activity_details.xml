@@ -74,7 +74,7 @@
             android:gravity="center"
             android:text="立即购买"
             android:textColor="@color/t_white"
-            android:textSize="@dimen/sp_big" />
+            android:textSize="@dimen/sp_mid" />
 
         <TextView
             android:id="@+id/tvAddCart"
@@ -85,7 +85,7 @@
             android:gravity="center"
             android:text="加入购物车"
             android:textColor="@color/t_white"
-            android:textSize="@dimen/sp_big" />
+            android:textSize="@dimen/sp_mid" />
 
         <LinearLayout
             android:layout_width="match_parent"

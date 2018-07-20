@@ -1,6 +1,7 @@
 package com.chunlangjiu.app.abase;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
@@ -14,7 +15,7 @@ import com.pkqup.commonlibrary.dialog.CommonLoadingDialog;
 
 import butterknife.ButterKnife;
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends FragmentActivity {
 
     //标题容器
     public RelativeLayout titleView;

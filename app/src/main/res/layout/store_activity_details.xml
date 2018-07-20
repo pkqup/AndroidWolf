@@ -27,7 +27,7 @@
             android:layout_centerInParent="true"
             android:text="联系酒庄"
             android:textColor="@color/t_white"
-            android:textSize="@dimen/sp_big_x" />
+            android:textSize="@dimen/sp_big" />
 
     </RelativeLayout>
 

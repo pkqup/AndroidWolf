@@ -23,7 +23,7 @@
         android:layout_marginRight="10dp"
         android:layout_toLeftOf="@id/imgArrow"
         android:textColor="@color/t_black"
-        android:textSize="@dimen/sp_big"
+        android:textSize="@dimen/sp_mid"
         tools:text="名庄" />
 
     <View

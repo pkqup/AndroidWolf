@@ -22,7 +22,7 @@
                 android:gravity="center"
                 android:text="综合"
                 android:textColor="@color/t_gray_select"
-                android:textSize="@dimen/sp_mid" />
+                android:textSize="@dimen/sp_small" />
 
             <TextView
                 android:id="@+id/tv_new"
@@ -32,7 +32,7 @@
                 android:gravity="center"
                 android:text="新品"
                 android:textColor="@color/t_gray_select"
-                android:textSize="@dimen/sp_mid" />
+                android:textSize="@dimen/sp_small" />
 
             <TextView
                 android:id="@+id/tv_price"
@@ -42,7 +42,7 @@
                 android:gravity="center"
                 android:text="价格"
                 android:textColor="@color/t_gray_select"
-                android:textSize="@dimen/sp_mid" />
+                android:textSize="@dimen/sp_small" />
 
             <TextView
                 android:id="@+id/tv_class"
@@ -52,7 +52,7 @@
                 android:gravity="center"
                 android:text="分类"
                 android:textColor="@color/t_gray_select"
-                android:textSize="@dimen/sp_mid" />
+                android:textSize="@dimen/sp_small" />
 
             <TextView
                 android:id="@+id/tv_filter"
@@ -62,7 +62,7 @@
                 android:gravity="center"
                 android:text="筛选"
                 android:textColor="@color/t_gray_select"
-                android:textSize="@dimen/sp_mid" />
+                android:textSize="@dimen/sp_small" />
         </LinearLayout>
 
         <View
@@ -91,7 +91,7 @@
             android:gravity="center"
             android:text="DrawerLayout"
             android:textColor="@color/t_black"
-            android:textSize="@dimen/sp_big" />
+            android:textSize="@dimen/sp_mid" />
 
 
     </LinearLayout>

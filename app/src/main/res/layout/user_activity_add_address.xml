@@ -22,7 +22,7 @@
                 android:layout_marginLeft="15dp"
                 android:text="收货人"
                 android:textColor="@color/t_black"
-                android:textSize="@dimen/sp_big" />
+                android:textSize="@dimen/sp_mid" />
 
             <EditText
                 android:id="@+id/etName"
@@ -35,7 +35,7 @@
                 android:paddingRight="15dp"
                 android:singleLine="true"
                 android:textColor="@color/t_black"
-                android:textSize="@dimen/sp_big" />
+                android:textSize="@dimen/sp_mid" />
 
             <View
                 android:layout_width="match_parent"
@@ -57,7 +57,7 @@
                 android:layout_marginLeft="15dp"
                 android:text="联系方式"
                 android:textColor="@color/t_black"
-                android:textSize="@dimen/sp_big" />
+                android:textSize="@dimen/sp_mid" />
 
             <EditText
                 android:id="@+id/etPhone"
@@ -67,10 +67,12 @@
                 android:layout_toRightOf="@id/tvPhoneStr"
                 android:background="@null"
                 android:hint="请输入"
+                android:inputType="number"
+                android:maxLength="11"
                 android:paddingRight="15dp"
                 android:singleLine="true"
                 android:textColor="@color/t_black"
-                android:textSize="@dimen/sp_big" />
+                android:textSize="@dimen/sp_mid" />
 
             <View
                 android:layout_width="match_parent"
@@ -81,6 +83,7 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/rlChoiceArea"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="44dp">
@@ -93,9 +96,10 @@
                 android:layout_marginLeft="15dp"
                 android:text="选择地区"
                 android:textColor="@color/t_black"
-                android:textSize="@dimen/sp_big" />
+                android:textSize="@dimen/sp_mid" />
 
             <TextView
+                android:id="@+id/tvArea"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
@@ -107,7 +111,7 @@
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp"
                 android:textColor="@color/t_black"
-                android:textSize="@dimen/sp_big" />
+                android:textSize="@dimen/sp_mid" />
 
             <ImageView
                 android:layout_width="20dp"
@@ -116,8 +120,6 @@
                 android:layout_centerVertical="true"
                 android:layout_marginRight="15dp"
                 android:src="@mipmap/right_arrow" />
-
-
         </RelativeLayout>
 
         <View
@@ -138,7 +140,7 @@
                 android:layout_marginLeft="15dp"
                 android:text="详细地址"
                 android:textColor="@color/t_black"
-                android:textSize="@dimen/sp_big" />
+                android:textSize="@dimen/sp_mid" />
 
             <EditText
                 android:id="@+id/etAddress"
@@ -153,7 +155,7 @@
                 android:paddingRight="15dp"
                 android:paddingTop="10dp"
                 android:textColor="@color/t_black"
-                android:textSize="@dimen/sp_big" />
+                android:textSize="@dimen/sp_mid" />
         </RelativeLayout>
 
         <View
@@ -166,28 +168,24 @@
             android:layout_width="match_parent"
             android:layout_height="44dp">
 
-            <LinearLayout
+            <ImageView
+                android:id="@+id/imgSetDefault"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:background="@drawable/common_select" />
+
+            <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="15dp"
+                android:layout_toRightOf="@id/imgSetDefault"
+                android:text="设置为默认地址"
+                android:textColor="@color/t_black"
+                android:textSize="@dimen/sp_mid" />
 
-                <ImageView
-                    android:id="@+id/imgSetDefault"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="15dp"
-                    android:background="@drawable/common_select" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginLeft="15dp"
-                    android:text="设置为默认地址"
-                    android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_big" />
-            </LinearLayout>
         </RelativeLayout>
 
     </LinearLayout>
@@ -201,7 +199,7 @@
         android:gravity="center"
         android:text="保存"
         android:textColor="@color/t_white"
-        android:textSize="@dimen/sp_big_x" />
+        android:textSize="@dimen/sp_big" />
 
 
 </RelativeLayout>

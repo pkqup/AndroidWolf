@@ -31,7 +31,7 @@
         android:singleLine="true"
         android:text="法国红酒"
         android:textColor="@color/t_black"
-        android:textSize="@dimen/sp_mid" />
+        android:textSize="@dimen/sp_small" />
 
     <TextView
         android:id="@+id/tv_price"
@@ -45,7 +45,7 @@
         android:singleLine="true"
         android:text="￥50000.00"
         android:textColor="@color/t_black"
-        android:textSize="@dimen/sp_mid" />
+        android:textSize="@dimen/sp_small" />
 
 
     <TextView

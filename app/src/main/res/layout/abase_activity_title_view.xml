@@ -23,7 +23,8 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:padding="10dp"
-            android:src="@mipmap/title_search" />
+            android:src="@mipmap/title_search"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/img_title_right_two"

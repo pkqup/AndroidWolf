@@ -24,7 +24,7 @@
         android:ellipsize="end"
         android:maxLines="2"
         android:textColor="@color/t_black"
-        android:textSize="@dimen/sp_big"
+        android:textSize="@dimen/sp_mid"
         tools:text="法国凡特纳酒庄 全都是系列 康帝德干白葡萄酒 750ML" />
 
     <TextView
@@ -71,7 +71,7 @@
         android:layout_toRightOf="@id/img_pic"
         tools:text="￥50000.00"
         android:textColor="@color/t_red"
-        android:textSize="@dimen/sp_big" />
+        android:textSize="@dimen/sp_mid" />
 
     <TextView
         android:id="@+id/tv_old_price"
@@ -85,7 +85,7 @@
         tools:text="￥60000.00"
         android:visibility="gone"
         android:textColor="@color/t_gray"
-        android:textSize="@dimen/sp_big" />
+        android:textSize="@dimen/sp_mid" />
 
     <TextView
         android:id="@+id/tv_high_price"

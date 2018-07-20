@@ -12,7 +12,7 @@
         android:background="@drawable/first_class_bg"
         android:gravity="center"
         android:textColor="@color/t_red_selector"
-        android:textSize="@dimen/sp_big"
+        android:textSize="@dimen/sp_mid"
         tools:text="推荐分类" />
 
 </LinearLayout>
