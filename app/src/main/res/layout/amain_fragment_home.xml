@@ -24,7 +24,7 @@
         <RelativeLayout
             android:id="@+id/rlTitleSearch"
             android:layout_width="200dp"
-            android:layout_height="30dp"
+            android:layout_height="27dp"
             android:layout_centerInParent="true"
             android:background="@drawable/search_bg">
 
@@ -36,22 +36,42 @@
                 android:layout_marginLeft="10dp"
                 android:background="@mipmap/title_search" />
 
-            <EditText
+            <TextView
                 android:id="@+id/et_title_search"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="8dp"
                 android:layout_toRightOf="@id/img_title_search"
-                android:background="@null"
-                android:hint="请输入搜索关键字"
-                android:imeOptions="actionSearch"
+                android:gravity="center_vertical"
+                android:hint="搜索高端红酒..."
                 android:paddingRight="10dp"
                 android:singleLine="true"
                 android:textColor="@color/t_black"
                 android:textSize="14sp" />
         </RelativeLayout>
 
+        <ImageView
+            android:id="@+id/imgMsg"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:src="@mipmap/icon_delete" />
+
+        <TextView
+            android:id="@+id/tvMsgNum"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/cart_num_bg"
+            android:gravity="center"
+            android:text="1"
+            android:textColor="@color/white"
+            android:textSize="10sp" />
     </RelativeLayout>
 
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
@@ -67,6 +87,5 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white" />
-
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </LinearLayout>

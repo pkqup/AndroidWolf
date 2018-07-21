@@ -110,8 +110,6 @@ public class GoodsDetailsFragment extends BaseFragment {
 
         drag_text = rootView.findViewById(R.id.drag_text);
         webView = rootView.findViewById(R.id.webView);
-
-
     }
 
 

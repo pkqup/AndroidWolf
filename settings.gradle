@@ -1,3 +1,4 @@
-include ':app',':citypicker',
+include ':app',
         ':common:commonlibrary',
-        ':common:imagepicker'
+        ':common:imagepicker',
+        ':common:citypicker'

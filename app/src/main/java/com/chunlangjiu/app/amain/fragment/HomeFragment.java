@@ -1,8 +1,8 @@
 package com.chunlangjiu.app.amain.fragment;
 
-import android.content.Intent;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,17 +14,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.BaseViewHolder;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseFragment;
-import com.chunlangjiu.app.amain.activity.CityListActvity;
-import com.chunlangjiu.app.amain.bean.RealmBean;
-import com.chunlangjiu.app.user.activity.AddAddressActivity;
-import com.chunlangjiu.app.user.activity.AddressListActivity;
+import com.chunlangjiu.app.amain.adapter.BrandAdapter;
+import com.chunlangjiu.app.amain.adapter.HomeAdapter;
+import com.chunlangjiu.app.amain.bean.BrandBean;
+import com.chunlangjiu.app.amain.bean.HomeBean;
 import com.pkqup.commonlibrary.glide.BannerGlideLoader;
-import com.pkqup.commonlibrary.net.bean.ResultBean;
-import com.pkqup.commonlibrary.realm.RealmUtils;
 import com.pkqup.commonlibrary.util.ToastUtils;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -76,10 +72,16 @@ public class HomeFragment extends BaseFragment {
     private List<ImageView> imageViews;
     private List<String> bannerUrls;
 
-    private RefreshLayout refreshLayout;
+    //品牌推荐
+    private RecyclerView recyclerViewBrand;
+    private BrandAdapter brandAdapter;
+    private List<BrandBean> brandLists;
+
+    //酒列表
     private RecyclerView recyclerView;
-    private List lists;
+    private RefreshLayout refreshLayout;
     private HomeAdapter homeAdapter;
+    private List<HomeBean> lists;
 
     private List<HotCity> hotCities;
     private List<City> cityList;
@@ -101,23 +103,29 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void getContentView(LayoutInflater inflater, ViewGroup container) {
         inflater.inflate(R.layout.amain_fragment_home, container, true);
+        headerView = View.inflate(getActivity(), R.layout.amain_item_home_header, null);
+
     }
 
     @Override
     public void initView() {
-        headerView = View.inflate(getActivity(), R.layout.amain_item_home_header, null);
-        banner = headerView.findViewById(R.id.banner);
-        indicator = headerView.findViewById(R.id.indicator);
         tvCity = rootView.findViewById(R.id.tvCity);
         tvCity.setOnClickListener(onClickListener);
         rlTitleSearch = rootView.findViewById(R.id.rlTitleSearch);
         rlTitleSearch.setOnClickListener(onClickListener);
+
+        banner = headerView.findViewById(R.id.banner);
+        indicator = headerView.findViewById(R.id.indicator);
+
+        recyclerViewBrand = headerView.findViewById(R.id.recyclerViewBrand);
+
         refreshLayout = rootView.findViewById(R.id.refreshLayout);
         recyclerView = rootView.findViewById(R.id.listView);
         imageViews = new ArrayList<>();
         initBannerView();
         initBannerIndicator();
-        initRecyclerView();
+        initBrandRecycleView();
+        initListRecyclerView();
     }
 
 
@@ -186,26 +194,39 @@ public class HomeFragment extends BaseFragment {
     }
 
 
-    private void initRecyclerView() {
-        lists = new ArrayList();
+    /**
+     * 品牌推荐
+     */
+    private void initBrandRecycleView() {
+        brandLists = new ArrayList<>();
+        for (int i = 0; i < 3; i++) {
+            BrandBean brandBean = new BrandBean();
+            brandLists.add(brandBean);
+        }
+        brandAdapter = new BrandAdapter(R.layout.amain_itme_brand, brandLists);
+        recyclerViewBrand.setLayoutManager(new GridLayoutManager(getActivity(), 3));
+        recyclerViewBrand.setAdapter(brandAdapter);
 
+    }
+
+    /**
+     * 商品列表
+     */
+    private void initListRecyclerView() {
+        lists = new ArrayList<>();
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
-        homeAdapter = new HomeAdapter(R.layout.amain_item_home_list, lists);
+        homeAdapter = new HomeAdapter(getActivity(), lists);
         homeAdapter.addHeaderView(headerView);
         recyclerView.setAdapter(homeAdapter);
 
         refreshLayout.setEnableAutoLoadMore(true);//开启滑到底部自动加载
-//        refreshLayout.autoRefresh();       //触发自动刷新
         refreshLayout.setFooterHeight(0);
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
-            public void onRefresh(final RefreshLayout refreshLaut) {
+            public void onRefresh(final RefreshLayout refreshLayout) {
                 refreshLayout.getLayout().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        lists.clear();
-                        lists.addAll(getData());
-                        homeAdapter.setNewData(lists);
                         refreshLayout.finishRefresh();
                         refreshLayout.setNoMoreData(false);
                     }
@@ -220,8 +241,6 @@ public class HomeFragment extends BaseFragment {
                     @Override
                     public void run() {
                         refreshLayout.finishLoadMore();
-                        lists.addAll(getData());
-                        homeAdapter.setNewData(lists);
                         if (lists.size() > 50) {
                             recyclerView.postDelayed(new Runnable() {
                                 @Override
@@ -242,10 +261,16 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     public void initData() {
-        RealmBean realmBean = new RealmBean();
-        realmBean.setAge("10");
-        realmBean.setName("名字");
-        RealmUtils.add(realmBean);
+        for (int i = 0; i < 7; i++) {
+            HomeBean homeBean = new HomeBean();
+            if (i == 3) {
+                homeBean.setItemType(HomeBean.ITEM_PIC);
+            } else {
+                homeBean.setItemType(HomeBean.ITEM_GOODS);
+            }
+            lists.add(homeBean);
+        }
+        homeAdapter.setNewData(lists);
     }
 
 
@@ -309,21 +334,6 @@ public class HomeFragment extends BaseFragment {
         }
     }
 
-    public class HomeAdapter extends BaseQuickAdapter<ResultBean, BaseViewHolder> {
-
-        public HomeAdapter(int layoutResId, List<ResultBean> data) {
-            super(layoutResId, data);
-        }
-
-        @Override
-        protected void convert(BaseViewHolder helper, ResultBean item) {
-            helper.setText(R.id.tv_name, helper.getAdapterPosition() + "");
-        }
-    }
-
-    private List getData() {
-        return Arrays.asList(null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null);
-    }
 
     @Override
     public void onStart() {
