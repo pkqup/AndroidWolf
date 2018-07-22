@@ -50,7 +50,7 @@
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:background="@color/bg_red" />
+                    android:background="@mipmap/home_auction" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -73,7 +73,7 @@
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:background="@color/bg_red" />
+                    android:background="@mipmap/home_buy" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -96,7 +96,7 @@
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:background="@color/bg_red" />
+                    android:background="@mipmap/home_sell" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -119,7 +119,7 @@
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:background="@color/bg_red" />
+                    android:background="@mipmap/home_search_chateau" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -142,7 +142,7 @@
                 <ImageView
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:background="@color/bg_red" />
+                    android:background="@mipmap/home_evaluate" />
 
                 <TextView
                     android:layout_width="wrap_content"

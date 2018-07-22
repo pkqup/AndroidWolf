@@ -1,6 +1,7 @@
 package com.chunlangjiu.app.user.activity;
 
 import android.os.Bundle;
+import android.view.View;
 
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
@@ -11,9 +12,21 @@ import com.chunlangjiu.app.abase.BaseActivity;
  */
 public class CompanyAuthActivity extends BaseActivity {
 
+    private View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.img_title_left:
+                    finish();
+                    break;
+            }
+        }
+    };
+
     @Override
     public void setTitleView() {
-
+        titleName.setText("企业认证");
+        titleImgLeft.setOnClickListener(onClickListener);
     }
 
     @Override

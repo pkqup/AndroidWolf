@@ -9,3 +9,20 @@
     android:src="@color/bg_red"
     app:civ_border_color="@color/bg_white"
     app:civ_border_width="2dp" />
+
+
+<TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text=""
+    android:textColor="@color/t_gray"
+    android:textSize="@dimen/sp_small" />
+
+<EditText
+    android:id="@+id/etTitle"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@null"
+    android:hint="请选择"
+    android:textColor="@color/t_black"
+    android:textSize="@dimen/sp_mid" />

@@ -13,7 +13,10 @@ import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseFragment;
 import com.chunlangjiu.app.goods.activity.SearchActivity;
 import com.chunlangjiu.app.store.activity.StoreListActivity;
+import com.chunlangjiu.app.user.activity.AddGoodsActivity;
 import com.chunlangjiu.app.user.activity.AddressListActivity;
+import com.chunlangjiu.app.user.activity.CompanyAuthActivity;
+import com.chunlangjiu.app.user.activity.PersonAuthActivity;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -121,6 +124,8 @@ public class UserFragment extends BaseFragment {
                 case R.id.tvChangeType:// 切换买/卖家中心
                     break;
                 case R.id.tvAuthRealName:// 企业/个人认证
+                    startActivity(new Intent(getActivity(), PersonAuthActivity.class));
+                    startActivity(new Intent(getActivity(), CompanyAuthActivity.class));
                     break;
 
                 case R.id.rlOrderManager:// 订单管理
@@ -166,6 +171,7 @@ public class UserFragment extends BaseFragment {
                     break;
 
                 case R.id.rlAddGoods:// 添加商品
+                    startActivity(new Intent(getActivity(), AddGoodsActivity.class));
                     break;
                 case R.id.rlSellGoods:// 在售商品
                     break;

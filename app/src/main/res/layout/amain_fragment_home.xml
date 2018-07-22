@@ -15,7 +15,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
-            android:drawableRight="@mipmap/right_arrow"
+            android:drawableRight="@mipmap/white_down_arrow"
+            android:drawablePadding="4dp"
             android:gravity="center"
             android:text="城市"
             android:textColor="@color/t_white"
@@ -58,7 +59,7 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:src="@mipmap/icon_delete" />
+            android:src="@mipmap/home_msg" />
 
         <TextView
             android:id="@+id/tvMsgNum"

@@ -1,5 +1,6 @@
 package com.chunlangjiu.app.amain.fragment;
 
+import android.content.Intent;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
@@ -20,6 +21,7 @@ import com.chunlangjiu.app.amain.adapter.BrandAdapter;
 import com.chunlangjiu.app.amain.adapter.HomeAdapter;
 import com.chunlangjiu.app.amain.bean.BrandBean;
 import com.chunlangjiu.app.amain.bean.HomeBean;
+import com.chunlangjiu.app.goods.activity.ValuationActivity;
 import com.pkqup.commonlibrary.glide.BannerGlideLoader;
 import com.pkqup.commonlibrary.util.ToastUtils;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -72,6 +74,12 @@ public class HomeFragment extends BaseFragment {
     private List<ImageView> imageViews;
     private List<String> bannerUrls;
 
+    private LinearLayout llAuction;
+    private LinearLayout llBuy;
+    private LinearLayout llSell;
+    private LinearLayout llSearch;
+    private LinearLayout llEvaluate;
+
     //品牌推荐
     private RecyclerView recyclerViewBrand;
     private BrandAdapter brandAdapter;
@@ -95,6 +103,18 @@ public class HomeFragment extends BaseFragment {
                     break;
                 case R.id.rlTitleSearch:
                     break;
+                case R.id.llAuction://竞拍专区
+                    break;
+                case R.id.llBuy://我要买酒
+                    break;
+                case R.id.llSell://我要卖酒
+                    break;
+                case R.id.llSearch://名庄查询
+                    break;
+                case R.id.llEvaluate://名酒估价
+                    startActivity(new Intent(getActivity(), ValuationActivity.class));
+                    break;
+
             }
         }
     };
@@ -116,7 +136,16 @@ public class HomeFragment extends BaseFragment {
 
         banner = headerView.findViewById(R.id.banner);
         indicator = headerView.findViewById(R.id.indicator);
-
+        llAuction = headerView.findViewById(R.id.llAuction);
+        llBuy = headerView.findViewById(R.id.llBuy);
+        llSell = headerView.findViewById(R.id.llSell);
+        llSearch = headerView.findViewById(R.id.llSearch);
+        llEvaluate = headerView.findViewById(R.id.llEvaluate);
+        llAuction.setOnClickListener(onClickListener);
+        llBuy.setOnClickListener(onClickListener);
+        llSell.setOnClickListener(onClickListener);
+        llSearch.setOnClickListener(onClickListener);
+        llEvaluate.setOnClickListener(onClickListener);
         recyclerViewBrand = headerView.findViewById(R.id.recyclerViewBrand);
 
         refreshLayout = rootView.findViewById(R.id.refreshLayout);

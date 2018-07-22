@@ -57,7 +57,7 @@ public class MainActivity extends BaseActivity {
     TextView tabThreeText;
 
     @BindView(R.id.tab_four)
-    RelativeLayout tabFour;
+    LinearLayout tabFour;
     @BindView(R.id.tab_four_image)
     ImageView tabFourImage;
     @BindView(R.id.tab_four_text)
@@ -74,7 +74,7 @@ public class MainActivity extends BaseActivity {
 
     private BaseFragmentAdapter myFragmentAdapter;
     private List<Fragment> fragments;
-    private List<ImageView> imageViews;
+    private List<LinearLayout> linearLayouts;
     private List<TextView> textViews;
 
     @Override
@@ -130,17 +130,17 @@ public class MainActivity extends BaseActivity {
         tabFour.setOnClickListener(onClickListener);
         tabFive.setOnClickListener(onClickListener);
 
-        imageViews = new ArrayList<>();
-        imageViews.add(tabOneImage);
-        imageViews.add(tabTwoImage);
-        imageViews.add(tabThreeImage);
-        imageViews.add(tabFourImage);
-        imageViews.add(tabFiveImage);
+        linearLayouts = new ArrayList<>();
+        linearLayouts.add(tabOne);
+        linearLayouts.add(tabTwo);
+        linearLayouts.add(new LinearLayout(this));
+        linearLayouts.add(tabFour);
+        linearLayouts.add(tabFive);
 
         textViews = new ArrayList<>();
         textViews.add(tabOneText);
         textViews.add(tabTwoText);
-        textViews.add(tabThreeText);
+        textViews.add(new TextView(this));
         textViews.add(tabFourText);
         textViews.add(tabFiveText);
     }
@@ -181,24 +181,24 @@ public class MainActivity extends BaseActivity {
         }
     };
 
-
     private void setPageFragment(int position) {
         viewPager.setCurrentItem(position, false);
-        for (int i = 0; i < imageViews.size(); i++) {
-            if (position == i) {
-                imageViews.get(i).setSelected(true);
-            } else {
-                imageViews.get(i).setSelected(false);
+        if (position != 2) {
+            for (int i = 0; i < linearLayouts.size(); i++) {
+                if (position == i) {
+                    linearLayouts.get(i).setSelected(true);
+                } else {
+                    linearLayouts.get(i).setSelected(false);
+                }
             }
-        }
-        for (int i = 0; i < textViews.size(); i++) {
-            if (position == i) {
-                textViews.get(i).setSelected(true);
-            } else {
-                textViews.get(i).setSelected(false);
+            for (int i = 0; i < textViews.size(); i++) {
+                if (position == i) {
+                    textViews.get(i).setSelected(true);
+                } else {
+                    textViews.get(i).setSelected(false);
+                }
             }
         }
     }
-
 
 }

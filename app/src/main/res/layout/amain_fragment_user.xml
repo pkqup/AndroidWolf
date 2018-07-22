@@ -15,21 +15,21 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="300dp"
-            android:background="@color/bg_user">
+            android:background="@color/bg_red">
 
             <ImageView
                 android:id="@+id/imgSetting"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
+                android:layout_width="23dp"
+                android:layout_height="23dp"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="15dp"
+                android:layout_marginRight="10dp"
                 android:layout_marginTop="15dp"
-                android:src="@mipmap/title_change_list" />
+                android:src="@mipmap/setting" />
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/imgHead"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="40dp"
                 android:src="@color/bg_red"
@@ -44,7 +44,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
                 android:textColor="@color/t_white"
-                android:textSize="@dimen/sp_mid"
+                android:textSize="17sp"
                 tools:text="姓名" />
 
             <TextView
@@ -53,15 +53,15 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/imgHead"
                 android:layout_marginLeft="8dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="15dp"
                 android:layout_toRightOf="@id/tvName"
                 android:background="@drawable/bg_white_solid"
                 android:paddingBottom="1dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:paddingTop="1dp"
-                android:textColor="@color/bg_user"
-                android:textSize="@dimen/sp_small"
+                android:textColor="@color/bg_black"
+                android:textSize="10sp"
                 tools:text="个人" />
 
             <LinearLayout
@@ -78,13 +78,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/bg_white_stroke"
+                    android:background="@drawable/bg_white_rectangle"
                     android:paddingBottom="2dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:paddingTop="2dp"
                     android:text="切换到卖家中心"
-                    android:textColor="@color/t_white"
+                    android:textColor="@color/t_black"
                     android:textSize="@dimen/sp_mid" />
 
                 <TextView
@@ -93,13 +93,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="10dp"
-                    android:background="@drawable/bg_white_stroke"
+                    android:background="@drawable/bg_white_rectangle"
                     android:paddingBottom="2dp"
                     android:paddingLeft="30dp"
                     android:paddingRight="30dp"
                     android:paddingTop="2dp"
                     android:text="实名认证"
-                    android:textColor="@color/t_white"
+                    android:textColor="@color/t_black"
                     android:textSize="@dimen/sp_mid" />
             </LinearLayout>
 
@@ -225,7 +225,7 @@
         <LinearLayout
             android:id="@+id/llBuyOrder"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="75dp"
             android:background="@color/bg_white"
             android:orientation="horizontal">
 
@@ -238,11 +238,11 @@
 
                 <ImageView
                     android:id="@+id/imgOrderOne"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="24dp"
+                    android:layout_height="22dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="18dp"
-                    android:src="@mipmap/icon_user_place" />
+                    android:layout_marginTop="14dp"
+                    android:src="@mipmap/order_icon_one" />
 
                 <TextView
                     android:id="@+id/tvOrderOne"
@@ -280,11 +280,11 @@
 
                 <ImageView
                     android:id="@+id/imgOrderTwo"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="24dp"
+                    android:layout_height="22dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="18dp"
-                    android:src="@mipmap/icon_user_place" />
+                    android:layout_marginTop="14dp"
+                    android:src="@mipmap/order_icon_two" />
 
                 <TextView
                     android:id="@+id/tvOrderTwo"
@@ -322,11 +322,11 @@
 
                 <ImageView
                     android:id="@+id/imgOrderThree"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="24dp"
+                    android:layout_height="22dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="18dp"
-                    android:src="@mipmap/icon_user_place" />
+                    android:layout_marginTop="14dp"
+                    android:src="@mipmap/order_icon_three" />
 
                 <TextView
                     android:id="@+id/tvOrderThree"
@@ -364,11 +364,11 @@
 
                 <ImageView
                     android:id="@+id/imgOrderFour"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="24dp"
+                    android:layout_height="22dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="18dp"
-                    android:src="@mipmap/icon_user_place" />
+                    android:layout_marginTop="14dp"
+                    android:src="@mipmap/order_icon_four" />
 
                 <TextView
                     android:id="@+id/tvOrderFour"
@@ -406,11 +406,11 @@
 
                 <ImageView
                     android:id="@+id/imgOrderFive"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="24dp"
+                    android:layout_height="22dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="18dp"
-                    android:src="@mipmap/icon_user_place" />
+                    android:layout_marginTop="14dp"
+                    android:src="@mipmap/order_icon_five" />
 
                 <TextView
                     android:id="@+id/tvOrderFive"
@@ -442,7 +442,7 @@
         <LinearLayout
             android:id="@+id/llSellOrder"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="75dp"
             android:background="@color/bg_white"
             android:orientation="horizontal">
 
@@ -455,11 +455,11 @@
 
                 <ImageView
                     android:id="@+id/imgSellOrderOne"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="24dp"
+                    android:layout_height="22dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="18dp"
-                    android:src="@mipmap/icon_user_place" />
+                    android:layout_marginTop="14dp"
+                    android:src="@mipmap/order_icon_one" />
 
                 <TextView
                     android:id="@+id/tvSellOrderOne"
@@ -485,7 +485,6 @@
                     android:textSize="10sp"
                     android:visibility="gone"
                     tools:text="1" />
-
             </RelativeLayout>
 
             <RelativeLayout
@@ -497,11 +496,11 @@
 
                 <ImageView
                     android:id="@+id/imgSellOrderTwo"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="24dp"
+                    android:layout_height="22dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="18dp"
-                    android:src="@mipmap/icon_user_place" />
+                    android:layout_marginTop="14dp"
+                    android:src="@mipmap/order_icon_two" />
 
                 <TextView
                     android:id="@+id/tvSellOrderTwo"
@@ -539,11 +538,11 @@
 
                 <ImageView
                     android:id="@+id/imgSellOrderThree"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="24dp"
+                    android:layout_height="22dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="18dp"
-                    android:src="@mipmap/icon_user_place" />
+                    android:layout_marginTop="14dp"
+                    android:src="@mipmap/order_icon_four" />
 
                 <TextView
                     android:id="@+id/tvSellOrderThree"
@@ -581,11 +580,11 @@
 
                 <ImageView
                     android:id="@+id/imgSellOrderFour"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="24dp"
+                    android:layout_height="22dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="18dp"
-                    android:src="@mipmap/icon_user_place" />
+                    android:layout_marginTop="14dp"
+                    android:src="@mipmap/order_icon_five" />
 
                 <TextView
                     android:id="@+id/tvSellOrderFour"
@@ -655,7 +654,7 @@
         <LinearLayout
             android:id="@+id/llBuyAuction"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="75dp"
             android:background="@color/bg_white"
             android:orientation="horizontal">
 
@@ -668,11 +667,11 @@
 
                 <ImageView
                     android:id="@+id/imgAuctionOne"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="24dp"
+                    android:layout_height="22dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="18dp"
-                    android:src="@mipmap/icon_user_place" />
+                    android:layout_marginTop="14dp"
+                    android:src="@mipmap/auction_icon_one" />
 
                 <TextView
                     android:id="@+id/tvAuctionOne"
@@ -710,11 +709,11 @@
 
                 <ImageView
                     android:id="@+id/imgAuctionTwo"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="24dp"
+                    android:layout_height="22dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="18dp"
-                    android:src="@mipmap/icon_user_place" />
+                    android:layout_marginTop="14dp"
+                    android:src="@mipmap/auction_icon_two" />
 
                 <TextView
                     android:id="@+id/tvAuctionTwo"
@@ -752,11 +751,11 @@
 
                 <ImageView
                     android:id="@+id/imgAuctionThree"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="24dp"
+                    android:layout_height="22dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="18dp"
-                    android:src="@mipmap/icon_user_place" />
+                    android:layout_marginTop="14dp"
+                    android:src="@mipmap/order_icon_three" />
 
                 <TextView
                     android:id="@+id/tvAuctionThree"
@@ -794,11 +793,11 @@
 
                 <ImageView
                     android:id="@+id/imgAuctionFour"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="24dp"
+                    android:layout_height="22dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="18dp"
-                    android:src="@mipmap/icon_user_place" />
+                    android:layout_marginTop="14dp"
+                    android:src="@mipmap/auction_icon_four" />
 
                 <TextView
                     android:id="@+id/tvAuctionFour"
@@ -836,11 +835,11 @@
 
                 <ImageView
                     android:id="@+id/imgAuctionFive"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="24dp"
+                    android:layout_height="22dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="18dp"
-                    android:src="@mipmap/icon_user_place" />
+                    android:layout_marginTop="14dp"
+                    android:src="@mipmap/auction_icon_five" />
 
                 <TextView
                     android:id="@+id/tvAuctionFive"
@@ -871,7 +870,7 @@
         <LinearLayout
             android:id="@+id/llSellAuction"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="75dp"
             android:background="@color/bg_white"
             android:orientation="horizontal">
 
@@ -884,11 +883,11 @@
 
                 <ImageView
                     android:id="@+id/imgSellAuctionOne"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="24dp"
+                    android:layout_height="22dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="18dp"
-                    android:src="@mipmap/icon_user_place" />
+                    android:layout_marginTop="14dp"
+                    android:src="@mipmap/auction_icon_one" />
 
                 <TextView
                     android:id="@+id/tvSellAuctionOne"
@@ -926,11 +925,11 @@
 
                 <ImageView
                     android:id="@+id/imgSellAuctionTwo"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="24dp"
+                    android:layout_height="22dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="18dp"
-                    android:src="@mipmap/icon_user_place" />
+                    android:layout_marginTop="14dp"
+                    android:src="@mipmap/auction_icon_two" />
 
                 <TextView
                     android:id="@+id/tvSellAuctionTwo"
@@ -968,11 +967,11 @@
 
                 <ImageView
                     android:id="@+id/imgSellAuctionThree"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="24dp"
+                    android:layout_height="22dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="18dp"
-                    android:src="@mipmap/icon_user_place" />
+                    android:layout_marginTop="14dp"
+                    android:src="@mipmap/auction_icon_three" />
 
                 <TextView
                     android:id="@+id/tvSellAuctionThree"
@@ -1010,11 +1009,11 @@
 
                 <ImageView
                     android:id="@+id/imgSellAuctionFour"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="24dp"
+                    android:layout_height="22dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="18dp"
-                    android:src="@mipmap/icon_user_place" />
+                    android:layout_marginTop="14dp"
+                    android:src="@mipmap/auction_icon_four" />
 
                 <TextView
                     android:id="@+id/tvSellAuctionFour"
@@ -1047,7 +1046,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:orientation="vertical"/>
+                android:orientation="vertical" />
 
         </LinearLayout>
 
@@ -1085,7 +1084,7 @@
         <LinearLayout
             android:id="@+id/llGoodsContent"
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="75dp"
             android:background="@color/bg_white"
             android:orientation="horizontal">
 
@@ -1101,7 +1100,7 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="18dp"
+                    android:layout_marginTop="14dp"
                     android:src="@mipmap/icon_user_place" />
 
                 <TextView
@@ -1128,7 +1127,7 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="18dp"
+                    android:layout_marginTop="14dp"
                     android:src="@mipmap/icon_user_place" />
 
                 <TextView
@@ -1169,7 +1168,7 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="18dp"
+                    android:layout_marginTop="14dp"
                     android:src="@mipmap/icon_user_place" />
 
                 <TextView
@@ -1210,7 +1209,7 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="18dp"
+                    android:layout_marginTop="14dp"
                     android:src="@mipmap/icon_user_place" />
 
                 <TextView
@@ -1251,7 +1250,7 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="18dp"
+                    android:layout_marginTop="14dp"
                     android:src="@mipmap/icon_user_place" />
 
                 <TextView
@@ -1314,7 +1313,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="75dp"
             android:background="@color/bg_white"
             android:orientation="horizontal">
 
@@ -1327,11 +1326,11 @@
 
                 <ImageView
                     android:id="@+id/imgMoneyManager"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="24dp"
+                    android:layout_height="22dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="18dp"
-                    android:src="@mipmap/icon_user_place" />
+                    android:layout_marginTop="14dp"
+                    android:src="@mipmap/my_icon_one" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -1353,11 +1352,11 @@
 
                 <ImageView
                     android:id="@+id/imgCollect"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="24dp"
+                    android:layout_height="22dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="18dp"
-                    android:src="@mipmap/icon_user_place" />
+                    android:layout_marginTop="14dp"
+                    android:src="@mipmap/my_icon_two" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -1380,11 +1379,11 @@
 
                 <ImageView
                     android:id="@+id/imgBankCard"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="24dp"
+                    android:layout_height="22dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="18dp"
-                    android:src="@mipmap/icon_user_place" />
+                    android:layout_marginTop="14dp"
+                    android:src="@mipmap/my_icon_three" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -1406,11 +1405,11 @@
 
                 <ImageView
                     android:id="@+id/imgVip"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="24dp"
+                    android:layout_height="22dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="18dp"
-                    android:src="@mipmap/icon_user_place" />
+                    android:layout_marginTop="14dp"
+                    android:src="@mipmap/my_icon_four" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -1433,11 +1432,11 @@
 
                 <ImageView
                     android:id="@+id/imgAddress"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="24dp"
+                    android:layout_height="22dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="18dp"
-                    android:src="@mipmap/icon_user_place" />
+                    android:layout_marginTop="14dp"
+                    android:src="@mipmap/my_icon_five" />
 
                 <TextView
                     android:layout_width="wrap_content"
