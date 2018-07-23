@@ -87,7 +87,7 @@ dependencies {
 
     implementation project (':common:commonlibrary')
     implementation project (':common:imagepicker')
-    implementation project (':common:citypicker')
+    implementation project (':common:citypick')
 
     //依赖注入
     implementation 'com.jakewharton:butterknife:8.8.1'

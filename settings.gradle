@@ -1,4 +1,4 @@
 include ':app',
         ':common:commonlibrary',
         ':common:imagepicker',
-        ':common:citypicker'
+        ':common:citypick'
