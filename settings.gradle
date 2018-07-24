@@ -1,4 +1,5 @@
 include ':app',
         ':common:commonlibrary',
         ':common:imagepicker',
-        ':common:citypick'
+        ':common:citypick',
+        ':common:umengshare'

@@ -18,7 +18,10 @@ import com.chunlangjiu.app.amain.fragment.CartFragment;
 import com.chunlangjiu.app.amain.fragment.ClassFragment;
 import com.chunlangjiu.app.amain.fragment.HomeFragment;
 import com.chunlangjiu.app.amain.fragment.UserFragment;
+import com.chunlangjiu.app.util.GeTuiIntentService;
+import com.chunlangjiu.app.util.GeTuiPushService;
 import com.chunlangjiu.app.util.LocationUtils;
+import com.igexin.sdk.PushManager;
 import com.pkqup.commonlibrary.util.PermissionUtils;
 import com.pkqup.commonlibrary.view.MyViewPager;
 import com.socks.library.KLog;
@@ -82,8 +85,14 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.amain_activity_main);
         requestPermission();
+        initGeTuiPush();
         initView();
         initData();
+    }
+
+    private void initGeTuiPush() {
+        PushManager.getInstance().initialize(this.getApplicationContext(), GeTuiPushService.class);
+        PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), GeTuiIntentService.class);
     }
 
     private void requestPermission() {
