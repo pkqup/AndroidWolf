@@ -1097,8 +1097,8 @@
 
                 <ImageView
                     android:id="@+id/imgAddGoods"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="24dp"
+                    android:layout_height="20dp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="14dp"
                     android:src="@mipmap/icon_user_place" />
@@ -1124,8 +1124,8 @@
 
                 <ImageView
                     android:id="@+id/imgSellGoods"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="24dp"
+                    android:layout_height="20dp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="14dp"
                     android:src="@mipmap/icon_user_place" />
@@ -1165,8 +1165,8 @@
 
                 <ImageView
                     android:id="@+id/imgAuctionGoods"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="24dp"
+                    android:layout_height="20dp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="14dp"
                     android:src="@mipmap/icon_user_place" />
@@ -1206,8 +1206,8 @@
 
                 <ImageView
                     android:id="@+id/imgWareHouseGoods"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="24dp"
+                    android:layout_height="20dp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="14dp"
                     android:src="@mipmap/icon_user_place" />
@@ -1247,8 +1247,8 @@
 
                 <ImageView
                     android:id="@+id/imgCheckGoods"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="24dp"
+                    android:layout_height="20dp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="14dp"
                     android:src="@mipmap/icon_user_place" />

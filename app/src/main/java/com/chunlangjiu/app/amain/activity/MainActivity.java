@@ -91,8 +91,8 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initGeTuiPush() {
-        PushManager.getInstance().initialize(this.getApplicationContext(), GeTuiPushService.class);
-        PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), GeTuiIntentService.class);
+        PushManager.getInstance().initialize(getApplicationContext(), GeTuiPushService.class);
+        PushManager.getInstance().registerPushIntentService(getApplicationContext(), GeTuiIntentService.class);
     }
 
     private void requestPermission() {
@@ -206,6 +206,13 @@ public class MainActivity extends BaseActivity {
                 } else {
                     textViews.get(i).setSelected(false);
                 }
+            }
+        } else {
+            for (int i = 0; i < linearLayouts.size(); i++) {
+                linearLayouts.get(i).setSelected(false);
+            }
+            for (int i = 0; i < textViews.size(); i++) {
+                textViews.get(i).setSelected(false);
             }
         }
     }

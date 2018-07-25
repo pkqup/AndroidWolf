@@ -228,7 +228,7 @@ public class HomeFragment extends BaseFragment {
      */
     private void initBrandRecycleView() {
         brandLists = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 6; i++) {
             BrandBean brandBean = new BrandBean();
             brandLists.add(brandBean);
         }

@@ -339,10 +339,10 @@
             </LinearLayout>
 
             <LinearLayout
-                android:paddingBottom="10dp"
-                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="170dp">
+                android:layout_height="170dp"
+                android:orientation="horizontal"
+                android:paddingBottom="10dp">
 
                 <RelativeLayout
                     android:layout_width="0dp"
@@ -385,15 +385,10 @@
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
-                    android:layout_weight="1"/>
-
+                    android:layout_weight="1" />
             </LinearLayout>
-
-
-
         </LinearLayout>
     </ScrollView>
-
 
     <TextView
         android:id="@+id/tvCommit"
