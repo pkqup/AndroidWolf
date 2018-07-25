@@ -291,7 +291,7 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     public void initData() {
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < 20; i++) {
             HomeBean homeBean = new HomeBean();
             if (i == 3) {
                 homeBean.setItemType(HomeBean.ITEM_PIC);
