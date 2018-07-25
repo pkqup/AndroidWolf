@@ -8,6 +8,7 @@ import com.chad.library.adapter.base.util.MultiTypeDelegate;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.amain.bean.CartGoodsBean;
 import com.chunlangjiu.app.amain.bean.HomeBean;
+import com.pkqup.commonlibrary.view.countdownview.CountdownView;
 
 import java.util.List;
 
@@ -36,7 +37,9 @@ public class HomeAdapter extends BaseQuickAdapter<HomeBean, BaseViewHolder> {
     protected void convert(BaseViewHolder viewHolder, HomeBean item) {
         switch (viewHolder.getItemViewType()) {
             case HomeBean.ITEM_GOODS:
-
+                CountdownView countdownView = viewHolder.getView(R.id.countdownView);
+                long time2 = (long)3 * 24 * 60 * 60 * 1000;
+                countdownView.start(time2);
                 break;
             case HomeBean.ITEM_PIC:
 

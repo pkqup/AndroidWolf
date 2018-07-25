@@ -16,16 +16,10 @@ import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseFragment;
 import com.chunlangjiu.app.amain.adapter.AuctionListAdapter;
 import com.chunlangjiu.app.amain.bean.AuctionGoodsBean;
-import com.chunlangjiu.app.amain.bean.GoodsListInfoBean;
-import com.chunlangjiu.app.goods.activity.GoodsDetailsActivity;
-import com.chunlangjiu.app.goods.activity.GoodsListActivity;
 import com.pkqup.commonlibrary.util.SizeUtils;
-import com.pkqup.commonlibrary.view.TimerTextView;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.BindView;
 
 /**
  * @CreatedbBy: liucun on 2018/6/16.

@@ -235,7 +235,8 @@ public class HomeFragment extends BaseFragment {
         brandAdapter = new BrandAdapter(R.layout.amain_itme_brand, brandLists);
         recyclerViewBrand.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         recyclerViewBrand.setAdapter(brandAdapter);
-
+        recyclerViewBrand.setHasFixedSize(true);
+        recyclerViewBrand.setNestedScrollingEnabled(false);
     }
 
     /**
