@@ -43,7 +43,6 @@ public class BaseApplication extends MultiDexApplication {
         PlatformConfig.setWeixin("wx0e1869b241d7234f", "13a3d322c7055d7c33e3de912a4fad2a");
         PlatformConfig.setQQZone("1106941413", "9qybO7qdrpQIYPiq");
         PlatformConfig.setSinaWeibo("1325843831", "bccdf04dac982831efd444a71588daea", "http://sns.whalecloud.com");
-
     }
 
     private void initRealm() {
