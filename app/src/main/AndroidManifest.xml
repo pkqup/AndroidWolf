@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.chunlangjiu.app">
 
-
     <application
         android:name=".abase.BaseApplication"
         android:allowBackup="true"
@@ -19,9 +18,20 @@
         <!--高德地图key-->
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="029dc531fe0c93b534114f1b1c178899"/>
+            android:value="d06f204a3a8f591c3447119cdca1d35e" />
         <!--高德地图定位服务-->
-        <service android:name="com.amap.api.location.APSService"/>
+        <service android:name="com.amap.api.location.APSService" />
+
+        <!-- 配置个推SDK核心服务 -->
+        <service
+            android:name=".util.GeTuiPushService"
+            android:exported="true"
+            android:label="PushService"
+            android:process=":pushservice"/>
+        <!-- 用户自定义服务继承自GTIntentService,作为SDK与APP桥梁服务,用来接收各种消息和命令回复-->
+        <service android:name=".util.GeTuiIntentService"/>
+
+
 
         <activity
             android:name=".amain.activity.SplashActivity"
@@ -44,10 +54,10 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
-            android:theme="@style/DefaultCityPickerTheme"
             android:name=".amain.activity.MainActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
+            android:theme="@style/DefaultCityPickerTheme"
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity
             android:name=".amain.activity.CityListActvity"
@@ -136,6 +146,58 @@
             android:name=".store.activity.StoreSearchActivity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden" />
+
+
+        <!--微博分享回调-->
+        <activity
+            android:name="com.umeng.socialize.media.WBShareCallBackActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="false"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+        <activity
+            android:name="com.sina.weibo.sdk.web.WeiboSdkWebActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity
+            android:name="com.sina.weibo.sdk.share.WbShareTransActivity"
+            android:launchMode="singleTask"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen">
+            <intent-filter>
+                <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <!--微博分享回调-->
+
+        <!--微信分享回调-->
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <!--微信分享回调-->
+
+        <!--QQ分享回调-->
+        <activity
+            android:name="com.tencent.tauth.AuthActivity"
+            android:launchMode="singleTask"
+            android:noHistory="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="tencent1106941413" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.tencent.connect.common.AssistActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <!--QQ分享回调-->
+
     </application>
 
 </manifest>

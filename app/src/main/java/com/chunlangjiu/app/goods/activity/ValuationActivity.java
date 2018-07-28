@@ -3,6 +3,9 @@ package com.chunlangjiu.app.goods.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.chunlangjiu.app.R;
@@ -15,6 +18,29 @@ import butterknife.BindView;
  * @Describe: 名酒估价页面
  */
 public class ValuationActivity extends BaseActivity {
+
+
+    @BindView(R.id.rlChoiceClass)
+    RelativeLayout rlChoiceClass;
+    @BindView(R.id.tvClass)
+    TextView tvClass;
+    @BindView(R.id.etTitle)
+    EditText etTitle;
+    @BindView(R.id.etLocation)
+    EditText etLocation;
+    @BindView(R.id.etSeries)
+    EditText etSeries;
+
+    @BindView(R.id.imgMainEx)
+    ImageView imgMainEx;
+    @BindView(R.id.imgMainPic)
+    ImageView imgMainPic;
+    @BindView(R.id.imgDescEx)
+    ImageView imgDescEx;
+    @BindView(R.id.imgDescPic)
+    ImageView imgDescPic;
+    @BindView(R.id.imgGoodsPic)
+    ImageView imgGoodsPic;
 
     @BindView(R.id.tvCommit)
     TextView tvCommit;

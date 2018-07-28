@@ -18,7 +18,10 @@ import com.chunlangjiu.app.amain.fragment.CartFragment;
 import com.chunlangjiu.app.amain.fragment.ClassFragment;
 import com.chunlangjiu.app.amain.fragment.HomeFragment;
 import com.chunlangjiu.app.amain.fragment.UserFragment;
+import com.chunlangjiu.app.util.GeTuiIntentService;
+import com.chunlangjiu.app.util.GeTuiPushService;
 import com.chunlangjiu.app.util.LocationUtils;
+import com.igexin.sdk.PushManager;
 import com.pkqup.commonlibrary.util.PermissionUtils;
 import com.pkqup.commonlibrary.view.MyViewPager;
 import com.socks.library.KLog;
@@ -82,8 +85,14 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.amain_activity_main);
         requestPermission();
+        initGeTuiPush();
         initView();
         initData();
+    }
+
+    private void initGeTuiPush() {
+        PushManager.getInstance().initialize(getApplicationContext(), GeTuiPushService.class);
+        PushManager.getInstance().registerPushIntentService(getApplicationContext(), GeTuiIntentService.class);
     }
 
     private void requestPermission() {
@@ -197,6 +206,13 @@ public class MainActivity extends BaseActivity {
                 } else {
                     textViews.get(i).setSelected(false);
                 }
+            }
+        } else {
+            for (int i = 0; i < linearLayouts.size(); i++) {
+                linearLayouts.get(i).setSelected(false);
+            }
+            for (int i = 0; i < textViews.size(); i++) {
+                textViews.get(i).setSelected(false);
             }
         }
     }

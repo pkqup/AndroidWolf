@@ -16,7 +16,14 @@ import com.chunlangjiu.app.abase.BaseFragmentAdapter;
 import com.chunlangjiu.app.goods.fragment.GoodsCommentFragment;
 import com.chunlangjiu.app.goods.fragment.GoodsDetailsFragment;
 import com.chunlangjiu.app.goods.fragment.GoodsWebFragment;
+import com.chunlangjiu.app.util.ShareUtils;
 import com.flyco.tablayout.SlidingTabLayout;
+import com.socks.library.KLog;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.editorpage.ShareActivity;
+import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.media.UMWeb;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +34,8 @@ public class GoodsDetailsActivity extends BaseActivity {
 
     @BindView(R.id.img_back)
     ImageView imgBack;
+    @BindView(R.id.img_share)
+    ImageView imgShare;
     @BindView(R.id.tab)
     SlidingTabLayout tab;
     @BindView(R.id.view_pager)
@@ -60,6 +69,9 @@ public class GoodsDetailsActivity extends BaseActivity {
                 case R.id.img_back:
                     finish();
                     break;
+                case R.id.img_share://分享
+                    showShare();
+                    break;
                 case R.id.tvBuy://立即购买
                     startActivity(new Intent(GoodsDetailsActivity.this, ConfirmOrderActivity.class
                     ));
@@ -67,6 +79,7 @@ public class GoodsDetailsActivity extends BaseActivity {
             }
         }
     };
+
 
     public static void startGoodsDetailsActivity(Activity activity, String goodsId) {
         Intent intent = new Intent(activity, GoodsDetailsActivity.class);
@@ -89,6 +102,7 @@ public class GoodsDetailsActivity extends BaseActivity {
 
     private void initView() {
         imgBack.setOnClickListener(onClickListener);
+        imgShare.setOnClickListener(onClickListener);
         mFragments = new ArrayList<>();
         mFragments.add(new GoodsDetailsFragment());
         mFragments.add(new GoodsWebFragment());
@@ -109,6 +123,37 @@ public class GoodsDetailsActivity extends BaseActivity {
     private void initData() {
 
 
+    }
+
+
+    private void showShare() {
+        UMImage thumb = new UMImage(this, R.mipmap.launcher);
+        UMWeb web = new UMWeb("http://www.baidu.com");
+        web.setTitle("This is music title");//标题
+        web.setThumb(thumb);  //缩略图
+        web.setDescription("my description");//描述
+
+        ShareUtils.shareLink(this, web, new UMShareListener() {
+            @Override
+            public void onStart(SHARE_MEDIA share_media) {
+                KLog.e("-----share onStart----");
+            }
+
+            @Override
+            public void onResult(SHARE_MEDIA share_media) {
+                KLog.e("-----share success----");
+            }
+
+            @Override
+            public void onError(SHARE_MEDIA share_media, Throwable throwable) {
+                KLog.e("-----share onError----");
+            }
+
+            @Override
+            public void onCancel(SHARE_MEDIA share_media) {
+                KLog.e("-----share onCancel----");
+            }
+        });
     }
 
 }

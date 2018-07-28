@@ -228,14 +228,15 @@ public class HomeFragment extends BaseFragment {
      */
     private void initBrandRecycleView() {
         brandLists = new ArrayList<>();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 6; i++) {
             BrandBean brandBean = new BrandBean();
             brandLists.add(brandBean);
         }
         brandAdapter = new BrandAdapter(R.layout.amain_itme_brand, brandLists);
         recyclerViewBrand.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         recyclerViewBrand.setAdapter(brandAdapter);
-
+        recyclerViewBrand.setHasFixedSize(true);
+        recyclerViewBrand.setNestedScrollingEnabled(false);
     }
 
     /**
@@ -290,7 +291,7 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     public void initData() {
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < 20; i++) {
             HomeBean homeBean = new HomeBean();
             if (i == 3) {
                 homeBean.setItemType(HomeBean.ITEM_PIC);

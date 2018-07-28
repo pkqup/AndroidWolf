@@ -12,6 +12,12 @@ android {
         multiDexEnabled true
         flavorDimensions "versionCode"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        manifestPlaceholders = [
+                GETUI_APP_ID : "ed2XgSCNZUAk7e8LksMce5",
+                GETUI_APP_KEY : "F2cXuwCSvm8AgOkq1gc833",
+                GETUI_APP_SECRET : "XQY0MtICcv7drJesxQn1Y"
+        ]
     }
     signingConfigs {
         release {
@@ -87,7 +93,9 @@ dependencies {
 
     implementation project (':common:commonlibrary')
     implementation project (':common:imagepicker')
-    implementation project (':common:citypicker')
+    implementation project (':common:citypick')
+    implementation project (':common:umengshare')
+    implementation project (':common:TimePickerDialog')
 
     //依赖注入
     implementation 'com.jakewharton:butterknife:8.8.1'
@@ -95,4 +103,7 @@ dependencies {
 
     //高德地图定位
     implementation 'com.amap.api:location:4.0.1'
+    //个推
+    implementation 'com.getui:sdk:2.12.4.0'
+
 }
