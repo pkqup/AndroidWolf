@@ -30,8 +30,8 @@ public class ConfirmOrderGoodsAdapter extends BaseQuickAdapter<OrderGoodsBean, B
             }
         });
         getMultiTypeDelegate()
-                .registerItemType(OrderGoodsBean.ITEM_STORE, R.layout.amain_item_cart_store)
-                .registerItemType(OrderGoodsBean.ITEM_GOODS, R.layout.amain_item_cart_goods);
+                .registerItemType(OrderGoodsBean.ITEM_STORE, R.layout.goods_item_confirm_order_store)
+                .registerItemType(OrderGoodsBean.ITEM_GOODS, R.layout.goods_item_confirm_order_goods);
     }
 
 

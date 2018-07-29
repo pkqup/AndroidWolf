@@ -47,7 +47,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:padding="10dp"
-                    android:src="@mipmap/right_arrow" />
+                    android:src="@mipmap/black_right_arrow" />
 
                 <View
                     android:layout_width="match_parent"

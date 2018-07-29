@@ -4,20 +4,21 @@
     android:layout_height="100dp"
     android:background="@color/bg_white">
 
-    <CheckBox
-        android:id="@+id/choice_goods"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <ImageView
+        android:id="@+id/check_store"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="15dp" />
+        android:layout_marginLeft="15dp"
+        android:background="@drawable/cart_choice_goods" />
 
     <ImageView
         android:id="@+id/img_pic"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="10dp"
-        android:layout_toRightOf="@id/choice_goods"
+        android:layout_marginLeft="12dp"
+        android:layout_toRightOf="@id/check_store"
         android:background="@color/bg_red" />
 
     <TextView
@@ -28,10 +29,11 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="15dp"
         android:layout_toRightOf="@id/img_pic"
+        android:ellipsize="end"
         android:singleLine="true"
         android:text="法国红酒"
         android:textColor="@color/t_black"
-        android:textSize="@dimen/sp_small" />
+        android:textSize="@dimen/sp_mid" />
 
     <TextView
         android:id="@+id/tv_price"
@@ -40,12 +42,12 @@
         android:layout_below="@id/tv_name"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="15dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:layout_toRightOf="@id/img_pic"
         android:singleLine="true"
         android:text="￥50000.00"
         android:textColor="@color/t_black"
-        android:textSize="@dimen/sp_small" />
+        android:textSize="@dimen/sp_mid" />
 
 
     <TextView
@@ -59,7 +61,54 @@
         android:singleLine="true"
         android:text="750ML"
         android:textColor="@color/t_gray"
-        android:textSize="@dimen/sp_small" />
+        android:textSize="12sp" />
+
+    <LinearLayout
+        android:id="@+id/llChangeNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="6dp"
+        android:layout_marginRight="15dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:visibility="visible">
+
+        <ImageView
+            android:id="@+id/imgSub"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:padding="4dp"
+            android:src="@mipmap/sub" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="11"
+            android:textColor="@color/t_black"
+            android:textSize="@dimen/sp_mid" />
+
+        <ImageView
+            android:id="@+id/imgAdd"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:padding="4dp"
+            android:src="@mipmap/add" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/deleteOne"
+        android:layout_width="23dp"
+        android:layout_height="25dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="15dp"
+        android:src="@mipmap/red_delete"
+        android:visibility="gone" />
 
     <View
         android:layout_width="match_parent"

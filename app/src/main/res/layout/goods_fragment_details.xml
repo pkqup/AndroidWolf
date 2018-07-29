@@ -20,7 +20,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="360dp">
+                android:layout_height="220dp">
 
                 <com.youth.banner.Banner
                     android:id="@+id/banner"
@@ -35,7 +35,6 @@
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:padding="10dp" />
-
             </RelativeLayout>
 
             <View
@@ -48,10 +47,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="15dp"
+                android:text="￥5000.00"
                 android:textColor="@color/t_red"
-                android:textSize="@dimen/sp_small"
-                tools:text="￥5000.00" />
+                android:textSize="@dimen/sp_big" />
 
             <TextView
                 android:id="@+id/tvGoodsName"
@@ -60,9 +59,10 @@
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="8dp"
+                android:maxLines="2"
+                android:text="法国红酒法国红酒法国红酒法国红酒法国红酒法国红酒"
                 android:textColor="@color/t_black"
-                android:textSize="@dimen/sp_small"
-                tools:text="法国红酒" />
+                android:textSize="@dimen/sp_mid" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -81,7 +81,7 @@
                     android:paddingRight="5dp"
                     android:paddingTop="1dp"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_small"
+                    android:textSize="12sp"
                     tools:text="法国" />
 
                 <TextView
@@ -95,7 +95,7 @@
                     android:paddingRight="5dp"
                     android:paddingTop="1dp"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_small"
+                    android:textSize="12sp"
                     tools:text="92年" />
             </LinearLayout>
 
@@ -107,7 +107,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="44dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:paddingBottom="10dp"
@@ -139,12 +139,12 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="60dp">
+                android:layout_height="70dp">
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/imgStore"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="15dp"
                     android:src="@color/bg_red" />
@@ -154,7 +154,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="14dp"
                     android:layout_toRightOf="@id/imgStore"
                     android:text="店铺名"
                     android:textColor="@color/t_black"
@@ -170,18 +170,23 @@
                     android:layout_toRightOf="@id/imgStore"
                     android:text="简介"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_small" />
+                    android:textSize="12sp" />
 
                 <TextView
                     android:id="@+id/tvLookAll"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
+                    android:layout_marginTop="14dp"
+                    android:background="@drawable/orange_bg_stroke"
+                    android:paddingBottom="4dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="4dp"
                     android:text="查看全部商品"
                     android:textColor="@color/t_orange"
-                    android:textSize="@dimen/sp_small" />
+                    android:textSize="12sp" />
             </RelativeLayout>
 
             <View
@@ -192,7 +197,7 @@
             <RelativeLayout
                 android:id="@+id/rlEvaluate"
                 android:layout_width="match_parent"
-                android:layout_height="40dp">
+                android:layout_height="44dp">
 
                 <TextView
                     android:id="@+id/tvEvaluate"
@@ -210,8 +215,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
-                    android:src="@mipmap/right_arrow" />
-
+                    android:src="@mipmap/black_right_arrow" />
             </RelativeLayout>
 
             <View
@@ -245,7 +249,6 @@
                     android:text="推荐商品"
                     android:textColor="@color/t_black"
                     android:textSize="@dimen/sp_small" />
-
             </RelativeLayout>
 
             <View
@@ -268,8 +271,9 @@
 
 
             <LinearLayout
+                android:id="@+id/llSeeMore"
                 android:layout_width="match_parent"
-                android:layout_height="30dp"
+                android:layout_height="50dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 

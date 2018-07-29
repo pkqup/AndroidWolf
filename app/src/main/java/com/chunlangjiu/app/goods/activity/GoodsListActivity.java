@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -50,15 +51,21 @@ public class GoodsListActivity extends BaseActivity {
     TextView tv_all;
     @BindView(R.id.tv_new)
     TextView tv_new;
+    @BindView(R.id.sortPrice)
+    RelativeLayout sortPrice;
     @BindView(R.id.tv_price)
     TextView tv_price;
     @BindView(R.id.tv_class)
     TextView tv_class;
+    @BindView(R.id.sortFilter)
+    RelativeLayout sortFilter;
     @BindView(R.id.tv_filter)
     TextView tv_filter;
 
     @BindView(R.id.recycle_view)
     RecyclerView recycle_view;
+
+    private List<TextView> sortTextViewLists;
 
     private boolean listType = true;//是否是列表形式
     private List<GoodsListInfoBean> lists;
@@ -70,6 +77,40 @@ public class GoodsListActivity extends BaseActivity {
 
     private CompositeDisposable disposable;
 
+    private View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.img_title_left:
+                    checkBack();
+                    break;
+                case R.id.img_title_right_one:
+                    startActivity(new Intent(GoodsListActivity.this, SearchActivity.class));
+                    break;
+                case R.id.img_title_right_two:
+                    changeListType();
+                    break;
+                case R.id.tv_all:
+                    changeSort(0);
+                    break;
+                case R.id.tv_new:
+                    changeSort(1);
+                    break;
+                case R.id.sortPrice:
+                    changeSort(2);
+                    break;
+                case R.id.tv_class:
+                    changeSort(3);
+                    break;
+                case R.id.sortFilter:
+                    changeSort(4);
+                    showDrawerLayout();
+                    break;
+            }
+        }
+    };
+
+
     public static void startGoodsListActivity(Activity activity, String secondClassId, String secondClassName) {
         Intent intent = new Intent(activity, GoodsListActivity.class);
         intent.putExtra("secondClassId", secondClassId);
@@ -77,14 +118,12 @@ public class GoodsListActivity extends BaseActivity {
         activity.startActivity(intent);
     }
 
-
     @Override
     public void setTitleView() {
-        titleImgRightTwo.setVisibility(View.VISIBLE);
-        secondClassId = getIntent().getStringExtra("secondClassId");
-        secondClassName = getIntent().getStringExtra("secondClassName");
-        titleName.setText(secondClassName);
         titleImgLeft.setOnClickListener(onClickListener);
+        titleImgRightOne.setVisibility(View.VISIBLE);
+        titleImgRightTwo.setVisibility(View.VISIBLE);
+        titleImgRightTwo.setImageResource(R.mipmap.icon_grid);
         titleImgRightOne.setOnClickListener(onClickListener);
         titleImgRightTwo.setOnClickListener(onClickListener);
     }
@@ -93,9 +132,16 @@ public class GoodsListActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.goods_activity_list);
+        getIntentData();
         initDrawerLayout();
         initView();
         initData();
+    }
+
+    private void getIntentData() {
+        secondClassId = getIntent().getStringExtra("secondClassId");
+        secondClassName = getIntent().getStringExtra("secondClassName");
+        titleName.setText(secondClassName);
     }
 
     private void initDrawerLayout() {
@@ -128,9 +174,16 @@ public class GoodsListActivity extends BaseActivity {
     private void initView() {
         tv_all.setOnClickListener(onClickListener);
         tv_new.setOnClickListener(onClickListener);
-        tv_price.setOnClickListener(onClickListener);
+        sortPrice.setOnClickListener(onClickListener);
         tv_class.setOnClickListener(onClickListener);
-        tv_filter.setOnClickListener(onClickListener);
+        sortFilter.setOnClickListener(onClickListener);
+        tv_all.setSelected(true);
+        sortTextViewLists = new ArrayList<>();
+        sortTextViewLists.add(tv_all);
+        sortTextViewLists.add(tv_new);
+        sortTextViewLists.add(tv_price);
+        sortTextViewLists.add(tv_class);
+        sortTextViewLists.add(tv_filter);
 
         lists = new ArrayList<>();
         linearAdapter = new LinearAdapter(R.layout.amain_item_goods_list_linear, lists);
@@ -185,43 +238,27 @@ public class GoodsListActivity extends BaseActivity {
                 }));
     }
 
-    private View.OnClickListener onClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            switch (view.getId()) {
-                case R.id.img_title_left:
-                    checkBack();
-                    break;
-                case R.id.img_title_right_one:
-                    break;
-                case R.id.img_title_right_two:
-                    changeListType();
-                    break;
-                case R.id.tv_all:
-                    break;
-                case R.id.tv_new:
-                    break;
-                case R.id.tv_price:
-                    break;
-                case R.id.tv_class:
-                    break;
-                case R.id.tv_filter:
-                    showDrawerLayout();
-                    break;
+    private void changeSort(int index) {
+        for (int i = 0; i < sortTextViewLists.size(); i++) {
+            if(i==index){
+                sortTextViewLists.get(i).setSelected(true);
+            }else{
+                sortTextViewLists.get(i).setSelected(false);
             }
         }
-    };
-
+    }
 
     private void changeListType() {
         if (listType) {
             //列表切换到网格
             listType = false;
+            titleImgRightTwo.setImageResource(R.mipmap.icon_list);
             recycle_view.setLayoutManager(new GridLayoutManager(this, 2));
             recycle_view.setAdapter(gridAdapter);
         } else {
             //网格切换到列表
             listType = true;
+            titleImgRightTwo.setImageResource(R.mipmap.icon_grid);
             recycle_view.setLayoutManager(new LinearLayoutManager(this));
             recycle_view.setAdapter(linearAdapter);
         }

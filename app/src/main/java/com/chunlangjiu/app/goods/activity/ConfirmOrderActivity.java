@@ -28,8 +28,10 @@ public class ConfirmOrderActivity extends BaseActivity {
 
     @BindView(R.id.scrollView)
     ScrollView scrollView;
+
     @BindView(R.id.rlNoAddress)
     RelativeLayout rlNoAddress;
+
     @BindView(R.id.rlHasAddress)
     RelativeLayout rlHasAddress;
     @BindView(R.id.tvAddressName)
@@ -41,6 +43,9 @@ public class ConfirmOrderActivity extends BaseActivity {
 
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
+
+    @BindView(R.id.rlChoicePay)
+    RelativeLayout rlChoicePay;
     @BindView(R.id.tvPayMethod)
     TextView tvPayMethod;
     @BindView(R.id.etRemark)
@@ -65,9 +70,13 @@ public class ConfirmOrderActivity extends BaseActivity {
                 case R.id.img_title_left:
                     finish();
                     break;
+                case R.id.rlChoicePay:
+                    showPayMethodDialog();
+                    break;
             }
         }
     };
+
 
     @Override
     public void setTitleView() {
@@ -83,6 +92,8 @@ public class ConfirmOrderActivity extends BaseActivity {
     }
 
     private void initView() {
+        rlChoicePay.setOnClickListener(onClickListener);
+
         lists = new ArrayList<>();
         orderGoodsAdapter = new ConfirmOrderGoodsAdapter(this, lists);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -108,4 +119,10 @@ public class ConfirmOrderActivity extends BaseActivity {
             }
         });
     }
+
+
+    private void showPayMethodDialog() {
+
+    }
+
 }

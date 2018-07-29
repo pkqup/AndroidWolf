@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="80dp"
+    android:background="@color/bg_white">
+
+    <ImageView
+        android:id="@+id/img_pic"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="15dp"
+        android:background="@color/bg_red" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/img_pic"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="15dp"
+        android:layout_toRightOf="@id/img_pic"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="法国红酒"
+        android:textColor="@color/t_black"
+        android:textSize="@dimen/sp_mid" />
+
+    <TextView
+        android:id="@+id/tv_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_name"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="4dp"
+        android:layout_toRightOf="@id/img_pic"
+        android:singleLine="true"
+        android:text="￥50000.00"
+        android:textColor="@color/t_black"
+        android:textSize="@dimen/sp_mid" />
+
+
+    <TextView
+        android:id="@+id/tv_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/tv_price"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="4dp"
+        android:layout_toRightOf="@id/tv_price"
+        android:singleLine="true"
+        android:text="750ML"
+        android:textColor="@color/t_gray"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_num"
+        android:layout_width="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="10dp"
+        android:layout_height="wrap_content"
+        android:text="x5"
+        android:textColor="@color/t_black"
+        android:textSize="16sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_alignParentBottom="true"
+        android:background="@color/bg_gray" />
+
+</RelativeLayout>

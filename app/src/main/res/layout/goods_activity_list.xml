@@ -11,7 +11,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="44dp"
             android:orientation="horizontal">
 
             <TextView
@@ -34,15 +34,25 @@
                 android:textColor="@color/t_gray_select"
                 android:textSize="@dimen/sp_small" />
 
-            <TextView
-                android:id="@+id/tv_price"
+            <RelativeLayout
+                android:id="@+id/sortPrice"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="价格"
-                android:textColor="@color/t_gray_select"
-                android:textSize="@dimen/sp_small" />
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/tv_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:drawablePadding="2dp"
+                    android:drawableRight="@mipmap/goods_price_sort"
+                    android:gravity="center"
+                    android:text="价格"
+                    android:textColor="@color/t_gray_select"
+                    android:textSize="@dimen/sp_small" />
+            </RelativeLayout>
+
 
             <TextView
                 android:id="@+id/tv_class"
@@ -54,15 +64,26 @@
                 android:textColor="@color/t_gray_select"
                 android:textSize="@dimen/sp_small" />
 
-            <TextView
-                android:id="@+id/tv_filter"
+
+            <RelativeLayout
+                android:id="@+id/sortFilter"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="筛选"
-                android:textColor="@color/t_gray_select"
-                android:textSize="@dimen/sp_small" />
+                android:layout_weight="1">
+
+                <TextView
+                    android:id="@+id/tv_filter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:drawablePadding="2dp"
+                    android:drawableRight="@mipmap/goods_filter"
+                    android:gravity="center"
+                    android:text="筛选"
+                    android:textColor="@color/t_gray_select"
+                    android:textSize="@dimen/sp_small" />
+            </RelativeLayout>
+
         </LinearLayout>
 
         <View
@@ -73,7 +94,9 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycle_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp" />
 
     </LinearLayout>
 
@@ -92,7 +115,6 @@
             android:text="DrawerLayout"
             android:textColor="@color/t_black"
             android:textSize="@dimen/sp_mid" />
-
 
     </LinearLayout>
 </android.support.v4.widget.DrawerLayout>

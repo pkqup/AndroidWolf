@@ -84,7 +84,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
-                    android:src="@mipmap/right_arrow" />
+                    android:src="@mipmap/black_right_arrow" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -100,8 +100,9 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/rlChoicePay"
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="44dp"
                 android:layout_marginTop="10dp"
                 android:background="@color/bg_white">
 
@@ -120,7 +121,7 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
-                    android:src="@mipmap/right_arrow" />
+                    android:src="@mipmap/black_right_arrow" />
 
                 <TextView
                     android:id="@+id/tvPayMethod"
@@ -130,7 +131,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="40dp"
                     android:text="微信支付"
-                    android:textColor="@color/t_black"
+                    android:textColor="@color/t_red"
                     android:textSize="@dimen/sp_mid" />
             </RelativeLayout>
 
@@ -143,7 +144,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/bg_white"
-                android:minHeight="48dp">
+                android:minHeight="44dp">
 
                 <TextView
                     android:id="@+id/tv_tips"
@@ -174,7 +175,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="44dp"
                 android:layout_marginTop="10dp"
                 android:background="@color/bg_white">
 
@@ -207,7 +208,7 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
+                android:layout_height="44dp"
                 android:background="@color/bg_white">
 
                 <TextView

@@ -221,7 +221,7 @@ public class GoodsDetailsFragment extends BaseFragment {
             ViewGroup.LayoutParams layoutParams = imgPic.getLayoutParams();
             int screenWidth = SizeUtils.getScreenWidth();
             int picWidth = (screenWidth - SizeUtils.dp2px(45)) / 3;
-            layoutParams.height = picWidth * 7/6;
+            layoutParams.height = picWidth;
             layoutParams.width = picWidth;
             imgPic.setLayoutParams(layoutParams);
 

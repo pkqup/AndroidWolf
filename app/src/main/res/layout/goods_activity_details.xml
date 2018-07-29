@@ -97,7 +97,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:src="@mipmap/icon_user_place" />
+                    android:src="@mipmap/goods_details_msg" />
 
             </RelativeLayout>
 
@@ -116,7 +116,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:src="@mipmap/icon_user_place" />
+                    android:src="@mipmap/goods_detalis_collect" />
 
             </RelativeLayout>
 
@@ -136,21 +136,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:src="@mipmap/icon_user_place" />
+                    android:src="@mipmap/goods_details_cart" />
 
                 <TextView
                     android:id="@+id/tvCartNum"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
                     android:layout_alignTop="@id/imgCart"
-                    android:layout_marginLeft="-15dp"
+                    android:layout_marginLeft="-10dp"
                     android:layout_marginTop="-5dp"
                     android:layout_toRightOf="@id/imgCart"
                     android:background="@drawable/cart_num_bg"
                     android:gravity="center"
                     android:textColor="@color/t_white"
-                    android:textSize="10sp"
-                    android:visibility="gone"
+                    android:textSize="8sp"
+                    android:visibility="visible"
                     tools:text="1" />
 
             </RelativeLayout>

@@ -93,8 +93,8 @@ public class CartFragment extends BaseFragment {
             if (viewType == CartGoodsBean.ITEM_GOODS) {
                 SwipeMenuItem deleteItem = new SwipeMenuItem(getActivity())
                         .setBackground(R.color.bg_red)
-                        .setImage(R.mipmap.icon_delete)
                         .setText("删除")
+                        .setTextColorResource(R.color.t_white)
                         .setWidth(width)
                         .setHeight(height);
                 swipeRightMenu.addMenuItem(deleteItem);// 添加菜单到右侧。

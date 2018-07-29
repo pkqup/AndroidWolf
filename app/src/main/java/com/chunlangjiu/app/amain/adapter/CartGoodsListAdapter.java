@@ -40,9 +40,9 @@ public class CartGoodsListAdapter extends BaseQuickAdapter<CartGoodsBean, BaseVi
         switch (viewHolder.getItemViewType()) {
             case CartGoodsBean.ITEM_STORE:
                 if (viewHolder.getAdapterPosition() == 0) {
-                    viewHolder.setVisible(R.id.view_line, false);
+                    viewHolder.setGone(R.id.view_line, false);
                 } else {
-                    viewHolder.setVisible(R.id.view_line, true);
+                    viewHolder.setGone(R.id.view_line, true);
                 }
                 break;
             case CartGoodsBean.ITEM_GOODS:

@@ -11,7 +11,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:padding="10dp"
-        android:src="@mipmap/title_back_white"
+        android:src="@mipmap/white_left_arrow"
         android:visibility="gone" />
 
     <LinearLayout

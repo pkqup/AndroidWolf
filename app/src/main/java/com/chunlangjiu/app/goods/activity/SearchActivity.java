@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -38,8 +39,8 @@ public class SearchActivity extends BaseActivity {
     FlowTagLayout tagHot;
     @BindView(R.id.tag_history)
     FlowTagLayout tagHistory;
-    @BindView(R.id.tv_delete)
-    TextView tvDelete;
+    @BindView(R.id.imgDelete)
+    ImageView imgDelete;
 
     private List<TagBean> hotLists;
     private List<TagBean> historyLists;
@@ -84,7 +85,7 @@ public class SearchActivity extends BaseActivity {
                 case R.id.img_title_left:
                     finish();
                     break;
-                case R.id.tv_delete:
+                case R.id.imgDelete:
                     deleteHistory();
                     break;
             }
@@ -92,7 +93,7 @@ public class SearchActivity extends BaseActivity {
     };
 
     private void initView() {
-        tvDelete.setOnClickListener(onClickListener);
+        imgDelete.setOnClickListener(onClickListener);
 
         hotLists = new ArrayList<>();
         hotAdapter = new TagAdapter<>(this, hotLists);

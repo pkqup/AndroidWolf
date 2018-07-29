@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -15,8 +14,8 @@
             android:id="@+id/img_back"
             android:layout_width="48dp"
             android:layout_height="match_parent"
-            android:padding="10dp"
-            android:src="@mipmap/title_back_white" />
+            android:padding="12dp"
+            android:src="@mipmap/white_left_arrow" />
 
 
         <TextView
@@ -28,17 +27,12 @@
             android:textColor="@color/t_white"
             android:textSize="18sp" />
 
-        <TextView
-            android:id="@+id/tv_edit"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:layout_alignParentRight="true"
-            android:gravity="center"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:text="编辑"
-            android:textColor="@color/t_white"
-            android:textSize="16sp" />
+            android:padding="13dp"
+            android:src="@mipmap/white_edit" />
 
     </RelativeLayout>
 
@@ -60,12 +54,13 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <CheckBox
+            <ImageView
                 android:id="@+id/check_all"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="15dp"
+                android:layout_height="15dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginLeft="15dp" />
+                android:layout_marginLeft="15dp"
+                android:background="@drawable/cart_choice_goods" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -81,8 +76,6 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="20dp"
                 android:background="@color/line" />
-
-
         </LinearLayout>
 
         <TextView
@@ -126,6 +119,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/rl_bottom"
+        android:layout_below="@id/title_view"
         android:background="@color/bg_gray">
 
         <com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView
