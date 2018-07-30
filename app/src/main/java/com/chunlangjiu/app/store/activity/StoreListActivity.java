@@ -47,6 +47,7 @@ public class StoreListActivity extends BaseActivity {
     public void setTitleView() {
         titleName.setText("名庄查询");
         titleImgLeft.setOnClickListener(onClickListener);
+        titleImgRightOne.setVisibility(View.VISIBLE);
         titleImgRightOne.setOnClickListener(onClickListener);
     }
 

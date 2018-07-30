@@ -1,6 +1,7 @@
 package com.chunlangjiu.app.goods.fragment;
 
 import android.app.ActionBar;
+import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +20,9 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseFragment;
 import com.chunlangjiu.app.amain.bean.SecondClassBean;
+import com.chunlangjiu.app.goods.activity.GoodsListActivity;
+import com.chunlangjiu.app.goods.activity.SearchActivity;
+import com.chunlangjiu.app.goods.activity.ShopMainActivity;
 import com.pkqup.commonlibrary.glide.BannerGlideLoader;
 import com.pkqup.commonlibrary.util.SizeUtils;
 import com.pkqup.commonlibrary.util.ToastUtils;
@@ -78,9 +82,16 @@ public class GoodsDetailsFragment extends BaseFragment {
     private List<String> recommendLists;
     private RecommendAdapter recommendAdapter;
 
-    public void setDragText(String text) {
-        drag_text.setText(text);
-    }
+    private View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.tvLookAll:
+                    startActivity(new Intent(getActivity(), ShopMainActivity.class));
+                    break;
+            }
+        }
+    };
 
     @Override
     public void getContentView(LayoutInflater inflater, ViewGroup container) {
@@ -102,6 +113,7 @@ public class GoodsDetailsFragment extends BaseFragment {
         tvStoreName = rootView.findViewById(R.id.tvStoreName);
         tvStoreDesc = rootView.findViewById(R.id.tvStoreDesc);
         tvLookAll = rootView.findViewById(R.id.tvLookAll);
+        tvLookAll.setOnClickListener(onClickListener);
 
         rlEvaluate = rootView.findViewById(R.id.rlEvaluate);
         tvEvaluate = rootView.findViewById(R.id.tvEvaluate);
@@ -112,7 +124,6 @@ public class GoodsDetailsFragment extends BaseFragment {
         webView = rootView.findViewById(R.id.webView);
     }
 
-
     @Override
     public void initData() {
         initBannerData();
@@ -120,7 +131,6 @@ public class GoodsDetailsFragment extends BaseFragment {
         initRecommendView();
         initWebViewData();
     }
-
 
     private void initBannerData() {
         imageViews = new ArrayList<>();

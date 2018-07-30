@@ -14,6 +14,7 @@ import com.chunlangjiu.app.abase.BaseActivity;
 import com.chunlangjiu.app.amain.bean.CartGoodsBean;
 import com.chunlangjiu.app.goods.adapter.ConfirmOrderGoodsAdapter;
 import com.chunlangjiu.app.goods.bean.OrderGoodsBean;
+import com.chunlangjiu.app.goods.dialog.PayDialog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,6 +63,8 @@ public class ConfirmOrderActivity extends BaseActivity {
 
     private List<OrderGoodsBean> lists;
     private ConfirmOrderGoodsAdapter orderGoodsAdapter;
+    private PayDialog payDialog;
+    private int payMehtod = 0;//默认微信支付
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -122,7 +125,34 @@ public class ConfirmOrderActivity extends BaseActivity {
 
 
     private void showPayMethodDialog() {
+        if (payDialog == null) {
+            payDialog = new PayDialog(this);
+            payDialog.setCallBack(new PayDialog.CallBack() {
+                @Override
+                public void choicePayMethod(int payMethod) {
+                    updatePayMethod(payMethod);
+                }
+            });
+        }
+        payDialog.show();
+    }
 
+    private void updatePayMethod(int payMethod) {
+        this.payMehtod =payMethod;
+        switch (payMethod) {
+            case 0:
+                tvPayMethod.setText("微信支付");
+                break;
+            case 1:
+                tvPayMethod.setText("支付宝支付");
+                break;
+            case 2:
+                tvPayMethod.setText("余额支付");
+                break;
+            case 3:
+                tvPayMethod.setText("大额支付");
+                break;
+        }
     }
 
 }

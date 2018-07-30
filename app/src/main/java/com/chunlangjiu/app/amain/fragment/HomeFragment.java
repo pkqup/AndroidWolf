@@ -17,11 +17,16 @@ import android.widget.Toast;
 
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseFragment;
+import com.chunlangjiu.app.amain.activity.MainActivity;
 import com.chunlangjiu.app.amain.adapter.BrandAdapter;
 import com.chunlangjiu.app.amain.adapter.HomeAdapter;
 import com.chunlangjiu.app.amain.bean.BrandBean;
 import com.chunlangjiu.app.amain.bean.HomeBean;
+import com.chunlangjiu.app.goods.activity.SearchActivity;
 import com.chunlangjiu.app.goods.activity.ValuationActivity;
+import com.chunlangjiu.app.store.activity.StoreListActivity;
+import com.chunlangjiu.app.user.activity.AddGoodsActivity;
+import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.glide.BannerGlideLoader;
 import com.pkqup.commonlibrary.util.ToastUtils;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -102,14 +107,19 @@ public class HomeFragment extends BaseFragment {
                     choiceCity();
                     break;
                 case R.id.rlTitleSearch:
+                    startActivity(new Intent(getActivity(), SearchActivity.class));
                     break;
                 case R.id.llAuction://竞拍专区
+                    EventManager.getInstance().notify(null, MainActivity.MSG_PAGE_AUCTION);
                     break;
                 case R.id.llBuy://我要买酒
+                    EventManager.getInstance().notify(null, MainActivity.MSG_PAGE_CLASS);
                     break;
                 case R.id.llSell://我要卖酒
+                    startActivity(new Intent(getActivity(), AddGoodsActivity.class));
                     break;
                 case R.id.llSearch://名庄查询
+                    startActivity(new Intent(getActivity(), StoreListActivity.class));
                     break;
                 case R.id.llEvaluate://名酒估价
                     startActivity(new Intent(getActivity(), ValuationActivity.class));

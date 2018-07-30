@@ -11,6 +11,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -21,6 +22,12 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
 import com.chunlangjiu.app.amain.bean.GoodsListInfoBean;
+import com.chunlangjiu.app.goods.adapter.FilterBrandAdapter;
+import com.chunlangjiu.app.goods.adapter.FilterStoreAdapter;
+import com.chunlangjiu.app.goods.bean.ClassBean;
+import com.chunlangjiu.app.goods.bean.FilterBrandBean;
+import com.chunlangjiu.app.goods.bean.FilterStoreBean;
+import com.chunlangjiu.app.goods.dialog.ClassPopWindow;
 import com.chunlangjiu.app.net.ApiUtils;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.pkqup.commonlibrary.net.exception.ApiException;
@@ -48,34 +55,54 @@ public class GoodsListActivity extends BaseActivity {
     LinearLayout rightView;
 
     @BindView(R.id.tv_all)
-    TextView tv_all;
+    TextView tvAll;
     @BindView(R.id.tv_new)
-    TextView tv_new;
+    TextView tvNew;
     @BindView(R.id.sortPrice)
     RelativeLayout sortPrice;
     @BindView(R.id.tv_price)
-    TextView tv_price;
+    TextView tvPrice;
     @BindView(R.id.tv_class)
-    TextView tv_class;
+    TextView tvClass;
     @BindView(R.id.sortFilter)
     RelativeLayout sortFilter;
     @BindView(R.id.tv_filter)
-    TextView tv_filter;
+    TextView tvFilter;
+
+    @BindView(R.id.etLowPrice)
+    EditText etLowPrice;
+    @BindView(R.id.etHighPrice)
+    EditText etHighPrice;
+    @BindView(R.id.etStartTime)
+    EditText etStartTime;
+    @BindView(R.id.etEndTime)
+    EditText etEndTime;
+    @BindView(R.id.tvReset)
+    TextView tvReset;
+    @BindView(R.id.tvConfirm)
+    TextView tvConfirm;
+    @BindView(R.id.recyclerViewBrand)
+    RecyclerView recyclerViewBrand;//品牌列表
+    @BindView(R.id.recyclerViewStore)
+    RecyclerView recyclerViewStore;//名庄列表
 
     @BindView(R.id.recycle_view)
-    RecyclerView recycle_view;
+    RecyclerView recycleView;
 
     private List<TextView> sortTextViewLists;
-
     private boolean listType = true;//是否是列表形式
     private List<GoodsListInfoBean> lists;
     private LinearAdapter linearAdapter;
     private GridAdapter gridAdapter;
-
     private String secondClassId;
     private String secondClassName;
-
     private CompositeDisposable disposable;
+    private ClassPopWindow classPopWindow;
+
+    private List<FilterBrandBean> brandLists;
+    private FilterBrandAdapter filterBrandAdapter;
+    private List<FilterStoreBean> storeLists;
+    private FilterStoreAdapter filterStoreAdapter;
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -101,6 +128,7 @@ public class GoodsListActivity extends BaseActivity {
                     break;
                 case R.id.tv_class:
                     changeSort(3);
+                    showClassPopWindow();
                     break;
                 case R.id.sortFilter:
                     changeSort(4);
@@ -168,22 +196,57 @@ public class GoodsListActivity extends BaseActivity {
         ViewGroup.LayoutParams layoutParams = rightView.getLayoutParams();
         layoutParams.width = SizeUtils.getScreenWidth() - SizeUtils.dp2px(100);
         rightView.setLayoutParams(layoutParams);
+
+
+        brandLists = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            brandLists.add(new FilterBrandBean(i+"","品牌"+i,false));
+        }
+        brandLists.get(0).setSelect(true);
+        filterBrandAdapter = new FilterBrandAdapter(R.layout.goods_item_pop_class, brandLists);
+        filterBrandAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+
+            }
+        });
+        recyclerViewBrand.setHasFixedSize(true);
+        recyclerViewBrand.setNestedScrollingEnabled(false);
+        recyclerViewBrand.setLayoutManager(new GridLayoutManager(this, 3));
+        recyclerViewBrand.setAdapter(filterBrandAdapter);
+
+        storeLists = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            storeLists.add(new FilterStoreBean(i+"","名庄"+i,false));
+        }
+        storeLists.get(0).setSelect(true);
+        filterStoreAdapter = new FilterStoreAdapter(R.layout.goods_item_pop_class, storeLists);
+        filterStoreAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+
+            }
+        });
+        recyclerViewStore.setHasFixedSize(true);
+        recyclerViewStore.setNestedScrollingEnabled(false);
+        recyclerViewStore.setLayoutManager(new GridLayoutManager(this, 3));
+        recyclerViewStore.setAdapter(filterStoreAdapter);
     }
 
 
     private void initView() {
-        tv_all.setOnClickListener(onClickListener);
-        tv_new.setOnClickListener(onClickListener);
+        tvAll.setOnClickListener(onClickListener);
+        tvNew.setOnClickListener(onClickListener);
         sortPrice.setOnClickListener(onClickListener);
-        tv_class.setOnClickListener(onClickListener);
+        tvClass.setOnClickListener(onClickListener);
         sortFilter.setOnClickListener(onClickListener);
-        tv_all.setSelected(true);
+        tvAll.setSelected(true);
         sortTextViewLists = new ArrayList<>();
-        sortTextViewLists.add(tv_all);
-        sortTextViewLists.add(tv_new);
-        sortTextViewLists.add(tv_price);
-        sortTextViewLists.add(tv_class);
-        sortTextViewLists.add(tv_filter);
+        sortTextViewLists.add(tvAll);
+        sortTextViewLists.add(tvNew);
+        sortTextViewLists.add(tvPrice);
+        sortTextViewLists.add(tvClass);
+        sortTextViewLists.add(tvFilter);
 
         lists = new ArrayList<>();
         linearAdapter = new LinearAdapter(R.layout.amain_item_goods_list_linear, lists);
@@ -200,8 +263,8 @@ public class GoodsListActivity extends BaseActivity {
                 GoodsDetailsActivity.startGoodsDetailsActivity(GoodsListActivity.this, "");
             }
         });
-        recycle_view.setLayoutManager(new LinearLayoutManager(this));
-        recycle_view.setAdapter(linearAdapter);
+        recycleView.setLayoutManager(new LinearLayoutManager(this));
+        recycleView.setAdapter(linearAdapter);
     }
 
     private void initData() {
@@ -240,9 +303,9 @@ public class GoodsListActivity extends BaseActivity {
 
     private void changeSort(int index) {
         for (int i = 0; i < sortTextViewLists.size(); i++) {
-            if(i==index){
+            if (i == index) {
                 sortTextViewLists.get(i).setSelected(true);
-            }else{
+            } else {
                 sortTextViewLists.get(i).setSelected(false);
             }
         }
@@ -253,14 +316,14 @@ public class GoodsListActivity extends BaseActivity {
             //列表切换到网格
             listType = false;
             titleImgRightTwo.setImageResource(R.mipmap.icon_list);
-            recycle_view.setLayoutManager(new GridLayoutManager(this, 2));
-            recycle_view.setAdapter(gridAdapter);
+            recycleView.setLayoutManager(new GridLayoutManager(this, 2));
+            recycleView.setAdapter(gridAdapter);
         } else {
             //网格切换到列表
             listType = true;
             titleImgRightTwo.setImageResource(R.mipmap.icon_grid);
-            recycle_view.setLayoutManager(new LinearLayoutManager(this));
-            recycle_view.setAdapter(linearAdapter);
+            recycleView.setLayoutManager(new LinearLayoutManager(this));
+            recycleView.setAdapter(linearAdapter);
         }
     }
 
@@ -309,6 +372,19 @@ public class GoodsListActivity extends BaseActivity {
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, Gravity.END);
             drawerLayout.openDrawer(Gravity.END);
         }
+    }
+
+    private void showClassPopWindow() {
+        List<ClassBean> lists = new ArrayList<>();
+        lists.add(new ClassBean("0", "葡萄酒"));
+        lists.add(new ClassBean("1", "红酒"));
+        lists.add(new ClassBean("2", "白酒"));
+        lists.add(new ClassBean("3", "拉菲"));
+        lists.add(new ClassBean("4", "康帝"));
+        if (classPopWindow == null) {
+            classPopWindow = new ClassPopWindow(this, lists, "0");
+        }
+        classPopWindow.showAsDropDown(tvClass, 0, 1);
     }
 
 

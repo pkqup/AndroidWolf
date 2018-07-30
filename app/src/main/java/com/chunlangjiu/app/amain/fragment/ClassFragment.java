@@ -42,6 +42,18 @@ public class ClassFragment extends BaseFragment {
     private List<SecondClassBean> secondLists;
     private SecondClassAdapter secondAdapter;
 
+
+    private View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.rl_search:
+                    startActivity(new Intent(getActivity(), SearchActivity.class));
+                    break;
+            }
+        }
+    };
+
     @Override
     public void getContentView(LayoutInflater inflater, ViewGroup container) {
         inflater.inflate(R.layout.amain_fragment_class, container, true);
@@ -110,17 +122,6 @@ public class ClassFragment extends BaseFragment {
         }
         secondAdapter.setNewData(secondLists);
     }
-
-    private View.OnClickListener onClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-            switch (view.getId()) {
-                case R.id.rl_search:
-                    startActivity(new Intent(getActivity(), SearchActivity.class));
-                    break;
-            }
-        }
-    };
 
     public class FirstClassAdapter extends BaseQuickAdapter<FirstClassBean, BaseViewHolder> {
         public FirstClassAdapter(int layoutResId, List<FirstClassBean> data) {

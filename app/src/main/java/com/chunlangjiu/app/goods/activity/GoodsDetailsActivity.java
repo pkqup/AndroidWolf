@@ -136,22 +136,22 @@ public class GoodsDetailsActivity extends BaseActivity {
         ShareUtils.shareLink(this, web, new UMShareListener() {
             @Override
             public void onStart(SHARE_MEDIA share_media) {
-                KLog.e("-----share onStart----");
+                KLog.e("-----white_share onStart----");
             }
 
             @Override
             public void onResult(SHARE_MEDIA share_media) {
-                KLog.e("-----share success----");
+                KLog.e("-----white_share success----");
             }
 
             @Override
             public void onError(SHARE_MEDIA share_media, Throwable throwable) {
-                KLog.e("-----share onError----");
+                KLog.e("-----white_share onError----");
             }
 
             @Override
             public void onCancel(SHARE_MEDIA share_media) {
-                KLog.e("-----share onCancel----");
+                KLog.e("-----white_share onCancel----");
             }
         });
     }

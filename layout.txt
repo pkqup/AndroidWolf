@@ -15,8 +15,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text=""
-    android:textColor="@color/t_gray"
-    android:textSize="@dimen/sp_small" />
+    android:textColor="@color/t_black"
+    android:textSize="@dimen/sp_mid" />
 
 <EditText
     android:id="@+id/etTitle"
@@ -26,3 +26,21 @@
     android:hint="请选择"
     android:textColor="@color/t_black"
     android:textSize="@dimen/sp_mid" />
+
+
+private View.OnClickListener onClickListener = new View.OnClickListener() {
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.img_title_left:
+
+                break;
+        }
+    }
+};
+
+
+
+
+
+

@@ -3,11 +3,13 @@ package com.chunlangjiu.app.amain.activity;
 import android.Manifest;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.amap.api.location.AMapLocation;
 import com.chunlangjiu.app.R;
@@ -22,6 +24,7 @@ import com.chunlangjiu.app.util.GeTuiIntentService;
 import com.chunlangjiu.app.util.GeTuiPushService;
 import com.chunlangjiu.app.util.LocationUtils;
 import com.igexin.sdk.PushManager;
+import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.util.PermissionUtils;
 import com.pkqup.commonlibrary.view.MyViewPager;
 import com.socks.library.KLog;
@@ -34,6 +37,9 @@ import butterknife.BindView;
 
 
 public class MainActivity extends BaseActivity {
+
+    public static final String MSG_PAGE_CLASS = "msg_page_class";
+    public static final String MSG_PAGE_AUCTION = "msg_page_auction";
 
     @BindView(R.id.view_pager)
     MyViewPager viewPager;
@@ -80,10 +86,13 @@ public class MainActivity extends BaseActivity {
     private List<LinearLayout> linearLayouts;
     private List<TextView> textViews;
 
+    private long exitTime;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.amain_activity_main);
+        EventManager.getInstance().registerListener(onNotifyListener);
         requestPermission();
         initGeTuiPush();
         initView();
@@ -215,6 +224,45 @@ public class MainActivity extends BaseActivity {
                 textViews.get(i).setSelected(false);
             }
         }
+    }
+
+    private EventManager.OnNotifyListener onNotifyListener = new EventManager.OnNotifyListener() {
+        @Override
+        public void onNotify(Object object, String eventTag) {
+            msgToPageClass(eventTag);//我要买酒
+            msgToPageAuction(eventTag);//竞拍专区
+        }
+    };
+
+    private void msgToPageClass(String eventTag) {
+        if (eventTag.equals(MSG_PAGE_CLASS)) {
+            setPageFragment(1);
+        }
+    }
+
+    private void msgToPageAuction(String eventTag) {
+        if (eventTag.equals(MSG_PAGE_AUCTION)) {
+            setPageFragment(2);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventManager.getInstance().unRegisterListener(onNotifyListener);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if ((System.currentTimeMillis() - exitTime) > 2000) {
+                Toast.makeText(getApplicationContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
+                exitTime = System.currentTimeMillis();
+            } else {
+                finish();
+            }
+        }
+        return true;
     }
 
 }
