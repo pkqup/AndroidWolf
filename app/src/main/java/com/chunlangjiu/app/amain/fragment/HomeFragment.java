@@ -276,7 +276,7 @@ public class HomeFragment extends BaseFragment {
 
         refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
-            public void onLoadMore(final RefreshLayout refreshLaut) {
+            public void onLoadMore(final RefreshLayout refreshLayout) {
                 refreshLayout.getLayout().postDelayed(new Runnable() {
                     @Override
                     public void run() {

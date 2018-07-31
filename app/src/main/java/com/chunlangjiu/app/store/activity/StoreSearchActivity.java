@@ -1,18 +1,17 @@
 package com.chunlangjiu.app.store.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ExpandableListView;
 import android.widget.RelativeLayout;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.BaseViewHolder;
+import com.chad.library.adapter.base.entity.MultiItemEntity;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
-import com.chunlangjiu.app.store.bean.SearchStoreBean;
-import com.chunlangjiu.app.store.bean.StoreClassBean;
+import com.chunlangjiu.app.store.adapter.SearchStoreAdapter;
+import com.chunlangjiu.app.store.bean.SearchBean;
+import com.chunlangjiu.app.store.bean.SearchSecondBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,10 +26,11 @@ public class StoreSearchActivity extends BaseActivity {
 
     @BindView(R.id.rlMore)
     RelativeLayout rlMore;
-    @BindView(R.id.recyclerView)
-    RecyclerView recyclerView;
 
-    private List<SearchStoreBean> lists;
+    @BindView(R.id.exListView)
+    ExpandableListView exListView;
+
+    private List<SearchBean> lists;
     private SearchStoreAdapter searchStoreAdapter;
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -53,6 +53,7 @@ public class StoreSearchActivity extends BaseActivity {
     @Override
     public void setTitleView() {
         titleImgLeft.setOnClickListener(onClickListener);
+        titleImgRightOne.setVisibility(View.VISIBLE);
         titleImgRightOne.setOnClickListener(onClickListener);
         titleName.setVisibility(View.GONE);
         titleSearchView.setVisibility(View.VISIBLE);
@@ -68,30 +69,32 @@ public class StoreSearchActivity extends BaseActivity {
 
     private void initView() {
         rlMore.setOnClickListener(onClickListener);
+
         lists = new ArrayList<>();
-        searchStoreAdapter = new SearchStoreAdapter(R.layout.store_item_search_store, lists);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(searchStoreAdapter);
+        searchStoreAdapter = new SearchStoreAdapter(this, lists);
+        exListView.setAdapter(searchStoreAdapter);
+        exListView.setGroupIndicator(null);
+        exListView.setDivider(null);
+        exListView.setCacheColorHint(0);
     }
 
     private void initData() {
-        for (int i = 0; i < 10; i++) {
-            SearchStoreBean searchStoreBean = new SearchStoreBean();
-            lists.add(searchStoreBean);
+        for (int i = 0; i < 6; i++) {
+            SearchBean searchBean = new SearchBean();
+            searchBean.setId(i + "");
+            searchBean.setName("分类" + i);
+            ArrayList<SearchSecondBean> secondBeans = new ArrayList<>();
+            for (int j = 0; j < 6; j++) {
+                SearchSecondBean searchSecondBean = new SearchSecondBean();
+                searchSecondBean.setId(j + "");
+                searchSecondBean.setName("名庄" + j);
+                secondBeans.add(searchSecondBean);
+            }
+            searchBean.setList(secondBeans);
+            lists.add(searchBean);
         }
-        searchStoreAdapter.setNewData(lists);
+        searchStoreAdapter.setLists(lists);
     }
 
 
-    public class SearchStoreAdapter extends BaseQuickAdapter<SearchStoreBean, BaseViewHolder> {
-
-        public SearchStoreAdapter(int layoutResId, List<SearchStoreBean> data) {
-            super(layoutResId, data);
-        }
-
-        @Override
-        protected void convert(BaseViewHolder helper, SearchStoreBean item) {
-            helper.setText(R.id.tvName, item.getName());
-        }
-    }
 }

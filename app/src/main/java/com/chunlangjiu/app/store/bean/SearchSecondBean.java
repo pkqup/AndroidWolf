@@ -1,20 +1,20 @@
 package com.chunlangjiu.app.store.bean;
 
 /**
- * @CreatedbBy: liucun on 2018/7/14.
+ * @CreatedbBy: liucun on 2018/7/31
  * @Describe:
  */
-public class SearchStoreBean {
+public class SearchSecondBean {
 
-    private String imgUrl;
+    private String id;
     private String name;
 
-    public String getImgUrl() {
-        return imgUrl;
+    public String getId() {
+        return id;
     }
 
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
