@@ -8,6 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:background="@color/bg_white"
         android:scrollbars="none">
 
         <LinearLayout
@@ -258,6 +259,7 @@
 
 
             <LinearLayout
+                android:id="@+id/llMainPic"
                 android:layout_width="match_parent"
                 android:layout_height="170dp"
                 android:orientation="horizontal"
@@ -343,6 +345,7 @@
 
 
             <LinearLayout
+                android:id="@+id/llDescPic"
                 android:layout_width="match_parent"
                 android:layout_height="170dp"
                 android:orientation="horizontal"
@@ -412,15 +415,17 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/llGoodsPic"
                 android:layout_width="match_parent"
                 android:layout_height="170dp"
                 android:orientation="horizontal"
-                android:paddingBottom="10dp">
+                android:paddingBottom="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp">
 
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
                     android:layout_weight="1"
                     android:background="@drawable/bg_gray_stroke">
 
@@ -602,6 +607,7 @@
                                 android:layout_height="1px"
                                 android:layout_alignParentBottom="true"
                                 android:layout_marginBottom="8dp"
+                                android:layout_marginRight="10dp"
                                 android:background="@color/line" />
                         </RelativeLayout>
                     </LinearLayout>
@@ -672,6 +678,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="1px"
                                 android:layout_alignParentBottom="true"
+                                android:layout_marginBottom="8dp"
+                                android:layout_marginRight="10dp"
                                 android:background="@color/line" />
                         </RelativeLayout>
                     </LinearLayout>
@@ -755,6 +763,7 @@
                                 android:layout_height="1px"
                                 android:layout_alignParentBottom="true"
                                 android:layout_marginBottom="8dp"
+                                android:layout_marginRight="10dp"
                                 android:background="@color/line" />
                         </RelativeLayout>
                     </LinearLayout>
@@ -788,6 +797,7 @@
                             android:layout_height="1px"
                             android:layout_alignParentBottom="true"
                             android:layout_marginBottom="8dp"
+                            android:layout_marginRight="10dp"
                             android:background="@color/line" />
                     </RelativeLayout>
 

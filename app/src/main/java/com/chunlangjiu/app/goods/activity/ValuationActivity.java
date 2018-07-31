@@ -3,13 +3,16 @@ package com.chunlangjiu.app.goods.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
+import com.pkqup.commonlibrary.util.SizeUtils;
 
 import butterknife.BindView;
 
@@ -18,7 +21,6 @@ import butterknife.BindView;
  * @Describe: 名酒估价页面
  */
 public class ValuationActivity extends BaseActivity {
-
 
     @BindView(R.id.rlChoiceClass)
     RelativeLayout rlChoiceClass;
@@ -30,6 +32,13 @@ public class ValuationActivity extends BaseActivity {
     EditText etLocation;
     @BindView(R.id.etSeries)
     EditText etSeries;
+
+    @BindView(R.id.llMainPic)
+    LinearLayout llMainPic;
+    @BindView(R.id.llDescPic)
+    LinearLayout llDescPic;
+    @BindView(R.id.llGoodsPic)
+    LinearLayout llGoodsPic;
 
     @BindView(R.id.imgMainEx)
     ImageView imgMainEx;
@@ -75,7 +84,16 @@ public class ValuationActivity extends BaseActivity {
     }
 
     private void initView() {
+        int picSize = (SizeUtils.getScreenWidth() - 30) / 2;
+        ViewGroup.LayoutParams layoutParams = llMainPic.getLayoutParams();
+        layoutParams.height = picSize;
+        llMainPic.setLayoutParams(layoutParams);
+        llDescPic.setLayoutParams(layoutParams);
+        llGoodsPic.setLayoutParams(layoutParams);
+
         tvCommit.setOnClickListener(onClickListener);
+
+
     }
 
 

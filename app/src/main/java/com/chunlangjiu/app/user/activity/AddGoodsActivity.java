@@ -2,13 +2,16 @@ package com.chunlangjiu.app.user.activity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
+import com.pkqup.commonlibrary.util.SizeUtils;
 
 import butterknife.BindView;
 
@@ -32,6 +35,13 @@ public class AddGoodsActivity extends BaseActivity {
     EditText etPrice;
     @BindView(R.id.etCount)
     EditText etCount;
+
+    @BindView(R.id.llMainPic)
+    LinearLayout llMainPic;
+    @BindView(R.id.llDescPic)
+    LinearLayout llDescPic;
+    @BindView(R.id.llGoodsPic)
+    LinearLayout llGoodsPic;
 
     @BindView(R.id.imgMainEx)
     ImageView imgMainEx;
@@ -87,5 +97,15 @@ public class AddGoodsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.user_activity_add_goods);
+        initView();
+    }
+
+    private void initView() {
+        int picSize = (SizeUtils.getScreenWidth() - 30) / 2;
+        ViewGroup.LayoutParams layoutParams = llMainPic.getLayoutParams();
+        layoutParams.height = picSize;
+        llMainPic.setLayoutParams(layoutParams);
+        llDescPic.setLayoutParams(layoutParams);
+        llGoodsPic.setLayoutParams(layoutParams);
     }
 }
