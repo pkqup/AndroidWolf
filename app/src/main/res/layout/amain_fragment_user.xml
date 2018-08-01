@@ -13,6 +13,7 @@
         android:orientation="vertical">
 
         <RelativeLayout
+            android:id="@+id/rlBackground"
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:background="@color/bg_red">
@@ -79,7 +80,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/bg_white_rectangle"
-                    android:paddingBottom="2dp"
+                    android:paddingBottom="3dp"
                     android:paddingLeft="10dp"
                     android:paddingRight="10dp"
                     android:paddingTop="2dp"
@@ -94,7 +95,7 @@
                     android:layout_marginLeft="20dp"
                     android:layout_marginTop="10dp"
                     android:background="@drawable/bg_white_rectangle"
-                    android:paddingBottom="2dp"
+                    android:paddingBottom="3dp"
                     android:paddingLeft="30dp"
                     android:paddingRight="30dp"
                     android:paddingTop="2dp"
@@ -439,6 +440,7 @@
 
             </RelativeLayout>
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/llSellOrder"
             android:layout_width="match_parent"
@@ -617,7 +619,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:orientation="vertical"/>
+                android:orientation="vertical" />
 
         </LinearLayout>
 
@@ -867,6 +869,7 @@
                     tools:text="1" />
             </RelativeLayout>
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/llSellAuction"
             android:layout_width="match_parent"
@@ -1101,7 +1104,7 @@
                     android:layout_height="20dp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="14dp"
-                    android:src="@mipmap/icon_user_place" />
+                    android:src="@mipmap/goods_manager_add" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -1128,7 +1131,7 @@
                     android:layout_height="20dp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="14dp"
-                    android:src="@mipmap/icon_user_place" />
+                    android:src="@mipmap/goods_manager_sell" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -1169,7 +1172,7 @@
                     android:layout_height="20dp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="14dp"
-                    android:src="@mipmap/icon_user_place" />
+                    android:src="@mipmap/goods_manager_auction" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -1210,7 +1213,7 @@
                     android:layout_height="20dp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="14dp"
-                    android:src="@mipmap/icon_user_place" />
+                    android:src="@mipmap/goods_manager_home" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -1231,10 +1234,10 @@
                     android:layout_toRightOf="@id/imgWareHouseGoods"
                     android:background="@drawable/cart_num_bg"
                     android:gravity="center"
-                    tools:text="1"
-                    android:visibility="gone"
                     android:textColor="@color/t_white"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    tools:text="1" />
 
             </RelativeLayout>
 
@@ -1251,7 +1254,7 @@
                     android:layout_height="20dp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="14dp"
-                    android:src="@mipmap/icon_user_place" />
+                    android:src="@mipmap/goods_manager_auth" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -1272,10 +1275,10 @@
                     android:layout_toRightOf="@id/imgCheckGoods"
                     android:background="@drawable/cart_num_bg"
                     android:gravity="center"
-                    tools:text="1"
-                    android:visibility="gone"
                     android:textColor="@color/t_white"
-                    android:textSize="10sp" />
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    tools:text="1" />
             </RelativeLayout>
         </LinearLayout>
 
@@ -1367,31 +1370,30 @@
                     android:text="我的收藏"
                     android:textColor="@color/t_black"
                     android:textSize="@dimen/sp_small" />
-
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/rlBankCard"
+                android:id="@+id/rlShare"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
                 <ImageView
-                    android:id="@+id/imgBankCard"
+                    android:id="@+id/imgShare"
                     android:layout_width="24dp"
                     android:layout_height="22dp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="14dp"
-                    android:src="@mipmap/my_icon_three" />
+                    android:src="@mipmap/my_manager_share" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/imgBankCard"
+                    android:layout_below="@id/imgShare"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
-                    android:text="银行卡管理"
+                    android:text="我要分享"
                     android:textColor="@color/t_black"
                     android:textSize="@dimen/sp_small" />
             </RelativeLayout>
@@ -1420,7 +1422,6 @@
                     android:text="会员资料"
                     android:textColor="@color/t_black"
                     android:textSize="@dimen/sp_small" />
-
             </RelativeLayout>
 
             <RelativeLayout
@@ -1448,6 +1449,86 @@
                     android:textColor="@color/t_black"
                     android:textSize="@dimen/sp_small" />
             </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rlBankCard"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/imgBankCard"
+                    android:layout_width="24dp"
+                    android:layout_height="22dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="14dp"
+                    android:src="@mipmap/my_icon_three" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/imgBankCard"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:text="银行卡管理"
+                    android:textColor="@color/t_black"
+                    android:textSize="@dimen/sp_small" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/llMyManagerSecond"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:background="@color/bg_white"
+            android:orientation="horizontal">
+
+            <RelativeLayout
+                android:id="@+id/rlBankCardSecond"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/imgBankCardSecond"
+                    android:layout_width="24dp"
+                    android:layout_height="22dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="14dp"
+                    android:src="@mipmap/my_icon_three" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/imgBankCardSecond"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:text="银行卡管理"
+                    android:textColor="@color/t_black"
+                    android:textSize="@dimen/sp_small" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <RelativeLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

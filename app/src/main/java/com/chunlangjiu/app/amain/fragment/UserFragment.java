@@ -1,6 +1,7 @@
 package com.chunlangjiu.app.amain.fragment;
 
 import android.content.Intent;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class UserFragment extends BaseFragment {
 
+    private RelativeLayout rlBackground;
     private ImageView imgSetting;
 
     private CircleImageView imgHead;
@@ -106,28 +108,34 @@ public class UserFragment extends BaseFragment {
     private RelativeLayout rlCheckGoods;
     /*商品管理*/
 
-    /*其他*/
+    /*我的管理*/
     private RelativeLayout rlMoneyManager;
     private RelativeLayout rlCollect;
+    private RelativeLayout rlShare;
     private RelativeLayout rlVip;
     private RelativeLayout rlAddress;
     private RelativeLayout rlBankCard;
-    /*其他*/
+    private LinearLayout llMyManagerSecond;
+    private RelativeLayout rlBankCardSecond;
+    /*我的管理*/
+
+    private static final int TYPE_BUYER = 0;//买家中心
+    private static final int TYPE_SELLER = 1;//卖家中心
+    private int userType = TYPE_BUYER;
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.imgSetting:
-                    startActivity(new Intent(getActivity(), StoreListActivity.class));
                     break;
                 case R.id.tvChangeType:// 切换买/卖家中心
+                    changeUserType();
                     break;
                 case R.id.tvAuthRealName:// 企业/个人认证
                     startActivity(new Intent(getActivity(), PersonAuthActivity.class));
                     startActivity(new Intent(getActivity(), CompanyAuthActivity.class));
                     break;
-
                 case R.id.rlOrderManager:// 订单管理
                     break;
                 case R.id.rlOrderOne:// 买家待付款
@@ -148,7 +156,6 @@ public class UserFragment extends BaseFragment {
                     break;
                 case R.id.rlSellOrderFour:// 卖家全部订单
                     break;
-
                 case R.id.rlAuctionManager:// 竞拍订单管理
                     break;
                 case R.id.rlAuctionOne:// 买家竞拍订单-待付定金
@@ -169,7 +176,6 @@ public class UserFragment extends BaseFragment {
                     break;
                 case R.id.rlSellAuctionFour:// 卖家竞拍订单-全部订单
                     break;
-
                 case R.id.rlAddGoods:// 添加商品
                     startActivity(new Intent(getActivity(), AddGoodsActivity.class));
                     break;
@@ -181,7 +187,6 @@ public class UserFragment extends BaseFragment {
                     break;
                 case R.id.rlCheckGoods:// 审核商品
                     break;
-
                 case R.id.rlMoneyManager:// 资金管理
                     break;
                 case R.id.rlCollect:// 我的收藏
@@ -205,6 +210,7 @@ public class UserFragment extends BaseFragment {
 
     @Override
     public void initView() {
+        rlBackground = rootView.findViewById(R.id.rlBackground);
         imgSetting = rootView.findViewById(R.id.imgSetting);
         imgSetting.setOnClickListener(onClickListener);
 
@@ -306,18 +312,72 @@ public class UserFragment extends BaseFragment {
 
         rlMoneyManager = rootView.findViewById(R.id.rlMoneyManager);
         rlCollect = rootView.findViewById(R.id.rlCollect);
+        rlShare = rootView.findViewById(R.id.rlShare);
         rlVip = rootView.findViewById(R.id.rlVip);
         rlAddress = rootView.findViewById(R.id.rlAddress);
         rlBankCard = rootView.findViewById(R.id.rlBankCard);
         rlMoneyManager.setOnClickListener(onClickListener);
         rlCollect.setOnClickListener(onClickListener);
+        rlShare.setOnClickListener(onClickListener);
         rlVip.setOnClickListener(onClickListener);
         rlAddress.setOnClickListener(onClickListener);
         rlBankCard.setOnClickListener(onClickListener);
+
+        llMyManagerSecond = rootView.findViewById(R.id.llMyManagerSecond);
+        rlBankCardSecond = rootView.findViewById(R.id.rlBankCardSecond);
+        rlBankCardSecond.setOnClickListener(onClickListener);
+
+        showUserTypeView();
+    }
+
+    private void showUserTypeView() {
+        if (userType == TYPE_BUYER) {
+            //买家中心
+            rlBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.bg_low_black));
+            tvChangeType.setText("切换到卖家中心");
+            llNotUseMoney.setVisibility(View.GONE);
+
+            llBuyOrder.setVisibility(View.VISIBLE);
+            llSellOrder.setVisibility(View.GONE);
+            llBuyAuction.setVisibility(View.VISIBLE);
+            llSellAuction.setVisibility(View.GONE);
+
+            rlGoodsManager.setVisibility(View.GONE);
+            llGoodsContent.setVisibility(View.GONE);
+
+            rlCollect.setVisibility(View.VISIBLE);
+            rlBankCard.setVisibility(View.GONE);
+            llMyManagerSecond.setVisibility(View.VISIBLE);
+        } else {
+            //卖家中心
+            rlBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.bg_red));
+            tvChangeType.setText("切换到买家中心");
+            llNotUseMoney.setVisibility(View.VISIBLE);
+
+            llBuyOrder.setVisibility(View.GONE);
+            llSellOrder.setVisibility(View.VISIBLE);
+            llBuyAuction.setVisibility(View.GONE);
+            llSellAuction.setVisibility(View.VISIBLE);
+
+            rlGoodsManager.setVisibility(View.VISIBLE);
+            llGoodsContent.setVisibility(View.VISIBLE);
+
+            rlCollect.setVisibility(View.GONE);
+            rlBankCard.setVisibility(View.VISIBLE);
+            llMyManagerSecond.setVisibility(View.GONE);
+        }
     }
 
     @Override
     public void initData() {
 
     }
+
+
+    private void changeUserType() {
+        userType = userType == TYPE_BUYER ? TYPE_SELLER : TYPE_BUYER;
+        showUserTypeView();
+    }
+
+
 }
