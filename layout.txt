@@ -1,6 +1,7 @@
 ¥
 
-
+    recyclerView.setHasFixedSize(true);
+    recyclerView.setNestedScrollingEnabled(false);
 
 <de.hdodenhof.circleimageview.CircleImageView
     android:id="@+id/imgHead"

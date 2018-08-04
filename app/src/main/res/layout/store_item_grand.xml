@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:scrollbars="none">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="45dp"
         android:orientation="vertical">
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -21,69 +19,70 @@
                 android:layout_weight="1">
 
                 <TextView
+                    android:id="@+id/tvYear"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:text="年份"
-                    android:textColor="@color/t_gray"
+                    android:text="2018"
+                    android:textColor="@color/t_black"
                     android:textSize="@dimen/sp_mid" />
 
             </RelativeLayout>
-
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
 
                 <ImageView
+                    android:id="@+id/imgGrand"
                     android:layout_width="14dp"
                     android:layout_height="12dp"
                     android:layout_centerInParent="true"
                     android:src="@mipmap/store_icon_grand" />
 
             </RelativeLayout>
-
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
 
                 <TextView
+                    android:id="@+id/tvRp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:text="RP评分"
-                    android:textColor="@color/t_gray"
+                    android:text="90"
+                    android:textColor="@color/t_black"
                     android:textSize="@dimen/sp_mid" />
 
             </RelativeLayout>
-
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
 
                 <TextView
+                    android:id="@+id/tvWs"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:text="WS评分"
-                    android:textColor="@color/t_gray"
+                    android:text="89"
+                    android:textColor="@color/t_black"
                     android:textSize="@dimen/sp_mid" />
 
             </RelativeLayout>
-
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1">
 
                 <TextView
+                    android:id="@+id/tvJr"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
-                    android:text="JR评分"
-                    android:textColor="@color/t_gray"
+                    android:text="16"
+                    android:textColor="@color/t_black"
                     android:textSize="@dimen/sp_mid" />
 
             </RelativeLayout>
@@ -95,17 +94,6 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:background="@color/line" />
-
-        <LinearLayout
-            android:id="@+id/llGrand"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-
-        </LinearLayout>
-
     </LinearLayout>
 
-
-</ScrollView>
+</RelativeLayout>
