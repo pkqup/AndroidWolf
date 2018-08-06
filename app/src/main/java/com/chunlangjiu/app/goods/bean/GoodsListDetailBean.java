@@ -14,7 +14,7 @@ public class GoodsListDetailBean {
     private String price;
     private String sold_quantity;
     private List promotion;//促销信息
-    private String gift;
+    private GiftDetail gift;
 
     public String getItem_id() {
         return item_id;
@@ -64,11 +64,11 @@ public class GoodsListDetailBean {
         this.promotion = promotion;
     }
 
-    public String getGift() {
+    public GiftDetail getGift() {
         return gift;
     }
 
-    public void setGift(String gift) {
+    public void setGift(GiftDetail gift) {
         this.gift = gift;
     }
 

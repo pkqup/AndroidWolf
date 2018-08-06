@@ -21,19 +21,22 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
-import com.chunlangjiu.app.amain.bean.GoodsListInfoBean;
 import com.chunlangjiu.app.amain.bean.ThirdClassBean;
 import com.chunlangjiu.app.goods.adapter.FilterBrandAdapter;
 import com.chunlangjiu.app.goods.adapter.FilterStoreAdapter;
 import com.chunlangjiu.app.goods.bean.ClassBean;
 import com.chunlangjiu.app.goods.bean.FilterBrandBean;
 import com.chunlangjiu.app.goods.bean.FilterStoreBean;
+import com.chunlangjiu.app.goods.bean.GoodsListBean;
+import com.chunlangjiu.app.goods.bean.GoodsListDetailBean;
 import com.chunlangjiu.app.goods.dialog.ClassPopWindow;
 import com.chunlangjiu.app.net.ApiUtils;
+import com.pkqup.commonlibrary.glide.GlideUtils;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.pkqup.commonlibrary.net.exception.ApiException;
 import com.pkqup.commonlibrary.util.SizeUtils;
 import com.pkqup.commonlibrary.util.ToastUtils;
+import com.socks.library.KLog;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -50,6 +53,11 @@ import io.reactivex.schedulers.Schedulers;
  * @Describe:
  */
 public class GoodsListActivity extends BaseActivity {
+
+    private static final String ORDER_ALL = "modified_time";//综合
+    private static final String ORDER_NEW = "list_time";//新品
+    private static final String ORDER_PRICE_ASC = "price_asc";//价格升序
+    private static final String ORDER_PRICE_DESC = "price_desc";//价格降序
 
     @BindView(R.id.drawerLayout)
     DrawerLayout drawerLayout;
@@ -93,11 +101,11 @@ public class GoodsListActivity extends BaseActivity {
 
     private List<TextView> sortTextViewLists;
     private boolean listType = true;//是否是列表形式
-    private List<GoodsListInfoBean> lists;
+    private List<GoodsListDetailBean> lists;
     private LinearAdapter linearAdapter;
     private GridAdapter gridAdapter;
-    private String secondClassId;
-    private String secondClassName;
+    private String classId;
+    private String className;
     private CompositeDisposable disposable;
     private ClassPopWindow classPopWindow;
 
@@ -105,6 +113,9 @@ public class GoodsListActivity extends BaseActivity {
     private FilterBrandAdapter filterBrandAdapter;
     private List<FilterStoreBean> storeLists;
     private FilterStoreAdapter filterStoreAdapter;
+
+    private int pageNum = 1;
+    private String orderBy = ORDER_ALL;
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -143,8 +154,8 @@ public class GoodsListActivity extends BaseActivity {
 
     public static void startGoodsListActivity(Activity activity, String secondClassId, String secondClassName, List<ThirdClassBean> classLists) {
         Intent intent = new Intent(activity, GoodsListActivity.class);
-        intent.putExtra("secondClassId", secondClassId);
-        intent.putExtra("secondClassName", secondClassName);
+        intent.putExtra("classId", secondClassId);
+        intent.putExtra("className", secondClassName);
         intent.putExtra("classLists", (Serializable) classLists);
         activity.startActivity(intent);
     }
@@ -170,9 +181,9 @@ public class GoodsListActivity extends BaseActivity {
     }
 
     private void getIntentData() {
-        secondClassId = getIntent().getStringExtra("secondClassId");
-        secondClassName = getIntent().getStringExtra("secondClassName");
-        titleName.setText(secondClassName);
+        classId = getIntent().getStringExtra("classId");
+        className = getIntent().getStringExtra("className");
+        titleName.setText(className);
     }
 
     private void initDrawerLayout() {
@@ -238,6 +249,8 @@ public class GoodsListActivity extends BaseActivity {
 
 
     private void initView() {
+        disposable = new CompositeDisposable();
+
         tvAll.setOnClickListener(onClickListener);
         tvNew.setOnClickListener(onClickListener);
         sortPrice.setOnClickListener(onClickListener);
@@ -271,38 +284,35 @@ public class GoodsListActivity extends BaseActivity {
     }
 
     private void initData() {
-        disposable = new CompositeDisposable();
-        lists.clear();
-        for (int i = 0; i < 30; i++) {
-            GoodsListInfoBean goodsListInfoBean = new GoodsListInfoBean();
-            lists.add(goodsListInfoBean);
-        }
+        getGoodsList();
+    }
+
+    private void getGoodsList() {
+        disposable.add(ApiUtils.getInstance().getGoodsList(classId, pageNum, orderBy)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<GoodsListBean>>() {
+                    @Override
+                    public void accept(ResultBean<GoodsListBean> goodsListBeanResultBean) throws Exception {
+                        getListSuccess(goodsListBeanResultBean.getData().getList());
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        KLog.e();
+                    }
+                }));
+    }
+
+    private void getListSuccess(List<GoodsListDetailBean> list) {
+        this.lists = list;
         if (listType) {
             linearAdapter.setNewData(lists);
         } else {
             gridAdapter.setNewData(lists);
         }
-
-        disposable.add(ApiUtils.getInstance().getApiService().getAddressList("")
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<ResultBean>() {
-                    @Override
-                    public void accept(ResultBean resultBean) throws Exception {
-
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        if (throwable instanceof ApiException) {
-                            ApiException apiException = (ApiException) throwable;
-                            if (apiException.getCode() == ApiException.NO_NETWORK) {
-                                ToastUtils.showShort(apiException.getMessage());
-                            }
-                        }
-                    }
-                }));
     }
+
 
     private void changeSort(int index) {
         for (int i = 0; i < sortTextViewLists.size(); i++) {
@@ -321,39 +331,47 @@ public class GoodsListActivity extends BaseActivity {
             titleImgRightTwo.setImageResource(R.mipmap.icon_list);
             recycleView.setLayoutManager(new GridLayoutManager(this, 2));
             recycleView.setAdapter(gridAdapter);
+            gridAdapter.setNewData(lists);
         } else {
             //网格切换到列表
             listType = true;
             titleImgRightTwo.setImageResource(R.mipmap.icon_grid);
             recycleView.setLayoutManager(new LinearLayoutManager(this));
             recycleView.setAdapter(linearAdapter);
+            linearAdapter.setNewData(lists);
         }
     }
 
 
-    public class LinearAdapter extends BaseQuickAdapter<GoodsListInfoBean, BaseViewHolder> {
-        public LinearAdapter(int layoutResId, List<GoodsListInfoBean> data) {
+    public class LinearAdapter extends BaseQuickAdapter<GoodsListDetailBean, BaseViewHolder> {
+        public LinearAdapter(int layoutResId, List<GoodsListDetailBean> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, GoodsListInfoBean item) {
+        protected void convert(BaseViewHolder helper, GoodsListDetailBean item) {
+            ImageView imgPic = helper.getView(R.id.img_pic);
+            GlideUtils.loadImage(GoodsListActivity.this,item.getImage_default_id(),imgPic);
+            helper.setText(R.id.tv_name,item.getTitle());
         }
     }
 
-    public class GridAdapter extends BaseQuickAdapter<GoodsListInfoBean, BaseViewHolder> {
-        public GridAdapter(int layoutResId, List<GoodsListInfoBean> data) {
+    public class GridAdapter extends BaseQuickAdapter<GoodsListDetailBean, BaseViewHolder> {
+        public GridAdapter(int layoutResId, List<GoodsListDetailBean> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, GoodsListInfoBean item) {
-            ImageView imaPic = helper.getView(R.id.img_pic);
-            ViewGroup.LayoutParams layoutParams = imaPic.getLayoutParams();
+        protected void convert(BaseViewHolder helper, GoodsListDetailBean item) {
+            ImageView imgPic = helper.getView(R.id.img_pic);
+            ViewGroup.LayoutParams layoutParams = imgPic.getLayoutParams();
             int picWidth = (SizeUtils.getScreenWidth() - SizeUtils.dp2px(40)) / 2;
             layoutParams.width = picWidth;
             layoutParams.height = picWidth;
-            imaPic.setLayoutParams(layoutParams);
+            imgPic.setLayoutParams(layoutParams);
+
+            GlideUtils.loadImage(GoodsListActivity.this,item.getImage_default_id(),imgPic);
+            helper.setText(R.id.tv_name,item.getTitle());
         }
     }
 
@@ -398,5 +416,11 @@ public class GoodsListActivity extends BaseActivity {
             return true;
         }
         return true;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        disposable.dispose();
     }
 }

@@ -41,14 +41,6 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class ClassFragment extends BaseFragment {
 
-    private static final String order_all = "modified_time";//综合
-    private static final String order_new = "list_time";//新品
-    private static final String order_price_asc = "price_asc";//价格升序
-    private static final String order_price_desc = "price_desc";//价格降序
-    private static final String order_class = "item_id";//分类
-    private String orderBy;
-
-
     private RelativeLayout rl_search;
     private RecyclerView firstRecycleView;
     private ExpandableListView exListView;
