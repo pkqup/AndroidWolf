@@ -25,6 +25,7 @@ import com.chunlangjiu.app.goods.activity.SearchActivity;
 import com.chunlangjiu.app.net.ApiUtils;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.pkqup.commonlibrary.util.SizeUtils;
+import com.pkqup.commonlibrary.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,14 @@ import io.reactivex.schedulers.Schedulers;
  * @Describe: 分类
  */
 public class ClassFragment extends BaseFragment {
+
+    private static final String order_all = "modified_time";//综合
+    private static final String order_new = "list_time";//新品
+    private static final String order_price_asc = "price_asc";//价格升序
+    private static final String order_price_desc = "price_desc";//价格降序
+    private static final String order_class = "item_id";//分类
+    private String orderBy;
+
 
     private RelativeLayout rl_search;
     private RecyclerView firstRecycleView;
@@ -98,6 +107,13 @@ public class ClassFragment extends BaseFragment {
             public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
                 //设置点击分类头部不收缩
                 return true;
+            }
+        });
+        secondClassAdapter.setCallBackListener(new SecondClassAdapter.CallBack() {
+            @Override
+            public void onSubClick(int groupPosition, int subPosition) {
+                GoodsListActivity.startGoodsListActivity(getActivity(),secondList.get(groupPosition).getLv3().get(subPosition).getCat_id(),
+                        secondList.get(groupPosition).getLv3().get(subPosition).getCat_name());
             }
         });
     }
