@@ -1,5 +1,6 @@
 package com.chunlangjiu.app.net;
 
+import com.chunlangjiu.app.amain.bean.MainClassBean;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 
 import io.reactivex.Flowable;
@@ -15,12 +16,9 @@ public interface ApiService {
 
     @POST(".")
     @FormUrlEncoded
-    Flowable<ResultBean> test(@Field("field") String field);
-
-
-    @POST(".")
-    @FormUrlEncoded
     Flowable<ResultBean> getAddressList(@Field("field") String field);
 
-
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<MainClassBean>> getClass(@Field("method") String method, @Field("v") String v);
 }

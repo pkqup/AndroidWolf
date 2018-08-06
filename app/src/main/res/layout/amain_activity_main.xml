@@ -13,19 +13,14 @@
     <RelativeLayout
         android:id="@+id/rlBottom"
         android:layout_width="match_parent"
-        android:layout_height="61dp"
+        android:layout_height="60dp"
         android:layout_alignParentBottom="true"
         android:background="@color/bg_white">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/line" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_alignParentBottom="true"
+            android:layout_height="match_parent"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -88,7 +83,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:orientation="vertical"/>
+                android:orientation="vertical" />
 
             <RelativeLayout
                 android:layout_width="0dp"
@@ -160,6 +155,11 @@
                     android:textSize="12sp" />
             </LinearLayout>
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:background="@color/line" />
     </RelativeLayout>
 
     <RelativeLayout

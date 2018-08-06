@@ -76,6 +76,12 @@ public class StoreSearchActivity extends BaseActivity {
         exListView.setGroupIndicator(null);
         exListView.setDivider(null);
         exListView.setCacheColorHint(0);
+        exListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                return true;
+            }
+        });
     }
 
     private void initData() {
@@ -94,6 +100,13 @@ public class StoreSearchActivity extends BaseActivity {
             lists.add(searchBean);
         }
         searchStoreAdapter.setLists(lists);
+
+        int groupCount = exListView.getCount();
+
+        for (int i=0; i<groupCount; i++) {
+            exListView.expandGroup(i);
+        }
+
     }
 
 

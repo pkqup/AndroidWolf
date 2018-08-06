@@ -1,12 +1,10 @@
 package com.chunlangjiu.app.amain.bean;
 
-import java.util.List;
-
 /**
- * @CreatedbBy: liucun on 2018/6/23.
+ * @CreatedbBy: liucun on 2018/8/6
  * @Describe:
  */
-public class SecondClassBean {
+public class ThirdClassBean {
 
     private String cat_id;
     private String parent_id;
@@ -17,7 +15,6 @@ public class SecondClassBean {
     private String is_leaf;
     private String child_count;
     private String order_sort;
-    private List<ThirdClassBean> lv3;
 
     public String getCat_id() {
         return cat_id;
@@ -89,13 +86,5 @@ public class SecondClassBean {
 
     public void setOrder_sort(String order_sort) {
         this.order_sort = order_sort;
-    }
-
-    public List<ThirdClassBean> getLv3() {
-        return lv3;
-    }
-
-    public void setLv3(List<ThirdClassBean> lv3) {
-        this.lv3 = lv3;
     }
 }

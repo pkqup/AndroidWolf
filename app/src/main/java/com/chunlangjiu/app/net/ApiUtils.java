@@ -1,6 +1,10 @@
 package com.chunlangjiu.app.net;
 
+import com.chunlangjiu.app.amain.bean.MainClassBean;
 import com.pkqup.commonlibrary.net.HttpUtils;
+import com.pkqup.commonlibrary.net.bean.ResultBean;
+
+import io.reactivex.Flowable;
 
 /**
  * @CreatedbBy: liucun on 2018/7/6
@@ -32,5 +36,10 @@ public class ApiUtils {
         }
         return apiService;
     }
+
+    public Flowable<ResultBean<MainClassBean>> getMainClass() {
+        return apiService.getClass("category.itemCategory", "v1");
+    }
+
 
 }

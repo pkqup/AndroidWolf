@@ -112,7 +112,7 @@ public class MainActivity extends BaseActivity {
                     if (grantPermission.equals(Manifest.permission.ACCESS_FINE_LOCATION) ||
                             grantPermission.equals(Manifest.permission.ACCESS_COARSE_LOCATION)) {
                         //开启定位
-                        new LocationUtils().startLocation(new LocationUtils.LocationCallBack() {
+                   /*     new LocationUtils().startLocation(new LocationUtils.LocationCallBack() {
                             @Override
                             public void locationSuccess(AMapLocation aMapLocation) {
                                 KLog.e("location_success");
@@ -122,7 +122,7 @@ public class MainActivity extends BaseActivity {
                             public void locationFail() {
                                 KLog.e("location_fail");
                             }
-                        });
+                        });*/
                     }
                 }
             }
