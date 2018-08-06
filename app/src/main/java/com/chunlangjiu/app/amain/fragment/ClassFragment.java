@@ -113,7 +113,7 @@ public class ClassFragment extends BaseFragment {
             @Override
             public void onSubClick(int groupPosition, int subPosition) {
                 GoodsListActivity.startGoodsListActivity(getActivity(),secondList.get(groupPosition).getLv3().get(subPosition).getCat_id(),
-                        secondList.get(groupPosition).getLv3().get(subPosition).getCat_name());
+                        secondList.get(groupPosition).getLv3().get(subPosition).getCat_name(),secondList.get(groupPosition).getLv3());
             }
         });
     }

@@ -22,6 +22,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
 import com.chunlangjiu.app.amain.bean.GoodsListInfoBean;
+import com.chunlangjiu.app.amain.bean.ThirdClassBean;
 import com.chunlangjiu.app.goods.adapter.FilterBrandAdapter;
 import com.chunlangjiu.app.goods.adapter.FilterStoreAdapter;
 import com.chunlangjiu.app.goods.bean.ClassBean;
@@ -34,6 +35,7 @@ import com.pkqup.commonlibrary.net.exception.ApiException;
 import com.pkqup.commonlibrary.util.SizeUtils;
 import com.pkqup.commonlibrary.util.ToastUtils;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -139,10 +141,11 @@ public class GoodsListActivity extends BaseActivity {
     };
 
 
-    public static void startGoodsListActivity(Activity activity, String secondClassId, String secondClassName) {
+    public static void startGoodsListActivity(Activity activity, String secondClassId, String secondClassName, List<ThirdClassBean> classLists) {
         Intent intent = new Intent(activity, GoodsListActivity.class);
         intent.putExtra("secondClassId", secondClassId);
         intent.putExtra("secondClassName", secondClassName);
+        intent.putExtra("classLists", (Serializable) classLists);
         activity.startActivity(intent);
     }
 
@@ -200,7 +203,7 @@ public class GoodsListActivity extends BaseActivity {
 
         brandLists = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            brandLists.add(new FilterBrandBean(i+"","品牌"+i,false));
+            brandLists.add(new FilterBrandBean(i + "", "品牌" + i, false));
         }
         brandLists.get(0).setSelect(true);
         filterBrandAdapter = new FilterBrandAdapter(R.layout.goods_item_pop_class, brandLists);
@@ -217,7 +220,7 @@ public class GoodsListActivity extends BaseActivity {
 
         storeLists = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            storeLists.add(new FilterStoreBean(i+"","名庄"+i,false));
+            storeLists.add(new FilterStoreBean(i + "", "名庄" + i, false));
         }
         storeLists.get(0).setSelect(true);
         filterStoreAdapter = new FilterStoreAdapter(R.layout.goods_item_pop_class, storeLists);

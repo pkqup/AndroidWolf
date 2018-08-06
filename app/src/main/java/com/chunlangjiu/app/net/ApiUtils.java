@@ -1,6 +1,7 @@
 package com.chunlangjiu.app.net;
 
 import com.chunlangjiu.app.amain.bean.MainClassBean;
+import com.chunlangjiu.app.goods.bean.GoodsListBean;
 import com.pkqup.commonlibrary.net.HttpUtils;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 
@@ -41,5 +42,8 @@ public class ApiUtils {
         return apiService.getClass("category.itemCategory", "v1");
     }
 
+    public Flowable<ResultBean<GoodsListBean>> getGoodsList(String cat_id, int page_no, String orderBy) {
+        return apiService.getGoodsList("item.search", "v1", cat_id, page_no, 20, orderBy);
+    }
 
 }

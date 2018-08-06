@@ -26,7 +26,7 @@ public interface ApiService {
     @POST("index.php/topapi")
     @FormUrlEncoded
     Flowable<ResultBean<GoodsListBean>> getGoodsList(@Field("method") String method, @Field("v") String v, @Field("cat_id") String cat_id,
-                                                     @Field("page_no") String page_no, @Field("page_size") String page_size,
+                                                     @Field("page_no") int page_no, @Field("page_size") int page_size,
                                                      @Field("orderBy") String orderBy);
 
 

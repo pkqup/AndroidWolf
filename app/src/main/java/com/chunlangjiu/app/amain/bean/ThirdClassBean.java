@@ -1,10 +1,12 @@
 package com.chunlangjiu.app.amain.bean;
 
+import java.io.Serializable;
+
 /**
  * @CreatedbBy: liucun on 2018/8/6
  * @Describe:
  */
-public class ThirdClassBean {
+public class ThirdClassBean implements Serializable{
 
     private String cat_id;
     private String parent_id;
