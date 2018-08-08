@@ -1,5 +1,6 @@
 package com.chunlangjiu.app.net;
 
+import com.chunlangjiu.app.amain.bean.LoginBean;
 import com.chunlangjiu.app.amain.bean.MainClassBean;
 import com.chunlangjiu.app.goods.bean.GoodsListBean;
 import com.pkqup.commonlibrary.net.HttpUtils;
@@ -46,4 +47,12 @@ public class ApiUtils {
         return apiService.getGoodsList("item.search", "v1", cat_id, page_no, 20, orderBy);
     }
 
+
+    public Flowable<ResultBean> getAuthSms(String mobile) {
+        return apiService.getAuthSms("user.sendSms", "v1", mobile);
+    }
+
+    public Flowable<ResultBean<LoginBean>> login(String mobile, String code) {
+        return apiService.login("user.oauthlogin", "v2", mobile, code);
+    }
 }

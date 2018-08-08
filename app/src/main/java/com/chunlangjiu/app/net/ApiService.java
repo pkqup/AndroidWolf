@@ -1,5 +1,6 @@
 package com.chunlangjiu.app.net;
 
+import com.chunlangjiu.app.amain.bean.LoginBean;
 import com.chunlangjiu.app.amain.bean.MainClassBean;
 import com.chunlangjiu.app.goods.bean.GoodsListBean;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
@@ -29,5 +30,11 @@ public interface ApiService {
                                                      @Field("page_no") int page_no, @Field("page_size") int page_size,
                                                      @Field("orderBy") String orderBy);
 
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean> getAuthSms(@Field("method") String method, @Field("v") String v,@Field("mobile") String mobile);
 
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<LoginBean>> login(@Field("method") String method, @Field("v") String v, @Field("account") String mobile, @Field("verifycode") String verifycode);
 }

@@ -6,6 +6,7 @@ import android.support.multidex.MultiDexApplication;
 import com.chunlangjiu.app.net.ApiUtils;
 import com.pkqup.commonlibrary.crash.CrashHandler;
 import com.pkqup.commonlibrary.util.AppUtils;
+import com.pkqup.commonlibrary.util.SPUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshFooterCreator;
 import com.scwang.smartrefresh.layout.api.DefaultRefreshHeaderCreator;
@@ -23,6 +24,8 @@ import io.realm.RealmConfiguration;
 
 public class BaseApplication extends MultiDexApplication {
 
+    private String token;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -30,10 +33,11 @@ public class BaseApplication extends MultiDexApplication {
         ApiUtils.getInstance().init();
         initRealm();
         initUM();
+        initToken();
         CrashHandler.getInstance().init(this);
-
         KLog.init(AppUtils.isDebug());
     }
+
 
     /**
      * 友盟初始化
@@ -50,6 +54,11 @@ public class BaseApplication extends MultiDexApplication {
         RealmConfiguration config = new RealmConfiguration.Builder().
                 name("MyRealm.realm").deleteRealmIfMigrationNeeded().build();
         Realm.setDefaultConfiguration(config);
+    }
+
+
+    private void initToken() {
+        token = (String) SPUtils.get("token","");
     }
 
     static {
