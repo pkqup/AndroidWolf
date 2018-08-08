@@ -3,11 +3,13 @@ package com.chunlangjiu.app.goods.dialog;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
@@ -15,8 +17,14 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chunlangjiu.app.R;
+import com.chunlangjiu.app.amain.adapter.SecondClassAdapter;
+import com.chunlangjiu.app.amain.bean.FirstClassBean;
+import com.chunlangjiu.app.amain.bean.SecondClassBean;
+import com.chunlangjiu.app.goods.activity.GoodsListActivity;
+import com.chunlangjiu.app.goods.adapter.ClassPopSecondAdapter;
 import com.chunlangjiu.app.goods.bean.ClassBean;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,15 +37,21 @@ public class ClassPopWindow extends PopupWindow {
     private LayoutInflater inflater;
     private View mContentView;
 
-    private GridAdapter gridAdapter;
-    private List<ClassBean> lists;
+    private RecyclerView firstRecycleView;
+    private ExpandableListView exListView;
+
+    private List<FirstClassBean> firstLists;
+    private FirstClassAdapter firstAdapter;
+
+    private List<SecondClassBean> secondList;
+    private ClassPopSecondAdapter secondClassAdapter;
 
     private String selectClassId;
 
-    public ClassPopWindow(Context context, List<ClassBean> lists, String selectClassId) {
+    public ClassPopWindow(Context context, List<FirstClassBean> firstLists, String selectClassId) {
         super(context);
         this.context = context;
-        this.lists = lists;
+        this.firstLists = firstLists;
         this.selectClassId = selectClassId;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContentView = inflater.inflate(R.layout.popwindow_class, null);
@@ -70,39 +84,76 @@ public class ClassPopWindow extends PopupWindow {
                 dismiss();
             }
         });
-        RecyclerView recycleView = mContentView.findViewById(R.id.recycleView);
-        gridAdapter = new GridAdapter(R.layout.goods_item_pop_class, lists);
-        gridAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+
+        firstRecycleView = mContentView.findViewById(R.id.first_class_recycle_view);
+        exListView = mContentView.findViewById(R.id.exListView);
+
+        firstLists.get(0).setSelect(true);
+        firstAdapter = new FirstClassAdapter(R.layout.amain_item_first_class, firstLists);
+        firstRecycleView.setLayoutManager(new LinearLayoutManager(context));
+        firstRecycleView.setAdapter(firstAdapter);
+        firstAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                selectClassId = lists.get(position).getClassId();
-                gridAdapter.notifyDataSetChanged();
-                if (callBack != null) {
-                    callBack.choiceClass(lists.get(position).getClassName(), lists.get(position).getClassId());
-                }
-                dismiss();
+                changeFirstClass(position);
             }
         });
-        recycleView.setLayoutManager(new GridLayoutManager(context, 3));
-        recycleView.setAdapter(gridAdapter);
+
+        secondList = firstLists.get(0).getLv2();
+        secondClassAdapter = new ClassPopSecondAdapter(context, secondList, selectClassId);
+        exListView.setAdapter(secondClassAdapter);
+        exListView.setGroupIndicator(null);
+        exListView.setDivider(null);
+        exListView.setCacheColorHint(0);
+        exListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
+            @Override
+            public boolean onGroupClick(ExpandableListView parent, View v, int groupPosition, long id) {
+                //设置点击分类头部不收缩
+                return true;
+            }
+        });
+        secondClassAdapter.setCallBackListener(new ClassPopSecondAdapter.CallBack() {
+            @Override
+            public void onSubClick(int groupPosition, int subPosition) {
+                if (callBack != null) {
+                    String cat_id = secondList.get(groupPosition).getLv3().get(subPosition).getCat_id();
+                    String cat_name = secondList.get(groupPosition).getLv3().get(subPosition).getCat_name();
+                    selectClassId = cat_id;
+                    secondClassAdapter.setSelectClassId(cat_id);
+                    callBack.choiceClass(cat_name, cat_id);
+                    dismiss();
+                }
+            }
+        });
+
+        int groupCount = exListView.getCount();
+        for (int i = 0; i < groupCount; i++) {
+            exListView.expandGroup(i);
+        }
     }
 
-    public class GridAdapter extends BaseQuickAdapter<ClassBean, BaseViewHolder> {
-        public GridAdapter(int layoutResId, List<ClassBean> data) {
-            super(layoutResId, data);
-        }
+    private void changeFirstClass(int position) {
+        if (!firstLists.get(position).isSelect()) {
+            for (int i = 0; i < firstLists.size(); i++) {
+                if (i == position) {
+                    firstLists.get(i).setSelect(true);
+                } else {
+                    firstLists.get(i).setSelect(false);
+                }
+            }
+            firstAdapter.notifyDataSetChanged();
 
-        @Override
-        protected void convert(BaseViewHolder helper, ClassBean item) {
-            TextView tvName = helper.getView(R.id.tvName);
-            tvName.setText(item.getClassName());
-            if (selectClassId.equals(item.getClassId())) {
-                tvName.setSelected(true);
-            } else {
-                tvName.setSelected(false);
+
+            secondList = firstLists.get(position).getLv2();
+            secondClassAdapter.setLists(new ArrayList<SecondClassBean>());
+            secondClassAdapter.setLists(secondList);
+            int groupCount = exListView.getCount();
+            for (int i = 0; i < groupCount; i++) {
+                exListView.expandGroup(i);
             }
         }
     }
+
 
     private CallBack callBack;
 
@@ -112,5 +163,18 @@ public class ClassPopWindow extends PopupWindow {
 
     public interface CallBack {
         void choiceClass(String className, String classId);
+    }
+
+    public class FirstClassAdapter extends BaseQuickAdapter<FirstClassBean, BaseViewHolder> {
+        public FirstClassAdapter(int layoutResId, List<FirstClassBean> data) {
+            super(layoutResId, data);
+        }
+
+        @Override
+        protected void convert(BaseViewHolder helper, FirstClassBean item) {
+            TextView tvClass = helper.getView(R.id.tv_class);
+            tvClass.setText(item.getCat_name());
+            tvClass.setSelected(item.isSelect());
+        }
     }
 }

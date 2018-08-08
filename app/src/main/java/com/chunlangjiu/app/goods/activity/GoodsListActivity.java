@@ -21,6 +21,8 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
+import com.chunlangjiu.app.amain.bean.FirstClassBean;
+import com.chunlangjiu.app.amain.bean.MainClassBean;
 import com.chunlangjiu.app.amain.bean.ThirdClassBean;
 import com.chunlangjiu.app.goods.adapter.FilterBrandAdapter;
 import com.chunlangjiu.app.goods.adapter.FilterStoreAdapter;
@@ -99,6 +101,7 @@ public class GoodsListActivity extends BaseActivity {
     @BindView(R.id.recycle_view)
     RecyclerView recycleView;
 
+    private CompositeDisposable disposable;
     private List<TextView> sortTextViewLists;
     private boolean listType = true;//是否是列表形式
     private List<GoodsListDetailBean> lists;
@@ -106,13 +109,18 @@ public class GoodsListActivity extends BaseActivity {
     private GridAdapter gridAdapter;
     private String classId;
     private String className;
-    private CompositeDisposable disposable;
+
+    //三级分类列表
+    private List<FirstClassBean> categoryLists;
     private ClassPopWindow classPopWindow;
 
+    //品牌列表
     private List<FilterBrandBean> brandLists;
     private FilterBrandAdapter filterBrandAdapter;
+    //酒庄列表
     private List<FilterStoreBean> storeLists;
     private FilterStoreAdapter filterStoreAdapter;
+
 
     private int pageNum = 1;
     private String orderBy = ORDER_ALL;
@@ -285,6 +293,7 @@ public class GoodsListActivity extends BaseActivity {
 
     private void initData() {
         getGoodsList();
+        getClassData();
     }
 
     private void getGoodsList() {
@@ -300,6 +309,23 @@ public class GoodsListActivity extends BaseActivity {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         KLog.e();
+                    }
+                }));
+    }
+
+    private void getClassData() {
+        disposable.add(ApiUtils.getInstance().getMainClass()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<MainClassBean>>() {
+                    @Override
+                    public void accept(ResultBean<MainClassBean> mainClassBean) throws Exception {
+                        categoryLists = mainClassBean.getData().getCategorys();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+
+                    public void accept(Throwable throwable) throws Exception {
                     }
                 }));
     }
@@ -351,8 +377,8 @@ public class GoodsListActivity extends BaseActivity {
         @Override
         protected void convert(BaseViewHolder helper, GoodsListDetailBean item) {
             ImageView imgPic = helper.getView(R.id.img_pic);
-            GlideUtils.loadImage(GoodsListActivity.this,item.getImage_default_id(),imgPic);
-            helper.setText(R.id.tv_name,item.getTitle());
+            GlideUtils.loadImage(GoodsListActivity.this, item.getImage_default_id(), imgPic);
+            helper.setText(R.id.tv_name, item.getTitle());
         }
     }
 
@@ -370,8 +396,8 @@ public class GoodsListActivity extends BaseActivity {
             layoutParams.height = picWidth;
             imgPic.setLayoutParams(layoutParams);
 
-            GlideUtils.loadImage(GoodsListActivity.this,item.getImage_default_id(),imgPic);
-            helper.setText(R.id.tv_name,item.getTitle());
+            GlideUtils.loadImage(GoodsListActivity.this, item.getImage_default_id(), imgPic);
+            helper.setText(R.id.tv_name, item.getTitle());
         }
     }
 
@@ -396,16 +422,24 @@ public class GoodsListActivity extends BaseActivity {
     }
 
     private void showClassPopWindow() {
-        List<ClassBean> lists = new ArrayList<>();
-        lists.add(new ClassBean("0", "葡萄酒"));
-        lists.add(new ClassBean("1", "红酒"));
-        lists.add(new ClassBean("2", "白酒"));
-        lists.add(new ClassBean("3", "拉菲"));
-        lists.add(new ClassBean("4", "康帝"));
-        if (classPopWindow == null) {
-            classPopWindow = new ClassPopWindow(this, lists, "0");
+        if (categoryLists == null || categoryLists.size() == 0) {
+            ToastUtils.showShort("暂无分类");
+        } else {
+            if (classPopWindow == null) {
+                classPopWindow = new ClassPopWindow(this, categoryLists, classId);
+                classPopWindow.setCallBack(new ClassPopWindow.CallBack() {
+                    @Override
+                    public void choiceClass(String name, String id) {
+                        classId = id;
+                        className = name;
+                        titleName.setText(className);
+                        pageNum = 1;
+                        getGoodsList();
+                    }
+                });
+            }
+            classPopWindow.showAsDropDown(tvClass, 0, 1);
         }
-        classPopWindow.showAsDropDown(tvClass, 0, 1);
     }
 
 
