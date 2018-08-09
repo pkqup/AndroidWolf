@@ -27,6 +27,17 @@
                 android:layout_marginTop="15dp"
                 android:src="@mipmap/setting" />
 
+            <TextView
+                android:id="@+id/tvToLogin"
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                android:layout_centerInParent="true"
+                android:background="@drawable/bg_white_stroke"
+                android:gravity="center"
+                android:text="请登录"
+                android:textColor="@color/t_white"
+                android:textSize="@dimen/sp_mid" />
+
 
             <RelativeLayout
                 android:id="@+id/rlHead"

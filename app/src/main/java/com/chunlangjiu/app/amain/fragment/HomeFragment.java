@@ -26,6 +26,7 @@ import com.chunlangjiu.app.goods.activity.SearchActivity;
 import com.chunlangjiu.app.goods.activity.ValuationActivity;
 import com.chunlangjiu.app.store.activity.StoreListActivity;
 import com.chunlangjiu.app.user.activity.AddGoodsActivity;
+import com.chunlangjiu.app.util.ConstantMsg;
 import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.glide.BannerGlideLoader;
 import com.pkqup.commonlibrary.util.ToastUtils;
@@ -110,10 +111,10 @@ public class HomeFragment extends BaseFragment {
                     startActivity(new Intent(getActivity(), SearchActivity.class));
                     break;
                 case R.id.llAuction://竞拍专区
-                    EventManager.getInstance().notify(null, MainActivity.MSG_PAGE_AUCTION);
+                    EventManager.getInstance().notify(null, ConstantMsg.MSG_PAGE_AUCTION);
                     break;
                 case R.id.llBuy://我要买酒
-                    EventManager.getInstance().notify(null, MainActivity.MSG_PAGE_CLASS);
+                    EventManager.getInstance().notify(null, ConstantMsg.MSG_PAGE_CLASS);
                     break;
                 case R.id.llSell://我要卖酒
                     startActivity(new Intent(getActivity(), AddGoodsActivity.class));

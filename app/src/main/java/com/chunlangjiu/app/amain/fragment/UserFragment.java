@@ -11,13 +11,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.chunlangjiu.app.R;
+import com.chunlangjiu.app.abase.BaseApplication;
 import com.chunlangjiu.app.abase.BaseFragment;
-import com.chunlangjiu.app.goods.activity.SearchActivity;
-import com.chunlangjiu.app.store.activity.StoreListActivity;
+import com.chunlangjiu.app.amain.activity.LoginActivity;
 import com.chunlangjiu.app.user.activity.AddGoodsActivity;
 import com.chunlangjiu.app.user.activity.AddressListActivity;
 import com.chunlangjiu.app.user.activity.CompanyAuthActivity;
 import com.chunlangjiu.app.user.activity.PersonAuthActivity;
+import com.chunlangjiu.app.util.ConstantMsg;
+import com.pkqup.commonlibrary.eventmsg.EventManager;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -27,6 +29,9 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * @Describe: 我的
  */
 public class UserFragment extends BaseFragment {
+
+    private TextView tvToLogin;
+    private RelativeLayout rlHead;
 
     private RelativeLayout rlBackground;
     private ImageView imgSetting;
@@ -126,7 +131,13 @@ public class UserFragment extends BaseFragment {
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
+            if (!BaseApplication.isLogin()) {
+                startActivity(new Intent(getActivity(), LoginActivity.class));
+                return;
+            }
             switch (view.getId()) {
+                case R.id.tvToLogin:
+                    break;
                 case R.id.imgSetting:
                     break;
                 case R.id.tvChangeType:// 切换买/卖家中心
@@ -210,6 +221,10 @@ public class UserFragment extends BaseFragment {
 
     @Override
     public void initView() {
+        tvToLogin = rootView.findViewById(R.id.tvToLogin);
+        tvToLogin.setOnClickListener(onClickListener);
+        rlHead = rootView.findViewById(R.id.rlHead);
+
         rlBackground = rootView.findViewById(R.id.rlBackground);
         imgSetting = rootView.findViewById(R.id.imgSetting);
         imgSetting.setOnClickListener(onClickListener);
@@ -327,7 +342,18 @@ public class UserFragment extends BaseFragment {
         rlBankCardSecond = rootView.findViewById(R.id.rlBankCardSecond);
         rlBankCardSecond.setOnClickListener(onClickListener);
 
+        checkLogin();
         showUserTypeView();
+    }
+
+    private void checkLogin() {
+        if (BaseApplication.isLogin()) {
+            tvToLogin.setVisibility(View.GONE);
+            rlHead.setVisibility(View.VISIBLE);
+        } else {
+            tvToLogin.setVisibility(View.VISIBLE);
+            rlHead.setVisibility(View.GONE);
+        }
     }
 
     private void showUserTypeView() {
@@ -370,14 +396,30 @@ public class UserFragment extends BaseFragment {
 
     @Override
     public void initData() {
-
+        EventManager.getInstance().registerListener(onNotifyListener);
     }
-
 
     private void changeUserType() {
         userType = userType == TYPE_BUYER ? TYPE_SELLER : TYPE_BUYER;
         showUserTypeView();
     }
 
+    private EventManager.OnNotifyListener onNotifyListener = new EventManager.OnNotifyListener() {
+        @Override
+        public void onNotify(Object object, String eventTag) {
+            loginSuccess(eventTag);
+        }
+    };
 
+    private void loginSuccess(String eventTag) {
+        if (eventTag.equals(ConstantMsg.LOGIN_SUCCESS)) {
+            checkLogin();
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventManager.getInstance().unRegisterListener(onNotifyListener);
+    }
 }

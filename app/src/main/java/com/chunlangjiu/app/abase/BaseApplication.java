@@ -2,6 +2,7 @@ package com.chunlangjiu.app.abase;
 
 import android.content.Context;
 import android.support.multidex.MultiDexApplication;
+import android.text.TextUtils;
 
 import com.chunlangjiu.app.net.ApiUtils;
 import com.pkqup.commonlibrary.crash.CrashHandler;
@@ -24,7 +25,7 @@ import io.realm.RealmConfiguration;
 
 public class BaseApplication extends MultiDexApplication {
 
-    private String token;
+    private static String token;
 
     @Override
     public void onCreate() {
@@ -57,8 +58,20 @@ public class BaseApplication extends MultiDexApplication {
     }
 
 
-    private void initToken() {
-        token = (String) SPUtils.get("token","");
+    public static void initToken() {
+        token = (String) SPUtils.get("token", "");
+    }
+
+    public static boolean isLogin() {
+        return !TextUtils.isEmpty(token);
+    }
+
+    public static String getToken() {
+        return token;
+    }
+
+    public static void setToken(String token) {
+        BaseApplication.token = token;
     }
 
     static {

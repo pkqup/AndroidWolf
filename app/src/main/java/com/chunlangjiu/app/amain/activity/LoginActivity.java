@@ -9,9 +9,22 @@ import android.widget.TextView;
 
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
+import com.chunlangjiu.app.abase.BaseApplication;
+import com.chunlangjiu.app.amain.bean.LoginBean;
+import com.chunlangjiu.app.amain.bean.MainClassBean;
+import com.chunlangjiu.app.net.ApiUtils;
+import com.chunlangjiu.app.util.ConstantMsg;
+import com.pkqup.commonlibrary.eventmsg.EventManager;
+import com.pkqup.commonlibrary.net.bean.ResultBean;
+import com.pkqup.commonlibrary.util.SPUtils;
+import com.pkqup.commonlibrary.util.ToastUtils;
 import com.socks.library.KLog;
 
 import butterknife.BindView;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @CreatedbBy: liucun on 2018/7/6
@@ -28,6 +41,8 @@ public class LoginActivity extends BaseActivity {
     @BindView(R.id.tvLogin)
     TextView tvLogin;
 
+    private CompositeDisposable disposable;
+
     private CountDownTimer countDownTimer;
 
 
@@ -39,14 +54,15 @@ public class LoginActivity extends BaseActivity {
                     finish();
                     break;
                 case R.id.tvGetCode:
-                    countDownTime();
+                    checkPhone();
                     break;
                 case R.id.tvLogin:
-                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                    checkSmsCode();
                     break;
             }
         }
     };
+
 
     @Override
     public void setTitleView() {
@@ -62,10 +78,36 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void initView() {
+        disposable = new CompositeDisposable();
         tvGetCode.setOnClickListener(onClickListener);
         tvLogin.setOnClickListener(onClickListener);
     }
 
+
+    private void checkPhone() {
+        if (etPhone.getText().toString().length() == 11) {
+            getSmsCode();
+            countDownTime();
+        } else {
+            ToastUtils.showShort("请输入正确的手机号码");
+        }
+    }
+
+    //获取短信验证码
+    private void getSmsCode() {
+        disposable.add(ApiUtils.getInstance().getAuthSms(etPhone.getText().toString())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean>() {
+                    @Override
+                    public void accept(ResultBean resultBean) throws Exception {
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                }));
+    }
 
     private void countDownTime() {
         countDownTimer = new CountDownTimer(60 * 1000, 1000) {
@@ -89,4 +131,39 @@ public class LoginActivity extends BaseActivity {
     }
 
 
+    private void checkSmsCode() {
+        if (etAuthCode.getText().toString().length() == 6) {
+            login();
+        } else {
+            ToastUtils.showShort("请输入正确的验证码");
+        }
+    }
+
+    private void login() {
+        disposable.add(ApiUtils.getInstance().login(etPhone.getText().toString(), etAuthCode.getText().toString())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<LoginBean>>() {
+                    @Override
+                    public void accept(ResultBean<LoginBean> loginBeanResultBean) throws Exception {
+                        SPUtils.put("token", loginBeanResultBean.getData().getAccessToken());
+                        BaseApplication.setToken(loginBeanResultBean.getData().getAccessToken());
+                        BaseApplication.initToken();
+                        EventManager.getInstance().notify(null, ConstantMsg.LOGIN_SUCCESS);
+                        finish();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        ToastUtils.showShort("登录失败");
+                    }
+                }));
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        disposable.dispose();
+    }
 }

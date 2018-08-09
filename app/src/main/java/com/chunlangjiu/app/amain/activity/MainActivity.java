@@ -20,6 +20,7 @@ import com.chunlangjiu.app.amain.fragment.CartFragment;
 import com.chunlangjiu.app.amain.fragment.ClassFragment;
 import com.chunlangjiu.app.amain.fragment.HomeFragment;
 import com.chunlangjiu.app.amain.fragment.UserFragment;
+import com.chunlangjiu.app.util.ConstantMsg;
 import com.chunlangjiu.app.util.GeTuiIntentService;
 import com.chunlangjiu.app.util.GeTuiPushService;
 import com.chunlangjiu.app.util.LocationUtils;
@@ -37,9 +38,6 @@ import butterknife.BindView;
 
 
 public class MainActivity extends BaseActivity {
-
-    public static final String MSG_PAGE_CLASS = "msg_page_class";
-    public static final String MSG_PAGE_AUCTION = "msg_page_auction";
 
     @BindView(R.id.view_pager)
     MyViewPager viewPager;
@@ -235,13 +233,13 @@ public class MainActivity extends BaseActivity {
     };
 
     private void msgToPageClass(String eventTag) {
-        if (eventTag.equals(MSG_PAGE_CLASS)) {
+        if (eventTag.equals(ConstantMsg.MSG_PAGE_CLASS)) {
             setPageFragment(1);
         }
     }
 
     private void msgToPageAuction(String eventTag) {
-        if (eventTag.equals(MSG_PAGE_AUCTION)) {
+        if (eventTag.equals(ConstantMsg.MSG_PAGE_AUCTION)) {
             setPageFragment(2);
         }
     }
