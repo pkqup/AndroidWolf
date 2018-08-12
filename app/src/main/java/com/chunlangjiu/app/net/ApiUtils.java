@@ -3,10 +3,12 @@ package com.chunlangjiu.app.net;
 import com.chunlangjiu.app.amain.bean.LoginBean;
 import com.chunlangjiu.app.amain.bean.MainClassBean;
 import com.chunlangjiu.app.goods.bean.GoodsListBean;
+import com.chunlangjiu.app.user.bean.AddressListBean;
 import com.pkqup.commonlibrary.net.HttpUtils;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 
 import io.reactivex.Flowable;
+import retrofit2.http.Field;
 
 /**
  * @CreatedbBy: liucun on 2018/7/6
@@ -55,4 +57,31 @@ public class ApiUtils {
     public Flowable<ResultBean<LoginBean>> login(String mobile, String code) {
         return apiService.login("user.oauthlogin", "v2", mobile, code);
     }
+
+    public Flowable<ResultBean> newAddress(String name, String mobile, String area, String addr, String def_addr) {
+        return apiService.newAddress("member.address.create", "v1", name, mobile, area, addr, def_addr);
+    }
+
+    public Flowable<ResultBean<AddressListBean>> getAddressList() {
+        return apiService.getAddressList("member.address.list", "v1");
+    }
+
+    public Flowable<ResultBean> editAddress(String name, String mobile, String area, String addr, String def_addr, String addressId) {
+        return apiService.editAddress("member.address.update", "v1", name, mobile, area, addr, def_addr, addressId);
+    }
+
+    public Flowable<ResultBean> deleteAddress(String addressId) {
+        return apiService.deleteAddress("member.address.delete", "v1", addressId);
+    }
+
+    public Flowable<ResultBean> setDefault(String addressId) {
+        return apiService.setDefault("member.address.setDefault", "v1", addressId);
+    }
+
+
+
+
+
+
+
 }

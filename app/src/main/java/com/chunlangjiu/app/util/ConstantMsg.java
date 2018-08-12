@@ -12,4 +12,6 @@ public class ConstantMsg {
 
     public static final String LOGIN_SUCCESS = "msg_login_success";//登录成功
 
+    public static final String ADD_ADDRESS_SUCCESS = "msg_add_address_success";//添加地址成功
+
 }

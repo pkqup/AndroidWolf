@@ -25,7 +25,7 @@ import io.realm.RealmConfiguration;
 
 public class BaseApplication extends MultiDexApplication {
 
-    private static String token;
+    private static String token = "";
 
     @Override
     public void onCreate() {
@@ -59,7 +59,9 @@ public class BaseApplication extends MultiDexApplication {
 
 
     public static void initToken() {
+        //44fd86649bd5d33eb2038f01349e397ab9c56d1b4985285b889a92ffdf2e81ca
         token = (String) SPUtils.get("token", "");
+        KLog.e("-----token-----",token);
     }
 
     public static boolean isLogin() {

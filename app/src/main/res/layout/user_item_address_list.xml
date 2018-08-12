@@ -12,12 +12,13 @@
 
         <ImageView
             android:id="@+id/imgChoice"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_centerVertical="true"
             android:layout_marginLeft="5dp"
-            android:padding="10dp"
-            android:src="@mipmap/icon_select" />
+            android:padding="15dp"
+            android:src="@mipmap/address_select_green"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/imgEdit"
@@ -25,9 +26,8 @@
             android:layout_height="40dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="5dp"
             android:padding="10dp"
-            android:src="@mipmap/gray_edit" />
+            android:src="@mipmap/address_edit" />
 
         <RelativeLayout
             android:id="@+id/rlAddressDetails"
@@ -35,8 +35,8 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginBottom="10dp"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
             android:layout_marginTop="10dp"
             android:layout_toLeftOf="@id/imgEdit"
             android:layout_toRightOf="@id/imgChoice"
@@ -46,7 +46,10 @@
                 android:id="@+id/tvAddressName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="姓名"
+                android:ellipsize="end"
+                android:maxWidth="180dp"
+                android:singleLine="true"
+                android:text="姓名姓名姓名姓名姓名姓名姓名姓名姓名"
                 android:textColor="@color/t_black"
                 android:textSize="@dimen/sp_mid" />
 
@@ -56,6 +59,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_toRightOf="@id/tvAddressName"
+                android:ellipsize="end"
+                android:singleLine="true"
                 android:text="18588889999"
                 android:textColor="@color/t_black"
                 android:textSize="@dimen/sp_mid" />
@@ -66,6 +71,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tvAddressName"
                 android:layout_marginTop="4dp"
+                android:ellipsize="end"
+                android:maxLines="2"
                 android:text="深圳市南山区科兴科学园"
                 android:textColor="@color/t_gray"
                 android:textSize="@dimen/sp_small" />
@@ -80,11 +87,55 @@
 
     </RelativeLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/line" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:background="@color/bg_white">
+
+        <ImageView
+            android:id="@+id/imgSetDefault"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/address_select" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15dp"
+            android:layout_toRightOf="@id/imgSetDefault"
+            android:text="设置为默认地址"
+            android:textColor="@color/t_black"
+            android:textSize="@dimen/sp_mid" />
+
+        <ImageView
+            android:id="@+id/imgDelete"
+            android:layout_width="21dp"
+            android:layout_height="21dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:src="@mipmap/address_delete" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:background="@color/bg_gray" />
+
     <LinearLayout
         android:id="@+id/llAdd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <TextView
             android:id="@+id/tvNoAddressStr"
@@ -110,18 +161,16 @@
             android:background="@color/bg_white">
 
             <TextView
-                android:gravity="center"
-                android:drawablePadding="5dp"
-                android:drawableLeft="@mipmap/icon_add"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
+                android:drawableLeft="@mipmap/icon_add"
+                android:drawablePadding="5dp"
+                android:gravity="center"
                 android:text="添加地址"
                 android:textColor="@color/t_black"
                 android:textSize="@dimen/sp_mid" />
-
         </RelativeLayout>
-
     </LinearLayout>
 
 
