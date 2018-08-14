@@ -1,5 +1,6 @@
 package com.chunlangjiu.app.amain.fragment;
 
+import android.Manifest;
 import android.content.Intent;
 import android.os.Handler;
 import android.support.v4.view.ViewPager;
@@ -15,9 +16,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amap.api.location.AMapLocation;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseFragment;
-import com.chunlangjiu.app.amain.activity.MainActivity;
 import com.chunlangjiu.app.amain.adapter.BrandAdapter;
 import com.chunlangjiu.app.amain.adapter.HomeAdapter;
 import com.chunlangjiu.app.amain.bean.BrandBean;
@@ -25,14 +26,21 @@ import com.chunlangjiu.app.amain.bean.HomeBean;
 import com.chunlangjiu.app.goods.activity.SearchActivity;
 import com.chunlangjiu.app.goods.activity.ValuationActivity;
 import com.chunlangjiu.app.store.activity.StoreListActivity;
+import com.chunlangjiu.app.user.activity.AddAddressActivity;
 import com.chunlangjiu.app.user.activity.AddGoodsActivity;
+import com.chunlangjiu.app.user.bean.LocalAreaBean;
+import com.chunlangjiu.app.util.AreaUtils;
 import com.chunlangjiu.app.util.ConstantMsg;
+import com.chunlangjiu.app.util.LocationUtils;
 import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.glide.BannerGlideLoader;
+import com.pkqup.commonlibrary.util.PermissionUtils;
 import com.pkqup.commonlibrary.util.ToastUtils;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.socks.library.KLog;
+import com.yanzhenjie.permission.PermissionListener;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.listener.OnBannerListener;
@@ -45,10 +53,17 @@ import com.zaaach.citypicker.model.LocateState;
 import com.zaaach.citypicker.model.LocatedCity;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import io.reactivex.Observable;
+import io.reactivex.ObservableEmitter;
+import io.reactivex.ObservableOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @CreatedbBy: liucun on 2018/6/16.
@@ -68,8 +83,6 @@ public class HomeFragment extends BaseFragment {
                     "http://img.my.csdn.net/uploads/201407/26/1406383264_4787.jpg",
                     "http://img.my.csdn.net/uploads/201407/26/1406383264_8243.jpg",
                     "http://img.my.csdn.net/uploads/201407/26/1406383248_3693.jpg",};
-
-    private static final int CHOICE_CITY = 10001;
 
     private TextView tvCity;
     private RelativeLayout rlTitleSearch;
@@ -97,8 +110,12 @@ public class HomeFragment extends BaseFragment {
     private HomeAdapter homeAdapter;
     private List<HomeBean> lists;
 
-    private List<HotCity> hotCities;
-    private List<City> cityList;
+    private String locationCityName;//定位城市名
+    private LocatedCity locatedCity;//定位城市实体
+    private List<HotCity> hotCities;//热门城市
+    private List<City> cityList;//所有的城市列表
+
+    private CompositeDisposable disposable;
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -125,7 +142,6 @@ public class HomeFragment extends BaseFragment {
                 case R.id.llEvaluate://名酒估价
                     startActivity(new Intent(getActivity(), ValuationActivity.class));
                     break;
-
             }
         }
     };
@@ -135,11 +151,11 @@ public class HomeFragment extends BaseFragment {
     public void getContentView(LayoutInflater inflater, ViewGroup container) {
         inflater.inflate(R.layout.amain_fragment_home, container, true);
         headerView = View.inflate(getActivity(), R.layout.amain_item_home_header, null);
-
     }
 
     @Override
     public void initView() {
+        disposable = new CompositeDisposable();
         tvCity = rootView.findViewById(R.id.tvCity);
         tvCity.setOnClickListener(onClickListener);
         rlTitleSearch = rootView.findViewById(R.id.rlTitleSearch);
@@ -162,10 +178,76 @@ public class HomeFragment extends BaseFragment {
         refreshLayout = rootView.findViewById(R.id.refreshLayout);
         recyclerView = rootView.findViewById(R.id.listView);
         imageViews = new ArrayList<>();
+        locationCity();
         initBannerView();
         initBannerIndicator();
         initBrandRecycleView();
         initListRecyclerView();
+    }
+
+    //开启定位
+    private void locationCity() {
+        PermissionUtils.PermissionForStart(getActivity(), new PermissionListener() {
+            @Override
+            public void onSucceed(int requestCode, List<String> grantPermissions) {
+                for (String grantPermission : grantPermissions) {
+                    if (grantPermission.equals(Manifest.permission.ACCESS_FINE_LOCATION) ||
+                            grantPermission.equals(Manifest.permission.ACCESS_COARSE_LOCATION)) {
+                        //开启定位
+                        new LocationUtils().startLocation(new LocationUtils.LocationCallBack() {
+                            @Override
+                            public void locationSuccess(AMapLocation aMapLocation) {
+                                locationCityName = aMapLocation.getCity();
+                                locatedCity = new LocatedCity(locationCityName, aMapLocation.getProvince(), "");
+                                tvCity.setText(locationCityName);
+                            }
+
+                            @Override
+                            public void locationFail() {
+                                tvCity.setText("定位失败");
+                            }
+                        });
+                    }
+                }
+            }
+
+            @Override
+            public void onFailed(int requestCode, List<String> deniedPermissions) {
+                for (String grantPermission : deniedPermissions) {
+                    KLog.e(grantPermission);
+                }
+            }
+        });
+
+        //获取城市列表
+        disposable.add(Observable.create(new ObservableOnSubscribe<List<City>>() {
+            @Override
+            public void subscribe(ObservableEmitter<List<City>> e) throws Exception {
+                List<City> cities = AreaUtils.getCityList(getActivity());
+                e.onNext(cities);
+            }
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<City>>() {
+                    @Override
+                    public void accept(List<City> cities) throws Exception {
+                        cityList = cities;
+                        //城市按 a-z排序
+                        Collections.sort(cityList, new CityComparator());
+
+                        //初始化热门城市
+                        hotCities = new ArrayList<>();
+                        hotCities.add(new HotCity("北京", "北京", ""));
+                        hotCities.add(new HotCity("上海", "上海", ""));
+                        hotCities.add(new HotCity("广州", "广东", ""));
+                        hotCities.add(new HotCity("深圳", "广东", ""));
+                        hotCities.add(new HotCity("杭州", "浙江", ""));
+                        hotCities.add(new HotCity("成都", "四川", ""));
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                }));
     }
 
 
@@ -316,48 +398,21 @@ public class HomeFragment extends BaseFragment {
 
 
     private void choiceCity() {
-        hotCities = new ArrayList<>();
-        hotCities.add(new HotCity("北京", "北京", "101010100"));
-        hotCities.add(new HotCity("上海", "上海", "101020100"));
-        hotCities.add(new HotCity("广州", "广东", "101280101"));
-        hotCities.add(new HotCity("深圳", "广东", "101280601"));
-        hotCities.add(new HotCity("杭州", "浙江", "101210101"));
-
-        cityList = new ArrayList<>();
-        cityList.add(new City("广州", "", "guangzhou", "101010100"));
-        cityList.add(new City("北京", "北京", "beijing", "101010100"));
-        cityList.add(new City("安定", "", "anding", "101010100"));
-        cityList.add(new City("重庆", "", "chongqing", "101010100"));
-        cityList.add(new City("上海", "上海", "shanghai", "101010100"));
-        cityList.add(new City("武汉", "", "wuhan", "101010100"));
-        Collections.sort(cityList, new CityComparator());
-
         CityPicker.getInstance()
                 .setFragmentManager(getActivity().getSupportFragmentManager())
-                .setLocatedCity(null)
+                .setLocatedCity(locatedCity)
                 .setHotCities(hotCities)
                 .setCityLists(cityList)
                 .setOnPickListener(new OnPickListener() {
                     @Override
                     public void onPick(int position, City data) {
                         if (data != null) {
-                            Toast.makeText(
-                                    getActivity(),
-                                    String.format("点击的数据：%s，%s", data.getName(), data.getCode()),
-                                    Toast.LENGTH_SHORT)
-                                    .show();
+
                         }
                     }
 
                     @Override
                     public void onLocate() {
-                        //开始定位，这里模拟一下定位
-                        new Handler().postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                CityPicker.getInstance().locateComplete(new LocatedCity("深圳", "广东", "101280601"), LocateState.SUCCESS);
-                            }
-                        }, 3000);
                     }
                 })
                 .show();
@@ -374,7 +429,6 @@ public class HomeFragment extends BaseFragment {
             return a.compareTo(b);
         }
     }
-
 
     @Override
     public void onStart() {

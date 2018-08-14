@@ -145,8 +145,6 @@ public class AddAddressActivity extends BaseActivity {
                     public void accept(Throwable throwable) throws Exception {
                     }
                 }));
-
-
     }
 
     private void isEditAddress() {

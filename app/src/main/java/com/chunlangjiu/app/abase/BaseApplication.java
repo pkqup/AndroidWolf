@@ -5,6 +5,8 @@ import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 
 import com.chunlangjiu.app.net.ApiUtils;
+import com.github.promeg.pinyinhelper.Pinyin;
+import com.github.promeg.pinyinhelper.PinyinMapDict;
 import com.pkqup.commonlibrary.crash.CrashHandler;
 import com.pkqup.commonlibrary.util.AppUtils;
 import com.pkqup.commonlibrary.util.SPUtils;
@@ -20,6 +22,9 @@ import com.socks.library.KLog;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
@@ -32,13 +37,19 @@ public class BaseApplication extends MultiDexApplication {
         super.onCreate();
         AppUtils.init(this);
         ApiUtils.getInstance().init();
+        initToken();
         initRealm();
         initUM();
-        initToken();
+        initPinyinCity();
         CrashHandler.getInstance().init(this);
         KLog.init(AppUtils.isDebug());
     }
 
+    public static void initToken() {
+        //44fd86649bd5d33eb2038f01349e397ab9c56d1b4985285b889a92ffdf2e81ca
+        token = (String) SPUtils.get("token", "");
+        KLog.e("-----token-----", token);
+    }
 
     /**
      * 友盟初始化
@@ -57,12 +68,19 @@ public class BaseApplication extends MultiDexApplication {
         Realm.setDefaultConfiguration(config);
     }
 
-
-    public static void initToken() {
-        //44fd86649bd5d33eb2038f01349e397ab9c56d1b4985285b889a92ffdf2e81ca
-        token = (String) SPUtils.get("token", "");
-        KLog.e("-----token-----",token);
+    private void initPinyinCity() {
+        // 添加自定义词典
+        Pinyin.init(Pinyin.newConfig()
+                .with(new PinyinMapDict() {
+                    @Override
+                    public Map<String, String[]> mapping() {
+                        HashMap<String, String[]> map = new HashMap<>();
+                        map.put("重庆", new String[]{"CHONG", "QING"});
+                        return map;
+                    }
+                }));
     }
+
 
     public static boolean isLogin() {
         return !TextUtils.isEmpty(token);

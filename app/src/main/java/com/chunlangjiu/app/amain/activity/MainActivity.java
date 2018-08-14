@@ -24,6 +24,7 @@ import com.chunlangjiu.app.util.ConstantMsg;
 import com.chunlangjiu.app.util.GeTuiIntentService;
 import com.chunlangjiu.app.util.GeTuiPushService;
 import com.chunlangjiu.app.util.LocationUtils;
+import com.github.promeg.pinyinhelper.Pinyin;
 import com.igexin.sdk.PushManager;
 import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.util.PermissionUtils;
@@ -103,26 +104,10 @@ public class MainActivity extends BaseActivity {
     }
 
     private void requestPermission() {
+        //请求必要的权限
         PermissionUtils.PermissionForStart(this, new PermissionListener() {
             @Override
             public void onSucceed(int requestCode, List<String> grantPermissions) {
-                for (String grantPermission : grantPermissions) {
-                    if (grantPermission.equals(Manifest.permission.ACCESS_FINE_LOCATION) ||
-                            grantPermission.equals(Manifest.permission.ACCESS_COARSE_LOCATION)) {
-                        //开启定位
-                   /*     new LocationUtils().startLocation(new LocationUtils.LocationCallBack() {
-                            @Override
-                            public void locationSuccess(AMapLocation aMapLocation) {
-                                KLog.e("location_success");
-                            }
-
-                            @Override
-                            public void locationFail() {
-                                KLog.e("location_fail");
-                            }
-                        });*/
-                    }
-                }
             }
 
             @Override
