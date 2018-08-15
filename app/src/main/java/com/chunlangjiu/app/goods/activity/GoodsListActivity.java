@@ -277,14 +277,14 @@ public class GoodsListActivity extends BaseActivity {
         linearAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                GoodsDetailsActivity.startGoodsDetailsActivity(GoodsListActivity.this, "");
+                GoodsDetailsActivity.startGoodsDetailsActivity(GoodsListActivity.this, lists.get(position).getItem_id());
             }
         });
         gridAdapter = new GridAdapter(R.layout.amain_item_goods_list_grid, lists);
         gridAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                GoodsDetailsActivity.startGoodsDetailsActivity(GoodsListActivity.this, "");
+                GoodsDetailsActivity.startGoodsDetailsActivity(GoodsListActivity.this, lists.get(position).getItem_id());
             }
         });
         recycleView.setLayoutManager(new LinearLayoutManager(this));

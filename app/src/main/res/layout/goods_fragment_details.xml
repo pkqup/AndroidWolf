@@ -146,8 +146,7 @@
                     android:layout_width="45dp"
                     android:layout_height="45dp"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="15dp"
-                    android:src="@color/bg_red" />
+                    android:layout_marginLeft="15dp" />
 
                 <TextView
                     android:id="@+id/tvStoreName"
@@ -205,7 +204,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="15dp"
-                    android:text="商家评价(500)"
+                    android:text="商家评价"
                     android:textColor="@color/t_black"
                     android:textSize="@dimen/sp_small" />
 

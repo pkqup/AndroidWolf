@@ -13,11 +13,16 @@ import android.widget.TextView;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
 import com.chunlangjiu.app.abase.BaseFragmentAdapter;
+import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
 import com.chunlangjiu.app.goods.fragment.GoodsCommentFragment;
 import com.chunlangjiu.app.goods.fragment.GoodsDetailsFragment;
 import com.chunlangjiu.app.goods.fragment.GoodsWebFragment;
+import com.chunlangjiu.app.net.ApiUtils;
+import com.chunlangjiu.app.util.ConstantMsg;
 import com.chunlangjiu.app.util.ShareUtils;
 import com.flyco.tablayout.SlidingTabLayout;
+import com.pkqup.commonlibrary.eventmsg.EventManager;
+import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.socks.library.KLog;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -29,6 +34,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 public class GoodsDetailsActivity extends BaseActivity {
 
@@ -39,7 +48,7 @@ public class GoodsDetailsActivity extends BaseActivity {
     @BindView(R.id.tab)
     SlidingTabLayout tab;
     @BindView(R.id.view_pager)
-    ViewPager view_pager;
+    ViewPager viewPager;
 
     @BindView(R.id.rlBottom)
     RelativeLayout rlBottom;
@@ -58,9 +67,13 @@ public class GoodsDetailsActivity extends BaseActivity {
     TextView tvCartNum;
 
     private BaseFragmentAdapter fragmentAdapter;
-
     private final String[] mTitles = {"商品", "详情", "评价"};
     private List<Fragment> mFragments;
+
+    private CompositeDisposable disposable;
+    private String itemId;
+    private GoodsDetailBean goodsDetailBean;
+
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -80,7 +93,6 @@ public class GoodsDetailsActivity extends BaseActivity {
         }
     };
 
-
     public static void startGoodsDetailsActivity(Activity activity, String goodsId) {
         Intent intent = new Intent(activity, GoodsDetailsActivity.class);
         intent.putExtra("goodsId", goodsId);
@@ -91,6 +103,7 @@ public class GoodsDetailsActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.goods_activity_details);
+        EventManager.getInstance().registerListener(onNotifyListener);
         initView();
         initData();
     }
@@ -101,59 +114,105 @@ public class GoodsDetailsActivity extends BaseActivity {
     }
 
     private void initView() {
+        tab.setVisibility(View.GONE);
+        imgShare.setVisibility(View.GONE);
+        viewPager.setVisibility(View.GONE);
+        rlBottom.setVisibility(View.GONE);
+
         imgBack.setOnClickListener(onClickListener);
         imgShare.setOnClickListener(onClickListener);
-        mFragments = new ArrayList<>();
-        mFragments.add(new GoodsDetailsFragment());
-        mFragments.add(new GoodsWebFragment());
-        mFragments.add(new GoodsCommentFragment());
-        fragmentAdapter = new BaseFragmentAdapter(getSupportFragmentManager());
-        fragmentAdapter.setLists(mFragments);
-        view_pager.setAdapter(fragmentAdapter);
-        tab.setViewPager(view_pager, mTitles);
-        view_pager.setCurrentItem(0);
-
         tvBuy.setOnClickListener(onClickListener);
         tvAddCart.setOnClickListener(onClickListener);
         rlChat.setOnClickListener(onClickListener);
         rlCollect.setOnClickListener(onClickListener);
         rlCart.setOnClickListener(onClickListener);
+
+        itemId = getIntent().getStringExtra("goodsId");
+        disposable = new CompositeDisposable();
     }
 
     private void initData() {
+        showLoadingDialog();
+        disposable.add(ApiUtils.getInstance().getGoodsDetail(itemId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<GoodsDetailBean>>() {
+                    @Override
+                    public void accept(ResultBean<GoodsDetailBean> goodsDetailBeanResultBean) throws Exception {
+                        hideLoadingDialog();
+                        goodsDetailBean = goodsDetailBeanResultBean.getData();
+                        updateView();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        hideLoadingDialog();
+                    }
+                }));
+    }
 
+    private void updateView() {
+        tab.setVisibility(View.VISIBLE);
+        imgShare.setVisibility(View.VISIBLE);
+        viewPager.setVisibility(View.VISIBLE);
+        rlBottom.setVisibility(View.VISIBLE);
 
+        mFragments = new ArrayList<>();
+        mFragments.add(GoodsDetailsFragment.newInstance(goodsDetailBean));
+        mFragments.add(new GoodsWebFragment());
+        mFragments.add(GoodsCommentFragment.newInstance(itemId));
+        fragmentAdapter = new BaseFragmentAdapter(getSupportFragmentManager());
+        fragmentAdapter.setLists(mFragments);
+        viewPager.setAdapter(fragmentAdapter);
+        tab.setViewPager(viewPager, mTitles);
+        viewPager.setCurrentItem(0);
     }
 
 
     private void showShare() {
-        UMImage thumb = new UMImage(this, R.mipmap.launcher);
-        UMWeb web = new UMWeb("http://www.baidu.com");
-        web.setTitle("This is music title");//标题
+        UMImage thumb = new UMImage(this, goodsDetailBean.getShare().getImage());
+        UMWeb web = new UMWeb(goodsDetailBean.getShare().getH5href());
+        web.setTitle(goodsDetailBean.getItem().getTitle());//标题
         web.setThumb(thumb);  //缩略图
-        web.setDescription("my description");//描述
+        web.setDescription(goodsDetailBean.getItem().getSub_title());//描述
 
         ShareUtils.shareLink(this, web, new UMShareListener() {
             @Override
             public void onStart(SHARE_MEDIA share_media) {
-                KLog.e("-----white_share onStart----");
             }
 
             @Override
             public void onResult(SHARE_MEDIA share_media) {
-                KLog.e("-----white_share success----");
             }
 
             @Override
             public void onError(SHARE_MEDIA share_media, Throwable throwable) {
-                KLog.e("-----white_share onError----");
             }
 
             @Override
             public void onCancel(SHARE_MEDIA share_media) {
-                KLog.e("-----white_share onCancel----");
             }
         });
     }
 
+    private EventManager.OnNotifyListener onNotifyListener = new EventManager.OnNotifyListener() {
+        @Override
+        public void onNotify(Object object, String eventTag) {
+            changeToEvaluate(eventTag);
+        }
+    };
+
+    private void changeToEvaluate(String eventTag) {
+        if (eventTag.equals(ConstantMsg.CHANGE_TO_EVALUATE)) {
+            viewPager.setCurrentItem(2);
+        }
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        disposable.dispose();
+        EventManager.getInstance().unRegisterListener(onNotifyListener);
+    }
 }

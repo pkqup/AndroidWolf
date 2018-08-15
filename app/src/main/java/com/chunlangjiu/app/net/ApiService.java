@@ -2,6 +2,8 @@ package com.chunlangjiu.app.net;
 
 import com.chunlangjiu.app.amain.bean.LoginBean;
 import com.chunlangjiu.app.amain.bean.MainClassBean;
+import com.chunlangjiu.app.goods.bean.EvaluateListBean;
+import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
 import com.chunlangjiu.app.goods.bean.GoodsListBean;
 import com.chunlangjiu.app.user.bean.AddressListBean;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
@@ -17,23 +19,34 @@ import retrofit2.http.POST;
  */
 public interface ApiService {
 
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean> getAuthSms(@Field("method") String method, @Field("v") String v, @Field("mobile") String mobile);
+
     @POST("index.php/topapi")
     @FormUrlEncoded
     Flowable<ResultBean<LoginBean>> login(@Field("method") String method, @Field("v") String v, @Field("account") String mobile, @Field("verifycode") String verifycode);
 
     @POST("index.php/topapi")
     @FormUrlEncoded
-    Flowable<ResultBean<MainClassBean>> getClass(@Field("method") String method, @Field("v") String v);
+    Flowable<ResultBean<MainClassBean>> getGoodsClass(@Field("method") String method, @Field("v") String v);
 
     @POST("index.php/topapi")
     @FormUrlEncoded
     Flowable<ResultBean<GoodsListBean>> getGoodsList(@Field("method") String method, @Field("v") String v, @Field("cat_id") String cat_id,
                                                      @Field("page_no") int page_no, @Field("page_size") int page_size,
                                                      @Field("orderBy") String orderBy);
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<GoodsDetailBean>> getGoodsDetail(@Field("method") String method, @Field("v") String v, @Field("item_id") String item_id);
 
     @POST("index.php/topapi")
     @FormUrlEncoded
-    Flowable<ResultBean> getAuthSms(@Field("method") String method, @Field("v") String v, @Field("mobile") String mobile);
+    Flowable<ResultBean<EvaluateListBean>> getEvaluateList(@Field("method") String method, @Field("v") String v,
+                                                           @Field("rate_type") int rate_type, @Field("item_id") String item_id,
+                                                           @Field("page_no") int page_no, @Field("page_size") int page_size);
+
 
     @POST("index.php/topapi")
     @FormUrlEncoded

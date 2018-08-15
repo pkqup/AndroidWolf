@@ -2,13 +2,14 @@ package com.chunlangjiu.app.net;
 
 import com.chunlangjiu.app.amain.bean.LoginBean;
 import com.chunlangjiu.app.amain.bean.MainClassBean;
+import com.chunlangjiu.app.goods.bean.EvaluateListBean;
+import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
 import com.chunlangjiu.app.goods.bean.GoodsListBean;
 import com.chunlangjiu.app.user.bean.AddressListBean;
 import com.pkqup.commonlibrary.net.HttpUtils;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 
 import io.reactivex.Flowable;
-import retrofit2.http.Field;
 
 /**
  * @CreatedbBy: liucun on 2018/7/6
@@ -41,21 +42,28 @@ public class ApiUtils {
         return apiService;
     }
 
-    public Flowable<ResultBean<MainClassBean>> getMainClass() {
-        return apiService.getClass("category.itemCategory", "v1");
-    }
-
-    public Flowable<ResultBean<GoodsListBean>> getGoodsList(String cat_id, int page_no, String orderBy) {
-        return apiService.getGoodsList("item.search", "v1", cat_id, page_no, 20, orderBy);
-    }
-
-
     public Flowable<ResultBean> getAuthSms(String mobile) {
         return apiService.getAuthSms("user.sendSms", "v1", mobile);
     }
 
     public Flowable<ResultBean<LoginBean>> login(String mobile, String code) {
         return apiService.login("user.oauthlogin", "v2", mobile, code);
+    }
+
+    public Flowable<ResultBean<MainClassBean>> getMainClass() {
+        return apiService.getGoodsClass("category.itemCategory", "v1");
+    }
+
+    public Flowable<ResultBean<GoodsListBean>> getGoodsList(String cat_id, int page_no, String orderBy) {
+        return apiService.getGoodsList("item.search", "v1", cat_id, page_no, 20, orderBy);
+    }
+
+    public Flowable<ResultBean<GoodsDetailBean>> getGoodsDetail(String item_id) {
+        return apiService.getGoodsDetail("item.detail", "v1",item_id);
+    }
+
+    public Flowable<ResultBean<EvaluateListBean>> getEvaluateList(String item_id, int page_no) {
+        return apiService.getEvaluateList("item.rate.list", "v1",0,item_id,page_no,10);
     }
 
     public Flowable<ResultBean> newAddress(String name, String mobile, String area, String addr, String def_addr) {

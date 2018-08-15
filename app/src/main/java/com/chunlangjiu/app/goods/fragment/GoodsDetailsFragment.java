@@ -1,7 +1,7 @@
 package com.chunlangjiu.app.goods.fragment;
 
-import android.app.ActionBar;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,23 +11,25 @@ import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RatingBar;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseFragment;
-import com.chunlangjiu.app.amain.bean.SecondClassBean;
-import com.chunlangjiu.app.goods.activity.GoodsListActivity;
-import com.chunlangjiu.app.goods.activity.SearchActivity;
 import com.chunlangjiu.app.goods.activity.ShopMainActivity;
+import com.chunlangjiu.app.goods.bean.EvaluateListBean;
+import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
+import com.chunlangjiu.app.net.ApiUtils;
+import com.chunlangjiu.app.util.ConstantMsg;
+import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.glide.BannerGlideLoader;
+import com.pkqup.commonlibrary.glide.GlideUtils;
+import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.pkqup.commonlibrary.util.SizeUtils;
-import com.pkqup.commonlibrary.util.ToastUtils;
-import com.pkqup.commonlibrary.view.verticalview.VerticalScrollView;
-import com.socks.library.KLog;
+import com.pkqup.commonlibrary.util.TimeUtils;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.listener.OnBannerListener;
@@ -37,22 +39,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 
 public class GoodsDetailsFragment extends BaseFragment {
-
-    String[] images =
-            new String[]{"http://img.my.csdn.net/uploads/201407/26/1406383299_1976.jpg",
-                    "http://img.my.csdn.net/uploads/201407/26/1406383291_6518.jpg",
-                    "http://img.my.csdn.net/uploads/201407/26/1406383291_8239.jpg",
-                    "http://img.my.csdn.net/uploads/201407/26/1406383290_9329.jpg",
-                    "http://img.my.csdn.net/uploads/201407/26/1406383290_1042.jpg",
-                    "http://img.my.csdn.net/uploads/201407/26/1406383275_3977.jpg",
-                    "http://img.my.csdn.net/uploads/201407/26/1406383265_8550.jpg",
-                    "http://img.my.csdn.net/uploads/201407/26/1406383264_3954.jpg",
-                    "http://img.my.csdn.net/uploads/201407/26/1406383264_4787.jpg",
-                    "http://img.my.csdn.net/uploads/201407/26/1406383264_8243.jpg",
-                    "http://img.my.csdn.net/uploads/201407/26/1406383248_3693.jpg",};
 
     private Banner banner;
     private LinearLayout indicator;
@@ -82,12 +75,26 @@ public class GoodsDetailsFragment extends BaseFragment {
     private List<String> recommendLists;
     private RecommendAdapter recommendAdapter;
 
+    private CompositeDisposable disposable;
+    private GoodsDetailBean goodsDetailBean;
+
+    public static GoodsDetailsFragment newInstance(GoodsDetailBean goodsDetailBean) {
+        GoodsDetailsFragment goodsDetailsFragment = new GoodsDetailsFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("goodsDetailBean", goodsDetailBean);
+        goodsDetailsFragment.setArguments(bundle);
+        return goodsDetailsFragment;
+    }
+
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
-                case R.id.tvLookAll:
+                case R.id.tvLookAll://查看店铺
                     startActivity(new Intent(getActivity(), ShopMainActivity.class));
+                    break;
+                    case R.id.rlEvaluate://查看店铺
+                        EventManager.getInstance().notify(null,ConstantMsg.CHANGE_TO_EVALUATE);
                     break;
             }
         }
@@ -116,28 +123,31 @@ public class GoodsDetailsFragment extends BaseFragment {
         tvLookAll.setOnClickListener(onClickListener);
 
         rlEvaluate = rootView.findViewById(R.id.rlEvaluate);
+        rlEvaluate.setOnClickListener(onClickListener);
         tvEvaluate = rootView.findViewById(R.id.tvEvaluate);
         llEvaluate = rootView.findViewById(R.id.llEvaluate);
         recyclerView = rootView.findViewById(R.id.recyclerView);
 
         drag_text = rootView.findViewById(R.id.drag_text);
         webView = rootView.findViewById(R.id.webView);
+
+        disposable = new CompositeDisposable();
+        goodsDetailBean = (GoodsDetailBean) getArguments().getSerializable("goodsDetailBean");
     }
 
     @Override
     public void initData() {
         initBannerData();
-        initEvaluateView();
+        initCommonView();
         initRecommendView();
         initWebViewData();
+        getEvaluateData();
     }
+
 
     private void initBannerData() {
         imageViews = new ArrayList<>();
-        bannerUrls = new ArrayList<>();
-        bannerUrls.add(images[0]);
-        bannerUrls.add(images[1]);
-        bannerUrls.add(images[2]);
+        bannerUrls = goodsDetailBean.getItem().getImages();
 
         banner.setImages(bannerUrls)
                 .setImageLoader(new BannerGlideLoader())
@@ -189,25 +199,59 @@ public class GoodsDetailsFragment extends BaseFragment {
         banner.setOnBannerListener(new OnBannerListener() {
             @Override
             public void OnBannerClick(int position) {
-                ToastUtils.showShort("点击了item" + position);
             }
         });
     }
 
-    private void initEvaluateView() {
-        llEvaluate.removeAllViews();
-        for (int i = 0; i < 5; i++) {
-            View evaluateView = View.inflate(getActivity(), R.layout.goods_item_details_evaluate, null);
-            llEvaluate.addView(evaluateView);
-        }
+    private void initCommonView() {
+        tvPrice.setText("¥" + goodsDetailBean.getItem().getPrice());
+        tvGoodsName.setText(goodsDetailBean.getItem().getTitle());
+        GlideUtils.loadImage(getActivity(), goodsDetailBean.getShop().getShop_logo(), imgStore);
+        tvStoreName.setText(goodsDetailBean.getShop().getShop_name());
+        tvStoreDesc.setText(goodsDetailBean.getShop().getShop_descript());
     }
 
 
+    private void getEvaluateData() {
+        disposable.add(ApiUtils.getInstance().getEvaluateList(goodsDetailBean.getItem().getItem_id(), 1)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<EvaluateListBean>>() {
+                    @Override
+                    public void accept(ResultBean<EvaluateListBean> evaluateListBeanResultBean) throws Exception {
+                        List<EvaluateListBean.EvaluateDetailBean> list = evaluateListBeanResultBean.getData().getList();
+                        initEvaluateView(list);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                }));
+    }
+
+    private void initEvaluateView(List<EvaluateListBean.EvaluateDetailBean> list) {
+        llEvaluate.removeAllViews();
+        for (int i = 0; i < list.size(); i++) {
+            if (i < 2) {
+                View evaluateView = View.inflate(getActivity(), R.layout.goods_item_details_evaluate, null);
+                TextView tvName = evaluateView.findViewById(R.id.tvName);
+                RatingBar ratingBar = evaluateView.findViewById(R.id.ratingBar);
+                TextView tvContent = evaluateView.findViewById(R.id.tvContent);
+                TextView tvTime = evaluateView.findViewById(R.id.tvTime);
+                tvName.setText(list.get(i).getUser_name());
+                ratingBar.setRating(3);
+                tvContent.setText(list.get(i).getContent());
+                tvTime.setText(TimeUtils.millisToYearMD(list.get(i).getCreated_time() + "000"));
+                llEvaluate.addView(evaluateView);
+            }
+        }
+    }
+
     private void initRecommendView() {
         recommendLists = new ArrayList<>();
-        recommendLists.add(images[0]);
-        recommendLists.add(images[1]);
-        recommendLists.add(images[2]);
+        recommendLists.add(bannerUrls.get(0));
+        recommendLists.add(bannerUrls.get(0));
+        recommendLists.add(bannerUrls.get(0));
         recommendAdapter = new RecommendAdapter(R.layout.goods_item_recommend, recommendLists);
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         recyclerView.setAdapter(recommendAdapter);
@@ -240,9 +284,11 @@ public class GoodsDetailsFragment extends BaseFragment {
             nameLayoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             nameLayoutParams.width = picWidth;
             tv_name.setLayoutParams(nameLayoutParams);
-            helper.setText(R.id.tv_name,"拉菲庄园红酒拉菲庄园红酒");
-            helper.setText(R.id.tv_price,"￥500.00");
+            helper.setText(R.id.tv_name, "拉菲庄园红酒拉菲庄园红酒");
+            helper.setText(R.id.tv_price, "￥500.00");
         }
     }
+
+
 }
 

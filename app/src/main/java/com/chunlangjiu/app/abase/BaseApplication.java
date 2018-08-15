@@ -41,7 +41,7 @@ public class BaseApplication extends MultiDexApplication {
         initRealm();
         initUM();
         initPinyinCity();
-        CrashHandler.getInstance().init(this);
+//        CrashHandler.getInstance().init(this);
         KLog.init(AppUtils.isDebug());
     }
 
