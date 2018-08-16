@@ -74,11 +74,12 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="36dp"
                     android:layout_toRightOf="@id/tvClassStr"
-                    android:hint="请选择"
+                    android:text="身份证"
                     android:textColor="@color/t_black"
                     android:textSize="@dimen/sp_mid" />
 
                 <ImageView
+                    android:visibility="gone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
@@ -129,21 +130,21 @@
             </RelativeLayout>
 
             <LinearLayout
+                android:id="@+id/llPicOne"
                 android:layout_width="match_parent"
-                android:layout_height="110dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
                 <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:id="@+id/rlFront"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
                     android:background="@drawable/bg_dark_gray_stroke">
 
                     <LinearLayout
-                        android:id="@+id/llChoiceFront"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
@@ -173,10 +174,10 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
+                    android:id="@+id/rlBehind"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:layout_weight="1"
                     android:background="@drawable/bg_dark_gray_stroke">
 
                     <LinearLayout
@@ -211,17 +212,18 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/llPicTwo"
                 android:layout_width="match_parent"
-                android:layout_height="110dp"
+                android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
                 <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:id="@+id/rlPerson"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
                     android:background="@drawable/bg_dark_gray_stroke">
 
                     <LinearLayout
@@ -255,10 +257,10 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:layout_weight="1" />
+                    android:id="@+id/rlFour"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
