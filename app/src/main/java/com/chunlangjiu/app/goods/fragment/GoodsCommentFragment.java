@@ -107,12 +107,14 @@ public class GoodsCommentFragment extends BaseFragment {
     }
 
     private void getListSuccess(ResultBean<EvaluateListBean> evaluateListBeanResultBean, boolean isRefresh) {
-        lists = evaluateListBeanResultBean.getData().getList();
-        if (lists == null) lists = new ArrayList<>();
+        List<EvaluateListBean.EvaluateDetailBean> newLists = evaluateListBeanResultBean.getData().getList();
+        if (newLists == null) newLists = new ArrayList<>();
         if (isRefresh) {
             pageNo = 1;
+            lists = newLists;
         } else {
             pageNo++;
+            lists.addAll(newLists);
         }
         if (lists.size() < 10) {
             refreshLayout.setFooterHeight(30);

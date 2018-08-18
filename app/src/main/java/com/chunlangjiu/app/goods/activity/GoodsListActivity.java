@@ -38,6 +38,10 @@ import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.pkqup.commonlibrary.net.exception.ApiException;
 import com.pkqup.commonlibrary.util.SizeUtils;
 import com.pkqup.commonlibrary.util.ToastUtils;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.socks.library.KLog;
 
 import java.io.Serializable;
@@ -98,6 +102,8 @@ public class GoodsListActivity extends BaseActivity {
     @BindView(R.id.recyclerViewStore)
     RecyclerView recyclerViewStore;//名庄列表
 
+    @BindView(R.id.refreshLayout)
+    SmartRefreshLayout refreshLayout;
     @BindView(R.id.recycle_view)
     RecyclerView recycleView;
 
@@ -124,6 +130,7 @@ public class GoodsListActivity extends BaseActivity {
 
     private int pageNum = 1;
     private String orderBy = ORDER_ALL;
+    private int selectIndex = 0;
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -148,11 +155,9 @@ public class GoodsListActivity extends BaseActivity {
                     changeSort(2);
                     break;
                 case R.id.tv_class:
-                    changeSort(3);
                     showClassPopWindow();
                     break;
                 case R.id.sortFilter:
-                    changeSort(4);
                     showDrawerLayout();
                     break;
             }
@@ -160,11 +165,10 @@ public class GoodsListActivity extends BaseActivity {
     };
 
 
-    public static void startGoodsListActivity(Activity activity, String secondClassId, String secondClassName, List<ThirdClassBean> classLists) {
+    public static void startGoodsListActivity(Activity activity, String secondClassId, String secondClassName) {
         Intent intent = new Intent(activity, GoodsListActivity.class);
         intent.putExtra("classId", secondClassId);
         intent.putExtra("className", secondClassName);
-        intent.putExtra("classLists", (Serializable) classLists);
         activity.startActivity(intent);
     }
 
@@ -289,26 +293,44 @@ public class GoodsListActivity extends BaseActivity {
         });
         recycleView.setLayoutManager(new LinearLayoutManager(this));
         recycleView.setAdapter(linearAdapter);
+
+        refreshLayout.setEnableAutoLoadMore(false);//关闭自动加载更多
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(RefreshLayout refreshLayout) {
+                getGoodsList(1, true);
+            }
+        });
+
+        refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(RefreshLayout refreshLayout) {
+                getGoodsList(pageNum + 1, false);
+            }
+        });
     }
 
     private void initData() {
-        getGoodsList();
+        getGoodsList(pageNum, true);
         getClassData();
     }
 
-    private void getGoodsList() {
+    private void getGoodsList(int pageNum, final boolean isRefresh) {
         disposable.add(ApiUtils.getInstance().getGoodsList(classId, pageNum, orderBy)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean<GoodsListBean>>() {
                     @Override
                     public void accept(ResultBean<GoodsListBean> goodsListBeanResultBean) throws Exception {
-                        getListSuccess(goodsListBeanResultBean.getData().getList());
+                        refreshLayout.finishRefresh();
+                        refreshLayout.finishLoadMore();
+                        getListSuccess(goodsListBeanResultBean.getData(), isRefresh);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        KLog.e();
+                        refreshLayout.finishRefresh();
+                        refreshLayout.finishLoadMore();
                     }
                 }));
     }
@@ -330,8 +352,22 @@ public class GoodsListActivity extends BaseActivity {
                 }));
     }
 
-    private void getListSuccess(List<GoodsListDetailBean> list) {
-        this.lists = list;
+    private void getListSuccess(GoodsListBean goodsListBean, boolean isRefresh) {
+        List<GoodsListDetailBean> newLists = goodsListBean.getList();
+        if (newLists == null) newLists = new ArrayList<>();
+        if (isRefresh) {
+            pageNum = 1;
+            lists = newLists;
+        } else {
+            pageNum++;
+            lists.addAll(newLists);
+        }
+        if (goodsListBean.getPagers().getTotal() <= lists.size()) {
+            refreshLayout.setFooterHeight(30);
+            refreshLayout.finishLoadMoreWithNoMoreData();//显示没有更多数据
+        } else {
+            refreshLayout.setNoMoreData(false);
+        }
         if (listType) {
             linearAdapter.setNewData(lists);
         } else {
@@ -341,13 +377,32 @@ public class GoodsListActivity extends BaseActivity {
 
 
     private void changeSort(int index) {
-        for (int i = 0; i < sortTextViewLists.size(); i++) {
-            if (i == index) {
-                sortTextViewLists.get(i).setSelected(true);
-            } else {
-                sortTextViewLists.get(i).setSelected(false);
+        if (selectIndex != index) {
+            selectIndex = index;
+            if (index == 0) {
+                orderBy = ORDER_ALL;
+            } else if (index == 1) {
+                orderBy = ORDER_NEW;
+            } else if (index == 2) {
+                orderBy = ORDER_PRICE_ASC;
+            }
+            for (int i = 0; i < sortTextViewLists.size(); i++) {
+                if (i == index) {
+                    sortTextViewLists.get(i).setSelected(true);
+                } else {
+                    sortTextViewLists.get(i).setSelected(false);
+                }
+            }
+        } else {
+            if (index == 2) {
+                if (orderBy.equals(ORDER_PRICE_ASC)) {
+                    orderBy = ORDER_PRICE_DESC;
+                } else {
+                    orderBy = ORDER_PRICE_ASC;
+                }
             }
         }
+        getGoodsList(1, true);
     }
 
     private void changeListType() {
@@ -434,7 +489,7 @@ public class GoodsListActivity extends BaseActivity {
                         className = name;
                         titleName.setText(className);
                         pageNum = 1;
-                        getGoodsList();
+                        getGoodsList(pageNum, true);
                     }
                 });
             }

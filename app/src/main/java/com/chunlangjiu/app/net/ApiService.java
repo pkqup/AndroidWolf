@@ -5,7 +5,9 @@ import com.chunlangjiu.app.amain.bean.MainClassBean;
 import com.chunlangjiu.app.goods.bean.EvaluateListBean;
 import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
 import com.chunlangjiu.app.goods.bean.GoodsListBean;
+import com.chunlangjiu.app.goods.bean.ShopInfoBean;
 import com.chunlangjiu.app.user.bean.AddressListBean;
+import com.chunlangjiu.app.user.bean.MyNumBean;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 
 import io.reactivex.Flowable;
@@ -39,7 +41,8 @@ public interface ApiService {
                                                      @Field("orderBy") String orderBy);
     @POST("index.php/topapi")
     @FormUrlEncoded
-    Flowable<ResultBean<GoodsDetailBean>> getGoodsDetail(@Field("method") String method, @Field("v") String v, @Field("item_id") String item_id);
+    Flowable<ResultBean<GoodsDetailBean>> getGoodsDetail(@Field("method") String method, @Field("v") String v,
+                                                         @Field("item_id") String item_id);
 
     @POST("index.php/topapi")
     @FormUrlEncoded
@@ -47,6 +50,11 @@ public interface ApiService {
                                                            @Field("rate_type") int rate_type, @Field("item_id") String item_id,
                                                            @Field("page_no") int page_no, @Field("page_size") int page_size);
 
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<ShopInfoBean>> getShopInfo(@Field("method") String method, @Field("v") String v,
+                                                   @Field("shop_id") String shop_id);
 
     @POST("index.php/topapi")
     @FormUrlEncoded
@@ -72,6 +80,13 @@ public interface ApiService {
     @POST("index.php/topapi")
     @FormUrlEncoded
     Flowable<ResultBean> setDefault(@Field("method") String method, @Field("v") String v, @Field("addr_id") String addr_id);
+
+
+    //获取我的页面数据个数的统计
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<MyNumBean>> getMyNumFlag(@Field("method") String method, @Field("v") String v);
+
 
 
 }

@@ -5,7 +5,9 @@ import com.chunlangjiu.app.amain.bean.MainClassBean;
 import com.chunlangjiu.app.goods.bean.EvaluateListBean;
 import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
 import com.chunlangjiu.app.goods.bean.GoodsListBean;
+import com.chunlangjiu.app.goods.bean.ShopInfoBean;
 import com.chunlangjiu.app.user.bean.AddressListBean;
+import com.chunlangjiu.app.user.bean.MyNumBean;
 import com.pkqup.commonlibrary.net.HttpUtils;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 
@@ -59,12 +61,17 @@ public class ApiUtils {
     }
 
     public Flowable<ResultBean<GoodsDetailBean>> getGoodsDetail(String item_id) {
-        return apiService.getGoodsDetail("item.detail", "v1",item_id);
+        return apiService.getGoodsDetail("item.detail", "v1", item_id);
     }
 
     public Flowable<ResultBean<EvaluateListBean>> getEvaluateList(String item_id, int page_no) {
-        return apiService.getEvaluateList("item.rate.list", "v1",0,item_id,page_no,10);
+        return apiService.getEvaluateList("item.rate.list", "v1", 0, item_id, page_no, 10);
     }
+
+    public Flowable<ResultBean<ShopInfoBean>> getShopInfo(String shopId) {
+        return apiService.getShopInfo("shop.basic", "v1", shopId);
+    }
+
 
     public Flowable<ResultBean> newAddress(String name, String mobile, String area, String addr, String def_addr) {
         return apiService.newAddress("member.address.create", "v1", name, mobile, area, addr, def_addr);
@@ -86,10 +93,9 @@ public class ApiUtils {
         return apiService.setDefault("member.address.setDefault", "v1", addressId);
     }
 
-
-
-
-
+    public Flowable<ResultBean<MyNumBean>> getMyNumFlag(String addressId) {
+        return apiService.getMyNumFlag("member.index", "v1");
+    }
 
 
 }

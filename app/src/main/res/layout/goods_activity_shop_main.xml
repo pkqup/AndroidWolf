@@ -37,8 +37,7 @@
                     android:layout_width="45dp"
                     android:layout_height="45dp"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dp"
-                    android:src="@color/bg_red" />
+                    android:layout_marginLeft="10dp" />
 
                 <TextView
                     android:id="@+id/tvShopName"
@@ -95,7 +94,7 @@
                     android:textSize="@dimen/sp_small" />
 
                 <TextView
-                    android:id="@+id/tvShopPhoto"
+                    android:id="@+id/tvShopPhone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -222,12 +221,22 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.pkqup.commonlibrary.view.MyHeaderRecycleView
-                android:id="@+id/recycle_view"
+            <com.scwang.smartrefresh.layout.SmartRefreshLayout
+                android:id="@+id/refreshLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp" />
+                android:background="@color/bg_gray"
+                app:srlEnableFooterFollowWhenLoadFinished="true"
+                app:srlEnableScrollContentWhenLoaded="true">
+
+                <com.pkqup.commonlibrary.view.MyHeaderRecycleView
+                    android:id="@+id/recycle_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@color/bg_white"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp" />
+            </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
             <LinearLayout
                 android:id="@+id/right_view"
@@ -237,13 +246,7 @@
                 android:background="@color/bg_white"
                 android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:text="DrawerLayout"
-                    android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_mid" />
+                <include layout="@layout/goods_right_view_filter" />
 
             </LinearLayout>
 

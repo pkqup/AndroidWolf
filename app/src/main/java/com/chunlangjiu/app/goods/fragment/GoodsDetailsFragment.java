@@ -91,10 +91,10 @@ public class GoodsDetailsFragment extends BaseFragment {
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.tvLookAll://查看店铺
-                    startActivity(new Intent(getActivity(), ShopMainActivity.class));
+                    ShopMainActivity.startShopMainActivity(getActivity(),goodsDetailBean.getShop().getShop_id());
                     break;
-                    case R.id.rlEvaluate://查看店铺
-                        EventManager.getInstance().notify(null,ConstantMsg.CHANGE_TO_EVALUATE);
+                case R.id.rlEvaluate://查看店铺
+                    EventManager.getInstance().notify(null, ConstantMsg.CHANGE_TO_EVALUATE);
                     break;
             }
         }

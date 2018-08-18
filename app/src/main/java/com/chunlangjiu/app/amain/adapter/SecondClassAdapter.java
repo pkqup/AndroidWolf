@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.amain.bean.SecondClassBean;
 import com.chunlangjiu.app.amain.bean.ThirdClassBean;
+import com.pkqup.commonlibrary.glide.GlideUtils;
 import com.pkqup.commonlibrary.util.SizeUtils;
 import com.pkqup.commonlibrary.view.MyGridView;
 
@@ -149,6 +150,7 @@ public class SecondClassAdapter extends BaseExpandableListAdapter {
             layoutParams.width = picWidth;
             imgPic.setLayoutParams(layoutParams);
             tvName.setText(lists.get(position).getCat_name());
+            GlideUtils.loadImage(context, lists.get(position).getCat_logo(), imgPic);
             return convertView;
         }
     }
