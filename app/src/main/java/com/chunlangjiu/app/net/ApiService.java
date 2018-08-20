@@ -39,6 +39,7 @@ public interface ApiService {
     Flowable<ResultBean<GoodsListBean>> getGoodsList(@Field("method") String method, @Field("v") String v, @Field("cat_id") String cat_id,
                                                      @Field("page_no") int page_no, @Field("page_size") int page_size,
                                                      @Field("orderBy") String orderBy);
+
     @POST("index.php/topapi")
     @FormUrlEncoded
     Flowable<ResultBean<GoodsDetailBean>> getGoodsDetail(@Field("method") String method, @Field("v") String v,
@@ -88,5 +89,51 @@ public interface ApiService {
     Flowable<ResultBean<MyNumBean>> getMyNumFlag(@Field("method") String method, @Field("v") String v);
 
 
+    //获取名庄分类
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean> getStoreClass(@Field("method") String method, @Field("v") String v);
 
+    //获取名庄对应分类下的列表
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean> getStoreList(@Field("method") String method, @Field("v") String v,
+                                      @Field("chateaucat_id") String chateaucat_id,
+                                      @Field("page_no") int page_no, @Field("page_size") int page_size);
+
+    //获取名庄详情
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean> getStoreDetail(@Field("method") String method, @Field("v") String v, @Field("chateau_id") String chateau_id);
+
+    //获取购物车列表
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean> getCartList(@Field("method") String method, @Field("v") String v,
+                                     @Field("mode") String mode, @Field("platform") String platform);
+
+
+    //添加商品到购物车
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean> addGoodsToCart(@Field("method") String method, @Field("v") String v, @Field("quantity") int quantity,
+                                        @Field("sku_id") String sku_id, @Field("obj_type") String obj_type, @Field("mode") String mode);
+
+
+    //删除购物车商品 cart_id：购物车id,多个数据用逗号隔开
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean> deleteCartItem(@Field("method") String method, @Field("v") String v,
+                                        @Field("cart_id") String cart_id);
+
+    //更新购物车数据
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean> updateCartData(@Field("method") String method, @Field("v") String v,
+                                        @Field("obj_type") String obj_type,  @Field("cart_params") String cart_params);
+
+    //获取购物车数量
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean> getCartCount(@Field("method") String method, @Field("v") String v);
 }

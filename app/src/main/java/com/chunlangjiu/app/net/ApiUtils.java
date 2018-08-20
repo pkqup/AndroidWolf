@@ -97,5 +97,37 @@ public class ApiUtils {
         return apiService.getMyNumFlag("member.index", "v1");
     }
 
+    public Flowable<ResultBean> getStoreClass() {
+        return apiService.getStoreClass("category.chateauCat", "v1");
+    }
 
+    public Flowable<ResultBean> getStoreList(String id, int pageNum) {
+        return apiService.getStoreList("category.chateauList", "v1", id, pageNum, 20);
+    }
+
+    public Flowable<ResultBean> getStoreDetail(String id) {
+        return apiService.getStoreDetail("category.chateauDetail", "v1", id);
+    }
+
+
+    public Flowable<ResultBean> getCartList() {
+        return apiService.getCartList("cart.get", "v1", "cart", "wap");
+    }
+
+    public Flowable<ResultBean> addGoodsToCart(int num, String sku_id) {
+        return apiService.addGoodsToCart("cart.add", "v1", num, sku_id, "item", "cart");
+    }
+
+    public Flowable<ResultBean> deleteCartItem(String cart_id) {
+        return apiService.deleteCartItem("cart.del", "v1", cart_id);
+    }
+
+    //cart_params: 	[{"cart_id":1,"is_checked":1,"selected_promotion":13,"totalQuantity":2},{"cart_id":7,"is_checked":1,"selected_promotion":0,"totalQuantity":1}]
+    public Flowable<ResultBean> updateCartData(String cart_params) {
+        return apiService.updateCartData("cart.update", "v1", "item", cart_params);
+    }
+
+    public Flowable<ResultBean> getCartCount() {
+        return apiService.getCartCount("cart.count", "v1");
+    }
 }
