@@ -6,33 +6,24 @@ package com.chunlangjiu.app.goods.bean;
  */
 public class FilterStoreBean {
 
-    private String id;
-    private String name;
+    private String cat_id;
+    private String cat_name;
     private boolean select;
 
-    public FilterStoreBean() {
+    public String getCat_id() {
+        return cat_id;
     }
 
-    public FilterStoreBean(String id, String name, boolean select) {
-        this.id = id;
-        this.name = name;
-        this.select = select;
+    public void setCat_id(String cat_id) {
+        this.cat_id = cat_id;
     }
 
-    public String getId() {
-        return id;
+    public String getCat_name() {
+        return cat_name;
     }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setCat_name(String cat_name) {
+        this.cat_name = cat_name;
     }
 
     public boolean isSelect() {

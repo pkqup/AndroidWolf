@@ -23,7 +23,6 @@ public abstract class BaseActivity extends FragmentActivity {
     public TextView titleName;
     public ImageView titleImgRightOne;
     public ImageView titleImgRightTwo;
-
     public RelativeLayout titleSearchView;
     public EditText titleSearchEdit;
 

@@ -1,12 +1,14 @@
 package com.chunlangjiu.app.goods.adapter;
 
 import android.content.Context;
+import android.widget.ImageView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chad.library.adapter.base.util.MultiTypeDelegate;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.goods.bean.OrderGoodsBean;
+import com.pkqup.commonlibrary.glide.GlideUtils;
 
 import java.util.List;
 
@@ -22,6 +24,7 @@ public class ConfirmOrderGoodsAdapter extends BaseQuickAdapter<OrderGoodsBean, B
 
     public ConfirmOrderGoodsAdapter(Context context, List<OrderGoodsBean> list) {
         super(list);
+        this.context = context;
         setMultiTypeDelegate(new MultiTypeDelegate<OrderGoodsBean>() {
             @Override
             protected int getItemType(OrderGoodsBean cartGoodsBean) {
@@ -44,9 +47,17 @@ public class ConfirmOrderGoodsAdapter extends BaseQuickAdapter<OrderGoodsBean, B
                 } else {
                     helper.setVisible(R.id.view_line, true);
                 }
+
+                ImageView img_store = helper.getView(R.id.img_store);
+                GlideUtils.loadImage(context, item.getStoreLogo(), img_store);
+                helper.setText(R.id.tv_store_name, item.getStoreName());
                 break;
             case OrderGoodsBean.ITEM_GOODS:
-
+                ImageView img_pic = helper.getView(R.id.img_pic);
+                GlideUtils.loadImage(context, item.getGoodsPic(), img_pic);
+                helper.setText(R.id.tv_name, item.getGoodsName());
+                helper.setText(R.id.tv_price, "¥" + item.getGoodsPrice());
+                helper.setText(R.id.tv_num, "x" + item.getGoodsNum());
                 break;
         }
     }

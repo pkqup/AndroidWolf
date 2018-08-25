@@ -234,10 +234,6 @@ public class ShopMainActivity extends BaseActivity {
 
 
         brandLists = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            brandLists.add(new FilterBrandBean(i + "", "品牌" + i, false));
-        }
-        brandLists.get(0).setSelect(true);
         filterBrandAdapter = new FilterBrandAdapter(R.layout.goods_item_pop_class, brandLists);
         filterBrandAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
@@ -251,10 +247,6 @@ public class ShopMainActivity extends BaseActivity {
         recyclerViewBrand.setAdapter(filterBrandAdapter);
 
         storeLists = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            storeLists.add(new FilterStoreBean(i + "", "名庄" + i, false));
-        }
-        storeLists.get(0).setSelect(true);
         filterStoreAdapter = new FilterStoreAdapter(R.layout.goods_item_pop_class, storeLists);
         filterStoreAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override

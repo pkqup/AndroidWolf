@@ -150,7 +150,7 @@
                     android:gravity="center"
                     android:textColor="@color/t_white"
                     android:textSize="8sp"
-                    android:visibility="visible"
+                    android:visibility="gone"
                     tools:text="1" />
 
             </RelativeLayout>

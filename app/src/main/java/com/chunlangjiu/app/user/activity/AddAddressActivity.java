@@ -308,7 +308,7 @@ public class AddAddressActivity extends BaseActivity {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
                             hideLoadingDialog();
-                            ToastUtils.showShort("修改地址失败");
+                            ToastUtils.showNetErrorMsg(throwable);
                         }
                     }));
         } else {
@@ -328,7 +328,7 @@ public class AddAddressActivity extends BaseActivity {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
                             hideLoadingDialog();
-                            ToastUtils.showShort("添加地址失败");
+                            ToastUtils.showNetErrorMsg(throwable);
                         }
                     }));
         }

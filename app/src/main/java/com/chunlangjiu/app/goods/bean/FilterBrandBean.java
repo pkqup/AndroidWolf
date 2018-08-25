@@ -6,34 +6,24 @@ package com.chunlangjiu.app.goods.bean;
  */
 public class FilterBrandBean {
 
-    private String id;
-    private String name;
+    private String brand_id;
+    private String brand_name;
     private boolean select;
 
-
-    public FilterBrandBean() {
-
-    }
-    public FilterBrandBean(String id, String name, boolean select) {
-        this.id = id;
-        this.name = name;
-        this.select = select;
+    public String getBrand_id() {
+        return brand_id;
     }
 
-    public String getId() {
-        return id;
+    public void setBrand_id(String brand_id) {
+        this.brand_id = brand_id;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public String getBrand_name() {
+        return brand_name;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
+    public void setBrand_name(String brand_name) {
+        this.brand_name = brand_name;
     }
 
     public boolean isSelect() {

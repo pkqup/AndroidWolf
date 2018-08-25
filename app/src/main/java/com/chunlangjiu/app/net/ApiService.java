@@ -1,8 +1,11 @@
 package com.chunlangjiu.app.net;
 
+import com.chunlangjiu.app.amain.bean.CartCountBean;
 import com.chunlangjiu.app.amain.bean.LoginBean;
 import com.chunlangjiu.app.amain.bean.MainClassBean;
+import com.chunlangjiu.app.goods.bean.ConfirmOrderBean;
 import com.chunlangjiu.app.goods.bean.EvaluateListBean;
+import com.chunlangjiu.app.goods.bean.FilterListBean;
 import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
 import com.chunlangjiu.app.goods.bean.GoodsListBean;
 import com.chunlangjiu.app.goods.bean.ShopInfoBean;
@@ -39,6 +42,10 @@ public interface ApiService {
     Flowable<ResultBean<GoodsListBean>> getGoodsList(@Field("method") String method, @Field("v") String v, @Field("cat_id") String cat_id,
                                                      @Field("page_no") int page_no, @Field("page_size") int page_size,
                                                      @Field("orderBy") String orderBy);
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<FilterListBean>> getFilterData(@Field("method") String method, @Field("v") String v, @Field("cat_id") String cat_id);
 
     @POST("index.php/topapi")
     @FormUrlEncoded
@@ -126,6 +133,10 @@ public interface ApiService {
     Flowable<ResultBean> deleteCartItem(@Field("method") String method, @Field("v") String v,
                                         @Field("cart_id") String cart_id);
 
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<ConfirmOrderBean>> confirmOrder(@Field("method") String method, @Field("v") String v, @Field("mode") String mode);
+
     //更新购物车数据
     @POST("index.php/topapi")
     @FormUrlEncoded
@@ -135,5 +146,5 @@ public interface ApiService {
     //获取购物车数量
     @POST("index.php/topapi")
     @FormUrlEncoded
-    Flowable<ResultBean> getCartCount(@Field("method") String method, @Field("v") String v);
+    Flowable<ResultBean<CartCountBean>> getCartCount(@Field("method") String method, @Field("v") String v);
 }

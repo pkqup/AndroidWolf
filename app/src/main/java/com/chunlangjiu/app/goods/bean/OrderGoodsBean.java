@@ -11,8 +11,54 @@ public class OrderGoodsBean {
 
     private int itemType;
     private String storeId;
+    private String storeName;
+    private String storeLogo;
+
     private String goodsId;
+    private String goodsPic;
     private String goodsName;
+    private String goodsPrice;
+    private String goodsNum;
+
+    public String getStoreName() {
+        return storeName;
+    }
+
+    public void setStoreName(String storeName) {
+        this.storeName = storeName;
+    }
+
+    public String getStoreLogo() {
+        return storeLogo;
+    }
+
+    public void setStoreLogo(String storeLogo) {
+        this.storeLogo = storeLogo;
+    }
+
+    public String getGoodsPic() {
+        return goodsPic;
+    }
+
+    public void setGoodsPic(String goodsPic) {
+        this.goodsPic = goodsPic;
+    }
+
+    public String getGoodsPrice() {
+        return goodsPrice;
+    }
+
+    public void setGoodsPrice(String goodsPrice) {
+        this.goodsPrice = goodsPrice;
+    }
+
+    public String getGoodsNum() {
+        return goodsNum;
+    }
+
+    public void setGoodsNum(String goodsNum) {
+        this.goodsNum = goodsNum;
+    }
 
     public static int getItemStore() {
         return ITEM_STORE;

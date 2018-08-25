@@ -146,6 +146,15 @@ public class GoodsDetailBean implements Serializable{
         private String realStore;
         private String freez;
         private String store;
+        private String default_sku_id;
+
+        public String getDefault_sku_id() {
+            return default_sku_id;
+        }
+
+        public void setDefault_sku_id(String default_sku_id) {
+            this.default_sku_id = default_sku_id;
+        }
 
         public String getItem_id() {
             return item_id;

@@ -26,12 +26,12 @@
                 android:background="@color/bg_white">
 
                 <TextView
-                    android:gravity="center"
-                    android:drawablePadding="5dp"
-                    android:drawableLeft="@mipmap/icon_add"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerInParent="true"
+                    android:drawableLeft="@mipmap/icon_add"
+                    android:drawablePadding="5dp"
+                    android:gravity="center"
                     android:text="填写收货地址"
                     android:textColor="@color/t_black"
                     android:textSize="@dimen/sp_mid" />
@@ -47,24 +47,39 @@
                 android:paddingBottom="10dp"
                 android:paddingTop="10dp">
 
+                <ImageView
+                    android:id="@+id/imgArrow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:src="@mipmap/black_right_arrow" />
+
                 <TextView
                     android:id="@+id/tvAddressName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
-                    tools:text="姓名"
+                    android:ellipsize="end"
+                    android:maxWidth="150dp"
+                    android:singleLine="true"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_mid" />
+                    android:textSize="@dimen/sp_mid"
+                    tools:text="姓名" />
 
                 <TextView
                     android:id="@+id/tvAddressPhone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="15dp"
+                    android:layout_toLeftOf="@id/imgArrow"
                     android:layout_toRightOf="@id/tvAddressName"
-                    tools:text="18588889999"
+                    android:ellipsize="end"
+                    android:singleLine="true"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_mid" />
+                    android:textSize="@dimen/sp_mid"
+                    tools:text="18588889999" />
 
                 <TextView
                     android:id="@+id/tvAddressDetails"
@@ -74,17 +89,10 @@
                     android:layout_marginLeft="15dp"
                     android:layout_marginRight="40dp"
                     android:layout_marginTop="4dp"
-                    tools:text="深圳市南山区科兴科学园"
                     android:textColor="@color/t_gray"
-                    android:textSize="@dimen/sp_small" />
+                    android:textSize="@dimen/sp_small"
+                    tools:text="深圳市南山区科兴科学园" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="15dp"
-                    android:src="@mipmap/black_right_arrow" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -196,9 +204,9 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
-                    android:text="¥500"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_mid" />
+                    android:textSize="@dimen/sp_mid"
+                    tools:text="¥500" />
             </RelativeLayout>
 
             <View
@@ -228,9 +236,9 @@
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="15dp"
-                    android:text="¥10"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_mid" />
+                    android:textSize="@dimen/sp_mid"
+                    tools:text="¥10" />
             </RelativeLayout>
         </LinearLayout>
     </ScrollView>

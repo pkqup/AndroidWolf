@@ -14,7 +14,7 @@
         android:gravity="center"
         android:singleLine="true"
         android:textColor="@color/t_red_selector"
-        android:textSize="@dimen/sp_mid"
+        android:textSize="@dimen/sp_small"
         tools:text="推荐分类" />
 
 </LinearLayout>

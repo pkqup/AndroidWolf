@@ -4,9 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -43,14 +45,16 @@ public class AddressListActivity extends BaseActivity {
     private AddressAdapter addressAdapter;
     private List<AddressListDetailBean> lists;
     private CompositeDisposable disposable;
-    private boolean selectAddress;//是否是选择地址
+    private boolean isSelect = false;//是否是选择地址
+    private String selectAddressId = "";//选择的地址id
+
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.img_title_left:
-                    finish();
+                    checkBack();
                     break;
                 case R.id.tvAddAddress:
                     startActivity(new Intent(AddressListActivity.this, AddAddressActivity.class));
@@ -95,7 +99,6 @@ public class AddressListActivity extends BaseActivity {
                     case R.id.imgSetDefault:
                         setDefaultAddress(position);
                         break;
-
                 }
             }
         });
@@ -103,8 +106,23 @@ public class AddressListActivity extends BaseActivity {
 
     private void initData() {
         disposable = new CompositeDisposable();
-        selectAddress = getIntent().getBooleanExtra("select", false);
-
+        isSelect = getIntent().getBooleanExtra("isSelect", false);
+        if (isSelect) {
+            titleName.setText("选择地址");
+            selectAddressId = getIntent().getStringExtra("selectAddressId");
+            addressAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+                @Override
+                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                    AddressListDetailBean addressListDetailBean = lists.get(position);
+                    Intent intent = new Intent();
+                    intent.putExtra("addressListDetailBean", addressListDetailBean);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
+            });
+        } else {
+            titleName.setText("地址列表");
+        }
     }
 
     private void getAddressList() {
@@ -182,6 +200,30 @@ public class AddressListActivity extends BaseActivity {
     }
 
 
+    private void checkBack() {
+        if (isSelect) {
+            AddressListDetailBean addressListDetailBean = new AddressListDetailBean();
+            for (int i = 0; i < lists.size(); i++) {
+                if (lists.get(i).getAddr_id().equals(selectAddressId)) {
+                    addressListDetailBean = lists.get(i);
+                }
+            }
+            Intent intent = new Intent();
+            intent.putExtra("addressListDetailBean", addressListDetailBean);
+            setResult(RESULT_OK, intent);
+        }
+        finish();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            checkBack();
+        }
+        return true;
+    }
+
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -190,6 +232,7 @@ public class AddressListActivity extends BaseActivity {
     }
 
     public class AddressAdapter extends BaseQuickAdapter<AddressListDetailBean, BaseViewHolder> {
+
         public AddressAdapter(int layoutResId, List<AddressListDetailBean> data) {
             super(layoutResId, data);
         }
@@ -201,10 +244,16 @@ public class AddressListActivity extends BaseActivity {
             helper.setText(R.id.tvAddress, item.getAddrdetail());
             ImageView imgSetDefault = helper.getView(R.id.imgSetDefault);
             imgSetDefault.setSelected(item.getDef_addr().equals("1"));
-
             helper.addOnClickListener(R.id.imgEdit);
             helper.addOnClickListener(R.id.imgDelete);
             helper.addOnClickListener(R.id.imgSetDefault);
+
+            ImageView imgChoice = helper.getView(R.id.imgChoice);
+            if (item.getAddr_id().equals(selectAddressId)) {
+                imgChoice.setVisibility(View.VISIBLE);
+            } else {
+                imgChoice.setVisibility(View.GONE);
+            }
         }
     }
 }

@@ -17,7 +17,7 @@
             android:singleLine="true"
             android:text="二级分类"
             android:textColor="@color/t_black"
-            android:textSize="@dimen/sp_mid" />
+            android:textSize="@dimen/sp_small" />
 
     </RelativeLayout>
 </RelativeLayout>

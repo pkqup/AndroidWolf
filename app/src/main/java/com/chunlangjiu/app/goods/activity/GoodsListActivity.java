@@ -2,6 +2,7 @@ package com.chunlangjiu.app.goods.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -28,6 +29,7 @@ import com.chunlangjiu.app.goods.adapter.FilterBrandAdapter;
 import com.chunlangjiu.app.goods.adapter.FilterStoreAdapter;
 import com.chunlangjiu.app.goods.bean.ClassBean;
 import com.chunlangjiu.app.goods.bean.FilterBrandBean;
+import com.chunlangjiu.app.goods.bean.FilterListBean;
 import com.chunlangjiu.app.goods.bean.FilterStoreBean;
 import com.chunlangjiu.app.goods.bean.GoodsListBean;
 import com.chunlangjiu.app.goods.bean.GoodsListDetailBean;
@@ -225,15 +227,12 @@ public class GoodsListActivity extends BaseActivity {
 
 
         brandLists = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            brandLists.add(new FilterBrandBean(i + "", "品牌" + i, false));
-        }
-        brandLists.get(0).setSelect(true);
         filterBrandAdapter = new FilterBrandAdapter(R.layout.goods_item_pop_class, brandLists);
         filterBrandAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-
+                brandLists.get(position).setSelect(true);
+                filterBrandAdapter.notifyDataSetChanged();
             }
         });
         recyclerViewBrand.setHasFixedSize(true);
@@ -242,15 +241,12 @@ public class GoodsListActivity extends BaseActivity {
         recyclerViewBrand.setAdapter(filterBrandAdapter);
 
         storeLists = new ArrayList<>();
-        for (int i = 0; i < 20; i++) {
-            storeLists.add(new FilterStoreBean(i + "", "名庄" + i, false));
-        }
-        storeLists.get(0).setSelect(true);
         filterStoreAdapter = new FilterStoreAdapter(R.layout.goods_item_pop_class, storeLists);
         filterStoreAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-
+                storeLists.get(position).setSelect(true);
+                filterStoreAdapter.notifyDataSetChanged();
             }
         });
         recyclerViewStore.setHasFixedSize(true);
@@ -313,6 +309,7 @@ public class GoodsListActivity extends BaseActivity {
     private void initData() {
         getGoodsList(pageNum, true);
         getClassData();
+        getFilterData();
     }
 
     private void getGoodsList(int pageNum, final boolean isRefresh) {
@@ -351,6 +348,34 @@ public class GoodsListActivity extends BaseActivity {
                     }
                 }));
     }
+
+
+    private void getFilterData() {
+        disposable.add(ApiUtils.getInstance().getFilterData(classId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<FilterListBean>>() {
+                    @Override
+                    public void accept(ResultBean<FilterListBean> filterListBeanResultBean) throws Exception {
+                        List<FilterBrandBean> brands = filterListBeanResultBean.getData().getBrand();
+                        List<FilterStoreBean> cats = filterListBeanResultBean.getData().getCat();
+                        if (brands != null) {
+                            brandLists = brands;
+                            filterBrandAdapter.setNewData(brandLists);
+                        }
+
+                        if (cats != null) {
+                            storeLists = cats;
+                            filterStoreAdapter.setNewData(storeLists);
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                }));
+    }
+
 
     private void getListSuccess(GoodsListBean goodsListBean, boolean isRefresh) {
         List<GoodsListDetailBean> newLists = goodsListBean.getList();
@@ -432,8 +457,15 @@ public class GoodsListActivity extends BaseActivity {
         @Override
         protected void convert(BaseViewHolder helper, GoodsListDetailBean item) {
             ImageView imgPic = helper.getView(R.id.img_pic);
+            TextView tvStartPrice = helper.getView(R.id.tvStartPrice);
+
             GlideUtils.loadImage(GoodsListActivity.this, item.getImage_default_id(), imgPic);
             helper.setText(R.id.tv_name, item.getTitle());
+            helper.setText(R.id.tvStartPriceStr, "原价：");
+            tvStartPrice.setText(item.getPrice());
+            tvStartPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);  // 设置中划线并加清晰
+            helper.setText(R.id.tvSellPriceStr, "");
+            helper.setText(R.id.tvSellPrice, item.getPrice());
         }
     }
 
@@ -450,9 +482,15 @@ public class GoodsListActivity extends BaseActivity {
             layoutParams.width = picWidth;
             layoutParams.height = picWidth;
             imgPic.setLayoutParams(layoutParams);
-
             GlideUtils.loadImage(GoodsListActivity.this, item.getImage_default_id(), imgPic);
             helper.setText(R.id.tv_name, item.getTitle());
+
+            TextView tvStartPrice = helper.getView(R.id.tvStartPrice);
+            helper.setText(R.id.tvStartPriceStr, "原价：");
+            tvStartPrice.setText(item.getPrice());
+            tvStartPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);  // 设置中划线并加清晰
+            helper.setText(R.id.tvSellPriceStr, "");
+            helper.setText(R.id.tvSellPrice, item.getPrice());
         }
     }
 
@@ -490,6 +528,7 @@ public class GoodsListActivity extends BaseActivity {
                         titleName.setText(className);
                         pageNum = 1;
                         getGoodsList(pageNum, true);
+                        getFilterData();
                     }
                 });
             }

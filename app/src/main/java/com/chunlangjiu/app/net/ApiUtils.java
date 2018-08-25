@@ -1,8 +1,11 @@
 package com.chunlangjiu.app.net;
 
+import com.chunlangjiu.app.amain.bean.CartCountBean;
 import com.chunlangjiu.app.amain.bean.LoginBean;
 import com.chunlangjiu.app.amain.bean.MainClassBean;
+import com.chunlangjiu.app.goods.bean.ConfirmOrderBean;
 import com.chunlangjiu.app.goods.bean.EvaluateListBean;
+import com.chunlangjiu.app.goods.bean.FilterListBean;
 import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
 import com.chunlangjiu.app.goods.bean.GoodsListBean;
 import com.chunlangjiu.app.goods.bean.ShopInfoBean;
@@ -64,6 +67,11 @@ public class ApiUtils {
         return apiService.getGoodsDetail("item.detail", "v1", item_id);
     }
 
+    public Flowable<ResultBean<FilterListBean>> getFilterData(String cat_id) {
+        return apiService.getFilterData("item.filterItems", "v1", cat_id);
+    }
+
+
     public Flowable<ResultBean<EvaluateListBean>> getEvaluateList(String item_id, int page_no) {
         return apiService.getEvaluateList("item.rate.list", "v1", 0, item_id, page_no, 10);
     }
@@ -93,6 +101,7 @@ public class ApiUtils {
         return apiService.setDefault("member.address.setDefault", "v1", addressId);
     }
 
+    //获取我的模块的数量上标
     public Flowable<ResultBean<MyNumBean>> getMyNumFlag(String addressId) {
         return apiService.getMyNumFlag("member.index", "v1");
     }
@@ -118,6 +127,14 @@ public class ApiUtils {
         return apiService.addGoodsToCart("cart.add", "v1", num, sku_id, "item", "cart");
     }
 
+    public Flowable<ResultBean> addGoodsToCartBuyNow(int num, String sku_id) {
+        return apiService.addGoodsToCart("cart.add", "v1", num, sku_id, "item", "fastbuy");
+    }
+
+    public Flowable<ResultBean<ConfirmOrderBean>> buyNowConfirmOrder() {
+        return apiService.confirmOrder("cart.checkout", "v1","fastbuy");
+    }
+
     public Flowable<ResultBean> deleteCartItem(String cart_id) {
         return apiService.deleteCartItem("cart.del", "v1", cart_id);
     }
@@ -127,7 +144,7 @@ public class ApiUtils {
         return apiService.updateCartData("cart.update", "v1", "item", cart_params);
     }
 
-    public Flowable<ResultBean> getCartCount() {
+    public Flowable<ResultBean<CartCountBean>> getCartCount() {
         return apiService.getCartCount("cart.count", "v1");
     }
 }

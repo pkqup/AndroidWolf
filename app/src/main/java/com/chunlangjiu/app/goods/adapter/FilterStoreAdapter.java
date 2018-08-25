@@ -22,7 +22,7 @@ public class FilterStoreAdapter extends BaseQuickAdapter<FilterStoreBean, BaseVi
     @Override
     protected void convert(BaseViewHolder helper, FilterStoreBean item) {
         TextView tvName = helper.getView(R.id.tvName);
-        tvName.setText(item.getName());
+        tvName.setText(item.getCat_name());
         if (item.isSelect()) {
             tvName.setSelected(true);
         } else {

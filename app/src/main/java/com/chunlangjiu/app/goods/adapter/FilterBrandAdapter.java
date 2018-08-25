@@ -22,7 +22,7 @@ public class FilterBrandAdapter extends BaseQuickAdapter<FilterBrandBean, BaseVi
     @Override
     protected void convert(BaseViewHolder helper, FilterBrandBean item) {
         TextView tvName = helper.getView(R.id.tvName);
-        tvName.setText(item.getName());
+        tvName.setText(item.getBrand_name());
         if (item.isSelect()) {
             tvName.setSelected(true);
         } else {
