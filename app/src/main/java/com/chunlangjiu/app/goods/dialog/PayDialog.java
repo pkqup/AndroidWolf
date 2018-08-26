@@ -8,8 +8,10 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.chunlangjiu.app.R;
+import com.chunlangjiu.app.goods.bean.PaymentBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,11 +29,17 @@ public class PayDialog extends Dialog {
 
     private Context context;
     private int payMethod = PAY_WEIXIN;
+    private List<PaymentBean.PaymentInfo> payList;
     private List<ImageView> imageViewLists;
+    private String weixinPayId;
+    private String zhifubaoPayId;
+    private String yuePayId;
+    private String daePayId;
 
-    public PayDialog(Context context) {
+    public PayDialog(Context context, List<PaymentBean.PaymentInfo> payList) {
         super(context, R.style.dialog_transparent);
         this.context = context;
+        this.payList = payList;
         setCancelable(true);
         setCanceledOnTouchOutside(true);
         initView();
@@ -44,15 +52,21 @@ public class PayDialog extends Dialog {
         WindowManager.LayoutParams params = window.getAttributes();
         window.setAttributes(params);
         window.setGravity(Gravity.CENTER);
-
         setContentView(view);// 设置布局
 
         findViewById(R.id.imgClose).setOnClickListener(onClickListener);
-        findViewById(R.id.rlWeiXin).setOnClickListener(onClickListener);
-        findViewById(R.id.rlZhiFuBao).setOnClickListener(onClickListener);
-        findViewById(R.id.rlWallet).setOnClickListener(onClickListener);
-        findViewById(R.id.rlLarge).setOnClickListener(onClickListener);
-
+        RelativeLayout rlWeiXin = findViewById(R.id.rlWeiXin);
+        RelativeLayout rlZhiFuBao = findViewById(R.id.rlZhiFuBao);
+        RelativeLayout rlWallet = findViewById(R.id.rlWallet);
+        RelativeLayout rlLarge = findViewById(R.id.rlLarge);
+        rlWeiXin.setOnClickListener(onClickListener);
+        rlZhiFuBao.setOnClickListener(onClickListener);
+        rlWallet.setOnClickListener(onClickListener);
+        rlLarge.setOnClickListener(onClickListener);
+        rlWeiXin.setVisibility(View.GONE);
+        rlZhiFuBao.setVisibility(View.GONE);
+        rlWallet.setVisibility(View.GONE);
+        rlLarge.setVisibility(View.GONE);
         ImageView imgChoiceWeixin = findViewById(R.id.imgChoiceWeixin);
         ImageView imgChoiceZhifubao = findViewById(R.id.imgChoiceZhifubao);
         ImageView imgChoiceWallet = findViewById(R.id.imgChoiceWallet);
@@ -63,6 +77,25 @@ public class PayDialog extends Dialog {
         imageViewLists.add(imgChoiceZhifubao);
         imageViewLists.add(imgChoiceWallet);
         imageViewLists.add(imgChoiceLarge);
+
+        for (int i = 0; i < payList.size(); i++) {
+            if (payList.get(i).getApp_display_name().contains("微信")) {
+                weixinPayId = payList.get(i).getApp_id();
+                rlWeiXin.setVisibility(View.VISIBLE);
+            }
+            if (payList.get(i).getApp_display_name().contains("支付宝")) {
+                zhifubaoPayId = payList.get(i).getApp_id();
+                rlZhiFuBao.setVisibility(View.VISIBLE);
+            }
+            if (payList.get(i).getApp_display_name().contains("余额")) {
+                yuePayId = payList.get(i).getApp_id();
+                rlWallet.setVisibility(View.VISIBLE);
+            }
+            if (payList.get(i).getApp_display_name().contains("大额")) {
+                daePayId = payList.get(i).getApp_id();
+                rlLarge.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
 
@@ -74,23 +107,23 @@ public class PayDialog extends Dialog {
                     dismiss();
                     break;
                 case R.id.rlWeiXin:
-                    choicePay(0);
+                    choicePay(0, weixinPayId);
                     break;
                 case R.id.rlZhiFuBao:
-                    choicePay(1);
+                    choicePay(1, zhifubaoPayId);
                     break;
                 case R.id.rlWallet:
-                    choicePay(2);
+                    choicePay(2, yuePayId);
                     break;
                 case R.id.rlLarge:
-                    choicePay(3);
+                    choicePay(3, daePayId);
                     break;
             }
         }
     };
 
 
-    private void choicePay(int payMethod) {
+    private void choicePay(int payMethod, String payMethodId) {
         for (int i = 0; i < imageViewLists.size(); i++) {
             if (payMethod == i) {
                 imageViewLists.get(i).setVisibility(View.VISIBLE);
@@ -99,7 +132,7 @@ public class PayDialog extends Dialog {
             }
         }
         if (callBack != null) {
-            callBack.choicePayMethod(payMethod);
+            callBack.choicePayMethod(payMethod, payMethodId);
         }
         dismiss();
     }
@@ -111,6 +144,6 @@ public class PayDialog extends Dialog {
     }
 
     public interface CallBack {
-        void choicePayMethod(int payMethod);
+        void choicePayMethod(int payMethod, String payMethodId);
     }
 }

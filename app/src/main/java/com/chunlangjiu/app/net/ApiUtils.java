@@ -1,13 +1,17 @@
 package com.chunlangjiu.app.net;
 
 import com.chunlangjiu.app.amain.bean.CartCountBean;
+import com.chunlangjiu.app.amain.bean.CartListBean;
 import com.chunlangjiu.app.amain.bean.LoginBean;
 import com.chunlangjiu.app.amain.bean.MainClassBean;
 import com.chunlangjiu.app.goods.bean.ConfirmOrderBean;
+import com.chunlangjiu.app.goods.bean.CreateOrderBean;
 import com.chunlangjiu.app.goods.bean.EvaluateListBean;
 import com.chunlangjiu.app.goods.bean.FilterListBean;
 import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
 import com.chunlangjiu.app.goods.bean.GoodsListBean;
+import com.chunlangjiu.app.goods.bean.PayDoBean;
+import com.chunlangjiu.app.goods.bean.PaymentBean;
 import com.chunlangjiu.app.goods.bean.ShopInfoBean;
 import com.chunlangjiu.app.user.bean.AddressListBean;
 import com.chunlangjiu.app.user.bean.MyNumBean;
@@ -15,6 +19,7 @@ import com.pkqup.commonlibrary.net.HttpUtils;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 
 import io.reactivex.Flowable;
+import retrofit2.http.Field;
 
 /**
  * @CreatedbBy: liucun on 2018/7/6
@@ -119,7 +124,7 @@ public class ApiUtils {
     }
 
 
-    public Flowable<ResultBean> getCartList() {
+    public Flowable<ResultBean<CartListBean>> getCartList() {
         return apiService.getCartList("cart.get", "v1", "cart", "wap");
     }
 
@@ -132,11 +137,11 @@ public class ApiUtils {
     }
 
     public Flowable<ResultBean<ConfirmOrderBean>> buyNowConfirmOrder() {
-        return apiService.confirmOrder("cart.checkout", "v1","fastbuy");
+        return apiService.confirmOrder("cart.checkout", "v1", "fastbuy");
     }
 
     public Flowable<ResultBean> deleteCartItem(String cart_id) {
-        return apiService.deleteCartItem("cart.del", "v1", cart_id);
+        return apiService.deleteCartItem("cart.del", "v1", cart_id, "cart");
     }
 
     //cart_params: 	[{"cart_id":1,"is_checked":1,"selected_promotion":13,"totalQuantity":2},{"cart_id":7,"is_checked":1,"selected_promotion":0,"totalQuantity":1}]
@@ -146,5 +151,19 @@ public class ApiUtils {
 
     public Flowable<ResultBean<CartCountBean>> getCartCount() {
         return apiService.getCartCount("cart.count", "v1");
+    }
+
+    public Flowable<ResultBean<PaymentBean>> getPayment() {
+        return apiService.getPayment("payment.pay.paycenter", "v1");
+    }
+
+    public Flowable<ResultBean<CreateOrderBean>> createOrder(String mode, String md5, String addrId, String paymentId, String shippingType,
+                                                             String mark) {
+        return apiService.createOrder("trade.create", "v1", mode, md5, addrId, paymentId, "app",
+                shippingType, mark, "notuse", "", "");
+    }
+
+    public Flowable<ResultBean> payDo(String payment_id, String payment_type) {
+        return apiService.payDo("payment.pay.do", "v1", payment_id, payment_type);
     }
 }

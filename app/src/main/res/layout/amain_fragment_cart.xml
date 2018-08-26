@@ -28,11 +28,24 @@
             android:textSize="18sp" />
 
         <ImageView
+            android:id="@+id/imgEdit"
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_alignParentRight="true"
             android:padding="13dp"
-            android:src="@mipmap/white_edit" />
+            android:src="@mipmap/white_edit"
+            android:visibility="visible" />
+
+        <TextView
+            android:id="@+id/tvEditFinish"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentRight="true"
+            android:gravity="center"
+            android:text="完成"
+            android:textColor="@color/t_white"
+            android:textSize="14sp"
+            android:visibility="gone" />
 
     </RelativeLayout>
 
@@ -55,7 +68,7 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:id="@+id/check_all"
+                android:id="@+id/img_check_all"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
                 android:layout_gravity="center_vertical"
@@ -89,7 +102,21 @@
             android:textColor="@color/t_white"
             android:textSize="@dimen/sp_mid" />
 
+        <TextView
+            android:id="@+id/tv_delete"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="@color/bg_red"
+            android:gravity="center"
+            android:text="删除"
+            android:textColor="@color/t_white"
+            android:textSize="@dimen/sp_mid"
+            android:visibility="gone" />
+
+
         <LinearLayout
+            android:id="@+id/llTotalPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -105,9 +132,10 @@
                 android:textSize="@dimen/sp_small" />
 
             <TextView
+                android:id="@+id/tvTotalPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="50000000"
+                android:text="0.00"
                 android:textColor="@color/t_black"
                 android:textSize="@dimen/sp_small" />
         </LinearLayout>

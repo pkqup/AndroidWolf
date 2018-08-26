@@ -12,6 +12,15 @@ public class ConfirmOrderBean implements Serializable {
     private Address default_address;
     private ShopInfo cartInfo;
     private Total total;
+    private String md5_cart_info;
+
+    public String getMd5_cart_info() {
+        return md5_cart_info;
+    }
+
+    public void setMd5_cart_info(String md5_cart_info) {
+        this.md5_cart_info = md5_cart_info;
+    }
 
     public Total getTotal() {
         return total;

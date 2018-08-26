@@ -345,7 +345,7 @@ public class GoodsDetailsActivity extends BaseActivity {
                     @Override
                     public void accept(ResultBean<ConfirmOrderBean> resultBean) throws Exception {
                         hideLoadingDialog();
-                        ConfirmOrderActivity.startConfirmOrderActivity(GoodsDetailsActivity.this, resultBean.getData());
+                        ConfirmOrderActivity.startConfirmOrderActivity(GoodsDetailsActivity.this, resultBean.getData(),"fastbuy");
                     }
                 }, new Consumer<Throwable>() {
                     @Override

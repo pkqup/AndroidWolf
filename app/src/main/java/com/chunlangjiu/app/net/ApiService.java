@@ -1,13 +1,17 @@
 package com.chunlangjiu.app.net;
 
 import com.chunlangjiu.app.amain.bean.CartCountBean;
+import com.chunlangjiu.app.amain.bean.CartListBean;
 import com.chunlangjiu.app.amain.bean.LoginBean;
 import com.chunlangjiu.app.amain.bean.MainClassBean;
 import com.chunlangjiu.app.goods.bean.ConfirmOrderBean;
+import com.chunlangjiu.app.goods.bean.CreateOrderBean;
 import com.chunlangjiu.app.goods.bean.EvaluateListBean;
 import com.chunlangjiu.app.goods.bean.FilterListBean;
 import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
 import com.chunlangjiu.app.goods.bean.GoodsListBean;
+import com.chunlangjiu.app.goods.bean.PayDoBean;
+import com.chunlangjiu.app.goods.bean.PaymentBean;
 import com.chunlangjiu.app.goods.bean.ShopInfoBean;
 import com.chunlangjiu.app.user.bean.AddressListBean;
 import com.chunlangjiu.app.user.bean.MyNumBean;
@@ -116,8 +120,8 @@ public interface ApiService {
     //获取购物车列表
     @POST("index.php/topapi")
     @FormUrlEncoded
-    Flowable<ResultBean> getCartList(@Field("method") String method, @Field("v") String v,
-                                     @Field("mode") String mode, @Field("platform") String platform);
+    Flowable<ResultBean<CartListBean>> getCartList(@Field("method") String method, @Field("v") String v,
+                                                   @Field("mode") String mode, @Field("platform") String platform);
 
 
     //添加商品到购物车
@@ -131,7 +135,7 @@ public interface ApiService {
     @POST("index.php/topapi")
     @FormUrlEncoded
     Flowable<ResultBean> deleteCartItem(@Field("method") String method, @Field("v") String v,
-                                        @Field("cart_id") String cart_id);
+                                        @Field("cart_id") String cart_id,@Field("mode") String mode);
 
     @POST("index.php/topapi")
     @FormUrlEncoded
@@ -147,4 +151,26 @@ public interface ApiService {
     @POST("index.php/topapi")
     @FormUrlEncoded
     Flowable<ResultBean<CartCountBean>> getCartCount(@Field("method") String method, @Field("v") String v);
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<PaymentBean>> getPayment(@Field("method") String method, @Field("v") String v);
+
+    //创建订单
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<CreateOrderBean>> createOrder(@Field("method") String method, @Field("v") String v,
+                                                      @Field("mode") String mode, @Field("md5_cart_info") String md5_cart_info,
+                                                      @Field("addr_id") String addr_id, @Field("payment_type") String payment_type,
+                                                      @Field("source_from") String source_from, @Field("shipping_type") String shipping_type,
+                                                      @Field("mark") String mark, @Field("invoice_type") String invoice_type,
+                                                      @Field("invoice_content") String invoice_content, @Field("use_points") String use_points);
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean> payDo(@Field("method") String method, @Field("v") String v,
+                                          @Field("payment_id") String payment_id, @Field("pay_app_id") String pay_app_id);
+
+
+
 }

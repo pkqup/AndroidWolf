@@ -17,13 +17,15 @@ public class CartActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.cart_activity_main);
-        getSupportFragmentManager().beginTransaction().replace(R.id.llContent, new CartFragment())
+        CartFragment cartFragment = new CartFragment();
+        cartFragment.setIsActivity(true);
+        getSupportFragmentManager().beginTransaction().replace(R.id.llContent, cartFragment)
                 .commit();
     }
 
     @Override
     public void setTitleView() {
-       hideTitleView();
+        hideTitleView();
     }
 
 }

@@ -19,6 +19,8 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.socks.library.KLog;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
 
@@ -45,11 +47,13 @@ public class BaseApplication extends MultiDexApplication {
         KLog.init(AppUtils.isDebug());
     }
 
+
     public static void initToken() {
         //44fd86649bd5d33eb2038f01349e397ab9c56d1b4985285b889a92ffdf2e81ca
         token = (String) SPUtils.get("token", "");
         KLog.e("-----token-----", token);
     }
+
 
     /**
      * 友盟初始化

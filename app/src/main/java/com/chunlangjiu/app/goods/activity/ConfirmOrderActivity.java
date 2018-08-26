@@ -17,17 +17,37 @@ import com.chunlangjiu.app.abase.BaseActivity;
 import com.chunlangjiu.app.amain.bean.CartGoodsBean;
 import com.chunlangjiu.app.goods.adapter.ConfirmOrderGoodsAdapter;
 import com.chunlangjiu.app.goods.bean.ConfirmOrderBean;
+import com.chunlangjiu.app.goods.bean.CreateOrderBean;
+import com.chunlangjiu.app.goods.bean.MarkBean;
 import com.chunlangjiu.app.goods.bean.OrderGoodsBean;
+import com.chunlangjiu.app.goods.bean.PayDoBean;
+import com.chunlangjiu.app.goods.bean.PaymentBean;
+import com.chunlangjiu.app.goods.bean.ShippingTypeBean;
 import com.chunlangjiu.app.goods.dialog.PayDialog;
+import com.chunlangjiu.app.net.ApiUtils;
 import com.chunlangjiu.app.user.activity.AddressListActivity;
 import com.chunlangjiu.app.user.bean.AddressListDetailBean;
+import com.google.gson.Gson;
+import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.pkqup.commonlibrary.util.BigDecimalUtils;
+import com.pkqup.commonlibrary.util.ToastUtils;
+import com.tencent.mm.opensdk.modelbase.BaseReq;
+import com.tencent.mm.opensdk.modelbase.BaseResp;
+import com.tencent.mm.opensdk.modelpay.PayReq;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+import com.tencent.mm.opensdk.utils.ILog;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @CreatedbBy: liucun on 2018/7/6
@@ -71,20 +91,27 @@ public class ConfirmOrderActivity extends BaseActivity {
     @BindView(R.id.tvCommit)
     TextView tvCommit;
 
+    private IWXAPI wxapi;
+
+    private CompositeDisposable disposable;
     private List<OrderGoodsBean> lists;
     private ConfirmOrderGoodsAdapter orderGoodsAdapter;
     private PayDialog payDialog;
-    private int payMehtod = 0;//默认微信支付
+    private int payMehtod;//默认微信支付
+    private String payMehtodId;//支付方式类型
 
+    private String mode;//是立即购买还是购物车购买
     private ConfirmOrderBean confirmOrderBean;
     private String addressId = "";
     private String sendPrice = "0.00";
     private String goodsPrice = "0.00";
     private String payPrice = "0.00";
+    private List<PaymentBean.PaymentInfo> payList;
 
-    public static void startConfirmOrderActivity(Activity activity, ConfirmOrderBean confirmOrderBean) {
+    public static void startConfirmOrderActivity(Activity activity, ConfirmOrderBean confirmOrderBean, String mode) {
         Intent intent = new Intent(activity, ConfirmOrderActivity.class);
         intent.putExtra("confirmOrderBean", confirmOrderBean);
+        intent.putExtra("mode", mode);
         activity.startActivity(intent);
     }
 
@@ -104,9 +131,13 @@ public class ConfirmOrderActivity extends BaseActivity {
                 case R.id.rlChoicePay:
                     showPayMethodDialog();
                     break;
+                case R.id.tvCommit:
+                    createOrder();
+                    break;
             }
         }
     };
+
 
     @Override
     public void setTitleView() {
@@ -118,15 +149,24 @@ public class ConfirmOrderActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.goods_activity_confirm_order);
+        initPay();
         initView();
         initData();
+        getPaymentList();
     }
 
+    private void initPay() {
+        wxapi = WXAPIFactory.createWXAPI(this, null);
+        wxapi.registerApp("wx0e1869b241d7234f");
+    }
 
     private void initView() {
+        disposable = new CompositeDisposable();
         rlNoAddress.setOnClickListener(onClickListener);
         rlHasAddress.setOnClickListener(onClickListener);
         rlChoicePay.setOnClickListener(onClickListener);
+        tvCommit.setOnClickListener(onClickListener);
+
 
         lists = new ArrayList<>();
         orderGoodsAdapter = new ConfirmOrderGoodsAdapter(this, lists);
@@ -137,6 +177,7 @@ public class ConfirmOrderActivity extends BaseActivity {
     }
 
     private void initData() {
+        mode = getIntent().getStringExtra("mode");
         confirmOrderBean = (ConfirmOrderBean) getIntent().getSerializableExtra("confirmOrderBean");
         if (confirmOrderBean != null) {
             ConfirmOrderBean.Address default_address = confirmOrderBean.getDefault_address();
@@ -200,21 +241,51 @@ public class ConfirmOrderActivity extends BaseActivity {
         }
     }
 
-    private void showPayMethodDialog() {
-        if (payDialog == null) {
-            payDialog = new PayDialog(this);
-            payDialog.setCallBack(new PayDialog.CallBack() {
-                @Override
-                public void choicePayMethod(int payMethod) {
-                    updatePayMethod(payMethod);
-                }
-            });
-        }
-        payDialog.show();
+
+    private void getPaymentList() {
+        showLoadingDialog();
+        disposable.add(ApiUtils.getInstance().getPayment()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<PaymentBean>>() {
+                    @Override
+                    public void accept(ResultBean<PaymentBean> paymentBeanResultBean) throws Exception {
+                        hideLoadingDialog();
+                        payList = paymentBeanResultBean.getData().getList();
+                        if (payList != null & payList.size() > 0) {
+                            tvPayMethod.setText(payList.get(0).getApp_display_name());
+                            payMehtodId = payList.get(0).getApp_id();
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        hideLoadingDialog();
+                    }
+                }));
     }
 
-    private void updatePayMethod(int payMethod) {
+
+    private void showPayMethodDialog() {
+        if (payList == null & payList.size() == 0) {
+            ToastUtils.showShort("获取支付方式失败");
+        } else {
+            if (payDialog == null) {
+                payDialog = new PayDialog(this, payList);
+                payDialog.setCallBack(new PayDialog.CallBack() {
+                    @Override
+                    public void choicePayMethod(int payMethod, String payMethodId) {
+                        updatePayMethod(payMethod, payMethodId);
+                    }
+                });
+            }
+            payDialog.show();
+        }
+    }
+
+    private void updatePayMethod(int payMethod, String payMethodId) {
         this.payMehtod = payMethod;
+        this.payMehtodId = payMethodId;
         switch (payMethod) {
             case 0:
                 tvPayMethod.setText("微信支付");
@@ -239,6 +310,72 @@ public class ConfirmOrderActivity extends BaseActivity {
         startActivityForResult(intent, CHOICE_ADDRESS);
     }
 
+    private void createOrder() {
+        if (!TextUtils.isEmpty(addressId)) {
+            showLoadingDialog();
+            List<ConfirmOrderBean.CartData> resultCartData = confirmOrderBean.getCartInfo().getResultCartData();
+            List<ShippingTypeBean> shipLists = new ArrayList<>();
+            List<MarkBean> markLists = new ArrayList<>();
+            for (ConfirmOrderBean.CartData resultCartDatum : resultCartData) {
+                shipLists.add(new ShippingTypeBean(resultCartDatum.getShop_id(), "express"));
+                markLists.add(new MarkBean(resultCartDatum.getShop_id(), etRemark.getText().toString().trim()));
+            }
+            String shippingStr = new Gson().toJson(shipLists);
+            String markStr;
+            if (TextUtils.isEmpty(etRemark.getText().toString().trim())) {
+                markStr = "";
+            } else {
+                markStr = new Gson().toJson(markLists);
+            }
+            disposable.add(ApiUtils.getInstance().createOrder(mode, confirmOrderBean.getMd5_cart_info(), addressId,
+                    "online", shippingStr, markStr)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<ResultBean<CreateOrderBean>>() {
+                        @Override
+                        public void accept(ResultBean<CreateOrderBean> resultBean) throws Exception {
+                            createSuccess(resultBean.getData());
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            hideLoadingDialog();
+                        }
+                    }));
+        } else {
+            ToastUtils.showShort("请选择地址");
+        }
+    }
+
+    private void createSuccess(CreateOrderBean data) {
+        disposable.add(ApiUtils.getInstance().payDo(data.getPayment_id(), payMehtodId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean>() {
+                    @Override
+                    public void accept(ResultBean resultBean) throws Exception {
+                        hideLoadingDialog();
+                        invokePay(resultBean);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        hideLoadingDialog();
+                    }
+                }));
+    }
+
+    private void invokePay(ResultBean data) {
+        PayReq request = new PayReq();
+        request.appId = "wx0e1869b241d7234f";
+        request.partnerId = data.getPartnerid();
+        request.prepayId= data.getPrepayid();
+        request.packageValue =data.getPackageName();
+        request.nonceStr= data.getNoncestr();
+        request.timeStamp= data.getTimestamp();
+        request.sign= data.getSign();
+        wxapi.sendReq(request);
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -261,5 +398,11 @@ public class ConfirmOrderActivity extends BaseActivity {
                 }
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        disposable.dispose();
     }
 }
