@@ -1,7 +1,10 @@
 package com.chunlangjiu.app.amain.adapter;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -9,6 +12,8 @@ import com.chad.library.adapter.base.util.MultiTypeDelegate;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.amain.bean.CartGoodsBean;
 import com.chunlangjiu.app.amain.bean.HomeBean;
+import com.chunlangjiu.app.goods.activity.GoodsListActivity;
+import com.pkqup.commonlibrary.glide.GlideUtils;
 import com.pkqup.commonlibrary.view.countdownview.CountdownView;
 
 import java.util.List;
@@ -19,8 +24,11 @@ import java.util.List;
  */
 public class HomeAdapter extends BaseQuickAdapter<HomeBean, BaseViewHolder> {
 
+    private Context context;
+
     public HomeAdapter(Context context, List<HomeBean> list) {
         super(list);
+        this.context = context;
         setMultiTypeDelegate(new MultiTypeDelegate<HomeBean>() {
             @Override
             protected int getItemType(HomeBean homeBean) {
@@ -39,9 +47,20 @@ public class HomeAdapter extends BaseQuickAdapter<HomeBean, BaseViewHolder> {
         switch (viewHolder.getItemViewType()) {
             case HomeBean.ITEM_GOODS:
                 CountdownView countdownView = viewHolder.getView(R.id.countdownView);
-                long time2 = (long)3 * 24 * 60 * 60 * 1000;
+                long time2 = (long) 3 * 24 * 60 * 60 * 1000;
                 countdownView.start(time2);
-                dealWithLifeCycle(viewHolder,viewHolder.getAdapterPosition());
+                dealWithLifeCycle(viewHolder, viewHolder.getAdapterPosition());
+
+                ImageView imgPic = viewHolder.getView(R.id.imgPic);
+                TextView tvStartPrice = viewHolder.getView(R.id.tvStartPrice);
+
+                GlideUtils.loadImage(context, item.getImage_default_id(), imgPic);
+                viewHolder.setText(R.id.tv_name, item.getTitle());
+                viewHolder.setText(R.id.tvStartPriceStr, "原价：");
+                tvStartPrice.setText(item.getPrice());
+                tvStartPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);  // 设置中划线并加清晰
+                viewHolder.setText(R.id.tvSellPriceStr, "");
+                viewHolder.setText(R.id.tvSellPrice, item.getPrice());
                 break;
             case HomeBean.ITEM_PIC:
 
@@ -59,7 +78,7 @@ public class HomeAdapter extends BaseQuickAdapter<HomeBean, BaseViewHolder> {
             @Override
             public void onViewAttachedToWindow(View view) {
                 int pos = position;
-                long time2 = (long)3 * 24 * 60 * 60 * 1000;
+                long time2 = (long) 3 * 24 * 60 * 60 * 1000;
                 countdownView.start(time2);
             }
 

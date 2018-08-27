@@ -48,11 +48,14 @@
                 android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/imgIconOne"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:background="@mipmap/home_auction" />
+                    android:background="@mipmap/home_auction"
+                    android:scaleType="centerCrop" />
 
                 <TextView
+                    android:id="@+id/tvStrOne"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -71,11 +74,14 @@
                 android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/imgIconTwo"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:background="@mipmap/home_buy" />
+                    android:background="@mipmap/home_buy"
+                    android:scaleType="centerCrop" />
 
                 <TextView
+                    android:id="@+id/tvStrTwo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -94,11 +100,14 @@
                 android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/imgIconThree"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:background="@mipmap/home_sell" />
+                    android:background="@mipmap/home_sell"
+                    android:scaleType="centerCrop" />
 
                 <TextView
+                    android:id="@+id/tvStrThree"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -117,11 +126,14 @@
                 android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/imgIconFour"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:background="@mipmap/home_search_chateau" />
+                    android:background="@mipmap/home_search_chateau"
+                    android:scaleType="centerCrop" />
 
                 <TextView
+                    android:id="@+id/tvStrFour"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -140,11 +152,14 @@
                 android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/imgIconFive"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
-                    android:background="@mipmap/home_evaluate" />
+                    android:background="@mipmap/home_evaluate"
+                    android:scaleType="centerCrop" />
 
                 <TextView
+                    android:id="@+id/tvStrFive"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
@@ -184,5 +199,6 @@
         android:gravity="center"
         android:text="疯狂竞拍"
         android:textColor="@color/t_white"
-        android:textSize="@dimen/sp_big" />
+        android:textSize="@dimen/sp_big"
+        android:visibility="gone" />
 </LinearLayout>

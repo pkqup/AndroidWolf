@@ -2,6 +2,8 @@ package com.chunlangjiu.app.net;
 
 import com.chunlangjiu.app.amain.bean.CartCountBean;
 import com.chunlangjiu.app.amain.bean.CartListBean;
+import com.chunlangjiu.app.amain.bean.HomeListBean;
+import com.chunlangjiu.app.amain.bean.HomeModulesBean;
 import com.chunlangjiu.app.amain.bean.LoginBean;
 import com.chunlangjiu.app.amain.bean.MainClassBean;
 import com.chunlangjiu.app.goods.bean.ConfirmOrderBean;
@@ -135,7 +137,7 @@ public interface ApiService {
     @POST("index.php/topapi")
     @FormUrlEncoded
     Flowable<ResultBean> deleteCartItem(@Field("method") String method, @Field("v") String v,
-                                        @Field("cart_id") String cart_id,@Field("mode") String mode);
+                                        @Field("cart_id") String cart_id, @Field("mode") String mode);
 
     @POST("index.php/topapi")
     @FormUrlEncoded
@@ -145,7 +147,7 @@ public interface ApiService {
     @POST("index.php/topapi")
     @FormUrlEncoded
     Flowable<ResultBean> updateCartData(@Field("method") String method, @Field("v") String v,
-                                        @Field("obj_type") String obj_type,  @Field("cart_params") String cart_params);
+                                        @Field("obj_type") String obj_type, @Field("cart_params") String cart_params);
 
     //获取购物车数量
     @POST("index.php/topapi")
@@ -169,8 +171,17 @@ public interface ApiService {
     @POST("index.php/topapi")
     @FormUrlEncoded
     Flowable<ResultBean> payDo(@Field("method") String method, @Field("v") String v,
-                                          @Field("payment_id") String payment_id, @Field("pay_app_id") String pay_app_id);
+                               @Field("payment_id") String payment_id, @Field("pay_app_id") String pay_app_id);
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<HomeModulesBean>> getHomeModules(@Field("method") String method, @Field("v") String v,
+                                                         @Field("tmpl") String payment_id);
 
 
-
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<HomeListBean>> getHomeLists(@Field("method") String method, @Field("v") String v,
+                                                    @Field("tmpl") String payment_id, @Field("page_no") int page_no,
+                                                    @Field("pagesize") int pagesize);
 }

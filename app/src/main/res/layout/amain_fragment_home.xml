@@ -15,8 +15,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
-            android:drawableRight="@mipmap/white_down_arrow"
             android:drawablePadding="4dp"
+            android:drawableRight="@mipmap/white_down_arrow"
             android:gravity="center"
             android:text="定位中"
             android:textColor="@color/t_white"
@@ -80,6 +80,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/bg_gray"
+        android:visibility="gone"
         app:srlEnableFooterFollowWhenLoadFinished="true"
         app:srlEnableScrollContentWhenLoaded="true">
 
@@ -89,4 +90,9 @@
             android:layout_height="match_parent"
             android:background="@color/white" />
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+    <include
+        android:id="@+id/rlLoading"
+        layout="@layout/abase_activity_loading_view"
+        android:visibility="visible" />
 </LinearLayout>

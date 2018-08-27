@@ -2,7 +2,6 @@ package com.chunlangjiu.app.amain.fragment;
 
 import android.Manifest;
 import android.content.Intent;
-import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,28 +13,32 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.amap.api.location.AMapLocation;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseFragment;
 import com.chunlangjiu.app.amain.adapter.BrandAdapter;
 import com.chunlangjiu.app.amain.adapter.HomeAdapter;
-import com.chunlangjiu.app.amain.bean.BrandBean;
 import com.chunlangjiu.app.amain.bean.HomeBean;
+import com.chunlangjiu.app.amain.bean.HomeListBean;
+import com.chunlangjiu.app.amain.bean.HomeModulesBean;
 import com.chunlangjiu.app.goods.activity.SearchActivity;
 import com.chunlangjiu.app.goods.activity.ValuationActivity;
+import com.chunlangjiu.app.goods.bean.EvaluateListBean;
+import com.chunlangjiu.app.net.ApiUtils;
 import com.chunlangjiu.app.store.activity.StoreListActivity;
-import com.chunlangjiu.app.user.activity.AddAddressActivity;
 import com.chunlangjiu.app.user.activity.AddGoodsActivity;
-import com.chunlangjiu.app.user.bean.LocalAreaBean;
 import com.chunlangjiu.app.util.AreaUtils;
 import com.chunlangjiu.app.util.ConstantMsg;
 import com.chunlangjiu.app.util.LocationUtils;
 import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.glide.BannerGlideLoader;
+import com.pkqup.commonlibrary.glide.GlideUtils;
+import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.pkqup.commonlibrary.util.PermissionUtils;
 import com.pkqup.commonlibrary.util.ToastUtils;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -49,7 +52,6 @@ import com.zaaach.citypicker.CityPicker;
 import com.zaaach.citypicker.adapter.OnPickListener;
 import com.zaaach.citypicker.model.City;
 import com.zaaach.citypicker.model.HotCity;
-import com.zaaach.citypicker.model.LocateState;
 import com.zaaach.citypicker.model.LocatedCity;
 
 import java.util.ArrayList;
@@ -71,18 +73,9 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class HomeFragment extends BaseFragment {
 
-    String[] images =
-            new String[]{"http://img.my.csdn.net/uploads/201407/26/1406383299_1976.jpg",
-                    "http://img.my.csdn.net/uploads/201407/26/1406383291_6518.jpg",
-                    "http://img.my.csdn.net/uploads/201407/26/1406383291_8239.jpg",
-                    "http://img.my.csdn.net/uploads/201407/26/1406383290_9329.jpg",
-                    "http://img.my.csdn.net/uploads/201407/26/1406383290_1042.jpg",
-                    "http://img.my.csdn.net/uploads/201407/26/1406383275_3977.jpg",
-                    "http://img.my.csdn.net/uploads/201407/26/1406383265_8550.jpg",
-                    "http://img.my.csdn.net/uploads/201407/26/1406383264_3954.jpg",
-                    "http://img.my.csdn.net/uploads/201407/26/1406383264_4787.jpg",
-                    "http://img.my.csdn.net/uploads/201407/26/1406383264_8243.jpg",
-                    "http://img.my.csdn.net/uploads/201407/26/1406383248_3693.jpg",};
+    private static final String MODULE_SLIDER = "slider";
+    private static final String MODULE_ICONS_NAV = "icons_nav";
+    private static final String MODULE_CATEGORY_NAV = "category_nav";
 
     private TextView tvCity;
     private RelativeLayout rlTitleSearch;
@@ -93,20 +86,31 @@ public class HomeFragment extends BaseFragment {
     private List<ImageView> imageViews;
     private List<String> bannerUrls;
 
-    private LinearLayout llAuction;
-    private LinearLayout llBuy;
-    private LinearLayout llSell;
-    private LinearLayout llSearch;
-    private LinearLayout llEvaluate;
+    private LinearLayout llIconOne;
+    private ImageView imgIconOne;
+    private TextView tvStrOne;
+    private LinearLayout llIconTwo;
+    private ImageView imgIconTwo;
+    private TextView tvStrTwo;
+    private LinearLayout llIconThree;
+    private ImageView imgIconThree;
+    private TextView tvStrThree;
+    private LinearLayout llIconFour;
+    private ImageView imgIconFour;
+    private TextView tvStrFour;
+    private LinearLayout llIconFive;
+    private ImageView imgIconFive;
+    private TextView tvStrFive;
 
     //品牌推荐
     private RecyclerView recyclerViewBrand;
     private BrandAdapter brandAdapter;
-    private List<BrandBean> brandLists;
+    private List<HomeModulesBean.Pic> brandLists;
 
     //酒列表
+    private RelativeLayout rlLoading;
+    private SmartRefreshLayout refreshLayout;
     private RecyclerView recyclerView;
-    private RefreshLayout refreshLayout;
     private HomeAdapter homeAdapter;
     private List<HomeBean> lists;
 
@@ -116,6 +120,10 @@ public class HomeFragment extends BaseFragment {
     private List<City> cityList;//所有的城市列表
 
     private CompositeDisposable disposable;
+    private int pageNo = 1;//请求页数
+    private List<HomeModulesBean.Pic> bannerPicLists;
+    private List<HomeModulesBean.Pic> iconPicLists;
+    private List<HomeModulesBean.Pic> brandPicLists;
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -163,26 +171,48 @@ public class HomeFragment extends BaseFragment {
 
         banner = headerView.findViewById(R.id.banner);
         indicator = headerView.findViewById(R.id.indicator);
-        llAuction = headerView.findViewById(R.id.llAuction);
-        llBuy = headerView.findViewById(R.id.llBuy);
-        llSell = headerView.findViewById(R.id.llSell);
-        llSearch = headerView.findViewById(R.id.llSearch);
-        llEvaluate = headerView.findViewById(R.id.llEvaluate);
-        llAuction.setOnClickListener(onClickListener);
-        llBuy.setOnClickListener(onClickListener);
-        llSell.setOnClickListener(onClickListener);
-        llSearch.setOnClickListener(onClickListener);
-        llEvaluate.setOnClickListener(onClickListener);
+
+        llIconOne = headerView.findViewById(R.id.llAuction);
+        llIconTwo = headerView.findViewById(R.id.llBuy);
+        llIconThree = headerView.findViewById(R.id.llSell);
+        llIconFour = headerView.findViewById(R.id.llSearch);
+        llIconFive = headerView.findViewById(R.id.llEvaluate);
+        imgIconOne = headerView.findViewById(R.id.imgIconOne);
+        tvStrOne = headerView.findViewById(R.id.tvStrOne);
+        imgIconTwo = headerView.findViewById(R.id.imgIconTwo);
+        tvStrTwo = headerView.findViewById(R.id.tvStrTwo);
+        imgIconThree = headerView.findViewById(R.id.imgIconThree);
+        tvStrThree = headerView.findViewById(R.id.tvStrThree);
+        imgIconFour = headerView.findViewById(R.id.imgIconFour);
+        tvStrFour = headerView.findViewById(R.id.tvStrFour);
+        imgIconFive = headerView.findViewById(R.id.imgIconFive);
+        tvStrFive = headerView.findViewById(R.id.tvStrFive);
+        llIconOne.setOnClickListener(onClickListener);
+        llIconTwo.setOnClickListener(onClickListener);
+        llIconThree.setOnClickListener(onClickListener);
+        llIconFour.setOnClickListener(onClickListener);
+        llIconFive.setOnClickListener(onClickListener);
+
         recyclerViewBrand = headerView.findViewById(R.id.recyclerViewBrand);
 
+        rlLoading = rootView.findViewById(R.id.rlLoading);
         refreshLayout = rootView.findViewById(R.id.refreshLayout);
         recyclerView = rootView.findViewById(R.id.listView);
+        rlLoading.setVisibility(View.VISIBLE);
+        refreshLayout.setVisibility(View.GONE);
+        bannerUrls = new ArrayList<>();
         imageViews = new ArrayList<>();
+        brandLists = new ArrayList<>();
+    }
+
+
+    @Override
+    public void initData() {
         locationCity();
-        initBannerView();
-        initBannerIndicator();
         initBrandRecycleView();
         initListRecyclerView();
+        getHomeModules();
+        getHomeList(pageNo, true);
     }
 
     //开启定位
@@ -252,11 +282,6 @@ public class HomeFragment extends BaseFragment {
 
 
     private void initBannerView() {
-        bannerUrls = new ArrayList<>();
-        bannerUrls.add(images[0]);
-        bannerUrls.add(images[1]);
-        bannerUrls.add(images[2]);
-
         banner.setImages(bannerUrls)
                 .setImageLoader(new BannerGlideLoader())
                 .setBannerStyle(BannerConfig.NOT_INDICATOR)//去掉自带的indicator
@@ -265,7 +290,6 @@ public class HomeFragment extends BaseFragment {
                 .setDelayTime(4000)
                 .start();
     }
-
 
     private void initBannerIndicator() {
         imageViews.clear();
@@ -310,6 +334,7 @@ public class HomeFragment extends BaseFragment {
         banner.setOnBannerListener(new OnBannerListener() {
             @Override
             public void OnBannerClick(int position) {
+                // TODO: 2018/8/27 跳转广告
                 ToastUtils.showShort("点击了item" + position);
             }
         });
@@ -320,16 +345,17 @@ public class HomeFragment extends BaseFragment {
      * 品牌推荐
      */
     private void initBrandRecycleView() {
-        brandLists = new ArrayList<>();
-        for (int i = 0; i < 6; i++) {
-            BrandBean brandBean = new BrandBean();
-            brandLists.add(brandBean);
-        }
-        brandAdapter = new BrandAdapter(R.layout.amain_itme_brand, brandLists);
+        brandAdapter = new BrandAdapter(getActivity(), R.layout.amain_itme_brand, brandLists);
         recyclerViewBrand.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         recyclerViewBrand.setAdapter(brandAdapter);
         recyclerViewBrand.setHasFixedSize(true);
         recyclerViewBrand.setNestedScrollingEnabled(false);
+        brandAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                // TODO: 2018/8/27 跳转品牌
+            }
+        });
     }
 
     /**
@@ -343,59 +369,22 @@ public class HomeFragment extends BaseFragment {
         recyclerView.setAdapter(homeAdapter);
 
         refreshLayout.setEnableAutoLoadMore(true);//开启滑到底部自动加载
-        refreshLayout.setFooterHeight(0);
+        refreshLayout.setFooterHeight(30);
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(final RefreshLayout refreshLayout) {
-                refreshLayout.getLayout().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        refreshLayout.finishRefresh();
-                        refreshLayout.setNoMoreData(false);
-                    }
-                }, 1000);
+                getHomeModules();
+                getHomeList(1, true);
             }
         });
 
         refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore(final RefreshLayout refreshLayout) {
-                refreshLayout.getLayout().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        refreshLayout.finishLoadMore();
-                        if (lists.size() > 50) {
-                            recyclerView.postDelayed(new Runnable() {
-                                @Override
-                                public void run() {
-                                    refreshLayout.setFooterHeight(30);
-                                    refreshLayout.finishLoadMoreWithNoMoreData();//显示没有更多数据
-                                }
-                            }, 1000);
-
-                        }
-                    }
-                }, 1000);
+                getHomeList(pageNo + 1, false);
             }
         });
-
-
     }
-
-    @Override
-    public void initData() {
-        for (int i = 0; i < 20; i++) {
-            HomeBean homeBean = new HomeBean();
-            if (i == 3) {
-                homeBean.setItemType(HomeBean.ITEM_PIC);
-            } else {
-                homeBean.setItemType(HomeBean.ITEM_GOODS);
-            }
-            lists.add(homeBean);
-        }
-        homeAdapter.setNewData(lists);
-    }
-
 
     private void choiceCity() {
         CityPicker.getInstance()
@@ -429,6 +418,143 @@ public class HomeFragment extends BaseFragment {
             return a.compareTo(b);
         }
     }
+
+    private void getHomeModules() {
+        disposable.add(ApiUtils.getInstance().getHomeModules()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<HomeModulesBean>>() {
+                    @Override
+                    public void accept(ResultBean<HomeModulesBean> homeModulesBeanResultBean) throws Exception {
+                        rlLoading.setVisibility(View.GONE);
+                        refreshLayout.setVisibility(View.VISIBLE);
+                        getModulesSuccess(homeModulesBeanResultBean);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        rlLoading.setVisibility(View.GONE);
+                        refreshLayout.setVisibility(View.VISIBLE);
+                    }
+                }));
+    }
+
+    private void getModulesSuccess(ResultBean<HomeModulesBean> homeModulesBeanResultBean) {
+        List<HomeModulesBean.Modules> modules = homeModulesBeanResultBean.getData().getModules();
+        if (modules != null && modules.size() > 0) {
+            for (int i = 0; i < modules.size(); i++) {
+                if (MODULE_SLIDER.equals(modules.get(i).getWidget())) {
+                    updateBannerData(modules.get(i).getParams());
+                }
+                if (MODULE_ICONS_NAV.equals(modules.get(i).getWidget())) {
+                    updateIconData(modules.get(i).getParams());
+                }
+                if (MODULE_CATEGORY_NAV.equals(modules.get(i).getWidget())) {
+                    updateBrandData(modules.get(i).getParams());
+                }
+            }
+        }
+    }
+
+    private void updateBannerData(HomeModulesBean.Params params) {
+        bannerPicLists = params.getPic();
+        if (bannerPicLists != null && bannerPicLists.size() > 0) {
+            bannerUrls.clear();
+            for (int i = 0; i < bannerPicLists.size(); i++) {
+                bannerUrls.add(bannerPicLists.get(i).getImagesrc());
+            }
+        }
+        initBannerView();
+        initBannerIndicator();
+    }
+
+    private void updateIconData(HomeModulesBean.Params params) {
+        iconPicLists = params.getPic();
+        if (iconPicLists != null && iconPicLists.size() > 0) {
+            for (int i = 0; i < iconPicLists.size(); i++) {
+                switch (i) {
+                    case 0:
+                        GlideUtils.loadImage(getActivity(), iconPicLists.get(i).getImagesrc(), imgIconOne);
+                        tvStrOne.setText(iconPicLists.get(i).getTag());
+                        break;
+                    case 1:
+                        GlideUtils.loadImage(getActivity(), iconPicLists.get(i).getImagesrc(), imgIconTwo);
+                        tvStrTwo.setText(iconPicLists.get(i).getTag());
+                        break;
+                    case 2:
+                        GlideUtils.loadImage(getActivity(), iconPicLists.get(i).getImagesrc(), imgIconThree);
+                        tvStrThree.setText(iconPicLists.get(i).getTag());
+                        break;
+                    case 3:
+                        GlideUtils.loadImage(getActivity(), iconPicLists.get(i).getImagesrc(), imgIconFour);
+                        tvStrFour.setText(iconPicLists.get(i).getTag());
+                        break;
+                    case 4:
+                        GlideUtils.loadImage(getActivity(), iconPicLists.get(i).getImagesrc(), imgIconFive);
+                        tvStrFive.setText(iconPicLists.get(i).getTag());
+                        break;
+                }
+            }
+        }
+    }
+
+    private void updateBrandData(HomeModulesBean.Params params) {
+        brandPicLists = params.getPic();
+        if (brandPicLists != null && brandPicLists.size() > 0) {
+            brandLists.clear();
+            brandLists.addAll(brandPicLists);
+            brandAdapter.setNewData(brandLists);
+        }
+        recyclerView.post(new Runnable() {
+            @Override
+            public void run() {
+                recyclerView.scrollTo(0, 0);
+            }
+        });
+    }
+
+    private void getHomeList(int pageNo, final boolean isRefresh) {
+        disposable.add(ApiUtils.getInstance().getHomeLists(pageNo)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<HomeListBean>>() {
+                    @Override
+                    public void accept(ResultBean<HomeListBean> homeListBeanResultBean) throws Exception {
+                        refreshLayout.finishRefresh();
+                        refreshLayout.finishLoadMore();
+                        getListSuccess(homeListBeanResultBean, isRefresh);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        refreshLayout.finishRefresh();
+                        refreshLayout.finishLoadMore();
+                    }
+                }));
+    }
+
+    private void getListSuccess(ResultBean<HomeListBean> homeListBeanResultBean, boolean isRefresh) {
+        List<HomeBean> newLists = homeListBeanResultBean.getData().getList();
+        if (newLists == null) newLists = new ArrayList<>();
+        for (HomeBean homeBean : newLists) {
+            homeBean.setItemType(HomeBean.ITEM_GOODS);
+        }
+        if (isRefresh) {
+            pageNo = 1;
+            lists = newLists;
+        } else {
+            pageNo++;
+            lists.addAll(newLists);
+        }
+        if (lists.size() < 10) {
+            refreshLayout.setFooterHeight(30);
+            refreshLayout.finishLoadMoreWithNoMoreData();//显示没有更多数据
+        } else {
+            refreshLayout.setNoMoreData(false);
+        }
+        homeAdapter.setNewData(lists);
+    }
+
 
     @Override
     public void onStart() {

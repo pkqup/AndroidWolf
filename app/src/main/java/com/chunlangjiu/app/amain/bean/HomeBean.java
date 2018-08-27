@@ -10,14 +10,12 @@ public class HomeBean {
     public static final int ITEM_PIC = 2;
 
     private int itemType;
+    private String item_id;
+    private String title;
+    private String price;
+    private String image_default_id;
+    private String imgsrc;
 
-    public static int getItemGoods() {
-        return ITEM_GOODS;
-    }
-
-    public static int getItemPic() {
-        return ITEM_PIC;
-    }
 
     public int getItemType() {
         return itemType;
@@ -25,5 +23,45 @@ public class HomeBean {
 
     public void setItemType(int itemType) {
         this.itemType = itemType;
+    }
+
+    public String getItem_id() {
+        return item_id;
+    }
+
+    public void setItem_id(String item_id) {
+        this.item_id = item_id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getPrice() {
+        return price;
+    }
+
+    public void setPrice(String price) {
+        this.price = price;
+    }
+
+    public String getImage_default_id() {
+        return image_default_id;
+    }
+
+    public void setImage_default_id(String image_default_id) {
+        this.image_default_id = image_default_id;
+    }
+
+    public String getImgsrc() {
+        return imgsrc;
+    }
+
+    public void setImgsrc(String imgsrc) {
+        this.imgsrc = imgsrc;
     }
 }

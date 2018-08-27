@@ -2,6 +2,8 @@ package com.chunlangjiu.app.net;
 
 import com.chunlangjiu.app.amain.bean.CartCountBean;
 import com.chunlangjiu.app.amain.bean.CartListBean;
+import com.chunlangjiu.app.amain.bean.HomeListBean;
+import com.chunlangjiu.app.amain.bean.HomeModulesBean;
 import com.chunlangjiu.app.amain.bean.LoginBean;
 import com.chunlangjiu.app.amain.bean.MainClassBean;
 import com.chunlangjiu.app.goods.bean.ConfirmOrderBean;
@@ -170,4 +172,14 @@ public class ApiUtils {
     public Flowable<ResultBean> payDo(String payment_id, String payment_type) {
         return apiService.payDo("payment.pay.do", "v1", payment_id, payment_type);
     }
+
+    public Flowable<ResultBean<HomeModulesBean>> getHomeModules() {
+        return apiService.getHomeModules("theme.modules", "v1","index");
+    }
+
+    public Flowable<ResultBean<HomeListBean>> getHomeLists(int pageNo) {
+        return apiService.getHomeLists("theme.pull.goods", "v1", "index", pageNo,10);
+    }
+
+
 }
