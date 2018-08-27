@@ -19,6 +19,7 @@ import com.chunlangjiu.app.user.activity.AddressListActivity;
 import com.chunlangjiu.app.user.activity.CompanyAuthActivity;
 import com.chunlangjiu.app.user.activity.PersonAuthActivity;
 import com.chunlangjiu.app.util.ConstantMsg;
+import com.chunlangjiu.app.web.WebViewActivity;
 import com.pkqup.commonlibrary.eventmsg.EventManager;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -148,6 +149,7 @@ public class UserFragment extends BaseFragment {
                     startActivity(new Intent(getActivity(), CompanyAuthActivity.class));
                     break;
                 case R.id.rlOrderManager:// 订单管理
+                    toOrderWeb();
                     break;
                 case R.id.rlOrderOne:// 买家待付款
                     break;
@@ -403,6 +405,13 @@ public class UserFragment extends BaseFragment {
         userType = userType == TYPE_BUYER ? TYPE_SELLER : TYPE_BUYER;
         showUserTypeView();
     }
+
+
+    private void toOrderWeb() {
+        WebViewActivity.startWebViewActivity(getActivity(),
+                "http://mall.chunlangjiu.com/wap/trade-list.html?token=" + BaseApplication.getToken());
+    }
+
 
     private EventManager.OnNotifyListener onNotifyListener = new EventManager.OnNotifyListener() {
         @Override

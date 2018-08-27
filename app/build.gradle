@@ -46,7 +46,7 @@ android {
             //多渠道打包配置
             applicationVariants.all { variant ->
                 variant.outputs.all { output ->
-                    outputFileName = "AlcoholWolf_${variant.productFlavors[0].name}_${defaultConfig.versionCode}_${new Date().format("yyyyMMddHHmm")}.apk"
+                    outputFileName = "chunlang_${variant.productFlavors[0].name}_${defaultConfig.versionCode}_${new Date().format("yyyyMMddHHmm")}.apk"
                 }
             }
         }
