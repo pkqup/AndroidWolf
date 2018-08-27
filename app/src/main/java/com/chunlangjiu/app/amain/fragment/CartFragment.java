@@ -1,6 +1,7 @@
 package com.chunlangjiu.app.amain.fragment;
 
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,9 @@ import com.chunlangjiu.app.amain.adapter.CartGoodsListAdapter;
 import com.chunlangjiu.app.amain.bean.CartGoodsBean;
 import com.chunlangjiu.app.amain.bean.CartListBean;
 import com.chunlangjiu.app.cart.UpdateCartGoodsBean;
+import com.chunlangjiu.app.goods.activity.ConfirmOrderActivity;
+import com.chunlangjiu.app.goods.activity.GoodsDetailsActivity;
+import com.chunlangjiu.app.goods.bean.ConfirmOrderBean;
 import com.chunlangjiu.app.net.ApiUtils;
 import com.google.gson.Gson;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
@@ -23,6 +27,7 @@ import com.pkqup.commonlibrary.util.BigDecimalUtils;
 import com.pkqup.commonlibrary.util.ToastUtils;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.socks.library.KLog;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuBridge;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuCreator;
@@ -36,6 +41,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.reactivex.Flowable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
@@ -353,18 +359,22 @@ public class CartFragment extends BaseFragment {
      */
     private void changeCheckAllStatus() {
         Iterator<Map.Entry<CartGoodsBean, List<CartGoodsBean>>> iterator = goodsMaps.entrySet().iterator();
+        List<CartGoodsBean> changeLists = new ArrayList<>();
         while (iterator.hasNext()) {
             Map.Entry<CartGoodsBean, List<CartGoodsBean>> next = iterator.next();
             next.getKey().setStoreCheck(!isCheckAll);
             for (CartGoodsBean cartGoodsBean : next.getValue()) {
                 cartGoodsBean.setGoodsCheck(!isCheckAll);
+                changeLists.add(cartGoodsBean);
             }
         }
         isCheckAll = !isCheckAll;
         imgCheckAll.setSelected(isCheckAll);
         updateRecycleViewList();
         updateTotalPrice();
+        updateNetData(changeLists);
     }
+
 
     private void changeEditStatus() {
         if (isEdit) {
@@ -391,6 +401,7 @@ public class CartFragment extends BaseFragment {
         CartGoodsBean cartGoodsBean = lists.get(position);
         boolean storeCheck = cartGoodsBean.isStoreCheck();
         Iterator<Map.Entry<CartGoodsBean, List<CartGoodsBean>>> iterator = goodsMaps.entrySet().iterator();
+        List<CartGoodsBean> changeLists = new ArrayList<>();
         while (iterator.hasNext()) {
             Map.Entry<CartGoodsBean, List<CartGoodsBean>> next = iterator.next();
             if (next.getKey().equals(cartGoodsBean)) {
@@ -399,16 +410,19 @@ public class CartFragment extends BaseFragment {
                 List<CartGoodsBean> value = next.getValue();
                 for (CartGoodsBean goodsBean : value) {
                     goodsBean.setGoodsCheck(!storeCheck);
+                    changeLists.add(goodsBean);
                 }
             }
         }
         updateRecycleViewList();
         updateCheckAll();
         updateTotalPrice();
+        updateNetData(changeLists);
     }
 
     private void choiceGoods(int position) {
         CartGoodsBean cartGoodsBean = lists.get(position);
+        List<CartGoodsBean> changeLists = new ArrayList<>();
         Iterator<Map.Entry<CartGoodsBean, List<CartGoodsBean>>> iterator = goodsMaps.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<CartGoodsBean, List<CartGoodsBean>> next = iterator.next();
@@ -416,12 +430,14 @@ public class CartFragment extends BaseFragment {
             for (CartGoodsBean goodsBean : value) {
                 if (cartGoodsBean.equals(goodsBean)) {
                     goodsBean.setGoodsCheck(!cartGoodsBean.isGoodsCheck());
+                    changeLists.add(goodsBean);
                 }
             }
         }
         updateRecycleViewList();
         updateCheckAll();
         updateTotalPrice();
+        updateNetData(changeLists);
     }
 
     private void subGoodsNum(int position) {
@@ -430,7 +446,7 @@ public class CartFragment extends BaseFragment {
             showLoadingDialog();
             UpdateCartGoodsBean updateCartGoodsBean = new UpdateCartGoodsBean();
             updateCartGoodsBean.setCart_id(cartGoodsBean.getCart_id());
-            updateCartGoodsBean.setIs_checked("0");
+            updateCartGoodsBean.setIs_checked(cartGoodsBean.isStoreCheck() ? "1" : "0");
             updateCartGoodsBean.setSelected_promotion("0");
             updateCartGoodsBean.setTotalQuantity(Integer.parseInt(cartGoodsBean.getGoodsNum()) - 1 + "");
             List<UpdateCartGoodsBean> list = new ArrayList<>();
@@ -462,7 +478,7 @@ public class CartFragment extends BaseFragment {
         showLoadingDialog();
         UpdateCartGoodsBean updateCartGoodsBean = new UpdateCartGoodsBean();
         updateCartGoodsBean.setCart_id(cartGoodsBean.getCart_id());
-        updateCartGoodsBean.setIs_checked("0");
+        updateCartGoodsBean.setIs_checked(cartGoodsBean.isStoreCheck() ? "1" : "0");
         updateCartGoodsBean.setSelected_promotion("0");
         updateCartGoodsBean.setTotalQuantity(Integer.parseInt(cartGoodsBean.getGoodsNum()) + 1 + "");
         List<UpdateCartGoodsBean> list = new ArrayList<>();
@@ -487,6 +503,35 @@ public class CartFragment extends BaseFragment {
                     }
                 }));
     }
+
+
+    private void updateNetData(List<CartGoodsBean> changeLists) {
+        List<UpdateCartGoodsBean> updateLists = new ArrayList<>();
+        for (int i = 0; i < changeLists.size(); i++) {
+            UpdateCartGoodsBean updateCartGoodsBean = new UpdateCartGoodsBean();
+            updateCartGoodsBean.setCart_id(changeLists.get(i).getCart_id());
+            updateCartGoodsBean.setIs_checked(changeLists.get(i).isGoodsCheck() ? "1" : "0");
+            updateCartGoodsBean.setSelected_promotion("0");
+            updateCartGoodsBean.setTotalQuantity(changeLists.get(i).getGoodsNum());
+            updateLists.add(updateCartGoodsBean);
+        }
+        String jsonStr = new Gson().toJson(updateLists);
+        disposable.add(ApiUtils.getInstance().updateCartData(jsonStr)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean>() {
+                    @Override
+                    public void accept(ResultBean resultBean) throws Exception {
+                         KLog.e("updateSuccess");
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        KLog.e("updateFail");
+                    }
+                }));
+    }
+
 
     private void deleteOneGoods(final int position) {
         CartGoodsBean cartGoodsBean = lists.get(position);
@@ -603,7 +648,38 @@ public class CartFragment extends BaseFragment {
     }
 
     private void confirmOrder() {
-
+        boolean hasCheckGoods = false;
+        for (int i = 0; i < lists.size(); i++) {
+            if (lists.get(i).getItemType() == CartGoodsBean.ITEM_GOODS) {
+                if (lists.get(i).isGoodsCheck()) {
+                    hasCheckGoods = true;
+                }
+            }
+        }
+        if (hasCheckGoods) {
+            showLoadingDialog();
+            disposable.add(ApiUtils.getInstance().cartConfirmOrder()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<ResultBean<ConfirmOrderBean>>() {
+                        @Override
+                        public void accept(ResultBean<ConfirmOrderBean> resultBean) throws Exception {
+                            hideLoadingDialog();
+                            if (resultBean.getData() != null && !TextUtils.isEmpty(resultBean.getData().getMd5_cart_info())) {
+                                ConfirmOrderActivity.startConfirmOrderActivity(getActivity(), resultBean.getData(), "cart");
+                            } else {
+                                ToastUtils.showShort("请选择商品");
+                            }
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            hideLoadingDialog();
+                        }
+                    }));
+        } else {
+            ToastUtils.showShort("请选择商品");
+        }
     }
 
 }

@@ -140,6 +140,10 @@ public class ApiUtils {
         return apiService.confirmOrder("cart.checkout", "v1", "fastbuy");
     }
 
+    public Flowable<ResultBean<ConfirmOrderBean>> cartConfirmOrder() {
+        return apiService.confirmOrder("cart.checkout", "v1", "cart");
+    }
+
     public Flowable<ResultBean> deleteCartItem(String cart_id) {
         return apiService.deleteCartItem("cart.del", "v1", cart_id, "cart");
     }

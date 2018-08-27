@@ -14,32 +14,27 @@ import android.widget.TextView;
 
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
-import com.chunlangjiu.app.amain.bean.CartGoodsBean;
 import com.chunlangjiu.app.goods.adapter.ConfirmOrderGoodsAdapter;
 import com.chunlangjiu.app.goods.bean.ConfirmOrderBean;
 import com.chunlangjiu.app.goods.bean.CreateOrderBean;
 import com.chunlangjiu.app.goods.bean.MarkBean;
 import com.chunlangjiu.app.goods.bean.OrderGoodsBean;
-import com.chunlangjiu.app.goods.bean.PayDoBean;
 import com.chunlangjiu.app.goods.bean.PaymentBean;
 import com.chunlangjiu.app.goods.bean.ShippingTypeBean;
 import com.chunlangjiu.app.goods.dialog.PayDialog;
 import com.chunlangjiu.app.net.ApiUtils;
 import com.chunlangjiu.app.user.activity.AddressListActivity;
 import com.chunlangjiu.app.user.bean.AddressListDetailBean;
+import com.chunlangjiu.app.util.ConstantMsg;
 import com.google.gson.Gson;
+import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.pkqup.commonlibrary.util.BigDecimalUtils;
 import com.pkqup.commonlibrary.util.ToastUtils;
-import com.tencent.mm.opensdk.modelbase.BaseReq;
-import com.tencent.mm.opensdk.modelbase.BaseResp;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
-import com.tencent.mm.opensdk.openapi.IWXAPIEventHandler;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
-import com.tencent.mm.opensdk.utils.ILog;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -149,6 +144,7 @@ public class ConfirmOrderActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.goods_activity_confirm_order);
+        EventManager.getInstance().registerListener(onNotifyListener);
         initPay();
         initView();
         initData();
@@ -366,16 +362,46 @@ public class ConfirmOrderActivity extends BaseActivity {
     }
 
     private void invokePay(ResultBean data) {
+        switch (payMehtod) {
+            case 0:
+                invokeWeixinPay(data);
+                break;
+            case 1:
+                invokeZhifubaoPay(data);
+                break;
+            case 2:
+                invokeYuePay(data);
+                break;
+            case 3:
+                invokeDaePay(data);
+                break;
+        }
+    }
+
+    private void invokeWeixinPay(ResultBean data) {
         PayReq request = new PayReq();
         request.appId = "wx0e1869b241d7234f";
         request.partnerId = data.getPartnerid();
-        request.prepayId= data.getPrepayid();
-        request.packageValue =data.getPackageName();
-        request.nonceStr= data.getNoncestr();
-        request.timeStamp= data.getTimestamp();
-        request.sign= data.getSign();
+        request.prepayId = data.getPrepayid();
+        request.packageValue = data.getPackageName();
+        request.nonceStr = data.getNoncestr();
+        request.timeStamp = data.getTimestamp();
+        request.sign = data.getSign();
         wxapi.sendReq(request);
     }
+
+    private void invokeZhifubaoPay(ResultBean data) {
+
+    }
+
+    private void invokeYuePay(ResultBean data) {
+
+    }
+
+    private void invokeDaePay(ResultBean data) {
+
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -404,5 +430,28 @@ public class ConfirmOrderActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         disposable.dispose();
+        EventManager.getInstance().unRegisterListener(onNotifyListener);
+    }
+
+    private EventManager.OnNotifyListener onNotifyListener = new EventManager.OnNotifyListener() {
+        @Override
+        public void onNotify(Object object, String eventTag) {
+            weixinPaySuccess(object, eventTag);
+        }
+    };
+
+    private void weixinPaySuccess(Object object, String eventTag) {
+        if (eventTag.equals(ConstantMsg.WEIXIN_PAY_CALLBACK)) {
+            int code = (int) object;
+            if (code == 0) {
+                //支付成功
+                ToastUtils.showShort("支付成功");
+                finish();
+            } else if (code == -1) {
+                //支付错误
+            } else if (code == -2) {
+                //支付取消
+            }
+        }
     }
 }

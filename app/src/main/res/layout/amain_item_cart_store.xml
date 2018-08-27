@@ -18,11 +18,12 @@
 
         <ImageView
             android:id="@+id/check_store"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:padding="10dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="15dp"
-            android:background="@drawable/cart_choice_goods" />
+            android:layout_marginLeft="5dp"
+            android:src="@drawable/cart_choice_goods" />
 
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -30,7 +31,7 @@
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="12dp"
+            android:layout_marginLeft="2dp"
             android:layout_toRightOf="@id/check_store" />
 
         <TextView
