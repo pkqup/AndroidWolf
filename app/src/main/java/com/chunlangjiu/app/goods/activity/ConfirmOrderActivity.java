@@ -446,6 +446,7 @@ public class ConfirmOrderActivity extends BaseActivity {
             if (code == 0) {
                 //支付成功
                 ToastUtils.showShort("支付成功");
+                EventManager.getInstance().notify(null,ConstantMsg.UPDATE_CART_LIST);
                 finish();
             } else if (code == -1) {
                 //支付错误

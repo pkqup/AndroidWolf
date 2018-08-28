@@ -13,5 +13,6 @@ public class ConstantMsg {
     public static final String ADD_ADDRESS_SUCCESS = "msg_add_address_success";//添加地址成功
     public static final String CHANGE_TO_EVALUATE = "msg_change_to_evaluate";//切换到评论tab
     public static final String WEIXIN_PAY_CALLBACK = "weixin_pay_success";//微信支付成功
+    public static final String UPDATE_CART_LIST = "update_cart_list";//添加到购物车、支付成功等操作后更新购物车
 
 }

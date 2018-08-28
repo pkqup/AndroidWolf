@@ -66,8 +66,8 @@ public class ApiUtils {
         return apiService.getGoodsClass("category.itemCategory", "v1");
     }
 
-    public Flowable<ResultBean<GoodsListBean>> getGoodsList(String cat_id, int page_no, String orderBy) {
-        return apiService.getGoodsList("item.search", "v1", cat_id, page_no, 20, orderBy);
+    public Flowable<ResultBean<GoodsListBean>> getGoodsList(String cat_id, int page_no, String orderBy, String search_keywords) {
+        return apiService.getGoodsList("item.search", "v1", cat_id, page_no, 20, orderBy,search_keywords);
     }
 
     public Flowable<ResultBean<GoodsDetailBean>> getGoodsDetail(String item_id) {

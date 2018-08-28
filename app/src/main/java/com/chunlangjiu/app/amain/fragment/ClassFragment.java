@@ -26,6 +26,7 @@ import com.chunlangjiu.app.net.ApiUtils;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.pkqup.commonlibrary.util.SizeUtils;
 import com.pkqup.commonlibrary.util.ToastUtils;
+import com.socks.library.KLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,7 +106,7 @@ public class ClassFragment extends BaseFragment {
             @Override
             public void onSubClick(int groupPosition, int subPosition) {
                 GoodsListActivity.startGoodsListActivity(getActivity(),secondList.get(groupPosition).getLv3().get(subPosition).getCat_id(),
-                        secondList.get(groupPosition).getLv3().get(subPosition).getCat_name());
+                        secondList.get(groupPosition).getLv3().get(subPosition).getCat_name(),"");
             }
         });
     }
@@ -137,6 +138,7 @@ public class ClassFragment extends BaseFragment {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        KLog.e(throwable.toString());
                     }
                 }));
     }

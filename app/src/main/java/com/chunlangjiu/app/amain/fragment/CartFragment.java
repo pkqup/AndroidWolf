@@ -21,7 +21,9 @@ import com.chunlangjiu.app.goods.activity.ConfirmOrderActivity;
 import com.chunlangjiu.app.goods.activity.GoodsDetailsActivity;
 import com.chunlangjiu.app.goods.bean.ConfirmOrderBean;
 import com.chunlangjiu.app.net.ApiUtils;
+import com.chunlangjiu.app.util.ConstantMsg;
 import com.google.gson.Gson;
+import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.pkqup.commonlibrary.util.BigDecimalUtils;
 import com.pkqup.commonlibrary.util.ToastUtils;
@@ -117,6 +119,7 @@ public class CartFragment extends BaseFragment {
     public void onDestroy() {
         super.onDestroy();
         disposable.dispose();
+        EventManager.getInstance().unRegisterListener(onNotifyListener);
     }
 
     @Override
@@ -126,6 +129,7 @@ public class CartFragment extends BaseFragment {
 
     @Override
     public void initView() {
+        EventManager.getInstance().registerListener(onNotifyListener);
         disposable = new CompositeDisposable();
 
         img_back = rootView.findViewById(R.id.img_back);
@@ -522,7 +526,7 @@ public class CartFragment extends BaseFragment {
                 .subscribe(new Consumer<ResultBean>() {
                     @Override
                     public void accept(ResultBean resultBean) throws Exception {
-                         KLog.e("updateSuccess");
+                        KLog.e("updateSuccess");
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -682,4 +686,16 @@ public class CartFragment extends BaseFragment {
         }
     }
 
+    private EventManager.OnNotifyListener onNotifyListener = new EventManager.OnNotifyListener() {
+        @Override
+        public void onNotify(Object object, String eventTag) {
+            updateCartList(eventTag);
+        }
+    };
+
+    private void updateCartList(String eventTag) {
+        if (eventTag.equals(ConstantMsg.UPDATE_CART_LIST)) {
+            getCartList();
+        }
+    }
 }

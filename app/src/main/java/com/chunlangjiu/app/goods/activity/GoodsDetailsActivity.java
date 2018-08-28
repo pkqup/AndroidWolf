@@ -187,6 +187,8 @@ public class GoodsDetailsActivity extends BaseActivity {
                             cartCount = Integer.parseInt(number);
                             tvCartNum.setVisibility(View.VISIBLE);
                             tvCartNum.setText(number);
+                        } else {
+                            tvCartNum.setVisibility(View.GONE);
                         }
                     }
                 }, new Consumer<Throwable>() {
@@ -305,8 +307,8 @@ public class GoodsDetailsActivity extends BaseActivity {
                     @Override
                     public void accept(ResultBean resultBean) throws Exception {
                         hideLoadingDialog();
-                        cartCount++;
-                        tvCartNum.setText(cartCount + "");
+                        getCartNum();
+                        EventManager.getInstance().notify(null,ConstantMsg.UPDATE_CART_LIST);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -345,7 +347,7 @@ public class GoodsDetailsActivity extends BaseActivity {
                     @Override
                     public void accept(ResultBean<ConfirmOrderBean> resultBean) throws Exception {
                         hideLoadingDialog();
-                        ConfirmOrderActivity.startConfirmOrderActivity(GoodsDetailsActivity.this, resultBean.getData(),"fastbuy");
+                        ConfirmOrderActivity.startConfirmOrderActivity(GoodsDetailsActivity.this, resultBean.getData(), "fastbuy");
                     }
                 }, new Consumer<Throwable>() {
                     @Override

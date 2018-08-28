@@ -8,10 +8,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -38,6 +40,7 @@ import com.chunlangjiu.app.net.ApiUtils;
 import com.pkqup.commonlibrary.glide.GlideUtils;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.pkqup.commonlibrary.net.exception.ApiException;
+import com.pkqup.commonlibrary.util.KeyBoardUtils;
 import com.pkqup.commonlibrary.util.SizeUtils;
 import com.pkqup.commonlibrary.util.ToastUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -115,8 +118,6 @@ public class GoodsListActivity extends BaseActivity {
     private List<GoodsListDetailBean> lists;
     private LinearAdapter linearAdapter;
     private GridAdapter gridAdapter;
-    private String classId;
-    private String className;
 
     //三级分类列表
     private List<FirstClassBean> categoryLists;
@@ -129,6 +130,9 @@ public class GoodsListActivity extends BaseActivity {
     private List<FilterStoreBean> storeLists;
     private FilterStoreAdapter filterStoreAdapter;
 
+    private String searchKey;
+    private String classId;
+    private String className;
 
     private int pageNum = 1;
     private String orderBy = ORDER_ALL;
@@ -167,10 +171,11 @@ public class GoodsListActivity extends BaseActivity {
     };
 
 
-    public static void startGoodsListActivity(Activity activity, String secondClassId, String secondClassName) {
+    public static void startGoodsListActivity(Activity activity, String secondClassId, String secondClassName, String searchKey) {
         Intent intent = new Intent(activity, GoodsListActivity.class);
         intent.putExtra("classId", secondClassId);
         intent.putExtra("className", secondClassName);
+        intent.putExtra("searchKey", searchKey);
         activity.startActivity(intent);
     }
 
@@ -182,7 +187,23 @@ public class GoodsListActivity extends BaseActivity {
         titleImgRightTwo.setImageResource(R.mipmap.icon_grid);
         titleImgRightOne.setOnClickListener(onClickListener);
         titleImgRightTwo.setOnClickListener(onClickListener);
+        titleSearchEdit.setOnEditorActionListener(onEditorActionListener);
     }
+
+    private TextView.OnEditorActionListener onEditorActionListener = new
+            TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                    if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                        if (!TextUtils.isEmpty(titleSearchEdit.getText().toString().trim())) {
+                            KeyBoardUtils.hideSoftInput(GoodsListActivity.this);
+                            refreshLayout.autoRefresh();
+                            getGoodsList(pageNum, true);
+                        }
+                    }
+                    return true;
+                }
+            };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -197,7 +218,19 @@ public class GoodsListActivity extends BaseActivity {
     private void getIntentData() {
         classId = getIntent().getStringExtra("classId");
         className = getIntent().getStringExtra("className");
-        titleName.setText(className);
+        searchKey = getIntent().getStringExtra("searchKey");
+        if (TextUtils.isEmpty(searchKey)) {
+            searchKey = "";
+            titleName.setText(className);
+            titleName.setVisibility(View.VISIBLE);
+            titleImgRightOne.setVisibility(View.VISIBLE);
+            titleSearchView.setVisibility(View.GONE);
+        } else {
+            titleName.setVisibility(View.GONE);
+            titleImgRightOne.setVisibility(View.GONE);
+            titleSearchView.setVisibility(View.VISIBLE);
+            titleSearchEdit.setText(searchKey);
+        }
     }
 
     private void initDrawerLayout() {
@@ -313,7 +346,7 @@ public class GoodsListActivity extends BaseActivity {
     }
 
     private void getGoodsList(int pageNum, final boolean isRefresh) {
-        disposable.add(ApiUtils.getInstance().getGoodsList(classId, pageNum, orderBy)
+        disposable.add(ApiUtils.getInstance().getGoodsList(classId, pageNum, orderBy, searchKey)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean<GoodsListBean>>() {
