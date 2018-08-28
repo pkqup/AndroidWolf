@@ -232,7 +232,6 @@ public class ShopMainActivity extends BaseActivity {
         layoutParams.width = SizeUtils.getScreenWidth() - SizeUtils.dp2px(100);
         rightView.setLayoutParams(layoutParams);
 
-
         brandLists = new ArrayList<>();
         filterBrandAdapter = new FilterBrandAdapter(R.layout.goods_item_pop_class, brandLists);
         filterBrandAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
