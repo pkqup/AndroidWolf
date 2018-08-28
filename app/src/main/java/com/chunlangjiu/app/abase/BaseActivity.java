@@ -2,6 +2,7 @@ package com.chunlangjiu.app.abase;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chunlangjiu.app.R;
+import com.jaeger.library.StatusBarUtil;
 import com.pkqup.commonlibrary.dialog.CommonLoadingDialog;
 
 import butterknife.ButterKnife;
@@ -71,6 +73,12 @@ public abstract class BaseActivity extends FragmentActivity {
     public void setContentView(int layoutResID) {
         addSubContentView(layoutResID);
         ButterKnife.bind(this);
+        setStatusBarColor();
+    }
+
+    private void setStatusBarColor() {
+        StatusBarUtil.setColor(this, ContextCompat.getColor(this, R.color.bg_black),
+                StatusBarUtil.DEFAULT_STATUS_BAR_ALPHA);
     }
 
     public abstract void setTitleView();
