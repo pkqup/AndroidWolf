@@ -54,7 +54,7 @@ public class HomeAdapter extends BaseQuickAdapter<HomeBean, BaseViewHolder> {
                 ImageView imgPic = viewHolder.getView(R.id.imgPic);
                 TextView tvStartPrice = viewHolder.getView(R.id.tvStartPrice);
 
-                GlideUtils.loadImage(context, item.getImage_default_id(), imgPic);
+                GlideUtils.loadImage(context, item.getImgsrc(), imgPic);
                 viewHolder.setText(R.id.tv_name, item.getTitle());
                 viewHolder.setText(R.id.tvStartPriceStr, "原价：");
                 tvStartPrice.setText(item.getPrice());

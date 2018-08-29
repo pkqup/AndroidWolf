@@ -15,6 +15,8 @@ import com.chunlangjiu.app.goods.bean.GoodsListBean;
 import com.chunlangjiu.app.goods.bean.PayDoBean;
 import com.chunlangjiu.app.goods.bean.PaymentBean;
 import com.chunlangjiu.app.goods.bean.ShopInfoBean;
+import com.chunlangjiu.app.store.bean.StoreClassListBean;
+import com.chunlangjiu.app.store.bean.StoreDetailBean;
 import com.chunlangjiu.app.user.bean.AddressListBean;
 import com.chunlangjiu.app.user.bean.MyNumBean;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
@@ -47,7 +49,8 @@ public interface ApiService {
     @FormUrlEncoded
     Flowable<ResultBean<GoodsListBean>> getGoodsList(@Field("method") String method, @Field("v") String v, @Field("cat_id") String cat_id,
                                                      @Field("page_no") int page_no, @Field("page_size") int page_size,
-                                                     @Field("orderBy") String orderBy, @Field("search_keywords") String search_keywords);
+                                                     @Field("orderBy") String orderBy, @Field("search_keywords") String search_keywords,
+                                                     @Field("shop_id") String shop_id);
 
     @POST("index.php/topapi")
     @FormUrlEncoded
@@ -105,7 +108,7 @@ public interface ApiService {
     //获取名庄分类
     @POST("index.php/topapi")
     @FormUrlEncoded
-    Flowable<ResultBean> getStoreClass(@Field("method") String method, @Field("v") String v);
+    Flowable<ResultBean<StoreClassListBean>> getStoreClass(@Field("method") String method, @Field("v") String v);
 
     //获取名庄对应分类下的列表
     @POST("index.php/topapi")
@@ -117,7 +120,7 @@ public interface ApiService {
     //获取名庄详情
     @POST("index.php/topapi")
     @FormUrlEncoded
-    Flowable<ResultBean> getStoreDetail(@Field("method") String method, @Field("v") String v, @Field("chateau_id") String chateau_id);
+    Flowable<ResultBean<StoreDetailBean>> getStoreDetail(@Field("method") String method, @Field("v") String v, @Field("chateau_id") String chateau_id);
 
     //获取购物车列表
     @POST("index.php/topapi")

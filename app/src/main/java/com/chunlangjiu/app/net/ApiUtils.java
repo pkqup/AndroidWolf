@@ -15,6 +15,8 @@ import com.chunlangjiu.app.goods.bean.GoodsListBean;
 import com.chunlangjiu.app.goods.bean.PayDoBean;
 import com.chunlangjiu.app.goods.bean.PaymentBean;
 import com.chunlangjiu.app.goods.bean.ShopInfoBean;
+import com.chunlangjiu.app.store.bean.StoreClassListBean;
+import com.chunlangjiu.app.store.bean.StoreDetailBean;
 import com.chunlangjiu.app.user.bean.AddressListBean;
 import com.chunlangjiu.app.user.bean.MyNumBean;
 import com.pkqup.commonlibrary.net.HttpUtils;
@@ -66,8 +68,8 @@ public class ApiUtils {
         return apiService.getGoodsClass("category.itemCategory", "v1");
     }
 
-    public Flowable<ResultBean<GoodsListBean>> getGoodsList(String cat_id, int page_no, String orderBy, String search_keywords) {
-        return apiService.getGoodsList("item.search", "v1", cat_id, page_no, 20, orderBy,search_keywords);
+    public Flowable<ResultBean<GoodsListBean>> getGoodsList(String cat_id, int page_no, String orderBy, String search_keywords, String shop_id) {
+        return apiService.getGoodsList("item.search", "v1", cat_id, page_no, 20, orderBy,search_keywords,shop_id);
     }
 
     public Flowable<ResultBean<GoodsDetailBean>> getGoodsDetail(String item_id) {
@@ -113,7 +115,7 @@ public class ApiUtils {
         return apiService.getMyNumFlag("member.index", "v1");
     }
 
-    public Flowable<ResultBean> getStoreClass() {
+    public Flowable<ResultBean<StoreClassListBean>> getStoreClass() {
         return apiService.getStoreClass("category.chateauCat", "v1");
     }
 
@@ -121,7 +123,7 @@ public class ApiUtils {
         return apiService.getStoreList("category.chateauList", "v1", id, pageNum, 20);
     }
 
-    public Flowable<ResultBean> getStoreDetail(String id) {
+    public Flowable<ResultBean<StoreDetailBean>> getStoreDetail(String id) {
         return apiService.getStoreDetail("category.chateauDetail", "v1", id);
     }
 

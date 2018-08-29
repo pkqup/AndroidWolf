@@ -10,11 +10,19 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
-import com.chunlangjiu.app.store.bean.StoreClassBean;
+import com.chunlangjiu.app.goods.bean.ShopInfoBean;
+import com.chunlangjiu.app.net.ApiUtils;
+import com.chunlangjiu.app.store.bean.StoreClassListBean;
+import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @CreatedbBy: liucun on 2018/7/14.
@@ -24,8 +32,11 @@ public class StoreListActivity extends BaseActivity {
 
     private RefreshLayout refreshLayout;
     private RecyclerView recyclerView;
-    private List<StoreClassBean> lists;
+    private List<StoreClassListBean.StoreClassBean> lists;
     private StoreAdapter storeAdapter;
+
+    private CompositeDisposable disposable;
+
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -35,13 +46,11 @@ public class StoreListActivity extends BaseActivity {
                     finish();
                     break;
                 case R.id.img_title_right_one:
-                    startActivity(new Intent(StoreListActivity.this,StoreSearchActivity.class));
+                    startActivity(new Intent(StoreListActivity.this, StoreSearchActivity.class));
                     break;
-
             }
         }
     };
-
 
     @Override
     public void setTitleView() {
@@ -61,41 +70,63 @@ public class StoreListActivity extends BaseActivity {
 
 
     private void initView() {
+        disposable = new CompositeDisposable();
         refreshLayout = findViewById(R.id.refreshLayout);
         recyclerView = findViewById(R.id.recyclerView);
         refreshLayout.setEnableRefresh(false);//设置不可以下拉刷新
         refreshLayout.setEnableLoadMore(false);//设置不能加载更多
-        lists = new ArrayList();
+        lists = new ArrayList<>();
         storeAdapter = new StoreAdapter(R.layout.store_item_store_class, lists);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(storeAdapter);
         storeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                startActivity(new Intent(StoreListActivity.this,StoreDetailsActivity.class));
+                StoreDetailsActivity.startStoreDetailActivity(StoreListActivity.this, "1");
             }
         });
     }
 
     private void initData() {
-        for (int i = 0; i < 10; i++) {
-            StoreClassBean storeClassBean = new StoreClassBean();
-            storeClassBean.setName("名庄" + i);
-            lists.add(storeClassBean);
+        disposable.add(ApiUtils.getInstance().getStoreClass()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<StoreClassListBean>>() {
+                    @Override
+                    public void accept(ResultBean<StoreClassListBean> storeClassListBeanResultBean) throws Exception {
+                        getClassListSuccess(storeClassListBeanResultBean);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                }));
+    }
+
+    private void getClassListSuccess(ResultBean<StoreClassListBean> storeClassListBeanResultBean) {
+        List<StoreClassListBean.StoreClassBean> list = storeClassListBeanResultBean.getData().getList();
+        if (list.size() > 0) {
+            this.lists = list;
+            storeAdapter.setNewData(lists);
         }
-        storeAdapter.setNewData(lists);
     }
 
 
-    public class StoreAdapter extends BaseQuickAdapter<StoreClassBean, BaseViewHolder> {
+    public class StoreAdapter extends BaseQuickAdapter<StoreClassListBean.StoreClassBean, BaseViewHolder> {
 
-        public StoreAdapter(int layoutResId, List<StoreClassBean> data) {
+        public StoreAdapter(int layoutResId, List<StoreClassListBean.StoreClassBean> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, StoreClassBean item) {
-            helper.setText(R.id.tvName, item.getName());
+        protected void convert(BaseViewHolder helper, StoreClassListBean.StoreClassBean item) {
+            helper.setText(R.id.tvName, item.getChateaucat_name());
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        disposable.dispose();
     }
 }

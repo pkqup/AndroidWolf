@@ -346,7 +346,7 @@ public class GoodsListActivity extends BaseActivity {
     }
 
     private void getGoodsList(int pageNum, final boolean isRefresh) {
-        disposable.add(ApiUtils.getInstance().getGoodsList(classId, pageNum, orderBy, searchKey)
+        disposable.add(ApiUtils.getInstance().getGoodsList(classId, pageNum, orderBy, searchKey, "")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean<GoodsListBean>>() {
