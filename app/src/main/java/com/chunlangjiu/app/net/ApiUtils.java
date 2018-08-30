@@ -19,10 +19,12 @@ import com.chunlangjiu.app.store.bean.StoreClassListBean;
 import com.chunlangjiu.app.store.bean.StoreDetailBean;
 import com.chunlangjiu.app.user.bean.AddressListBean;
 import com.chunlangjiu.app.user.bean.MyNumBean;
+import com.chunlangjiu.app.user.bean.UploadImageBean;
 import com.pkqup.commonlibrary.net.HttpUtils;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 
 import io.reactivex.Flowable;
+import io.reactivex.Observable;
 import retrofit2.http.Field;
 
 /**
@@ -60,8 +62,12 @@ public class ApiUtils {
         return apiService.getAuthSms("user.sendSms", "v1", mobile);
     }
 
-    public Flowable<ResultBean<LoginBean>> login(String mobile, String code) {
-        return apiService.login("user.oauthlogin", "v2", mobile, code);
+    public Flowable<ResultBean<LoginBean>> login(String account, String code) {
+        return apiService.login("user.oauthlogin", "v2", account, code);
+    }
+
+    public Flowable<ResultBean<LoginBean>> shopLogin(String mobile, String password) {
+        return apiService.shopLogin("user.login", "v1", mobile, password);
     }
 
     public Flowable<ResultBean<MainClassBean>> getMainClass() {
@@ -69,7 +75,7 @@ public class ApiUtils {
     }
 
     public Flowable<ResultBean<GoodsListBean>> getGoodsList(String cat_id, int page_no, String orderBy, String search_keywords, String shop_id) {
-        return apiService.getGoodsList("item.search", "v1", cat_id, page_no, 20, orderBy,search_keywords,shop_id);
+        return apiService.getGoodsList("item.search", "v1", cat_id, page_no, 20, orderBy, search_keywords, shop_id);
     }
 
     public Flowable<ResultBean<GoodsDetailBean>> getGoodsDetail(String item_id) {
@@ -176,12 +182,18 @@ public class ApiUtils {
     }
 
     public Flowable<ResultBean<HomeModulesBean>> getHomeModules() {
-        return apiService.getHomeModules("theme.modules", "v1","index");
+        return apiService.getHomeModules("theme.modules", "v1", "index");
     }
 
     public Flowable<ResultBean<HomeListBean>> getHomeLists(int pageNo) {
-        return apiService.getHomeLists("theme.pull.goods", "v1", "index", pageNo,10);
+        return apiService.getHomeLists("theme.pull.goods", "v1", "index", pageNo, 10);
     }
 
+    public Observable<ResultBean<UploadImageBean>> uploadImage(String imgBase64, String imageName) {
+        return apiService.uploadImage("image.upload", "v1", "base64", imgBase64, imageName, "item", "0");
+    }
 
+    public Flowable<ResultBean> uploadImage(byte[] binary, String imageName) {
+        return apiService.uploadImage("image.upload", "v1", "binary", binary, imageName, "item", "0");
+    }
 }

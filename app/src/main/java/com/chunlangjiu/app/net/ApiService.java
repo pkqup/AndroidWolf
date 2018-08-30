@@ -19,9 +19,11 @@ import com.chunlangjiu.app.store.bean.StoreClassListBean;
 import com.chunlangjiu.app.store.bean.StoreDetailBean;
 import com.chunlangjiu.app.user.bean.AddressListBean;
 import com.chunlangjiu.app.user.bean.MyNumBean;
+import com.chunlangjiu.app.user.bean.UploadImageBean;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 
 import io.reactivex.Flowable;
+import io.reactivex.Observable;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
@@ -40,6 +42,12 @@ public interface ApiService {
     @POST("index.php/topapi")
     @FormUrlEncoded
     Flowable<ResultBean<LoginBean>> login(@Field("method") String method, @Field("v") String v, @Field("account") String mobile, @Field("verifycode") String verifycode);
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<LoginBean>> shopLogin(@Field("method") String method, @Field("v") String v,
+                                              @Field("account") String account, @Field("password") String password);
+
 
     @POST("index.php/topapi")
     @FormUrlEncoded
@@ -187,4 +195,17 @@ public interface ApiService {
     Flowable<ResultBean<HomeListBean>> getHomeLists(@Field("method") String method, @Field("v") String v,
                                                     @Field("tmpl") String payment_id, @Field("page_no") int page_no,
                                                     @Field("pagesize") int pagesize);
+
+    @POST("index.php/shop/topapi")
+    @FormUrlEncoded
+    Observable<ResultBean<UploadImageBean>> uploadImage(@Field("method") String method, @Field("v") String v,
+                                                        @Field("upload_type") String upload_type, @Field("image") String image,
+                                                        @Field("image_input_title") String image_input_title,
+                                                        @Field("image_type") String image_type, @Field("image_cat_id") String image_cat_id);
+    @POST("index.php/shop/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean> uploadImage(@Field("method") String method, @Field("v") String v,
+                                     @Field("upload_type") String upload_type, @Field("image") byte[] image,
+                                     @Field("image_input_title") String image_input_title,
+                                     @Field("image_type") String image_type, @Field("image_cat_id") String image_cat_id);
 }
