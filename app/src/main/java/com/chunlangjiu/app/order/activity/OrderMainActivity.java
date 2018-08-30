@@ -1,0 +1,150 @@
+package com.chunlangjiu.app.order.activity;
+
+import android.os.Bundle;
+import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
+
+import com.chunlangjiu.app.R;
+import com.chunlangjiu.app.abase.BaseActivity;
+import com.chunlangjiu.app.abase.BaseFragmentAdapter;
+import com.chunlangjiu.app.order.fragment.OrderListFragment;
+import com.chunlangjiu.app.order.params.OrderParams;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import butterknife.BindView;
+
+public class OrderMainActivity extends BaseActivity {
+    @BindView(R.id.tabTitle)
+    TabLayout tabLayout;
+    @BindView(R.id.vpContent)
+    ViewPager vpContent;
+
+    private List<Fragment> fragments;
+    private BaseFragmentAdapter myFragmentAdapter;
+
+    private int type;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.order_activity_main);
+
+        initView();
+        initData();
+    }
+
+    @Override
+    public void setTitleView() {
+
+    }
+
+    private void initView() {
+        type = getIntent().getIntExtra(OrderParams.TYPE, 0);
+        int target = getIntent().getIntExtra(OrderParams.TARGET, 0);
+
+        fragments = new ArrayList<>();
+        fragments.add(new OrderListFragment());
+        fragments.add(new OrderListFragment());
+        fragments.add(new OrderListFragment());
+        fragments.add(new OrderListFragment());
+        fragments.add(new OrderListFragment());
+        myFragmentAdapter = new BaseFragmentAdapter(getSupportFragmentManager());
+        myFragmentAdapter.setLists(fragments);
+        vpContent.setAdapter(myFragmentAdapter);
+        vpContent.addOnPageChangeListener(onPageChangeListener);
+
+        tabLayout.addOnTabSelectedListener(onTabSelectedListener);
+        fillTab(type, target);
+
+    }
+
+    private ViewPager.OnPageChangeListener onPageChangeListener = new ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            TabLayout.Tab tabAt = tabLayout.getTabAt(position);
+            if (null != tabAt) {
+                tabAt.select();
+            }
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+        }
+    };
+
+    private TabLayout.OnTabSelectedListener onTabSelectedListener = new TabLayout.OnTabSelectedListener() {
+        @Override
+        public void onTabSelected(TabLayout.Tab tab) {
+            int position = tab.getPosition();
+            Bundle bundle = new Bundle();
+            bundle.putInt(OrderParams.TYPE, type);
+            bundle.putInt(OrderParams.TARGET, position);
+            fragments.get(position).setArguments(bundle);
+            vpContent.setCurrentItem(position);
+        }
+
+        @Override
+        public void onTabUnselected(TabLayout.Tab tab) {
+        }
+
+        @Override
+        public void onTabReselected(TabLayout.Tab tab) {
+        }
+    };
+
+    private void fillTab(int type, int target) {
+        switch (type) {
+            case 0:
+                tabLayout.addTab(tabLayout.newTab().setText("全部"));
+                tabLayout.addTab(tabLayout.newTab().setText("待付款"));
+                tabLayout.addTab(tabLayout.newTab().setText("待评价"));
+                tabLayout.addTab(tabLayout.newTab().setText("已完成"));
+                tabLayout.addTab(tabLayout.newTab().setText("已取消"));
+                break;
+            case 1:
+                tabLayout.addTab(tabLayout.newTab().setText("全部"));
+                tabLayout.addTab(tabLayout.newTab().setText("待付定金"));
+                tabLayout.addTab(tabLayout.newTab().setText("竞拍中"));
+                tabLayout.addTab(tabLayout.newTab().setText("已中标"));
+                tabLayout.addTab(tabLayout.newTab().setText("待收货"));
+                break;
+            case 2:
+                tabLayout.addTab(tabLayout.newTab().setText("全部"));
+                tabLayout.addTab(tabLayout.newTab().setText("待处理"));
+                tabLayout.addTab(tabLayout.newTab().setText("待退货"));
+                tabLayout.addTab(tabLayout.newTab().setText("待退款"));
+                tabLayout.addTab(tabLayout.newTab().setText("退款完成"));
+                break;
+            case 3:
+                tabLayout.addTab(tabLayout.newTab().setText("全部"));
+                tabLayout.addTab(tabLayout.newTab().setText("待付款"));
+                tabLayout.addTab(tabLayout.newTab().setText("待发货"));
+                tabLayout.addTab(tabLayout.newTab().setText("已完成"));
+                tabLayout.addTab(tabLayout.newTab().setText("已取消"));
+                break;
+            case 4:
+                tabLayout.addTab(tabLayout.newTab().setText("全部"));
+                tabLayout.addTab(tabLayout.newTab().setText("待处理"));
+                tabLayout.addTab(tabLayout.newTab().setText("待退货"));
+                tabLayout.addTab(tabLayout.newTab().setText("待退款"));
+                tabLayout.addTab(tabLayout.newTab().setText("退款完成"));
+                break;
+        }
+        TabLayout.Tab tabAt = tabLayout.getTabAt(target);
+        if (null != tabAt) {
+            tabAt.select();
+        }
+    }
+
+    private void initData() {
+
+    }
+
+}

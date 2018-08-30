@@ -15,6 +15,7 @@ import com.chunlangjiu.app.goods.bean.GoodsListBean;
 import com.chunlangjiu.app.goods.bean.PayDoBean;
 import com.chunlangjiu.app.goods.bean.PaymentBean;
 import com.chunlangjiu.app.goods.bean.ShopInfoBean;
+import com.chunlangjiu.app.order.bean.OrderListBean;
 import com.chunlangjiu.app.user.bean.AddressListBean;
 import com.chunlangjiu.app.user.bean.MyNumBean;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
@@ -184,4 +185,10 @@ public interface ApiService {
     Flowable<ResultBean<HomeListBean>> getHomeLists(@Field("method") String method, @Field("v") String v,
                                                     @Field("tmpl") String payment_id, @Field("page_no") int page_no,
                                                     @Field("pagesize") int pagesize);
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<OrderListBean>> getOrderLists(@Field("method") String method, @Field("v") String v,
+                                                      @Field("status") String status, @Field("page_no") int page_no,
+                                                      @Field("pagesize") int pagesize);
 }

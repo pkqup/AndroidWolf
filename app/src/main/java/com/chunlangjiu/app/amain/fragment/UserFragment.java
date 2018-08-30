@@ -14,6 +14,7 @@ import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseApplication;
 import com.chunlangjiu.app.abase.BaseFragment;
 import com.chunlangjiu.app.amain.activity.LoginActivity;
+import com.chunlangjiu.app.order.activity.OrderMainActivity;
 import com.chunlangjiu.app.user.activity.AddGoodsActivity;
 import com.chunlangjiu.app.user.activity.AddressListActivity;
 import com.chunlangjiu.app.user.activity.CompanyAuthActivity;
@@ -149,11 +150,22 @@ public class UserFragment extends BaseFragment {
                     startActivity(new Intent(getActivity(), CompanyAuthActivity.class));
                     break;
                 case R.id.rlOrderManager:// 订单管理
-                    toOrderWeb();
+                    Intent intent = new Intent(getActivity(), OrderMainActivity.class);
+                    intent.putExtra("TYPE", 0);
+                    intent.putExtra("TARGET", 0);
+                    startActivity(intent);
                     break;
                 case R.id.rlOrderOne:// 买家待付款
+                    intent = new Intent(getActivity(), OrderMainActivity.class);
+                    intent.putExtra("TYPE", 0);
+                    intent.putExtra("TARGET", 1);
+                    startActivity(intent);
                     break;
                 case R.id.rlOrderTwo:// 买家待收货
+                    intent = new Intent(getActivity(), OrderMainActivity.class);
+                    intent.putExtra("TYPE", 0);
+                    intent.putExtra("TARGET", 2);
+                    startActivity(intent);
                     break;
                 case R.id.rlOrderThree:// 买家待评价
                     break;

@@ -12,9 +12,11 @@ import com.chunlangjiu.app.goods.bean.EvaluateListBean;
 import com.chunlangjiu.app.goods.bean.FilterListBean;
 import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
 import com.chunlangjiu.app.goods.bean.GoodsListBean;
+import com.chunlangjiu.app.goods.bean.OrderGoodsBean;
 import com.chunlangjiu.app.goods.bean.PayDoBean;
 import com.chunlangjiu.app.goods.bean.PaymentBean;
 import com.chunlangjiu.app.goods.bean.ShopInfoBean;
+import com.chunlangjiu.app.order.bean.OrderListBean;
 import com.chunlangjiu.app.user.bean.AddressListBean;
 import com.chunlangjiu.app.user.bean.MyNumBean;
 import com.pkqup.commonlibrary.net.HttpUtils;
@@ -67,7 +69,7 @@ public class ApiUtils {
     }
 
     public Flowable<ResultBean<GoodsListBean>> getGoodsList(String cat_id, int page_no, String orderBy, String search_keywords) {
-        return apiService.getGoodsList("item.search", "v1", cat_id, page_no, 20, orderBy,search_keywords);
+        return apiService.getGoodsList("item.search", "v1", cat_id, page_no, 20, orderBy, search_keywords);
     }
 
     public Flowable<ResultBean<GoodsDetailBean>> getGoodsDetail(String item_id) {
@@ -174,12 +176,16 @@ public class ApiUtils {
     }
 
     public Flowable<ResultBean<HomeModulesBean>> getHomeModules() {
-        return apiService.getHomeModules("theme.modules", "v1","index");
+        return apiService.getHomeModules("theme.modules", "v1", "index");
     }
 
     public Flowable<ResultBean<HomeListBean>> getHomeLists(int pageNo) {
-        return apiService.getHomeLists("theme.pull.goods", "v1", "index", pageNo,10);
+        return apiService.getHomeLists("theme.pull.goods", "v1", "index", pageNo, 10);
     }
 
+
+    public Flowable<ResultBean<OrderListBean>> getOrderLists(String status, int pageNo) {
+        return apiService.getOrderLists("trade.list", "v1", status, pageNo, 10);
+    }
 
 }
