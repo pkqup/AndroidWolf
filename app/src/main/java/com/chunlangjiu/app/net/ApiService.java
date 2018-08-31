@@ -198,14 +198,20 @@ public interface ApiService {
 
     @POST("index.php/shop/topapi")
     @FormUrlEncoded
-    Observable<ResultBean<UploadImageBean>> uploadImage(@Field("method") String method, @Field("v") String v,
-                                                        @Field("upload_type") String upload_type, @Field("image") String image,
-                                                        @Field("image_input_title") String image_input_title,
-                                                        @Field("image_type") String image_type, @Field("image_cat_id") String image_cat_id);
+    Observable<ResultBean<UploadImageBean>> shopUploadImage(@Field("method") String method, @Field("v") String v,
+                                                            @Field("upload_type") String upload_type, @Field("image") String image,
+                                                            @Field("image_input_title") String image_input_title,
+                                                            @Field("image_type") String image_type, @Field("image_cat_id") String image_cat_id);
+
+    //添加商品
     @POST("index.php/shop/topapi")
     @FormUrlEncoded
-    Flowable<ResultBean> uploadImage(@Field("method") String method, @Field("v") String v,
-                                     @Field("upload_type") String upload_type, @Field("image") byte[] image,
-                                     @Field("image_input_title") String image_input_title,
-                                     @Field("image_type") String image_type, @Field("image_cat_id") String image_cat_id);
+    Observable<ResultBean> addGoods(@Field("method") String method, @Field("v") String v,
+                                    @Field("cat_id") String cat_id, @Field("brand_id") String brand_id,
+                                    @Field("shop_cat_id") String shop_cat_id,
+                                    @Field("title") String title, @Field("sub_title") String sub_title,
+                                    @Field("weight") String weight, @Field("price") String price,
+                                    @Field("dlytmpl_id") String dlytmpl_id, @Field("sku") String sku);
+
+
 }
