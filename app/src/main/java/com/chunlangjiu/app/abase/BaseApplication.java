@@ -49,8 +49,8 @@ public class BaseApplication extends MultiDexApplication {
 
 
     public static void initToken() {
-        //b41ffb2ddffe45738ada3563c13e0c2918c7f4532875d76012ac3e8e4238abcf
-        SPUtils.put("token","9d64ac727806171bba89a876f181a31d18c7f4532875d76012ac3e8e4238abcf");
+        //9d64ac727806171bba89a876f181a31d18c7f4532875d76012ac3e8e4238abcf
+//        SPUtils.put("token","9d64ac727806171bba89a876f181a31d18c7f4532875d76012ac3e8e4238abcf");
         token = (String) SPUtils.get("token", "");
         KLog.e("-----token-----", token);
     }
