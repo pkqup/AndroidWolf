@@ -57,6 +57,7 @@ public class CartFragment extends BaseFragment {
 
     private RefreshLayout refreshLayout;
     private SwipeMenuRecyclerView recycleView;
+    private RelativeLayout rlEmptyView;
 
     private ImageView img_back;
     private ImageView imgEdit;
@@ -136,6 +137,7 @@ public class CartFragment extends BaseFragment {
         tvEditFinish = rootView.findViewById(R.id.tvEditFinish);
         imgEdit = rootView.findViewById(R.id.imgEdit);
         rl_bottom = rootView.findViewById(R.id.rl_bottom);
+        rl_bottom.setVisibility(View.GONE);
         ll_check_all = rootView.findViewById(R.id.ll_check_all);
         llTotalPrice = rootView.findViewById(R.id.llTotalPrice);
         imgCheckAll = rootView.findViewById(R.id.img_check_all);
@@ -153,6 +155,7 @@ public class CartFragment extends BaseFragment {
 
         refreshLayout = rootView.findViewById(R.id.refreshLayout);
         recycleView = rootView.findViewById(R.id.recycle_view);
+        rlEmptyView = rootView.findViewById(R.id.rlEmptyView);
         refreshLayout.setEnableRefresh(true);//设置可以下拉刷新
         refreshLayout.setEnableLoadMore(false);//设置不能加载更多
         goodsMaps = new LinkedHashMap<>();
@@ -255,7 +258,6 @@ public class CartFragment extends BaseFragment {
     private void getListSuccess(CartListBean data) {
         if (data != null && data.getCartlist() != null && data.getCartlist().size() > 0) {
             //有数据
-            rl_bottom.setVisibility(View.VISIBLE);
             List<CartListBean.ShopInfo> cartlist = data.getCartlist();
             goodsMaps.clear();
             for (int i = 0; i < cartlist.size(); i++) {
@@ -294,6 +296,8 @@ public class CartFragment extends BaseFragment {
         } else {
             //无数据
             rl_bottom.setVisibility(View.GONE);
+            recycleView.setVisibility(View.GONE);
+            rlEmptyView.setVisibility(View.VISIBLE);
         }
     }
 
@@ -320,9 +324,13 @@ public class CartFragment extends BaseFragment {
         }
         if (lists.size() > 0) {
             rl_bottom.setVisibility(View.VISIBLE);
+            recycleView.setVisibility(View.VISIBLE);
+            rlEmptyView.setVisibility(View.GONE);
             cartAdapter.setNewData(lists);
         } else {
             rl_bottom.setVisibility(View.GONE);
+            recycleView.setVisibility(View.GONE);
+            rlEmptyView.setVisibility(View.VISIBLE);
         }
     }
 

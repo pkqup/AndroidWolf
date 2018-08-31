@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.view.View;
 
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
@@ -38,7 +39,8 @@ public class OrderMainActivity extends BaseActivity {
 
     @Override
     public void setTitleView() {
-
+        titleImgLeft.setOnClickListener(onClickListener);
+        titleName.setText("我的订单");
     }
 
     private void initView() {
@@ -104,7 +106,7 @@ public class OrderMainActivity extends BaseActivity {
             case 0:
                 tabLayout.addTab(tabLayout.newTab().setText("全部"));
                 tabLayout.addTab(tabLayout.newTab().setText("待付款"));
-                tabLayout.addTab(tabLayout.newTab().setText("待评价"));
+                tabLayout.addTab(tabLayout.newTab().setText("待收货"));
                 tabLayout.addTab(tabLayout.newTab().setText("已完成"));
                 tabLayout.addTab(tabLayout.newTab().setText("已取消"));
                 break;
@@ -146,5 +148,12 @@ public class OrderMainActivity extends BaseActivity {
     private void initData() {
 
     }
+
+    private View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            finish();
+        }
+    };
 
 }

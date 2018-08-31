@@ -15,6 +15,7 @@ import com.chunlangjiu.app.abase.BaseApplication;
 import com.chunlangjiu.app.abase.BaseFragment;
 import com.chunlangjiu.app.amain.activity.LoginActivity;
 import com.chunlangjiu.app.order.activity.OrderMainActivity;
+import com.chunlangjiu.app.order.params.OrderParams;
 import com.chunlangjiu.app.user.activity.AddGoodsActivity;
 import com.chunlangjiu.app.user.activity.AddressListActivity;
 import com.chunlangjiu.app.user.activity.CompanyAuthActivity;
@@ -150,28 +151,20 @@ public class UserFragment extends BaseFragment {
                     startActivity(new Intent(getActivity(), CompanyAuthActivity.class));
                     break;
                 case R.id.rlOrderManager:// 订单管理
-                    Intent intent = new Intent(getActivity(), OrderMainActivity.class);
-                    intent.putExtra("TYPE", 0);
-                    intent.putExtra("TARGET", 0);
-                    startActivity(intent);
+                    toOrderMainActivity(0, 0);
                     break;
                 case R.id.rlOrderOne:// 买家待付款
-                    intent = new Intent(getActivity(), OrderMainActivity.class);
-                    intent.putExtra("TYPE", 0);
-                    intent.putExtra("TARGET", 1);
-                    startActivity(intent);
+                    toOrderMainActivity(0, 1);
                     break;
                 case R.id.rlOrderTwo:// 买家待收货
-                    intent = new Intent(getActivity(), OrderMainActivity.class);
-                    intent.putExtra("TYPE", 0);
-                    intent.putExtra("TARGET", 2);
-                    startActivity(intent);
+                    toOrderMainActivity(0, 2);
                     break;
                 case R.id.rlOrderThree:// 买家待评价
                     break;
                 case R.id.rlOrderFour:// 买家售后订单
                     break;
                 case R.id.rlOrderFive:// 买家全部订单
+                    toOrderMainActivity(0, 0);
                     break;
                 case R.id.rlSellOrderOne:// 卖家待付款
                     break;
@@ -442,5 +435,12 @@ public class UserFragment extends BaseFragment {
     public void onDestroy() {
         super.onDestroy();
         EventManager.getInstance().unRegisterListener(onNotifyListener);
+    }
+
+    private void toOrderMainActivity(int type, int target) {
+        Intent intent = new Intent(getActivity(), OrderMainActivity.class);
+        intent.putExtra(OrderParams.TYPE, type);
+        intent.putExtra(OrderParams.TARGET, target);
+        startActivity(intent);
     }
 }

@@ -112,6 +112,8 @@ public class GoodsListActivity extends BaseActivity {
     @BindView(R.id.recycle_view)
     RecyclerView recycleView;
 
+    private View notDataView;
+
     private CompositeDisposable disposable;
     private List<TextView> sortTextViewLists;
     private boolean listType = true;//是否是列表形式
@@ -337,6 +339,7 @@ public class GoodsListActivity extends BaseActivity {
                 getGoodsList(pageNum + 1, false);
             }
         });
+        notDataView = getLayoutInflater().inflate(R.layout.common_empty_view, (ViewGroup) recycleView.getParent(), false);
     }
 
     private void initData() {
@@ -346,7 +349,7 @@ public class GoodsListActivity extends BaseActivity {
     }
 
     private void getGoodsList(int pageNum, final boolean isRefresh) {
-        disposable.add(ApiUtils.getInstance().getGoodsList(classId, pageNum, orderBy, searchKey)
+        disposable.add(ApiUtils.getInstance().getGoodsList(classId, pageNum, orderBy, searchKey, "")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean<GoodsListBean>>() {
@@ -411,25 +414,41 @@ public class GoodsListActivity extends BaseActivity {
 
 
     private void getListSuccess(GoodsListBean goodsListBean, boolean isRefresh) {
-        List<GoodsListDetailBean> newLists = goodsListBean.getList();
-        if (newLists == null) newLists = new ArrayList<>();
-        if (isRefresh) {
-            pageNum = 1;
-            lists = newLists;
+        if (goodsListBean != null && goodsListBean.getList() != null && goodsListBean.getList().size() > 0) {
+            List<GoodsListDetailBean> newLists = goodsListBean.getList();
+            if (newLists == null) newLists = new ArrayList<>();
+            if (isRefresh) {
+                pageNum = 1;
+                lists = newLists;
+            } else {
+                pageNum++;
+                lists.addAll(newLists);
+            }
+            if (goodsListBean.getPagers().getTotal() <= lists.size()) {
+                refreshLayout.setFooterHeight(30);
+                refreshLayout.finishLoadMoreWithNoMoreData();//显示没有更多数据
+            } else {
+                refreshLayout.setNoMoreData(false);
+            }
+            if (listType) {
+                if (lists.size() == 0) {
+                    linearAdapter.setEmptyView(notDataView);
+                } else {
+                    linearAdapter.setNewData(lists);
+                }
+            } else {
+                if (lists.size() == 0) {
+                    gridAdapter.setEmptyView(notDataView);
+                } else {
+                    gridAdapter.setNewData(lists);
+                }
+            }
         } else {
-            pageNum++;
-            lists.addAll(newLists);
-        }
-        if (goodsListBean.getPagers().getTotal() <= lists.size()) {
-            refreshLayout.setFooterHeight(30);
-            refreshLayout.finishLoadMoreWithNoMoreData();//显示没有更多数据
-        } else {
-            refreshLayout.setNoMoreData(false);
-        }
-        if (listType) {
-            linearAdapter.setNewData(lists);
-        } else {
-            gridAdapter.setNewData(lists);
+            if (listType) {
+                linearAdapter.setEmptyView(notDataView);
+            } else {
+                gridAdapter.setEmptyView(notDataView);
+            }
         }
     }
 

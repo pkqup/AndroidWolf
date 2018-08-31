@@ -7,10 +7,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -35,6 +37,7 @@ import com.chunlangjiu.app.net.ApiUtils;
 import com.lzy.widget.HeaderViewPager;
 import com.pkqup.commonlibrary.glide.GlideUtils;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
+import com.pkqup.commonlibrary.util.KeyBoardUtils;
 import com.pkqup.commonlibrary.util.SizeUtils;
 import com.pkqup.commonlibrary.util.ToastUtils;
 import com.pkqup.commonlibrary.view.MyHeaderRecycleView;
@@ -122,6 +125,8 @@ public class ShopMainActivity extends BaseActivity {
     @BindView(R.id.recycle_view)
     MyHeaderRecycleView recycleView;
 
+    private View notDataView;
+
     private CompositeDisposable disposable;
     private List<TextView> sortTextViewLists;
     private boolean listType = true;//是否是列表形式
@@ -143,6 +148,7 @@ public class ShopMainActivity extends BaseActivity {
     private FilterStoreAdapter filterStoreAdapter;
 
     private String shopId;
+    private String searchKey = "";
     private boolean showDesc = false;
     private int pageNum = 1;
     private String orderBy = ORDER_ALL;
@@ -196,7 +202,24 @@ public class ShopMainActivity extends BaseActivity {
         titleImgRightOne.setOnClickListener(onClickListener);
         titleName.setVisibility(View.GONE);
         titleSearchView.setVisibility(View.VISIBLE);
+        titleSearchEdit.setOnEditorActionListener(onEditorActionListener);
     }
+
+    private TextView.OnEditorActionListener onEditorActionListener = new
+            TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                    if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                        if (!TextUtils.isEmpty(titleSearchEdit.getText().toString().trim())) {
+                            KeyBoardUtils.hideSoftInput(ShopMainActivity.this);
+                            refreshLayout.autoRefresh();
+                            getGoodsList(1, true);
+                        }
+                    }
+                    return true;
+                }
+            };
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -308,13 +331,14 @@ public class ShopMainActivity extends BaseActivity {
                 getGoodsList(pageNum + 1, false);
             }
         });
+        notDataView = getLayoutInflater().inflate(R.layout.common_empty_view, (ViewGroup) recycleView.getParent(), false);
     }
 
     private void initData() {
         disposable = new CompositeDisposable();
         shopId = getIntent().getStringExtra("shopId");
         getShopInfo();
-        getGoodsList(1,true);
+        getGoodsList(1, true);
     }
 
     private void getShopInfo() {
@@ -334,7 +358,7 @@ public class ShopMainActivity extends BaseActivity {
     }
 
     private void getShopInfoSuccess(ShopInfoBean data) {
-        GlideUtils.loadImage(this,data.getShopInfo().getShop_logo(),imgHead);
+        GlideUtils.loadImage(this, data.getShopInfo().getShop_logo(), imgHead);
         tvShopName.setText(data.getShopInfo().getShop_name());
         tvShopTips.setText(data.getShopInfo().getShop_descript());
         tvShopPhone.setText(data.getShopInfo().getMobile());
@@ -342,7 +366,7 @@ public class ShopMainActivity extends BaseActivity {
     }
 
     private void getGoodsList(int pageNum, final boolean isRefresh) {
-        disposable.add(ApiUtils.getInstance().getGoodsList(classId, pageNum, orderBy,"")
+        disposable.add(ApiUtils.getInstance().getGoodsList(classId, pageNum, orderBy, titleSearchEdit.getText().toString().trim(), shopId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean<GoodsListBean>>() {
@@ -378,9 +402,18 @@ public class ShopMainActivity extends BaseActivity {
             refreshLayout.setNoMoreData(false);
         }
         if (listType) {
-            linearAdapter.setNewData(lists);
+            if (lists.size() == 0) {
+                linearAdapter.setEmptyView(notDataView);
+            } else {
+                linearAdapter.setNewData(lists);
+            }
+
         } else {
-            gridAdapter.setNewData(lists);
+            if (lists.size() == 0) {
+                gridAdapter.setEmptyView(notDataView);
+            } else {
+                gridAdapter.setNewData(lists);
+            }
         }
     }
 

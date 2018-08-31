@@ -1,5 +1,6 @@
 package com.chunlangjiu.app.order.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,7 +11,9 @@ import android.view.ViewGroup;
 
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseFragment;
+import com.chunlangjiu.app.goods.activity.ShopMainActivity;
 import com.chunlangjiu.app.net.ApiUtils;
+import com.chunlangjiu.app.order.activity.OrderDetailActivity;
 import com.chunlangjiu.app.order.adapter.OrderListAdapter;
 import com.chunlangjiu.app.order.bean.OrderListBean;
 import com.chunlangjiu.app.order.params.OrderParams;
@@ -59,6 +62,7 @@ public class OrderListFragment extends BaseFragment {
     public void initData() {
         listBeans = new ArrayList<>();
         orderListAdapter = new OrderListAdapter(getActivity(), R.layout.order_adapter_list_item, listBeans);
+        orderListAdapter.setOnClickListener(onClickListener);
         listView.setAdapter(orderListAdapter);
 
         delayLoad();
@@ -95,9 +99,10 @@ public class OrderListFragment extends BaseFragment {
                         status = OrderParams.WAIT_BUYER_PAY;
                         break;
                     case 2:
-                        status = OrderParams.WAIT_RATE;
+                        status = OrderParams.WAIT_BUYER_CONFIRM_GOODS;
                         break;
                     case 3:
+                        status = OrderParams.TRADE_FINISHED;
                         break;
                     case 4:
                         break;
@@ -106,28 +111,51 @@ public class OrderListFragment extends BaseFragment {
             case 1:
                 break;
         }
-        if (!TextUtils.isEmpty(status)) {
-            disposable.add(ApiUtils.getInstance().getOrderLists(status, 1)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Consumer<ResultBean<OrderListBean>>() {
-                        @Override
-                        public void accept(ResultBean<OrderListBean> orderListBeanResultBean) throws Exception {
-                            rlLoading.setVisibility(View.GONE);
-                            refreshLayout.setVisibility(View.VISIBLE);
+        disposable.add(ApiUtils.getInstance().getOrderLists(status, 1)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<OrderListBean>>() {
+                    @Override
+                    public void accept(ResultBean<OrderListBean> orderListBeanResultBean) throws Exception {
+                        rlLoading.setVisibility(View.GONE);
+                        refreshLayout.setVisibility(View.VISIBLE);
 
-                            listBeans.clear();
-                            listBeans.addAll(orderListBeanResultBean.getData().getList());
-                            orderListAdapter.notifyDataSetChanged();
-                        }
-                    }, new Consumer<Throwable>() {
-                        @Override
-                        public void accept(Throwable throwable) throws Exception {
-                            rlLoading.setVisibility(View.GONE);
-                            refreshLayout.setVisibility(View.VISIBLE);
-                        }
-                    }));
+                        listBeans.clear();
+                        listBeans.addAll(orderListBeanResultBean.getData().getList());
+                        orderListAdapter.notifyDataSetChanged();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        rlLoading.setVisibility(View.GONE);
+                        refreshLayout.setVisibility(View.VISIBLE);
+                    }
+                }));
+    }
+
+    private View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.llStore:
+                    ShopMainActivity.startShopMainActivity(getActivity(), String.valueOf(listBeans.get(Integer.parseInt(view.getTag().toString())).getShop_id()));
+                    break;
+                case R.id.llProducts:
+                case R.id.llBottom:
+                    toOrderDetailActivity(view);
+                    break;
+                case R.id.tv1:
+                    break;
+                case R.id.tv2:
+                    break;
+            }
         }
+    };
+
+    private void toOrderDetailActivity(View view) {
+        Intent intent = new Intent(getActivity(), OrderDetailActivity.class);
+        intent.putExtra(OrderParams.ORDERID, listBeans.get(Integer.parseInt(view.getTag().toString())).getTid());
+        startActivity(intent);
     }
 
 }

@@ -10,8 +10,13 @@
         android:background="@color/bg_gray" />
 
     <LinearLayout
+        android:id="@+id/llStore"
         android:layout_width="match_parent"
         android:layout_height="48dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -59,6 +64,12 @@
         android:id="@+id/llProducts"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
         android:orientation="vertical" />
 
     <View
@@ -67,28 +78,46 @@
         android:background="@color/bg_gray" />
 
     <LinearLayout
+        android:id="@+id/llBottom"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="36dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginStart="8dp"
+        android:gravity="center_vertical"
         android:orientation="horizontal">
 
         <TextView
             android:id="@+id/tvTotalNum"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="合计：" />
+            android:layout_height="wrap_content" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="end|center_vertical"
             android:orientation="horizontal">
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/tv1"
+                android:layout_width="64dp"
+                android:layout_height="24dp"
+                android:background="@drawable/bg_white_soild_gray_stroke"
+                android:gravity="center"
+                android:text="取消订单"
+                android:textColor="@color/black" />
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/tv2"
+                android:layout_width="64dp"
+                android:layout_height="24dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginStart="12dp"
+                android:background="@drawable/bg_red_soild"
+                android:gravity="center"
+                android:text="申请退款"
+                android:textColor="@color/white" />
         </LinearLayout>
     </LinearLayout>
 

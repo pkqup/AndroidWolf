@@ -23,9 +23,9 @@ import com.chunlangjiu.app.amain.adapter.HomeAdapter;
 import com.chunlangjiu.app.amain.bean.HomeBean;
 import com.chunlangjiu.app.amain.bean.HomeListBean;
 import com.chunlangjiu.app.amain.bean.HomeModulesBean;
+import com.chunlangjiu.app.goods.activity.GoodsDetailsActivity;
 import com.chunlangjiu.app.goods.activity.SearchActivity;
 import com.chunlangjiu.app.goods.activity.ValuationActivity;
-import com.chunlangjiu.app.goods.bean.EvaluateListBean;
 import com.chunlangjiu.app.net.ApiUtils;
 import com.chunlangjiu.app.store.activity.StoreListActivity;
 import com.chunlangjiu.app.user.activity.AddGoodsActivity;
@@ -210,7 +210,7 @@ public class HomeFragment extends BaseFragment {
     public void initData() {
         locationCity();
         initBrandRecycleView();
-        initListRecyclerView();
+        initRecyclerView();
         getHomeModules();
         getHomeList(pageNo, true);
     }
@@ -361,7 +361,7 @@ public class HomeFragment extends BaseFragment {
     /**
      * 商品列表
      */
-    private void initListRecyclerView() {
+    private void initRecyclerView() {
         lists = new ArrayList<>();
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         homeAdapter = new HomeAdapter(getActivity(), lists);
@@ -382,6 +382,17 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void onLoadMore(final RefreshLayout refreshLayout) {
                 getHomeList(pageNo + 1, false);
+            }
+        });
+        homeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                HomeBean homeBean = lists.get(position);
+                if (homeBean.getItemType() == HomeBean.ITEM_GOODS) {
+                    GoodsDetailsActivity.startGoodsDetailsActivity(getActivity(), homeBean.getItem_id());
+                } else if (homeBean.getItemType() == HomeBean.ITEM_PIC) {
+
+                }
             }
         });
     }
