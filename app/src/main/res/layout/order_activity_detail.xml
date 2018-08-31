@@ -42,15 +42,22 @@
                     android:textColor="@color/black" />
 
                 <LinearLayout
+                    android:id="@+id/llOrderTitleRightContent"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center_vertical|end"
                     android:orientation="horizontal">
 
                     <TextView
+                        android:id="@+id/tvRightContentDesc"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="剩余支付时间：" />
+
+                    <TextView
+                        android:id="@+id/tvRightContent"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
                 </LinearLayout>
 
             </LinearLayout>

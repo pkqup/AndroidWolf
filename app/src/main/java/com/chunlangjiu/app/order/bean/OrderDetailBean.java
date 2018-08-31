@@ -78,13 +78,14 @@ public class OrderDetailBean {
     private Object invoice_type;
     private String invoice_main;
     private String invoice_vat_main;
-    private Object cancel_reason;
+    private String cancel_reason;
     private int refund_fee;
     private String shipping_type_name;
     private String status_desc;
     private boolean is_buyer_rate;
     private String shopname;
-    private List<?> cancelInfo;
+    private boolean logi;
+    private CancelInfoBean cancelInfo;
     private List<OrdersBean> orders;
 
     public long getTid() {
@@ -335,11 +336,11 @@ public class OrderDetailBean {
         this.invoice_vat_main = invoice_vat_main;
     }
 
-    public Object getCancel_reason() {
+    public String getCancel_reason() {
         return cancel_reason;
     }
 
-    public void setCancel_reason(Object cancel_reason) {
+    public void setCancel_reason(String cancel_reason) {
         this.cancel_reason = cancel_reason;
     }
 
@@ -383,12 +384,36 @@ public class OrderDetailBean {
         this.shopname = shopname;
     }
 
-    public List<?> getCancelInfo() {
+    public boolean isLogi() {
+        return logi;
+    }
+
+    public void setLogi(boolean logi) {
+        this.logi = logi;
+    }
+
+    public CancelInfoBean getCancelInfo() {
         return cancelInfo;
     }
 
-    public void setCancelInfo(List<?> cancelInfo) {
+    public void setCancelInfo(CancelInfoBean cancelInfo) {
         this.cancelInfo = cancelInfo;
+    }
+
+    public static class CancelInfoBean {
+        /**
+         * cancel_id : 484
+         */
+
+        private int cancel_id;
+
+        public int getCancel_id() {
+            return cancel_id;
+        }
+
+        public void setCancel_id(int cancel_id) {
+            this.cancel_id = cancel_id;
+        }
     }
 
     public List<OrdersBean> getOrders() {

@@ -3,23 +3,29 @@ package com.chunlangjiu.app.order.activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
 import com.chunlangjiu.app.net.ApiUtils;
+import com.chunlangjiu.app.order.bean.CancelOrderResultBean;
+import com.chunlangjiu.app.order.bean.CancelReasonBean;
 import com.chunlangjiu.app.order.bean.OrderDetailBean;
-import com.chunlangjiu.app.order.bean.OrderListBean;
+import com.chunlangjiu.app.order.dialog.CancelOrderDialog;
 import com.chunlangjiu.app.order.params.OrderParams;
+import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.glide.GlideUtils;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.pkqup.commonlibrary.util.TimeUtils;
 import com.pkqup.commonlibrary.util.ToastUtils;
+
+import java.math.BigDecimal;
+import java.util.List;
 
 import butterknife.BindView;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -65,6 +71,20 @@ public class OrderDetailActivity extends BaseActivity {
     LinearLayout llPayTime;
     @BindView(R.id.llSendTime)
     LinearLayout llSendTime;
+    @BindView(R.id.llOrderTitleRightContent)
+    LinearLayout llOrderTitleRightContent;
+    @BindView(R.id.tvRightContentDesc)
+    TextView tvRightContentDesc;
+    @BindView(R.id.tvRightContent)
+    TextView tvRightContent;
+    @BindView(R.id.tv1)
+    TextView tv1;
+    @BindView(R.id.tv2)
+    TextView tv2;
+
+    private int type = 0;
+
+    private CancelOrderDialog cancelOrderDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +102,8 @@ public class OrderDetailActivity extends BaseActivity {
     }
 
     private void initData() {
+        type = getIntent().getIntExtra(OrderParams.TYPE, 0);
+
         myClipboard = (ClipboardManager) getSystemService(CLIPBOARD_SERVICE);
         disposable = new CompositeDisposable();
         disposable.add(ApiUtils.getInstance().getOrderDetail(String.valueOf(getIntent().getLongExtra(OrderParams.ORDERID, 0)))
@@ -99,6 +121,8 @@ public class OrderDetailActivity extends BaseActivity {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         rlLoading.setVisibility(View.GONE);
+
+                        Log.e(OrderDetailActivity.class.getSimpleName(), throwable.toString());
                     }
                 }));
     }
@@ -113,11 +137,30 @@ public class OrderDetailActivity extends BaseActivity {
         tvCreateTime.setText(TimeUtils.millisToDate(String.valueOf(orderDetailBean.getCreated_time() + "000")));
         tvPayType.setText(orderDetailBean.getPay_type());
 
+        tv1.setOnClickListener(onClickListener);
+        tv2.setOnClickListener(onClickListener);
+
+        switch (type) {
+            case 0:
+                switch (orderDetailBean.getStatus()) {
+                    case OrderParams.WAIT_BUYER_PAY:
+                        tvRightContentDesc.setText("剩余支付时间：");
+                        break;
+                    case OrderParams.TRADE_CLOSED_BY_SYSTEM:
+                        tvRightContentDesc.setText("取消原因：");
+                        tvRightContent.setText(orderDetailBean.getCancel_reason());
+                        tv1.setText("删除订单");
+                        tv2.setText("重新购买");
+                        break;
+                }
+                break;
+        }
+
         tvUserInfo.setText(String.format("%s\u3000%s", orderDetailBean.getReceiver_name(), orderDetailBean.getReceiver_mobile()));
         tvAddress.setText(String.format("%s%s%s%s", orderDetailBean.getReceiver_state(), orderDetailBean.getReceiver_city(), orderDetailBean.getReceiver_district(), orderDetailBean.getReceiver_address()));
-        tvTotalPrice.setText(String.format("¥%s", orderDetailBean.getTotal_fee()));
-        tvSendPrice.setText(String.format("¥%s", orderDetailBean.getPost_fee()));
-        tvPayment.setText(String.format("¥%s", orderDetailBean.getPayment()));
+        tvTotalPrice.setText(String.format("¥%s", new BigDecimal(orderDetailBean.getTotal_fee()).setScale(2, BigDecimal.ROUND_HALF_UP).toString()));
+        tvSendPrice.setText(String.format("¥%s", new BigDecimal(orderDetailBean.getPost_fee()).setScale(2, BigDecimal.ROUND_HALF_UP).toString()));
+        tvPayment.setText(String.format("¥%s", new BigDecimal(orderDetailBean.getPayment()).setScale(2, BigDecimal.ROUND_HALF_UP).toString()));
 
         LayoutInflater inflater = LayoutInflater.from(this);
         for (OrderDetailBean.OrdersBean orderBean : orderDetailBean.getOrders()) {
@@ -127,7 +170,7 @@ public class OrderDetailActivity extends BaseActivity {
             TextView tvProductName = inflate.findViewById(R.id.tvProductName);
             tvProductName.setText(orderBean.getTitle());
             TextView tvProductPrice = inflate.findViewById(R.id.tvProductPrice);
-            tvProductPrice.setText(String.format("¥%s", orderBean.getPrice()));
+            tvProductPrice.setText(String.format("¥%s", new BigDecimal(orderBean.getPrice()).setScale(2, BigDecimal.ROUND_HALF_UP).toString()));
             TextView tvProductDesc = inflate.findViewById(R.id.tvProductDesc);
             tvProductDesc.setText(orderBean.getSpec_nature_info());
 
@@ -151,9 +194,57 @@ public class OrderDetailActivity extends BaseActivity {
                 case R.id.tvCopy:
                     copy();
                     break;
+                case R.id.tv1:
+                    leftButtonClick();
+                    break;
+                case R.id.tv2:
+                    break;
             }
         }
     };
+
+    private void leftButtonClick() {
+        switch (type) {
+            case 0:
+                switch (orderDetailBean.getStatus()) {
+                    case OrderParams.WAIT_BUYER_PAY:
+                        getCancelReason();
+                        break;
+                }
+                break;
+        }
+    }
+
+    private void getCancelReason() {
+        disposable.add(ApiUtils.getInstance().getCancelReason()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<CancelReasonBean>>() {
+                    @Override
+                    public void accept(ResultBean<CancelReasonBean> cancelReasonBeanResultBean) throws Exception {
+                        List<String> list = cancelReasonBeanResultBean.getData().getList();
+                        String s = String.valueOf(orderDetailBean.getTid());
+                        if (null == cancelOrderDialog) {
+                            cancelOrderDialog = new CancelOrderDialog(OrderDetailActivity.this, list, s);
+                            cancelOrderDialog.setCancelCallBack(new CancelOrderDialog.CancelCallBack() {
+                                @Override
+                                public void cancelSuccess() {
+                                    initData();
+                                    EventManager.getInstance().notify(null, OrderParams.REFRESH_ORDER_LIST);
+                                }
+                            });
+                        } else {
+                            cancelOrderDialog.setData(list, s);
+                        }
+                        cancelOrderDialog.show();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                    }
+                }));
+    }
 
     public void copy() {
         ClipData text = ClipData.newPlainText("chunLangOrderId", String.valueOf(orderDetailBean.getTid()));

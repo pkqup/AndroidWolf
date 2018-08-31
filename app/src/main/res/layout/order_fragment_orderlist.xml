@@ -25,4 +25,5 @@
         android:id="@+id/rlLoading"
         layout="@layout/abase_activity_loading_view"
         android:visibility="visible" />
+
 </LinearLayout>

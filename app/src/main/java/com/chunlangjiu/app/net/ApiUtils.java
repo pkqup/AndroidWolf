@@ -16,6 +16,8 @@ import com.chunlangjiu.app.goods.bean.OrderGoodsBean;
 import com.chunlangjiu.app.goods.bean.PayDoBean;
 import com.chunlangjiu.app.goods.bean.PaymentBean;
 import com.chunlangjiu.app.goods.bean.ShopInfoBean;
+import com.chunlangjiu.app.order.bean.CancelOrderResultBean;
+import com.chunlangjiu.app.order.bean.CancelReasonBean;
 import com.chunlangjiu.app.order.bean.OrderDetailBean;
 import com.chunlangjiu.app.store.bean.StoreClassListBean;
 import com.chunlangjiu.app.store.bean.StoreDetailBean;
@@ -199,12 +201,24 @@ public class ApiUtils {
     public Flowable<ResultBean> uploadImage(byte[] binary, String imageName) {
         return apiService.uploadImage("image.upload", "v1", "binary", binary, imageName, "item", "0");
     }
+
     public Flowable<ResultBean<OrderListBean>> getOrderLists(String status, int pageNo) {
         return apiService.getOrderLists("trade.list", "v1", status, pageNo, 10);
+    }
+
+    public Flowable<ResultBean<OrderListBean>> getCancelOrderLists(String status, int pageNo) {
+        return apiService.getOrderLists("trade.cancel.list", "v1", status, pageNo, 10);
     }
 
     public Flowable<ResultBean<OrderDetailBean>> getOrderDetail(String tid) {
         return apiService.getOrderDetail("trade.get", "v1", tid);
     }
 
+    public Flowable<ResultBean<CancelReasonBean>> getCancelReason() {
+        return apiService.getCancelReason("trade.cancel.reason.get", "v1");
+    }
+
+    public Flowable<ResultBean<CancelOrderResultBean>> cancelOrder(String tid, String reason) {
+        return apiService.cancelOrder("trade.cancel.create", "v1", tid, reason);
+    }
 }
