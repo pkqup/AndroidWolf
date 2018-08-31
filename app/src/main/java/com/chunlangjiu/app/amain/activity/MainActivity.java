@@ -1,6 +1,8 @@
 package com.chunlangjiu.app.amain.activity;
 
 import android.Manifest;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
@@ -26,6 +28,7 @@ import com.chunlangjiu.app.util.GeTuiPushService;
 import com.chunlangjiu.app.util.LocationUtils;
 import com.github.promeg.pinyinhelper.Pinyin;
 import com.igexin.sdk.PushManager;
+import com.pkqup.commonlibrary.dialog.CommonConfirmDialog;
 import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.util.PermissionUtils;
 import com.pkqup.commonlibrary.view.MyViewPager;
@@ -112,9 +115,33 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onFailed(int requestCode, List<String> deniedPermissions) {
-                for (String grantPermission : deniedPermissions) {
-                    KLog.e(grantPermission);
-                }
+                showPermissionDialog();
+            }
+        });
+    }
+
+    private void showPermissionDialog() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                final CommonConfirmDialog commonConfirmDialog = new CommonConfirmDialog(MainActivity.this, "信任是美好的开始，请授权相关权限，让我们更好的为你服务");
+                commonConfirmDialog.setDialogStr("取消", "去授权");
+                commonConfirmDialog.setCallBack(new CommonConfirmDialog.CallBack() {
+                    @Override
+                    public void onConfirm() {
+                        commonConfirmDialog.dismiss();
+                        Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_WRITE_SETTINGS);
+                        intent.setData(Uri.parse("package:" + MainActivity.this.getPackageName()));
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        MainActivity.this.startActivity(intent);
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        commonConfirmDialog.dismiss();
+                    }
+                });
+                commonConfirmDialog.show();
             }
         });
     }

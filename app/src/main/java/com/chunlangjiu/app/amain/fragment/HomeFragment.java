@@ -217,37 +217,25 @@ public class HomeFragment extends BaseFragment {
 
     //开启定位
     private void locationCity() {
-        PermissionUtils.PermissionForStart(getActivity(), new PermissionListener() {
-            @Override
-            public void onSucceed(int requestCode, List<String> grantPermissions) {
-                for (String grantPermission : grantPermissions) {
-                    if (grantPermission.equals(Manifest.permission.ACCESS_FINE_LOCATION) ||
-                            grantPermission.equals(Manifest.permission.ACCESS_COARSE_LOCATION)) {
-                        //开启定位
-                        new LocationUtils().startLocation(new LocationUtils.LocationCallBack() {
-                            @Override
-                            public void locationSuccess(AMapLocation aMapLocation) {
-                                locationCityName = aMapLocation.getCity();
-                                locatedCity = new LocatedCity(locationCityName, aMapLocation.getProvince(), "");
-                                tvCity.setText(locationCityName);
-                            }
-
-                            @Override
-                            public void locationFail() {
-                                tvCity.setText("定位失败");
-                            }
-                        });
-                    }
+        if (PermissionUtils.hasPermissionForLocation(getActivity())) {
+            //开启定位
+            new LocationUtils().startLocation(new LocationUtils.LocationCallBack() {
+                @Override
+                public void locationSuccess(AMapLocation aMapLocation) {
+                    locationCityName = aMapLocation.getCity();
+                    locatedCity = new LocatedCity(locationCityName, aMapLocation.getProvince(), "");
+                    tvCity.setText(locationCityName);
                 }
-            }
 
-            @Override
-            public void onFailed(int requestCode, List<String> deniedPermissions) {
-                for (String grantPermission : deniedPermissions) {
-                    KLog.e(grantPermission);
+                @Override
+                public void locationFail() {
+                    tvCity.setText("定位失败");
                 }
-            }
-        });
+            });
+        } else {
+            tvCity.setText("定位失败");
+            ToastUtils.showShort("请开启位置权限");
+        }
 
         //获取城市列表
         disposable.add(Observable.create(new ObservableOnSubscribe<List<City>>() {

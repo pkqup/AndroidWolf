@@ -194,12 +194,13 @@ public class ApiUtils {
         return apiService.getHomeLists("theme.pull.goods", "v1", "index", pageNo, 10);
     }
 
-    public Observable<ResultBean<UploadImageBean>> uploadImage(String imgBase64, String imageName) {
-        return apiService.uploadImage("image.upload", "v1", "base64", imgBase64, imageName, "item", "0");
+    public Observable<ResultBean<UploadImageBean>> shopUploadImage(String imgBase64, String imageName) {
+        return apiService.shopUploadImage("image.upload", "v1", "base64", imgBase64, imageName, "item", "0");
     }
 
-    public Flowable<ResultBean> uploadImage(byte[] binary, String imageName) {
-        return apiService.uploadImage("image.upload", "v1", "binary", binary, imageName, "item", "0");
+    public Observable<ResultBean> addGoods(String cat_id, String brand_id, String shop_cat_id, String title, String sub_title, String weight,
+                                           String price, String dlytmpl_id, String sku) {
+        return apiService.addGoods("item.create", "v1", cat_id, brand_id, shop_cat_id, title, sub_title, weight, price, dlytmpl_id, sku);
     }
 
     public Flowable<ResultBean<OrderListBean>> getOrderLists(String status, int pageNo) {
