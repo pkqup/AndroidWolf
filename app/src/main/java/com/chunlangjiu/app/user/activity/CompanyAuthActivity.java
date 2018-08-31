@@ -185,7 +185,8 @@ public class CompanyAuthActivity extends BaseActivity {
                 List<LocalAreaBean.ProvinceData> json = AreaUtils.getJson(CompanyAuthActivity.this);
                 e.onNext(json);
             }
-        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<List<LocalAreaBean.ProvinceData>>() {
                     @Override
                     public void accept(List<LocalAreaBean.ProvinceData> provinceData) throws Exception {

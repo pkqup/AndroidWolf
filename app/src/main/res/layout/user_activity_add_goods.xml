@@ -291,6 +291,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:id="@+id/rlMainPic"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
@@ -377,6 +378,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:id="@+id/rlDescPic"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginLeft="10dp"
@@ -424,6 +426,7 @@
                 android:paddingRight="10dp">
 
                 <RelativeLayout
+                    android:id="@+id/rlGoodsPic"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
