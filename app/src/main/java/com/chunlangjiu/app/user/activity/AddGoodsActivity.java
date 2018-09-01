@@ -239,9 +239,9 @@ public class AddGoodsActivity extends BaseActivity {
         if (base64Main == null || base64Detail == null || base64Goods == null) {
             ToastUtils.showShort("图片压缩失败，请重新选择图片");
         } else {
-           Observable<ResultBean<UploadImageBean>> main = ApiUtils.getInstance().uploadImage(base64Main, mainPicLists.get(0).name);
-            Observable<ResultBean<UploadImageBean>> detail = ApiUtils.getInstance().uploadImage(base64Detail, detailPicLists.get(0).name);
-            Observable<ResultBean<UploadImageBean>> goods = ApiUtils.getInstance().uploadImage(base64Goods, goodsPicLists.get(0).name);
+           Observable<ResultBean<UploadImageBean>> main = ApiUtils.getInstance().shopUploadImage(base64Main, mainPicLists.get(0).name);
+            Observable<ResultBean<UploadImageBean>> detail = ApiUtils.getInstance().shopUploadImage(base64Detail, detailPicLists.get(0).name);
+            Observable<ResultBean<UploadImageBean>> goods = ApiUtils.getInstance().shopUploadImage(base64Goods, goodsPicLists.get(0).name);
             disposable.add(Observable.zip(main, detail, goods, new Function3<ResultBean<UploadImageBean>, ResultBean<UploadImageBean>,
                     ResultBean<UploadImageBean>, List<String>>() {
                 @Override
