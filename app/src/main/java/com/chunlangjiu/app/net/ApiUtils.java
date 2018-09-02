@@ -23,7 +23,9 @@ import com.chunlangjiu.app.store.bean.StoreClassListBean;
 import com.chunlangjiu.app.store.bean.StoreDetailBean;
 import com.chunlangjiu.app.order.bean.OrderListBean;
 import com.chunlangjiu.app.user.bean.AddressListBean;
+import com.chunlangjiu.app.user.bean.BrandListBean;
 import com.chunlangjiu.app.user.bean.MyNumBean;
+import com.chunlangjiu.app.user.bean.ShopClassList;
 import com.chunlangjiu.app.user.bean.UploadImageBean;
 import com.pkqup.commonlibrary.net.HttpUtils;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
@@ -196,6 +198,14 @@ public class ApiUtils {
 
     public Observable<ResultBean<UploadImageBean>> shopUploadImage(String imgBase64, String imageName) {
         return apiService.shopUploadImage("image.upload", "v1", "base64", imgBase64, imageName, "item", "0");
+    }
+
+    public Flowable<ResultBean<ShopClassList>> getShopClassList() {
+        return apiService.getShopClassList("category.platform.get", "v1");
+    }
+
+    public Flowable<ResultBean<BrandListBean>> getShopBrandList(String class_id) {
+        return apiService.getShopBrandList("category.platform.brand.get", "v1", class_id);
     }
 
     public Observable<ResultBean> addGoods(String cat_id, String brand_id, String shop_cat_id, String title, String sub_title, String weight,

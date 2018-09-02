@@ -2,6 +2,7 @@ package com.chunlangjiu.app.user.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -12,16 +13,19 @@ import android.widget.TextView;
 
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
+import com.chunlangjiu.app.amain.bean.FirstClassBean;
+import com.chunlangjiu.app.goods.dialog.ClassPopWindow;
 import com.chunlangjiu.app.net.ApiUtils;
+import com.chunlangjiu.app.user.bean.BrandListBean;
+import com.chunlangjiu.app.user.bean.ShopClassList;
 import com.chunlangjiu.app.user.bean.UploadImageBean;
-import com.chunlangjiu.app.util.ConstantMsg;
+import com.chunlangjiu.app.user.dialog.BrandPopWindow;
 import com.chunlangjiu.app.util.GlideImageLoader;
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.lzy.imagepicker.ui.ImageGridActivity;
 import com.lzy.imagepicker.view.CropImageView;
 import com.pkqup.commonlibrary.dialog.ChoicePhotoDialog;
-import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.glide.GlideUtils;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.pkqup.commonlibrary.util.FileUtils;
@@ -33,7 +37,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -56,6 +59,11 @@ public class AddGoodsActivity extends BaseActivity {
     RelativeLayout rlChoiceClass;
     @BindView(R.id.tvClass)
     TextView tvClass;
+    @BindView(R.id.rlChoiceBrand)
+    RelativeLayout rlChoiceBrand;
+    @BindView(R.id.tvBrand)
+    TextView tvBrand;
+
     @BindView(R.id.etTitle)
     EditText etTitle;
     @BindView(R.id.etSecondName)
@@ -112,6 +120,16 @@ public class AddGoodsActivity extends BaseActivity {
     @BindView(R.id.tvCommit)
     TextView tvCommit;
 
+    //三级分类列表
+    private List<FirstClassBean> categoryLists;
+    private ClassPopWindow classPopWindow;
+    private String classId;
+
+    //品牌列表
+    private BrandPopWindow brandPopWindow;
+    private List<BrandListBean.Brand> brandLists;
+    private String brandId;
+
     private CompositeDisposable disposable;
     private ChoicePhotoDialog photoDialog;
     private ArrayList<ImageItem> mainPicLists;
@@ -127,6 +145,12 @@ public class AddGoodsActivity extends BaseActivity {
             switch (view.getId()) {
                 case R.id.img_title_left:
                     finish();
+                    break;
+                case R.id.rlChoiceClass:
+                    showClassPopWindow();
+                    break;
+                case R.id.rlChoiceBrand:
+                    showBrandPopWindow();
                     break;
                 case R.id.rlMainPic:
                     showPhotoDialog(REQUEST_CODE_SELECT_MAIN_PIC);
@@ -144,6 +168,7 @@ public class AddGoodsActivity extends BaseActivity {
         }
     };
 
+
     @Override
     public void setTitleView() {
         titleName.setText("商品添加");
@@ -156,6 +181,7 @@ public class AddGoodsActivity extends BaseActivity {
         setContentView(R.layout.user_activity_add_goods);
         initView();
         initImagePicker();
+        initData();
     }
 
     private void initView() {
@@ -171,6 +197,9 @@ public class AddGoodsActivity extends BaseActivity {
         rlDescPic.setOnClickListener(onClickListener);
         rlGoodsPic.setOnClickListener(onClickListener);
         tvCommit.setOnClickListener(onClickListener);
+
+        rlChoiceClass.setOnClickListener(onClickListener);
+        rlChoiceBrand.setOnClickListener(onClickListener);
     }
 
     private void initImagePicker() {
@@ -188,6 +217,82 @@ public class AddGoodsActivity extends BaseActivity {
         imagePicker.setOutPutY(500);                         //保存文件的高度。单位像素
     }
 
+
+    private void initData() {
+        disposable.add(ApiUtils.getInstance().getShopClassList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<ShopClassList>>() {
+                    @Override
+                    public void accept(ResultBean<ShopClassList> mainClassBeanResultBean) throws Exception {
+                        categoryLists = mainClassBeanResultBean.getData().getCategory();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                    }
+                }));
+    }
+
+    private void showClassPopWindow() {
+        if (categoryLists == null || categoryLists.size() == 0) {
+            ToastUtils.showShort("暂无分类");
+        } else {
+            if (classPopWindow == null) {
+                classPopWindow = new ClassPopWindow(this, categoryLists, classId);
+                classPopWindow.setCallBack(new ClassPopWindow.CallBack() {
+                    @Override
+                    public void choiceClass(String name, String id) {
+                        classId = id;
+                        tvClass.setText(name);
+                        getBrandLists();
+                    }
+                });
+            }
+            classPopWindow.showAsDropDown(rlChoiceClass, 0, 1);
+        }
+    }
+
+    private void getBrandLists() {
+        disposable.add(ApiUtils.getInstance().getShopBrandList(classId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<BrandListBean>>() {
+                    @Override
+                    public void accept(ResultBean<BrandListBean> brandListBeanResultBean) throws Exception {
+                        brandLists = brandListBeanResultBean.getData().getBrands();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                    }
+                }));
+    }
+
+    private void showBrandPopWindow() {
+        if (TextUtils.isEmpty(classId)) {
+            ToastUtils.showShort("请先选择分类");
+        } else {
+            if (brandLists == null || brandLists.size() == 0) {
+                ToastUtils.showShort("暂无品牌");
+            } else {
+                if (brandPopWindow == null) {
+                    brandPopWindow = new BrandPopWindow(this, brandLists, brandId);
+                    brandPopWindow.setCallBack(new BrandPopWindow.CallBack() {
+                        @Override
+                        public void choiceBrand(String selectName, String selectId) {
+                            brandId = selectId;
+                            tvBrand.setText(selectName);
+                        }
+                    });
+                }
+                brandPopWindow.setBrandList(brandLists);
+                brandPopWindow.showAsDropDown(rlChoiceBrand, 0, 1);
+            }
+        }
+    }
 
     private void showPhotoDialog(int requestCode) {
         codeType = requestCode;
@@ -239,7 +344,7 @@ public class AddGoodsActivity extends BaseActivity {
         if (base64Main == null || base64Detail == null || base64Goods == null) {
             ToastUtils.showShort("图片压缩失败，请重新选择图片");
         } else {
-           Observable<ResultBean<UploadImageBean>> main = ApiUtils.getInstance().shopUploadImage(base64Main, mainPicLists.get(0).name);
+            Observable<ResultBean<UploadImageBean>> main = ApiUtils.getInstance().shopUploadImage(base64Main, mainPicLists.get(0).name);
             Observable<ResultBean<UploadImageBean>> detail = ApiUtils.getInstance().shopUploadImage(base64Detail, detailPicLists.get(0).name);
             Observable<ResultBean<UploadImageBean>> goods = ApiUtils.getInstance().shopUploadImage(base64Goods, goodsPicLists.get(0).name);
             disposable.add(Observable.zip(main, detail, goods, new Function3<ResultBean<UploadImageBean>, ResultBean<UploadImageBean>,
@@ -305,6 +410,7 @@ public class AddGoodsActivity extends BaseActivity {
             e.printStackTrace();
         }
     }
+
 
     @Override
     protected void onDestroy() {

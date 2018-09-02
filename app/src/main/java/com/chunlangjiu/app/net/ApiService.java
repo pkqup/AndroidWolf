@@ -22,7 +22,9 @@ import com.chunlangjiu.app.store.bean.StoreClassListBean;
 import com.chunlangjiu.app.store.bean.StoreDetailBean;
 import com.chunlangjiu.app.order.bean.OrderListBean;
 import com.chunlangjiu.app.user.bean.AddressListBean;
+import com.chunlangjiu.app.user.bean.BrandListBean;
 import com.chunlangjiu.app.user.bean.MyNumBean;
+import com.chunlangjiu.app.user.bean.ShopClassList;
 import com.chunlangjiu.app.user.bean.UploadImageBean;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 
@@ -207,6 +209,14 @@ public interface ApiService {
                                                             @Field("image_input_title") String image_input_title,
                                                             @Field("image_type") String image_type, @Field("image_cat_id") String image_cat_id);
 
+    @POST("index.php/shop/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<ShopClassList>> getShopClassList(@Field("method") String method, @Field("v") String v);
+
+    @POST("index.php/shop/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<BrandListBean>> getShopBrandList(@Field("method") String method, @Field("v") String v, @Field("cat_id") String cat_id);
+
     //添加商品
     @POST("index.php/shop/topapi")
     @FormUrlEncoded
@@ -216,12 +226,6 @@ public interface ApiService {
                                     @Field("title") String title, @Field("sub_title") String sub_title,
                                     @Field("weight") String weight, @Field("price") String price,
                                     @Field("dlytmpl_id") String dlytmpl_id, @Field("sku") String sku);
-
-
-    Flowable<ResultBean> uploadImage(@Field("method") String method, @Field("v") String v,
-                                     @Field("upload_type") String upload_type, @Field("image") byte[] image,
-                                     @Field("image_input_title") String image_input_title,
-                                     @Field("image_type") String image_type, @Field("image_cat_id") String image_cat_id);
 
     @POST("index.php/topapi")
     @FormUrlEncoded
@@ -246,6 +250,7 @@ public interface ApiService {
 
     @POST("index.php/topapi")
     @FormUrlEncoded
-    Flowable<ResultBean<CancelOrderResultBean>> cancelOrder(@Field("method") String method, @Field("v") String v, @Field("tid") String tid, @Field("cancel_reason") String reason);
+    Flowable<ResultBean<CancelOrderResultBean>> cancelOrder(@Field("method") String method, @Field("v") String v,
+                                                            @Field("tid") String tid, @Field("cancel_reason") String reason);
 
 }
