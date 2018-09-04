@@ -224,8 +224,9 @@ public interface ApiService {
                                     @Field("cat_id") String cat_id, @Field("brand_id") String brand_id,
                                     @Field("shop_cat_id") String shop_cat_id,
                                     @Field("title") String title, @Field("sub_title") String sub_title,
-                                    @Field("weight") String weight, @Field("price") String price,
-                                    @Field("dlytmpl_id") String dlytmpl_id, @Field("sku") String sku);
+                                    @Field("weight") String weight, @Field("list_image") String list_image, @Field("price") String price,
+                                    @Field("dlytmpl_id") String dlytmpl_id, @Field("sku") String sku,
+                                    @Field("wap_desc") String wap_desc, @Field("nospec") String nospec);
 
     @POST("index.php/topapi")
     @FormUrlEncoded

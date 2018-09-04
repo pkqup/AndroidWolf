@@ -56,6 +56,7 @@
                     android:layout_alignParentBottom="true"
                     android:background="@color/bg_gray" />
             </RelativeLayout>
+
             <RelativeLayout
                 android:id="@+id/rlChoiceBrand"
                 android:layout_width="match_parent"
@@ -96,6 +97,7 @@
                     android:layout_alignParentBottom="true"
                     android:background="@color/bg_gray" />
             </RelativeLayout>
+
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="44dp">
@@ -225,8 +227,8 @@
                     android:layout_marginLeft="20dp"
                     android:layout_toRightOf="@id/tvPriceStr"
                     android:text="¥"
-                    android:textColor="@color/t_gray"
-                    android:textSize="@dimen/sp_small" />
+                    android:textColor="@color/t_black"
+                    android:textSize="@dimen/sp_mid" />
 
                 <EditText
                     android:id="@+id/etPrice"
@@ -235,6 +237,7 @@
                     android:layout_marginLeft="30dp"
                     android:layout_toRightOf="@id/tvPriceStr"
                     android:background="@null"
+                    android:digits="0123456789."
                     android:hint=""
                     android:paddingRight="10dp"
                     android:singleLine="true"
@@ -270,6 +273,7 @@
                     android:layout_toRightOf="@id/tvCountStr"
                     android:background="@null"
                     android:hint="请填写"
+                    android:inputType="number"
                     android:paddingRight="10dp"
                     android:singleLine="true"
                     android:textColor="@color/t_black"
@@ -315,8 +319,8 @@
                         android:id="@+id/imgMainEx"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@color/bg_red"
-                        android:scaleType="centerCrop" />
+                        android:scaleType="centerCrop"
+                        android:src="@mipmap/example_main" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -402,8 +406,8 @@
                         android:id="@+id/imgDescEx"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@color/bg_red"
-                        android:scaleType="centerCrop" />
+                        android:scaleType="centerCrop"
+                        android:src="@mipmap/example_detail" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -641,6 +645,7 @@
                                 android:background="@null"
                                 android:gravity="start"
                                 android:hint=""
+                                android:inputType="number"
                                 android:textColor="@color/t_black"
                                 android:textSize="@dimen/sp_small" />
 
@@ -797,6 +802,7 @@
                                 android:background="@null"
                                 android:gravity="start"
                                 android:hint=""
+                                android:inputType="number"
                                 android:textColor="@color/t_black"
                                 android:textSize="@dimen/sp_small" />
 

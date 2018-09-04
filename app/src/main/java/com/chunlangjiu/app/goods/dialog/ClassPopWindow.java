@@ -1,7 +1,9 @@
 package com.chunlangjiu.app.goods.dialog;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -177,4 +179,34 @@ public class ClassPopWindow extends PopupWindow {
             tvClass.setSelected(item.isSelect());
         }
     }
+    /**
+     * 适配7.0系统Popwindow显示全屏的问题
+     * @param anchor
+     */
+    @Override
+    public void showAsDropDown(View anchor) {
+        if(Build.VERSION.SDK_INT >= 24) {
+            Rect rect = new Rect();
+            anchor.getGlobalVisibleRect(rect);
+            int h = anchor.getResources().getDisplayMetrics().heightPixels - rect.bottom;
+            setHeight(h);
+        }
+        super.showAsDropDown(anchor);
+    }
+
+    /**
+     * 适配7.0系统Popwindow显示全屏的问题
+     * @param anchor
+     */
+    @Override
+    public void showAsDropDown(View anchor, int xoff, int yoff) {
+        if(Build.VERSION.SDK_INT >= 24) {
+            Rect rect = new Rect();
+            anchor.getGlobalVisibleRect(rect);
+            int h = anchor.getResources().getDisplayMetrics().heightPixels - rect.bottom;
+            setHeight(h);
+        }
+        super.showAsDropDown(anchor, xoff, yoff);
+    }
+
 }
