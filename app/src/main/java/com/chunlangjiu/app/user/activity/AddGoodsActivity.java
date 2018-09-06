@@ -317,16 +317,14 @@ public class AddGoodsActivity extends BaseActivity {
     }
 
     private void openCamera(int requestCode) {
-        ImagePicker.getInstance().setSelectLimit(1);
         Intent intent = new Intent(this, ImageGridActivity.class);
         intent.putExtra(ImageGridActivity.EXTRAS_TAKE_PICKERS, true); // 是否是直接打开相机
         startActivityForResult(intent, requestCode);
     }
 
     private void openAlbum(int requestCode) {
-        ImagePicker.getInstance().setSelectLimit(1);
-        Intent intent1 = new Intent(this, ImageGridActivity.class);
-        startActivityForResult(intent1, requestCode);
+        Intent intent = new Intent(this, ImageGridActivity.class);
+        startActivityForResult(intent, requestCode);
     }
 
 
