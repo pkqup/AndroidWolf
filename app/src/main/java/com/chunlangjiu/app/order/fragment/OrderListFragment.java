@@ -15,18 +15,22 @@ import com.chunlangjiu.app.abase.BaseFragment;
 import com.chunlangjiu.app.goods.activity.ShopMainActivity;
 import com.chunlangjiu.app.net.ApiUtils;
 import com.chunlangjiu.app.order.activity.OrderDetailActivity;
+import com.chunlangjiu.app.order.activity.OrderEvaluationMainActivity;
 import com.chunlangjiu.app.order.activity.OrderMainActivity;
 import com.chunlangjiu.app.order.adapter.OrderListAdapter;
+import com.chunlangjiu.app.order.bean.CancelOrderResultBean;
 import com.chunlangjiu.app.order.bean.CancelReasonBean;
 import com.chunlangjiu.app.order.bean.OrderListBean;
 import com.chunlangjiu.app.order.dialog.CancelOrderDialog;
 import com.chunlangjiu.app.order.params.OrderParams;
 import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
+import com.pkqup.commonlibrary.util.ToastUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -116,7 +120,6 @@ public class OrderListFragment extends BaseFragment {
     private void delayLoad() {
         if (isVisiable && initViewFinished && !isLoaded) {
             isLoaded = true;
-            //展示
             Bundle arguments = getArguments();
             if (null != arguments) {
                 type = arguments.getInt(OrderParams.TYPE, 0);
@@ -146,7 +149,8 @@ public class OrderListFragment extends BaseFragment {
                         getNormalOrderList();
                         break;
                     case 4:
-                        getCancelOrderList();
+                        status = OrderParams.TRADE_CLOSED_BY_SYSTEM;
+                        getNormalOrderList();
                         break;
                 }
                 break;
@@ -198,29 +202,6 @@ public class OrderListFragment extends BaseFragment {
                 }));
     }
 
-    private void getCancelOrderList() {
-        disposable.add(ApiUtils.getInstance().getCancelOrderLists(status, 1)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<ResultBean<OrderListBean>>() {
-                    @Override
-                    public void accept(ResultBean<OrderListBean> orderListBeanResultBean) throws Exception {
-                        rlLoading.setVisibility(View.GONE);
-                        refreshLayout.setVisibility(View.VISIBLE);
-
-                        listBeans.clear();
-                        listBeans.addAll(orderListBeanResultBean.getData().getList());
-                        orderListAdapter.notifyDataSetChanged();
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        rlLoading.setVisibility(View.GONE);
-                        refreshLayout.setVisibility(View.VISIBLE);
-                    }
-                }));
-    }
-
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -240,11 +221,35 @@ public class OrderListFragment extends BaseFragment {
                                     tid = String.valueOf(listBeans.get(Integer.parseInt(view.getTag().toString())).getTid());
                                     getCancelReason();
                                     break;
+                                case OrderParams.WAIT_BUYER_CONFIRM_GOODS:
+                                    tid = String.valueOf(listBeans.get(Integer.parseInt(view.getTag().toString())).getTid());
+                                    confirmReceipt();
+                                    break;
                             }
                             break;
                     }
                     break;
                 case R.id.tv2:
+                    switch (type) {
+                        case 0:
+                            switch (listBeans.get(Integer.parseInt(view.getTag().toString())).getStatus()) {
+                                case OrderParams.WAIT_BUYER_CONFIRM_GOODS:
+                                    tid = String.valueOf(listBeans.get(Integer.parseInt(view.getTag().toString())).getTid());
+                                    confirmReceipt();
+                                    break;
+                                case OrderParams.TRADE_FINISHED:
+                                    Intent intent = new Intent(getActivity(), OrderEvaluationMainActivity.class);
+                                    List<OrderListBean.ListBean.OrderBean> order = listBeans.get(Integer.parseInt(view.getTag().toString())).getOrder();
+                                    intent.putExtra(OrderParams.PRODUCTS, (Serializable) order);
+                                    startActivity(intent);
+                                    break;
+                                case OrderParams.WAIT_SELLER_SEND_GOODS:
+                                    tid = String.valueOf(listBeans.get(Integer.parseInt(view.getTag().toString())).getTid());
+                                    getCancelReason();
+                                    break;
+                            }
+                            break;
+                    }
                     break;
             }
         }
@@ -275,6 +280,25 @@ public class OrderListFragment extends BaseFragment {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
 
+                    }
+                }));
+    }
+
+    private void confirmReceipt() {
+        disposable.add(ApiUtils.getInstance().confirmReceipt(tid)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean>() {
+                    @Override
+                    public void accept(ResultBean resultBean) throws Exception {
+                        if (0 == resultBean.getErrorcode()) {
+                            ToastUtils.showShort("确认收货成功");
+                            refreshLayout.autoRefresh();
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
                     }
                 }));
     }

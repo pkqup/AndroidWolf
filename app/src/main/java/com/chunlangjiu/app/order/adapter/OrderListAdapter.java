@@ -67,6 +67,21 @@ public class OrderListAdapter extends BaseQuickAdapter<OrderListBean.ListBean, B
                         tv2.setText("删除订单");
                         tv2.setVisibility(View.VISIBLE);
                         break;
+                    case OrderParams.WAIT_SELLER_SEND_GOODS:
+                        tv1.setVisibility(View.GONE);
+                        tv2.setText("申请退款");
+                        tv2.setVisibility(View.VISIBLE);
+                        break;
+                    case OrderParams.WAIT_BUYER_CONFIRM_GOODS:
+                        tv1.setVisibility(View.GONE);
+                        tv2.setText("确认收货");
+                        tv2.setVisibility(View.VISIBLE);
+                        break;
+                    case OrderParams.TRADE_FINISHED:
+                        tv1.setVisibility(View.GONE);
+                        tv2.setText("评价");
+                        tv2.setVisibility(View.VISIBLE);
+                        break;
                 }
                 break;
         }

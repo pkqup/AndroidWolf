@@ -1,5 +1,6 @@
 package com.chunlangjiu.app.order.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class OrderListBean {
@@ -224,7 +225,7 @@ public class OrderListBean {
             this.order = order;
         }
 
-        public static class OrderBean {
+        public static class OrderBean implements Serializable {
             /**
              * title : ONex-OMS订单管理系统
              * num : 1

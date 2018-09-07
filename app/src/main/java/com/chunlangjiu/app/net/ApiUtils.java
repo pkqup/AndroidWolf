@@ -12,8 +12,6 @@ import com.chunlangjiu.app.goods.bean.EvaluateListBean;
 import com.chunlangjiu.app.goods.bean.FilterListBean;
 import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
 import com.chunlangjiu.app.goods.bean.GoodsListBean;
-import com.chunlangjiu.app.goods.bean.OrderGoodsBean;
-import com.chunlangjiu.app.goods.bean.PayDoBean;
 import com.chunlangjiu.app.goods.bean.PaymentBean;
 import com.chunlangjiu.app.goods.bean.ShopInfoBean;
 import com.chunlangjiu.app.order.bean.CancelOrderResultBean;
@@ -32,7 +30,6 @@ import com.pkqup.commonlibrary.net.bean.ResultBean;
 
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
-import retrofit2.http.Field;
 
 /**
  * @CreatedbBy: liucun on 2018/7/6
@@ -217,12 +214,12 @@ public class ApiUtils {
         return apiService.getOrderLists("trade.list", "v1", status, pageNo, 10);
     }
 
-    public Flowable<ResultBean<OrderListBean>> getCancelOrderLists(String status, int pageNo) {
-        return apiService.getOrderLists("trade.cancel.list", "v1", status, pageNo, 10);
-    }
-
     public Flowable<ResultBean<OrderDetailBean>> getOrderDetail(String tid) {
         return apiService.getOrderDetail("trade.get", "v1", tid);
+    }
+
+    public Flowable<ResultBean> confirmReceipt(String tid) {
+        return apiService.confirmReceipt("trade.confirm", "v1", tid);
     }
 
     public Flowable<ResultBean<CancelReasonBean>> getCancelReason() {
@@ -231,5 +228,9 @@ public class ApiUtils {
 
     public Flowable<ResultBean<CancelOrderResultBean>> cancelOrder(String tid, String reason) {
         return apiService.cancelOrder("trade.cancel.create", "v1", tid, reason);
+    }
+
+    public Flowable<ResultBean<UploadImageBean>> uploadEvaluationPic(String imgBase64, String imageName) {
+        return apiService.uploadEvaluationPic("image.upload", "v1", "base64", imgBase64, imageName, "rate");
     }
 }

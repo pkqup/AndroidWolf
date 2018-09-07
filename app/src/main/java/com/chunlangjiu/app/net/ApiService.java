@@ -12,7 +12,6 @@ import com.chunlangjiu.app.goods.bean.EvaluateListBean;
 import com.chunlangjiu.app.goods.bean.FilterListBean;
 import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
 import com.chunlangjiu.app.goods.bean.GoodsListBean;
-import com.chunlangjiu.app.goods.bean.PayDoBean;
 import com.chunlangjiu.app.goods.bean.PaymentBean;
 import com.chunlangjiu.app.goods.bean.ShopInfoBean;
 import com.chunlangjiu.app.order.bean.CancelOrderResultBean;
@@ -235,14 +234,13 @@ public interface ApiService {
 
     @POST("index.php/topapi")
     @FormUrlEncoded
-    Flowable<ResultBean<OrderListBean>> getCancelOrderLists(@Field("method") String method, @Field("v") String v,
-                                                            @Field("status") String status, @Field("page_no") int page_no,
-                                                            @Field("pagesize") int pagesize);
+    Flowable<ResultBean<OrderDetailBean>> getOrderDetail(@Field("method") String method, @Field("v") String v,
+                                                         @Field("tid") String tid);
 
     @POST("index.php/topapi")
     @FormUrlEncoded
-    Flowable<ResultBean<OrderDetailBean>> getOrderDetail(@Field("method") String method, @Field("v") String v,
-                                                         @Field("tid") String tid);
+    Flowable<ResultBean> confirmReceipt(@Field("method") String method, @Field("v") String v,
+                                        @Field("tid") String tid);
 
     @POST("index.php/topapi")
     @FormUrlEncoded
@@ -252,5 +250,12 @@ public interface ApiService {
     @FormUrlEncoded
     Flowable<ResultBean<CancelOrderResultBean>> cancelOrder(@Field("method") String method, @Field("v") String v,
                                                             @Field("tid") String tid, @Field("cancel_reason") String reason);
+
+    @POST("index.php/shop/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<UploadImageBean>> uploadEvaluationPic(@Field("method") String method, @Field("v") String v,
+                                                                @Field("upload_type") String upload_type, @Field("image") String image,
+                                                                @Field("image_input_title") String image_input_title,
+                                                                @Field("image_type") String image_type);
 
 }

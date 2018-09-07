@@ -14,6 +14,7 @@ import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseApplication;
 import com.chunlangjiu.app.abase.BaseFragment;
 import com.chunlangjiu.app.amain.activity.LoginActivity;
+import com.chunlangjiu.app.order.activity.OrderApplyForAfterSaleActivity;
 import com.chunlangjiu.app.order.activity.OrderMainActivity;
 import com.chunlangjiu.app.order.params.OrderParams;
 import com.chunlangjiu.app.user.activity.AddGoodsActivity;
@@ -160,6 +161,7 @@ public class UserFragment extends BaseFragment {
                     toOrderMainActivity(0, 2);
                     break;
                 case R.id.rlOrderThree:// 买家待评价
+                    startActivity(new Intent(getActivity(), OrderApplyForAfterSaleActivity.class));
                     break;
                 case R.id.rlOrderFour:// 买家售后订单
                     break;
