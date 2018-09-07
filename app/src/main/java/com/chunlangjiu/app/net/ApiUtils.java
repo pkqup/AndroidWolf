@@ -196,6 +196,11 @@ public class ApiUtils {
         return apiService.getHomeLists("theme.pull.goods", "v1", "index", pageNo, 10);
     }
 
+    // image_type —— complaints 用户投诉商家图片, aftersales售后图片, rate 评价图片
+    public Observable<ResultBean<UploadImageBean>> userUploadImage(String imgBase64, String imageName,String image_type) {
+        return apiService.userUploadImage("image.upload", "v1", "base64", imgBase64, imageName, image_type);
+    }
+
     public Observable<ResultBean<UploadImageBean>> shopUploadImage(String imgBase64, String imageName) {
         return apiService.shopUploadImage("image.upload", "v1", "base64", imgBase64, imageName, "item", "0");
     }

@@ -202,6 +202,13 @@ public interface ApiService {
                                                     @Field("tmpl") String payment_id, @Field("page_no") int page_no,
                                                     @Field("pagesize") int pagesize);
 
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Observable<ResultBean<UploadImageBean>> userUploadImage(@Field("method") String method, @Field("v") String v,
+                                                            @Field("upload_type") String upload_type, @Field("image") String image,
+                                                            @Field("image_input_title") String image_input_title,
+                                                            @Field("image_type") String image_type);
+
     @POST("index.php/shop/topapi")
     @FormUrlEncoded
     Observable<ResultBean<UploadImageBean>> shopUploadImage(@Field("method") String method, @Field("v") String v,
