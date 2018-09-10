@@ -4,7 +4,7 @@ import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.chunlangjiu.app.amain.bean.AuctionGoodsBean;
+import com.pkqup.commonlibrary.net.bean.ResultBean;
 
 import java.util.List;
 
@@ -12,14 +12,14 @@ import java.util.List;
  * @CreatedbBy: liucun on 2018/6/26
  * @Describe:
  */
-public class AuctionListAdapter extends BaseQuickAdapter<AuctionGoodsBean, BaseViewHolder> {
+public class AuctionListAdapter extends BaseQuickAdapter<ResultBean, BaseViewHolder> {
 
-    public AuctionListAdapter(int layoutResId, List<AuctionGoodsBean> data) {
+    public AuctionListAdapter(int layoutResId, List<ResultBean> data) {
         super(layoutResId, data);
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, AuctionGoodsBean item) {
+    protected void convert(BaseViewHolder helper, ResultBean item) {
 
 
     }

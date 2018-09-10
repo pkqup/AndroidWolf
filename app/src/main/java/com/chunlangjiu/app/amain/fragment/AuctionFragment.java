@@ -15,7 +15,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseFragment;
 import com.chunlangjiu.app.amain.adapter.AuctionListAdapter;
-import com.chunlangjiu.app.amain.bean.AuctionGoodsBean;
 import com.pkqup.commonlibrary.util.SizeUtils;
 
 import java.util.ArrayList;
@@ -36,8 +35,8 @@ public class AuctionFragment extends BaseFragment {
     private TextView tv_class;
     private TextView tv_filter;
 
-    private RecyclerView recycle_view;
-    private List<AuctionGoodsBean> lists;
+    private RecyclerView recyclerView;
+    private List lists;
     private AuctionListAdapter linearAdapter;
 
     private DrawerLayout.DrawerListener drawerListener = new DrawerLayout.DrawerListener() {
@@ -112,7 +111,7 @@ public class AuctionFragment extends BaseFragment {
         tv_class.setOnClickListener(onClickListener);
         tv_filter.setOnClickListener(onClickListener);
 
-        recycle_view = rootView.findViewById(R.id.recycle_view);
+        recyclerView = rootView.findViewById(R.id.recycle_view);
         lists = new ArrayList<>();
         linearAdapter = new AuctionListAdapter(R.layout.amain_item_goods_list_linear, lists);
         linearAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
@@ -121,8 +120,8 @@ public class AuctionFragment extends BaseFragment {
 
             }
         });
-        recycle_view.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recycle_view.setAdapter(linearAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(linearAdapter);
     }
 
     @Override
