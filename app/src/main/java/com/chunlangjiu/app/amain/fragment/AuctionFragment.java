@@ -15,11 +15,22 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseFragment;
 import com.chunlangjiu.app.amain.adapter.AuctionListAdapter;
+import com.chunlangjiu.app.amain.bean.AuctionListBean;
+import com.chunlangjiu.app.amain.bean.CartListBean;
+import com.chunlangjiu.app.net.ApiUtils;
+import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.pkqup.commonlibrary.util.SizeUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @CreatedbBy: liucun on 2018/6/16.
@@ -38,8 +49,10 @@ public class AuctionFragment extends BaseFragment {
 
     private SmartRefreshLayout refreshLayout;
     private RecyclerView recyclerView;
-    private List lists;
+    private List<AuctionListBean> lists;
     private AuctionListAdapter linearAdapter;
+
+    private CompositeDisposable disposable;
 
     private DrawerLayout.DrawerListener drawerListener = new DrawerLayout.DrawerListener() {
         @Override
@@ -89,6 +102,8 @@ public class AuctionFragment extends BaseFragment {
 
     @Override
     public void initView() {
+        disposable = new CompositeDisposable();
+
         titleView.setVisibility(View.VISIBLE);
         tvTitleF.setText("竞拍专区");
         imgTitleRightOneF.setOnClickListener(onClickListener);
@@ -114,9 +129,11 @@ public class AuctionFragment extends BaseFragment {
         tv_filter.setOnClickListener(onClickListener);
 
         refreshLayout = rootView.findViewById(R.id.refreshLayout);
+        refreshLayout.setEnableRefresh(true);//设置可以下拉刷新
+        refreshLayout.setEnableLoadMore(false);//设置不能加载更多
         recyclerView = rootView.findViewById(R.id.recycle_view);
         lists = new ArrayList<>();
-        linearAdapter = new AuctionListAdapter(R.layout.amain_item_goods_list_linear, lists);
+        linearAdapter = new AuctionListAdapter(getActivity(),R.layout.amain_item_goods_list_linear, lists);
         linearAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
@@ -125,11 +142,43 @@ public class AuctionFragment extends BaseFragment {
         });
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         recyclerView.setAdapter(linearAdapter);
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(final RefreshLayout refreshLayout) {
+                getListData();
+            }
+        });
     }
 
     @Override
     public void initData() {
+        getListData();
+    }
 
+    private void getListData() {
+        disposable.add(ApiUtils.getInstance().getAuctionList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<List<AuctionListBean>>>() {
+                    @Override
+                    public void accept(ResultBean<List<AuctionListBean>> listResultBean) throws Exception {
+                        refreshLayout.finishRefresh();
+                        List<AuctionListBean> data = listResultBean.getData();
+                        getListSuccess(data);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        refreshLayout.finishRefresh();
+                    }
+                }));
+    }
+
+    private void getListSuccess(List<AuctionListBean> list) {
+        if (list != null) {
+            this.lists = list;
+            linearAdapter.setNewData(lists);
+        }
     }
 
 
@@ -143,4 +192,9 @@ public class AuctionFragment extends BaseFragment {
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        disposable.dispose();
+    }
 }

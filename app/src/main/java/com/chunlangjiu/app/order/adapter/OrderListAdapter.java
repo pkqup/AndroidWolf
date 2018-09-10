@@ -3,17 +3,13 @@ package com.chunlangjiu.app.order.adapter;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.chad.library.adapter.base.util.MultiTypeDelegate;
 import com.chunlangjiu.app.R;
-import com.chunlangjiu.app.amain.bean.AuctionGoodsBean;
-import com.chunlangjiu.app.amain.bean.CartGoodsBean;
 import com.chunlangjiu.app.order.bean.OrderListBean;
 import com.chunlangjiu.app.order.params.OrderParams;
 import com.pkqup.commonlibrary.glide.GlideUtils;

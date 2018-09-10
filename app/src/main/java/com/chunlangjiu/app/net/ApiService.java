@@ -29,6 +29,8 @@ import com.chunlangjiu.app.user.bean.ShopClassList;
 import com.chunlangjiu.app.user.bean.UploadImageBean;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 
+import java.util.List;
+
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import retrofit2.http.Field;
@@ -58,7 +60,7 @@ public interface ApiService {
 
     @POST("index.php/topapi")
     @FormUrlEncoded
-    Flowable<ResultBean<AuctionListBean>> getAuctionList(@Field("method") String method, @Field("v") String v);
+    Flowable<ResultBean<List<AuctionListBean>>> getAuctionList(@Field("method") String method, @Field("v") String v);
 
     @POST("index.php/topapi")
     @FormUrlEncoded

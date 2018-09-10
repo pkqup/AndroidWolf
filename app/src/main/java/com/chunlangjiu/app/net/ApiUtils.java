@@ -31,6 +31,8 @@ import com.chunlangjiu.app.user.bean.UploadImageBean;
 import com.pkqup.commonlibrary.net.HttpUtils;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 
+import java.util.List;
+
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import retrofit2.http.Field;
@@ -78,7 +80,7 @@ public class ApiUtils {
         return apiService.shopLogin("user.login", "v1", mobile, password);
     }
 
-    public Flowable<ResultBean<AuctionListBean>> getAuctionList() {
+    public Flowable<ResultBean<List<AuctionListBean>>> getAuctionList() {
         return apiService.getAuctionList("item.auction.list", "v1");
     }
 
