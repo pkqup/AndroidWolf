@@ -16,6 +16,7 @@ import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseFragment;
 import com.chunlangjiu.app.amain.adapter.AuctionListAdapter;
 import com.pkqup.commonlibrary.util.SizeUtils;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +36,7 @@ public class AuctionFragment extends BaseFragment {
     private TextView tv_class;
     private TextView tv_filter;
 
+    private SmartRefreshLayout refreshLayout;
     private RecyclerView recyclerView;
     private List lists;
     private AuctionListAdapter linearAdapter;
@@ -111,6 +113,7 @@ public class AuctionFragment extends BaseFragment {
         tv_class.setOnClickListener(onClickListener);
         tv_filter.setOnClickListener(onClickListener);
 
+        refreshLayout = rootView.findViewById(R.id.refreshLayout);
         recyclerView = rootView.findViewById(R.id.recycle_view);
         lists = new ArrayList<>();
         linearAdapter = new AuctionListAdapter(R.layout.amain_item_goods_list_linear, lists);
