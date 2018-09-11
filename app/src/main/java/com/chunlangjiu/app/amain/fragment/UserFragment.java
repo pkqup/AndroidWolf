@@ -164,6 +164,7 @@ public class UserFragment extends BaseFragment {
                     startActivity(new Intent(getActivity(), OrderApplyForAfterSaleActivity.class));
                     break;
                 case R.id.rlOrderFour:// 买家售后订单
+                    toOrderMainActivity(2, 0);
                     break;
                 case R.id.rlOrderFive:// 买家全部订单
                     toOrderMainActivity(0, 0);

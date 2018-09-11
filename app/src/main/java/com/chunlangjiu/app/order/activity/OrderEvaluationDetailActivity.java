@@ -4,11 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.signature.ObjectKey;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
 import com.chunlangjiu.app.net.ApiUtils;
@@ -18,6 +20,7 @@ import com.chunlangjiu.app.order.bean.OrderListBean;
 import com.chunlangjiu.app.order.params.OrderParams;
 import com.chunlangjiu.app.user.bean.UploadImageBean;
 import com.chunlangjiu.app.util.GlideImageLoader;
+import com.google.gson.Gson;
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.lzy.imagepicker.ui.ImageGridActivity;
@@ -30,6 +33,10 @@ import com.pkqup.commonlibrary.util.FileUtils;
 import com.pkqup.commonlibrary.util.ToastUtils;
 import com.socks.library.KLog;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +60,11 @@ public class OrderEvaluationDetailActivity extends BaseActivity {
     EditText etContent;
     @BindView(R.id.tvCommit)
     TextView tvCommit;
+    @BindView(R.id.cbAnonymous)
+    CheckBox cbAnonymous;
+
+    private String tid;
+    private String oid;
 
     private int codeType;
     private ChoicePhotoDialog photoDialog;
@@ -68,6 +80,7 @@ public class OrderEvaluationDetailActivity extends BaseActivity {
     private CompositeDisposable disposable;
 
     private List<String> uploadImageUrls;
+    private int orderEvaluationPicBeanListSize;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,7 +93,8 @@ public class OrderEvaluationDetailActivity extends BaseActivity {
 
     @Override
     public void setTitleView() {
-
+        titleImgLeft.setOnClickListener(onClickListener);
+        titleName.setText("商品评价");
     }
 
     private void initData() {
@@ -88,6 +102,8 @@ public class OrderEvaluationDetailActivity extends BaseActivity {
         disposable = new CompositeDisposable();
         OrderListBean.ListBean.OrderBean orderBean = (OrderListBean.ListBean.OrderBean) getIntent().getSerializableExtra(OrderParams.PRODUCTS);
         GlideUtils.loadImage(this, orderBean.getPic_path(), imgProduct);
+        tid = String.valueOf(orderBean.getTid());
+        oid = String.valueOf(orderBean.getOid());
 
         orderEvaluationPicBeanList = new ArrayList<>();
         orderEvaluationPicBean = new OrderEvaluationPicBean();
@@ -225,6 +241,7 @@ public class OrderEvaluationDetailActivity extends BaseActivity {
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
+
                 case R.id.tvCommit:
                     commit();
                     break;
@@ -240,20 +257,21 @@ public class OrderEvaluationDetailActivity extends BaseActivity {
         }
         uploadImageUrls.clear();
         if (orderEvaluationPicBeanList.size() > 1) {
+            orderEvaluationPicBeanListSize = 0;
             for (OrderEvaluationPicBean orderEvaluationPicBean : orderEvaluationPicBeanList) {
                 if (!orderEvaluationPicBean.isAddButton()) {
+                    orderEvaluationPicBeanListSize++;
                     String base64Data = orderEvaluationPicBean.getBase64Data();
                     String name = orderEvaluationPicBean.getName();
-                    disposable.add(ApiUtils.getInstance().uploadEvaluationPic(base64Data, name)
+                    disposable.add(ApiUtils.getInstance().userUploadImage(base64Data, name, "rate")
                             .subscribeOn(Schedulers.io())
                             .observeOn(AndroidSchedulers.mainThread())
                             .subscribe(new Consumer<ResultBean<UploadImageBean>>() {
                                 @Override
                                 public void accept(ResultBean<UploadImageBean> uploadImageBeanResultBean) throws Exception {
                                     uploadImageUrls.add(uploadImageBeanResultBean.getData().getUrl());
-                                    if (uploadImageUrls.size() == orderEvaluationPicBeanList.size()) {
+                                    if (uploadImageUrls.size() == orderEvaluationPicBeanListSize) {
                                         commitContent();
-                                        KLog.i("执行了");
                                     }
                                 }
                             }, new Consumer<Throwable>() {
@@ -263,11 +281,60 @@ public class OrderEvaluationDetailActivity extends BaseActivity {
                             }));
                 }
             }
+        } else {
+            commitContent();
         }
     }
 
     private void commitContent() {
-
+        JSONArray jsonArray = new JSONArray();
+        JSONObject object = new JSONObject();
+        try {
+            object.put("oid", oid);
+            StringBuilder ratePic = new StringBuilder();
+            for (int i = 0; i <= uploadImageUrls.size() - 1; i++) {
+                if (i == uploadImageUrls.size() - 1) {
+                    ratePic.append(uploadImageUrls.get(i));
+                } else {
+                    ratePic.append(uploadImageUrls.get(i)).append(",");
+                }
+            }
+            object.put("rate_pic", ratePic.toString());
+            int rating = new BigDecimal(rbEvaluation.getRating()).intValue();
+            switch (rating) {
+                case 1:
+                case 2:
+                    object.put("result", "bad");
+                    break;
+                case 3:
+                    object.put("result", "neutral");
+                    break;
+                case 4:
+                case 5:
+                    object.put("result", "good");
+                    break;
+            }
+            object.put("content", etContent.getText().toString());
+            jsonArray.put(object);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        disposable.add(ApiUtils.getInstance().addRate(tid, jsonArray, cbAnonymous.isChecked(), 5, 5, 5)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean>() {
+                    @Override
+                    public void accept(ResultBean uploadImageBeanResultBean) throws Exception {
+                        if (0 == uploadImageBeanResultBean.getErrorcode()) {
+                            ToastUtils.showShort("商品评论成功");
+                            finish();
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                }));
     }
 
     @Override

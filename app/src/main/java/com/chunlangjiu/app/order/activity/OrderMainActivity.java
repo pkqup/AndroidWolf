@@ -40,7 +40,6 @@ public class OrderMainActivity extends BaseActivity {
     @Override
     public void setTitleView() {
         titleImgLeft.setOnClickListener(onClickListener);
-        titleName.setText("我的订单");
     }
 
     private void initView() {
@@ -104,6 +103,7 @@ public class OrderMainActivity extends BaseActivity {
     private void fillTab(int type, int target) {
         switch (type) {
             case 0:
+                titleName.setText("我的订单");
                 tabLayout.addTab(tabLayout.newTab().setText("全部"));
                 tabLayout.addTab(tabLayout.newTab().setText("待付款"));
                 tabLayout.addTab(tabLayout.newTab().setText("待收货"));
@@ -118,6 +118,7 @@ public class OrderMainActivity extends BaseActivity {
                 tabLayout.addTab(tabLayout.newTab().setText("待收货"));
                 break;
             case 2:
+                titleName.setText("售后订单");
                 tabLayout.addTab(tabLayout.newTab().setText("全部"));
                 tabLayout.addTab(tabLayout.newTab().setText("待处理"));
                 tabLayout.addTab(tabLayout.newTab().setText("待退货"));

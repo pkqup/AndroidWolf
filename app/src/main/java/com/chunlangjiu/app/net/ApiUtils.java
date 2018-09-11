@@ -16,6 +16,7 @@ import com.chunlangjiu.app.goods.bean.PaymentBean;
 import com.chunlangjiu.app.goods.bean.ShopInfoBean;
 import com.chunlangjiu.app.order.bean.CancelOrderResultBean;
 import com.chunlangjiu.app.order.bean.CancelReasonBean;
+import com.chunlangjiu.app.order.bean.OrderAfterSaleReasonBean;
 import com.chunlangjiu.app.order.bean.OrderDetailBean;
 import com.chunlangjiu.app.store.bean.StoreClassListBean;
 import com.chunlangjiu.app.store.bean.StoreDetailBean;
@@ -27,6 +28,8 @@ import com.chunlangjiu.app.user.bean.ShopClassList;
 import com.chunlangjiu.app.user.bean.UploadImageBean;
 import com.pkqup.commonlibrary.net.HttpUtils;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
+
+import org.json.JSONArray;
 
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
@@ -194,7 +197,7 @@ public class ApiUtils {
     }
 
     // image_type —— complaints 用户投诉商家图片, aftersales售后图片, rate 评价图片
-    public Observable<ResultBean<UploadImageBean>> userUploadImage(String imgBase64, String imageName,String image_type) {
+    public Observable<ResultBean<UploadImageBean>> userUploadImage(String imgBase64, String imageName, String image_type) {
         return apiService.userUploadImage("image.upload", "v1", "base64", imgBase64, imageName, image_type);
     }
 
@@ -219,8 +222,16 @@ public class ApiUtils {
         return apiService.getOrderLists("trade.list", "v1", status, pageNo, 10);
     }
 
+    public Flowable<ResultBean<OrderListBean>> getAfterSaleOrderList(int pageNo) {
+        return apiService.getAfterSaleOrderList("member.aftersales.list", "v1", pageNo, 10);
+    }
+
     public Flowable<ResultBean<OrderDetailBean>> getOrderDetail(String tid) {
         return apiService.getOrderDetail("trade.get", "v1", tid);
+    }
+
+    public Flowable<ResultBean<OrderDetailBean>> getAfterSaleOrderDetail(String aftersales_bn, String oid) {
+        return apiService.getAfterSaleOrderDetail("member.aftersales.get", "v1", aftersales_bn, oid);
     }
 
     public Flowable<ResultBean> confirmReceipt(String tid) {
@@ -235,7 +246,17 @@ public class ApiUtils {
         return apiService.cancelOrder("trade.cancel.create", "v1", tid, reason);
     }
 
-    public Flowable<ResultBean<UploadImageBean>> uploadEvaluationPic(String imgBase64, String imageName) {
-        return apiService.uploadEvaluationPic("image.upload", "v1", "base64", imgBase64, imageName, "rate");
+    public Flowable<ResultBean> addRate(String tid, JSONArray rateData, boolean anony, int tallyScore, int attitudeScore, int deliverySpeedScore) {
+        return apiService.addRate("member.rate.add", "v1", tid, rateData, anony, tallyScore, attitudeScore, deliverySpeedScore);
     }
+
+    public Flowable<ResultBean<OrderAfterSaleReasonBean>> getAfterSaleReason(String oid) {
+        return apiService.getAfterSaleReason("member.aftersales.applyInfo.get", "v1", oid);
+    }
+
+    public Flowable<ResultBean> applyAfterSaleReason(String tid, String oid, String reason, String description, String evidence_pic) {
+        return apiService.applyAfterSaleReason("member.aftersales.apply", "v1", tid, oid, reason, description, "REFUND_GOODS", evidence_pic);
+    }
+
+
 }

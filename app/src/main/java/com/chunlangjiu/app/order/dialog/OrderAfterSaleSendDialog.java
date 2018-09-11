@@ -16,9 +16,7 @@ import com.pkqup.commonlibrary.util.SystemUtils;
 
 import java.util.List;
 
-import io.reactivex.disposables.CompositeDisposable;
-
-public class OrderAfterSaleReasonDialog extends Dialog {
+public class OrderAfterSaleSendDialog extends Dialog {
     private Window window;
     private Context context;// 上下文
     private List<String> data;
@@ -36,7 +34,7 @@ public class OrderAfterSaleReasonDialog extends Dialog {
      *
      * @param context 上下文
      */
-    public OrderAfterSaleReasonDialog(Context context, List<String> data) {
+    public OrderAfterSaleSendDialog(Context context, List<String> data) {
         super(context, R.style.dialog_transparent);
         this.context = context;
         this.data = data;
@@ -50,7 +48,7 @@ public class OrderAfterSaleReasonDialog extends Dialog {
      * ..<br/>
      */
     private void initView() {
-        setContentView(R.layout.order_dialogfragment_cancel);
+        setContentView(R.layout.order_dialog_aftersale_send);
         tvTitle = findViewById(R.id.tvTitle);
         tvTitle.setText("请选择售后的理由");
         rgReason = findViewById(R.id.rgReason);

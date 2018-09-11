@@ -50,7 +50,8 @@
                         android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:numStars="5"
-                        android:stepSize="0.5" />
+                        android:rating="5"
+                        android:stepSize="1" />
 
                 </LinearLayout>
 
@@ -67,7 +68,10 @@
                     android:id="@+id/etContent"
                     android:layout_width="match_parent"
                     android:layout_height="160dp"
-                    android:background="@color/transparent" />
+                    android:background="@color/transparent"
+                    android:gravity="left"
+                    android:maxLength="500"
+                    android:padding="4dp" />
 
                 <TextView
                     android:layout_width="match_parent"

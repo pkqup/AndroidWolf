@@ -4,6 +4,8 @@ public class OrderParams {
     public static final String TYPE = "type";//类型 买家： 0:我的订单 1:竞品订单 2：售后订单  卖家： 3：订单管理 4：售后订单管理
     public static final String TARGET = "target";//定位标签页下标
     public static final String ORDERID = "orderId";//订单id
+    public static final String OID = "oid";//子订单id
+    public static final String AFTERSALESBN = "aftersales_bn";
     public static final String PRODUCTS = "products";//传递商品的key
 
     public static final String WAIT_BUYER_PAY = "WAIT_BUYER_PAY";//等待付款

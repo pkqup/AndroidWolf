@@ -1,36 +1,35 @@
 package com.chunlangjiu.app.order.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class OrderDetailBean {
-
-
     /**
-     * tid : 2433612000060086
+     * tid : 2439616000040086
      * shipping_type : express
-     * status : WAIT_BUYER_PAY
-     * payment : 4497.900
+     * status : TRADE_FINISHED
+     * payment : 0.100
      * points_fee : 0.000
      * cancel_status : NO_APPLY_CANCEL
      * hongbao_fee : 0.000
-     * post_fee : 4497.000
+     * post_fee : 0.000
      * pay_type : online
-     * payed_fee : 0.000
-     * pay_time : null
+     * payed_fee : 0.100
+     * pay_time : 1536132318
      * receiver_state : 广东省
      * receiver_city : 深圳市
      * receiver_district : 南山区
      * receiver_address : 1227474
      * trade_memo :
-     * receiver_name : 环绕
+     * receiver_name : 邓浩然
      * receiver_mobile : 18682330720
      * ziti_addr : null
      * ziti_memo : null
-     * total_fee : 0.900
+     * total_fee : 0.100
      * discount_fee : 0.000
-     * buyer_rate : 0
+     * buyer_rate : 1
      * adjust_fee : 0.000
-     * created_time : 1535613568
+     * created_time : 1536132310
      * shop_id : 1
      * need_invoice : 0
      * invoice_name :
@@ -40,11 +39,12 @@ public class OrderDetailBean {
      * cancel_reason : null
      * cancelInfo : []
      * refund_fee : 0
-     * orders : [{"price":"0.100","aftersales_status":null,"num":3,"title":"皇家礼炮","item_id":175,"cat_id":33,"end_time":null,"status":"WAIT_BUYER_PAY","pic_path":"http://mall.chunlangjiu.com/images/1e/fc/29/56e3751ced12cf94f44968c1af3f34accb5e7405.JPG_t.JPG","total_fee":"0.300","adjust_fee":"0.000","spec_nature_info":"颜色：紫色、尺码：m","gift_data":null,"complaints_status":"NOT_COMPLAINTS","buyer_rate":0,"oid":2433612000080086},{"price":"0.100","aftersales_status":null,"num":6,"title":"拉图1974","item_id":174,"cat_id":33,"end_time":null,"status":"WAIT_BUYER_PAY","pic_path":"http://mall.chunlangjiu.com/images/01/c5/84/3cad34fbb4ce6869f4b8a9799759f4a444384003.JPG_t.JPG","total_fee":"0.600","adjust_fee":"0.000","spec_nature_info":"颜色：红色、尺码：xxl","gift_data":null,"complaints_status":"NOT_COMPLAINTS","buyer_rate":0,"oid":2433612000120086}]
+     * orders : [{"price":"0.100","aftersales_status":null,"num":1,"title":"皇家礼炮","item_id":175,"cat_id":33,"end_time":1536133308,"status":"TRADE_FINISHED","pic_path":"http://mall.chunlangjiu.com/images/1e/fc/29/56e3751ced12cf94f44968c1af3f34accb5e7405.JPG?x-oss-process=style/t","total_fee":"0.100","adjust_fee":"0.000","spec_nature_info":"颜色：紫色、尺码：m","gift_data":null,"complaints_status":"NOT_COMPLAINTS","buyer_rate":1,"oid":2439616000080086,"refund_enabled":true,"changing_enabled":true}]
      * shipping_type_name : 快递
-     * status_desc : 待付款
+     * status_desc : 已完成
      * is_buyer_rate : false
      * shopname : GAP官方旗舰店
+     * logi : {"logi_name":"申通快递","logi_no":"123456","corp_code":"STO","delivery_id":1201809052106023165,"receiver_name":"邓浩然","t_begin":1536132349}
      */
 
     private long tid;
@@ -57,7 +57,7 @@ public class OrderDetailBean {
     private String post_fee;
     private String pay_type;
     private String payed_fee;
-    private Object pay_time;
+    private int pay_time;
     private String receiver_state;
     private String receiver_city;
     private String receiver_district;
@@ -72,6 +72,7 @@ public class OrderDetailBean {
     private int buyer_rate;
     private String adjust_fee;
     private int created_time;
+    private int modified_time;
     private int shop_id;
     private int need_invoice;
     private String invoice_name;
@@ -84,8 +85,8 @@ public class OrderDetailBean {
     private String status_desc;
     private boolean is_buyer_rate;
     private String shopname;
-    private boolean logi;
-    private CancelInfoBean cancelInfo;
+//    private LogiBean logi;
+//    private List<?> cancelInfo;
     private List<OrdersBean> orders;
 
     public long getTid() {
@@ -168,11 +169,11 @@ public class OrderDetailBean {
         this.payed_fee = payed_fee;
     }
 
-    public Object getPay_time() {
+    public int getPay_time() {
         return pay_time;
     }
 
-    public void setPay_time(Object pay_time) {
+    public void setPay_time(int pay_time) {
         this.pay_time = pay_time;
     }
 
@@ -288,6 +289,14 @@ public class OrderDetailBean {
         this.created_time = created_time;
     }
 
+    public int getModified_time() {
+        return modified_time;
+    }
+
+    public void setModified_time(int modified_time) {
+        this.modified_time = modified_time;
+    }
+
     public int getShop_id() {
         return shop_id;
     }
@@ -384,37 +393,21 @@ public class OrderDetailBean {
         this.shopname = shopname;
     }
 
-    public boolean isLogi() {
-        return logi;
-    }
+//    public LogiBean getLogi() {
+//        return logi;
+//    }
+//
+//    public void setLogi(LogiBean logi) {
+//        this.logi = logi;
+//    }
 
-    public void setLogi(boolean logi) {
-        this.logi = logi;
-    }
-
-    public CancelInfoBean getCancelInfo() {
-        return cancelInfo;
-    }
-
-    public void setCancelInfo(CancelInfoBean cancelInfo) {
-        this.cancelInfo = cancelInfo;
-    }
-
-    public static class CancelInfoBean {
-        /**
-         * cancel_id : 484
-         */
-
-        private int cancel_id;
-
-        public int getCancel_id() {
-            return cancel_id;
-        }
-
-        public void setCancel_id(int cancel_id) {
-            this.cancel_id = cancel_id;
-        }
-    }
+//    public List<?> getCancelInfo() {
+//        return cancelInfo;
+//    }
+//
+//    public void setCancelInfo(List<?> cancelInfo) {
+//        this.cancelInfo = cancelInfo;
+//    }
 
     public List<OrdersBean> getOrders() {
         return orders;
@@ -424,24 +417,92 @@ public class OrderDetailBean {
         this.orders = orders;
     }
 
-    public static class OrdersBean {
+    public static class LogiBean {
+        /**
+         * logi_name : 申通快递
+         * logi_no : 123456
+         * corp_code : STO
+         * delivery_id : 1201809052106023165
+         * receiver_name : 邓浩然
+         * t_begin : 1536132349
+         */
+
+        private String logi_name;
+        private String logi_no;
+        private String corp_code;
+        private long delivery_id;
+        private String receiver_name;
+        private int t_begin;
+
+        public String getLogi_name() {
+            return logi_name;
+        }
+
+        public void setLogi_name(String logi_name) {
+            this.logi_name = logi_name;
+        }
+
+        public String getLogi_no() {
+            return logi_no;
+        }
+
+        public void setLogi_no(String logi_no) {
+            this.logi_no = logi_no;
+        }
+
+        public String getCorp_code() {
+            return corp_code;
+        }
+
+        public void setCorp_code(String corp_code) {
+            this.corp_code = corp_code;
+        }
+
+        public long getDelivery_id() {
+            return delivery_id;
+        }
+
+        public void setDelivery_id(long delivery_id) {
+            this.delivery_id = delivery_id;
+        }
+
+        public String getReceiver_name() {
+            return receiver_name;
+        }
+
+        public void setReceiver_name(String receiver_name) {
+            this.receiver_name = receiver_name;
+        }
+
+        public int getT_begin() {
+            return t_begin;
+        }
+
+        public void setT_begin(int t_begin) {
+            this.t_begin = t_begin;
+        }
+    }
+
+    public static class OrdersBean implements Serializable{
         /**
          * price : 0.100
          * aftersales_status : null
-         * num : 3
+         * num : 1
          * title : 皇家礼炮
          * item_id : 175
          * cat_id : 33
-         * end_time : null
-         * status : WAIT_BUYER_PAY
-         * pic_path : http://mall.chunlangjiu.com/images/1e/fc/29/56e3751ced12cf94f44968c1af3f34accb5e7405.JPG_t.JPG
-         * total_fee : 0.300
+         * end_time : 1536133308
+         * status : TRADE_FINISHED
+         * pic_path : http://mall.chunlangjiu.com/images/1e/fc/29/56e3751ced12cf94f44968c1af3f34accb5e7405.JPG?x-oss-process=style/t
+         * total_fee : 0.100
          * adjust_fee : 0.000
          * spec_nature_info : 颜色：紫色、尺码：m
          * gift_data : null
          * complaints_status : NOT_COMPLAINTS
-         * buyer_rate : 0
-         * oid : 2433612000080086
+         * buyer_rate : 1
+         * oid : 2439616000080086
+         * refund_enabled : true
+         * changing_enabled : true
          */
 
         private String price;
@@ -450,7 +511,7 @@ public class OrderDetailBean {
         private String title;
         private int item_id;
         private int cat_id;
-        private Object end_time;
+        private int end_time;
         private String status;
         private String pic_path;
         private String total_fee;
@@ -460,6 +521,8 @@ public class OrderDetailBean {
         private String complaints_status;
         private int buyer_rate;
         private long oid;
+        private boolean refund_enabled;
+        private boolean changing_enabled;
 
         public String getPrice() {
             return price;
@@ -509,11 +572,11 @@ public class OrderDetailBean {
             this.cat_id = cat_id;
         }
 
-        public Object getEnd_time() {
+        public int getEnd_time() {
             return end_time;
         }
 
-        public void setEnd_time(Object end_time) {
+        public void setEnd_time(int end_time) {
             this.end_time = end_time;
         }
 
@@ -587,6 +650,22 @@ public class OrderDetailBean {
 
         public void setOid(long oid) {
             this.oid = oid;
+        }
+
+        public boolean isRefund_enabled() {
+            return refund_enabled;
+        }
+
+        public void setRefund_enabled(boolean refund_enabled) {
+            this.refund_enabled = refund_enabled;
+        }
+
+        public boolean isChanging_enabled() {
+            return changing_enabled;
+        }
+
+        public void setChanging_enabled(boolean changing_enabled) {
+            this.changing_enabled = changing_enabled;
         }
     }
 }

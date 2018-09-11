@@ -124,6 +124,7 @@ public class OrderListFragment extends BaseFragment {
             if (null != arguments) {
                 type = arguments.getInt(OrderParams.TYPE, 0);
                 target = arguments.getInt(OrderParams.TARGET, 0);
+                orderListAdapter.setType(type);
                 loadData();
             }
         }
@@ -156,12 +157,57 @@ public class OrderListFragment extends BaseFragment {
                 break;
             case 1:
                 break;
+            case 2:
+                getAfterSaleOrderList();
+                break;
         }
 
     }
 
     private void getNormalOrderList() {
         disposable.add(ApiUtils.getInstance().getOrderLists(status, pageNo)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<OrderListBean>>() {
+                    @Override
+                    public void accept(ResultBean<OrderListBean> orderListBeanResultBean) throws Exception {
+                        rlLoading.setVisibility(View.GONE);
+                        refreshLayout.setVisibility(View.VISIBLE);
+                        if (pageNo == orderListBeanResultBean.getData().getPagers().getTotal() / 10 + 1) {
+                            refreshLayout.setEnableLoadMore(false);
+                        } else {
+                            refreshLayout.setEnableLoadMore(true);
+                        }
+                        if (0 == orderListBeanResultBean.getErrorcode()) {
+                            if (1 == pageNo) {
+                                listBeans.clear();
+                            }
+                            listBeans.addAll(orderListBeanResultBean.getData().getList());
+                            orderListAdapter.notifyDataSetChanged();
+                        } else if (0 != orderListBeanResultBean.getErrorcode()) {
+                            if (1 < pageNo) {
+                                pageNo--;
+                            }
+                        }
+                        refreshLayout.finishLoadMore();
+                        refreshLayout.finishRefresh();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        rlLoading.setVisibility(View.GONE);
+                        refreshLayout.setVisibility(View.VISIBLE);
+                        refreshLayout.finishLoadMore();
+                        refreshLayout.finishRefresh();
+                        if (1 < pageNo) {
+                            pageNo--;
+                        }
+                    }
+                }));
+    }
+
+    private void getAfterSaleOrderList() {
+        disposable.add(ApiUtils.getInstance().getAfterSaleOrderList(pageNo)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean<OrderListBean>>() {
@@ -221,10 +267,6 @@ public class OrderListFragment extends BaseFragment {
                                     tid = String.valueOf(listBeans.get(Integer.parseInt(view.getTag().toString())).getTid());
                                     getCancelReason();
                                     break;
-                                case OrderParams.WAIT_BUYER_CONFIRM_GOODS:
-                                    tid = String.valueOf(listBeans.get(Integer.parseInt(view.getTag().toString())).getTid());
-                                    confirmReceipt();
-                                    break;
                             }
                             break;
                     }
@@ -246,6 +288,9 @@ public class OrderListFragment extends BaseFragment {
                                 case OrderParams.WAIT_SELLER_SEND_GOODS:
                                     tid = String.valueOf(listBeans.get(Integer.parseInt(view.getTag().toString())).getTid());
                                     getCancelReason();
+                                    break;
+                                case OrderParams.TRADE_CLOSED_BY_SYSTEM:
+                                    //删除订单
                                     break;
                             }
                             break;
@@ -305,7 +350,12 @@ public class OrderListFragment extends BaseFragment {
 
     private void toOrderDetailActivity(View view) {
         Intent intent = new Intent(getActivity(), OrderDetailActivity.class);
-        intent.putExtra(OrderParams.ORDERID, listBeans.get(Integer.parseInt(view.getTag().toString())).getTid());
+        int position = Integer.parseInt(view.getTag().toString());
+        intent.putExtra(OrderParams.ORDERID, listBeans.get(position).getTid());
+        if (null != listBeans.get(position).getSku()) {
+            intent.putExtra(OrderParams.OID, listBeans.get(position).getSku().getOid());
+            intent.putExtra(OrderParams.AFTERSALESBN, listBeans.get(position).getAftersales_bn());
+        }
         intent.putExtra(OrderParams.TYPE, type);
         startActivity(intent);
     }

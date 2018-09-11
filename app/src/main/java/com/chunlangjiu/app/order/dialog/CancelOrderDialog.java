@@ -59,7 +59,7 @@ public class CancelOrderDialog extends Dialog {
      * ..<br/>
      */
     private void initView() {
-        setContentView(R.layout.order_dialogfragment_cancel);
+        setContentView(R.layout.order_dialog_cancel);
         rgReason = findViewById(R.id.rgReason);
 
         tvOk = findViewById(R.id.tvOk);
