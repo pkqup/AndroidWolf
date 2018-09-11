@@ -12,6 +12,15 @@ public class GoodsDetailBean implements Serializable{
     private ShareBean share;
     private ShopBean shop;
     private ItemBean item;
+    private String desc;
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
 
     public ShareBean getShare() {
         return share;

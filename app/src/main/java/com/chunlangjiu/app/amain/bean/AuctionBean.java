@@ -1,13 +1,12 @@
 package com.chunlangjiu.app.amain.bean;
 
-import java.util.List;
+import java.io.Serializable;
 
 /**
  * @CreatedbBy: liucun on 2018/9/9.
  * @Describe:
  */
-public class AuctionListBean {
-
+public class AuctionBean implements Serializable {
 
     private String item_id;
     private String starting_price;
@@ -83,7 +82,7 @@ public class AuctionListBean {
     }
 
 
-    public class ItemInfo {
+    public class ItemInfo implements Serializable{
         private String item_id;
         private String shop_id;
         private String cat_id;
@@ -97,6 +96,15 @@ public class AuctionListBean {
         private String weight;
         private String unit;
         private String image_default_id;
+        private String list_image;
+
+        public String getList_image() {
+            return list_image;
+        }
+
+        public void setList_image(String list_image) {
+            this.list_image = list_image;
+        }
 
         public String getItem_id() {
             return item_id;

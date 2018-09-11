@@ -231,7 +231,7 @@ public class GoodsDetailsActivity extends BaseActivity {
 
         mFragments = new ArrayList<>();
         mFragments.add(GoodsDetailsFragment.newInstance(goodsDetailBean));
-        mFragments.add(new GoodsWebFragment());
+        mFragments.add(GoodsWebFragment.newInstance(goodsDetailBean.getDesc()));
         mFragments.add(GoodsCommentFragment.newInstance(itemId));
         fragmentAdapter = new BaseFragmentAdapter(getSupportFragmentManager());
         fragmentAdapter.setLists(mFragments);
@@ -308,7 +308,7 @@ public class GoodsDetailsActivity extends BaseActivity {
                     public void accept(ResultBean resultBean) throws Exception {
                         hideLoadingDialog();
                         getCartNum();
-                        EventManager.getInstance().notify(null,ConstantMsg.UPDATE_CART_LIST);
+                        EventManager.getInstance().notify(null, ConstantMsg.UPDATE_CART_LIST);
                     }
                 }, new Consumer<Throwable>() {
                     @Override

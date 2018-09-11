@@ -1,6 +1,6 @@
 package com.chunlangjiu.app.net;
 
-import com.chunlangjiu.app.amain.bean.AuctionListBean;
+import com.chunlangjiu.app.amain.bean.AuctionBean;
 import com.chunlangjiu.app.amain.bean.CartCountBean;
 import com.chunlangjiu.app.amain.bean.CartListBean;
 import com.chunlangjiu.app.amain.bean.HomeListBean;
@@ -13,7 +13,6 @@ import com.chunlangjiu.app.goods.bean.EvaluateListBean;
 import com.chunlangjiu.app.goods.bean.FilterListBean;
 import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
 import com.chunlangjiu.app.goods.bean.GoodsListBean;
-import com.chunlangjiu.app.goods.bean.PayDoBean;
 import com.chunlangjiu.app.goods.bean.PaymentBean;
 import com.chunlangjiu.app.goods.bean.ShopInfoBean;
 import com.chunlangjiu.app.order.bean.CancelOrderResultBean;
@@ -60,7 +59,12 @@ public interface ApiService {
 
     @POST("index.php/topapi")
     @FormUrlEncoded
-    Flowable<ResultBean<List<AuctionListBean>>> getAuctionList(@Field("method") String method, @Field("v") String v);
+    Flowable<ResultBean<List<AuctionBean>>> getAuctionList(@Field("method") String method, @Field("v") String v);
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean> auctionGivePrice(@Field("method") String method, @Field("v") String v,
+                                          @Field("item_id") String item_id, @Field("price") String price);
 
     @POST("index.php/topapi")
     @FormUrlEncoded

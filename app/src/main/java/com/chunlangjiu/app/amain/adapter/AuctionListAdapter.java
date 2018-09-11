@@ -8,9 +8,8 @@ import android.widget.ImageView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chunlangjiu.app.R;
-import com.chunlangjiu.app.amain.bean.AuctionListBean;
+import com.chunlangjiu.app.amain.bean.AuctionBean;
 import com.pkqup.commonlibrary.glide.GlideUtils;
-import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.pkqup.commonlibrary.view.countdownview.CountdownView;
 
 import java.util.List;
@@ -19,18 +18,18 @@ import java.util.List;
  * @CreatedbBy: liucun on 2018/6/26
  * @Describe:
  */
-public class AuctionListAdapter extends BaseQuickAdapter<AuctionListBean, BaseViewHolder> {
+public class AuctionListAdapter extends BaseQuickAdapter<AuctionBean, BaseViewHolder> {
 
     private Context context;
 
 
-    public AuctionListAdapter(Context context, int layoutResId, List<AuctionListBean> data) {
+    public AuctionListAdapter(Context context, int layoutResId, List<AuctionBean> data) {
         super(layoutResId, data);
         this.context = context;
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, AuctionListBean item) {
+    protected void convert(BaseViewHolder helper, AuctionBean item) {
         ImageView imageView = helper.getView(R.id.img_pic);
         GlideUtils.loadImage(context, item.getItem_info().getImage_default_id(), imageView);
         helper.setText(R.id.tv_name, item.getItem_info().getTitle());
@@ -56,7 +55,7 @@ public class AuctionListAdapter extends BaseQuickAdapter<AuctionListBean, BaseVi
     /**
      * 以下两个接口代替 activity.onStart() 和 activity.onStop(), 控制 timer 的开关
      */
-    private void dealWithLifeCycle(final BaseViewHolder viewHolder, final int position, final AuctionListBean item) {
+    private void dealWithLifeCycle(final BaseViewHolder viewHolder, final int position, final AuctionBean item) {
         final CountdownView countdownView = viewHolder.getView(R.id.countdownView);
         countdownView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
             @Override

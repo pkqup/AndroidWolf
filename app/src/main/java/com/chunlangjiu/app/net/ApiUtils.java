@@ -1,6 +1,6 @@
 package com.chunlangjiu.app.net;
 
-import com.chunlangjiu.app.amain.bean.AuctionListBean;
+import com.chunlangjiu.app.amain.bean.AuctionBean;
 import com.chunlangjiu.app.amain.bean.CartCountBean;
 import com.chunlangjiu.app.amain.bean.CartListBean;
 import com.chunlangjiu.app.amain.bean.HomeListBean;
@@ -13,8 +13,6 @@ import com.chunlangjiu.app.goods.bean.EvaluateListBean;
 import com.chunlangjiu.app.goods.bean.FilterListBean;
 import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
 import com.chunlangjiu.app.goods.bean.GoodsListBean;
-import com.chunlangjiu.app.goods.bean.OrderGoodsBean;
-import com.chunlangjiu.app.goods.bean.PayDoBean;
 import com.chunlangjiu.app.goods.bean.PaymentBean;
 import com.chunlangjiu.app.goods.bean.ShopInfoBean;
 import com.chunlangjiu.app.order.bean.CancelOrderResultBean;
@@ -35,7 +33,6 @@ import java.util.List;
 
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
-import retrofit2.http.Field;
 
 /**
  * @CreatedbBy: liucun on 2018/7/6
@@ -80,8 +77,12 @@ public class ApiUtils {
         return apiService.shopLogin("user.login", "v1", mobile, password);
     }
 
-    public Flowable<ResultBean<List<AuctionListBean>>> getAuctionList() {
+    public Flowable<ResultBean<List<AuctionBean>>> getAuctionList() {
         return apiService.getAuctionList("item.auction.list", "v1");
+    }
+
+    public Flowable<ResultBean> auctionGivePrice(String itemId, String price) {
+        return apiService.auctionGivePrice("item.auction.userAdd", "v1", itemId, price);
     }
 
     public Flowable<ResultBean<MainClassBean>> getMainClass() {
@@ -204,7 +205,7 @@ public class ApiUtils {
     }
 
     // image_type —— complaints 用户投诉商家图片, aftersales售后图片, rate 评价图片
-    public Observable<ResultBean<UploadImageBean>> userUploadImage(String imgBase64, String imageName,String image_type) {
+    public Observable<ResultBean<UploadImageBean>> userUploadImage(String imgBase64, String imageName, String image_type) {
         return apiService.userUploadImage("image.upload", "v1", "base64", imgBase64, imageName, image_type);
     }
 

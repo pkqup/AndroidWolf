@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -16,36 +15,20 @@ import com.chunlangjiu.app.abase.BaseActivity;
 import com.chunlangjiu.app.abase.BaseApplication;
 import com.chunlangjiu.app.abase.BaseFragmentAdapter;
 import com.chunlangjiu.app.amain.activity.LoginActivity;
-import com.chunlangjiu.app.amain.bean.CartCountBean;
+import com.chunlangjiu.app.amain.bean.AuctionBean;
 import com.chunlangjiu.app.cart.CartActivity;
-import com.chunlangjiu.app.cart.ChoiceNumDialog;
-import com.chunlangjiu.app.goods.bean.ConfirmOrderBean;
-import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
+import com.chunlangjiu.app.goods.fragment.AuctionDetailFragment;
 import com.chunlangjiu.app.goods.fragment.GoodsCommentFragment;
-import com.chunlangjiu.app.goods.fragment.GoodsDetailsFragment;
 import com.chunlangjiu.app.goods.fragment.GoodsWebFragment;
-import com.chunlangjiu.app.net.ApiUtils;
 import com.chunlangjiu.app.util.ConstantMsg;
-import com.chunlangjiu.app.util.ShareUtils;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.pkqup.commonlibrary.eventmsg.EventManager;
-import com.pkqup.commonlibrary.net.bean.ResultBean;
-import com.umeng.socialize.UMShareListener;
-import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.media.UMImage;
-import com.umeng.socialize.media.UMWeb;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
 import butterknife.BindView;
-import io.reactivex.Flowable;
-import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
-import io.reactivex.schedulers.Schedulers;
 
 /**
  * @CreatedbBy: liucun on 2018/9/10
@@ -83,14 +66,8 @@ public class AuctionDetailActivity extends BaseActivity {
     private List<Fragment> mFragments;
 
     private CompositeDisposable disposable;
-    private GoodsDetailBean goodsDetailBean;
+    private AuctionBean auctionBean;
     private String itemId;
-    private String skuId;
-    private int cartCount;//购物车数量
-    private int realStock = 1;//库存
-
-    private ChoiceNumDialog buyNowDialog;
-    private ChoiceNumDialog addCartDialog;
 
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -112,18 +89,12 @@ public class AuctionDetailActivity extends BaseActivity {
         public void onClick(View view) {
             if (BaseApplication.isLogin()) {
                 switch (view.getId()) {
-                    case R.id.tvAddCart://加入购物车
-                        showAddCartDialog();
-                        break;
-                    case R.id.tvBuy://立即购买
-                        showBuyNowDialog();
-                        break;
                     case R.id.rlChat://聊天
                         break;
                     case R.id.rlCollect://收藏
                         break;
-                    case R.id.rlCart://跳转到购物车
-                        startActivity(new Intent(AuctionDetailActivity.this, CartActivity.class));
+                    case R.id.tvBuy://立即购买
+                        toConfirmOrder();
                         break;
                 }
             } else {
@@ -133,16 +104,16 @@ public class AuctionDetailActivity extends BaseActivity {
     };
 
 
-    public static void startGoodsDetailsActivity(Activity activity, String goodsId) {
-        Intent intent = new Intent(activity, GoodsDetailsActivity.class);
-        intent.putExtra("goodsId", goodsId);
+    public static void startAuctionDetailsActivity(Activity activity, AuctionBean auctionBean) {
+        Intent intent = new Intent(activity, AuctionDetailActivity.class);
+        intent.putExtra("auctionInfo", auctionBean);
         activity.startActivity(intent);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.goods_activity_details);
+        setContentView(R.layout.goods_activity_auction_detail);
         EventManager.getInstance().registerListener(onNotifyListener);
         initView();
         initData();
@@ -167,62 +138,15 @@ public class AuctionDetailActivity extends BaseActivity {
         rlCollect.setOnClickListener(onClickListenerLogin);
         rlCart.setOnClickListener(onClickListenerLogin);
 
-        itemId = getIntent().getStringExtra("goodsId");//itemId=79  测试id
         disposable = new CompositeDisposable();
     }
 
     private void initData() {
-        getCartNum();
-        getGoodsDetail();
+        auctionBean = (AuctionBean) getIntent().getSerializableExtra("auctionInfo");
+        itemId = auctionBean.getItem_id();
+        updateView();
     }
 
-    private void getCartNum() {
-        disposable.add(ApiUtils.getInstance().getCartCount()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<ResultBean<CartCountBean>>() {
-                    @Override
-                    public void accept(ResultBean<CartCountBean> cartCountBeanResultBean) throws Exception {
-                        String number = cartCountBeanResultBean.getData().getNumber();
-                        if (!TextUtils.isEmpty(number) && Integer.parseInt(number) > 0) {
-                            cartCount = Integer.parseInt(number);
-                            tvCartNum.setVisibility(View.VISIBLE);
-                            tvCartNum.setText(number);
-                        } else {
-                            tvCartNum.setVisibility(View.GONE);
-                        }
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                    }
-                }));
-    }
-
-    private void getGoodsDetail() {
-        showLoadingDialog();
-        disposable.add(ApiUtils.getInstance().getGoodsDetail(itemId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<ResultBean<GoodsDetailBean>>() {
-                    @Override
-                    public void accept(ResultBean<GoodsDetailBean> goodsDetailBeanResultBean) throws Exception {
-                        hideLoadingDialog();
-                        goodsDetailBean = goodsDetailBeanResultBean.getData();
-                        skuId = goodsDetailBean.getItem().getDefault_sku_id();
-                        String realStore = goodsDetailBean.getItem().getRealStore();
-                        if (!TextUtils.isEmpty(realStore)) {
-                            realStock = Integer.parseInt(realStore);
-                        }
-                        updateView();
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        hideLoadingDialog();
-                    }
-                }));
-    }
 
     private void updateView() {
         tab.setVisibility(View.VISIBLE);
@@ -231,8 +155,8 @@ public class AuctionDetailActivity extends BaseActivity {
         rlBottom.setVisibility(View.VISIBLE);
 
         mFragments = new ArrayList<>();
-        mFragments.add(GoodsDetailsFragment.newInstance(goodsDetailBean));
-        mFragments.add(new GoodsWebFragment());
+        mFragments.add(AuctionDetailFragment.newInstance(auctionBean));
+        mFragments.add(GoodsWebFragment.newInstance("https://www.baidu.com"));
         mFragments.add(GoodsCommentFragment.newInstance(itemId));
         fragmentAdapter = new BaseFragmentAdapter(getSupportFragmentManager());
         fragmentAdapter.setLists(mFragments);
@@ -243,7 +167,7 @@ public class AuctionDetailActivity extends BaseActivity {
 
 
     private void showShare() {
-        UMImage thumb = new UMImage(this, goodsDetailBean.getShare().getImage());
+      /*  UMImage thumb = new UMImage(this, goodsDetailBean.getShare().getImage());
         UMWeb web = new UMWeb(goodsDetailBean.getShare().getH5href());
         web.setTitle(goodsDetailBean.getItem().getTitle());//标题
         web.setThumb(thumb);  //缩略图
@@ -265,7 +189,12 @@ public class AuctionDetailActivity extends BaseActivity {
             @Override
             public void onCancel(SHARE_MEDIA share_media) {
             }
-        });
+        });*/
+    }
+
+
+    private void toConfirmOrder() {
+        AuctionConfirmOrderActivity.startConfirmOrderActivity(this, auctionBean);
     }
 
     private EventManager.OnNotifyListener onNotifyListener = new EventManager.OnNotifyListener() {
@@ -286,77 +215,6 @@ public class AuctionDetailActivity extends BaseActivity {
         }
     }
 
-    private void showAddCartDialog() {
-        if (addCartDialog == null) {
-            addCartDialog = new ChoiceNumDialog(this, realStock);
-            addCartDialog.setCallBackListener(new ChoiceNumDialog.OnCallBackListener() {
-                @Override
-                public void choiceNum(int num) {
-                    addGoodsToCart(num);
-                }
-            });
-        }
-        addCartDialog.show();
-    }
-
-    private void addGoodsToCart(int num) {
-        showLoadingDialog();
-        disposable.add(ApiUtils.getInstance().addGoodsToCart(num, skuId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<ResultBean>() {
-                    @Override
-                    public void accept(ResultBean resultBean) throws Exception {
-                        hideLoadingDialog();
-                        getCartNum();
-                        EventManager.getInstance().notify(null, ConstantMsg.UPDATE_CART_LIST);
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        hideLoadingDialog();
-                    }
-                }));
-    }
-
-    private void showBuyNowDialog() {
-        if (buyNowDialog == null) {
-            buyNowDialog = new ChoiceNumDialog(this, realStock);
-            buyNowDialog.setCallBackListener(new ChoiceNumDialog.OnCallBackListener() {
-                @Override
-                public void choiceNum(int num) {
-                    buyNow(num);
-                }
-            });
-        }
-        buyNowDialog.show();
-    }
-
-    private void buyNow(int num) {
-        showLoadingDialog();
-        //立即购买流程为先调用添加到购物车接口（模式为fastbuy），然后调用结算接口（模式为fastbuy）
-        disposable.add(ApiUtils.getInstance().addGoodsToCartBuyNow(num, skuId)
-                .concatMap(new Function<ResultBean, Flowable<ResultBean<ConfirmOrderBean>>>() {
-                    @Override
-                    public Flowable<ResultBean<ConfirmOrderBean>> apply(ResultBean resultBean) throws Exception {
-                        return ApiUtils.getInstance().buyNowConfirmOrder();
-                    }
-                })
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<ResultBean<ConfirmOrderBean>>() {
-                    @Override
-                    public void accept(ResultBean<ConfirmOrderBean> resultBean) throws Exception {
-                        hideLoadingDialog();
-                        ConfirmOrderActivity.startConfirmOrderActivity(AuctionDetailActivity.this, resultBean.getData(), "fastbuy");
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        hideLoadingDialog();
-                    }
-                }));
-    }
 
     @Override
     public void onDestroy() {

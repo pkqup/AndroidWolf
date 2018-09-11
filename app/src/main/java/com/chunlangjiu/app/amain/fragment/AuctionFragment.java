@@ -15,8 +15,8 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseFragment;
 import com.chunlangjiu.app.amain.adapter.AuctionListAdapter;
-import com.chunlangjiu.app.amain.bean.AuctionListBean;
-import com.chunlangjiu.app.amain.bean.CartListBean;
+import com.chunlangjiu.app.amain.bean.AuctionBean;
+import com.chunlangjiu.app.goods.activity.AuctionDetailActivity;
 import com.chunlangjiu.app.net.ApiUtils;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.pkqup.commonlibrary.util.SizeUtils;
@@ -49,7 +49,7 @@ public class AuctionFragment extends BaseFragment {
 
     private SmartRefreshLayout refreshLayout;
     private RecyclerView recyclerView;
-    private List<AuctionListBean> lists;
+    private List<AuctionBean> lists;
     private AuctionListAdapter linearAdapter;
 
     private CompositeDisposable disposable;
@@ -133,11 +133,11 @@ public class AuctionFragment extends BaseFragment {
         refreshLayout.setEnableLoadMore(false);//设置不能加载更多
         recyclerView = rootView.findViewById(R.id.recycle_view);
         lists = new ArrayList<>();
-        linearAdapter = new AuctionListAdapter(getActivity(),R.layout.amain_item_goods_list_linear, lists);
+        linearAdapter = new AuctionListAdapter(getActivity(), R.layout.amain_item_goods_list_linear, lists);
         linearAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-
+                AuctionDetailActivity.startAuctionDetailsActivity(getActivity(), lists.get(position));
             }
         });
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -159,11 +159,11 @@ public class AuctionFragment extends BaseFragment {
         disposable.add(ApiUtils.getInstance().getAuctionList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<ResultBean<List<AuctionListBean>>>() {
+                .subscribe(new Consumer<ResultBean<List<AuctionBean>>>() {
                     @Override
-                    public void accept(ResultBean<List<AuctionListBean>> listResultBean) throws Exception {
+                    public void accept(ResultBean<List<AuctionBean>> listResultBean) throws Exception {
                         refreshLayout.finishRefresh();
-                        List<AuctionListBean> data = listResultBean.getData();
+                        List<AuctionBean> data = listResultBean.getData();
                         getListSuccess(data);
                     }
                 }, new Consumer<Throwable>() {
@@ -174,7 +174,7 @@ public class AuctionFragment extends BaseFragment {
                 }));
     }
 
-    private void getListSuccess(List<AuctionListBean> list) {
+    private void getListSuccess(List<AuctionBean> list) {
         if (list != null) {
             this.lists = list;
             linearAdapter.setNewData(lists);
