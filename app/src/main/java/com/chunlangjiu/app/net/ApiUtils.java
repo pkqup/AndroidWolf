@@ -1,5 +1,6 @@
 package com.chunlangjiu.app.net;
 
+import com.chunlangjiu.app.amain.bean.AuctionBean;
 import com.chunlangjiu.app.amain.bean.CartCountBean;
 import com.chunlangjiu.app.amain.bean.CartListBean;
 import com.chunlangjiu.app.amain.bean.HomeListBean;
@@ -30,6 +31,8 @@ import com.pkqup.commonlibrary.net.HttpUtils;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 
 import org.json.JSONArray;
+
+import java.util.List;
 
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
@@ -75,6 +78,14 @@ public class ApiUtils {
 
     public Flowable<ResultBean<LoginBean>> shopLogin(String mobile, String password) {
         return apiService.shopLogin("user.login", "v1", mobile, password);
+    }
+
+    public Flowable<ResultBean<List<AuctionBean>>> getAuctionList() {
+        return apiService.getAuctionList("item.auction.list", "v1");
+    }
+
+    public Flowable<ResultBean> auctionGivePrice(String itemId, String price) {
+        return apiService.auctionGivePrice("item.auction.userAdd", "v1", itemId, price);
     }
 
     public Flowable<ResultBean<MainClassBean>> getMainClass() {

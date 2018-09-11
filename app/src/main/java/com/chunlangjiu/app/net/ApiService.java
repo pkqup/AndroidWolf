@@ -1,5 +1,6 @@
 package com.chunlangjiu.app.net;
 
+import com.chunlangjiu.app.amain.bean.AuctionBean;
 import com.chunlangjiu.app.amain.bean.CartCountBean;
 import com.chunlangjiu.app.amain.bean.CartListBean;
 import com.chunlangjiu.app.amain.bean.HomeListBean;
@@ -30,6 +31,8 @@ import com.pkqup.commonlibrary.net.bean.ResultBean;
 
 import org.json.JSONArray;
 
+import java.util.List;
+
 import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import retrofit2.http.Field;
@@ -56,6 +59,15 @@ public interface ApiService {
     Flowable<ResultBean<LoginBean>> shopLogin(@Field("method") String method, @Field("v") String v,
                                               @Field("account") String account, @Field("password") String password);
 
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<List<AuctionBean>>> getAuctionList(@Field("method") String method, @Field("v") String v);
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean> auctionGivePrice(@Field("method") String method, @Field("v") String v,
+                                          @Field("item_id") String item_id, @Field("price") String price);
 
     @POST("index.php/topapi")
     @FormUrlEncoded

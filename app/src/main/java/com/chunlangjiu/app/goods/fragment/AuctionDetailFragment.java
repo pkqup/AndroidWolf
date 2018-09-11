@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,18 +19,17 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseFragment;
-import com.chunlangjiu.app.goods.activity.ShopMainActivity;
+import com.chunlangjiu.app.amain.bean.AuctionBean;
 import com.chunlangjiu.app.goods.bean.EvaluateListBean;
-import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
 import com.chunlangjiu.app.net.ApiUtils;
 import com.chunlangjiu.app.util.ConstantMsg;
-import com.chunlangjiu.app.web.WebSettingUtil;
 import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.glide.BannerGlideLoader;
 import com.pkqup.commonlibrary.glide.GlideUtils;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.pkqup.commonlibrary.util.SizeUtils;
 import com.pkqup.commonlibrary.util.TimeUtils;
+import com.pkqup.commonlibrary.view.countdownview.CountdownView;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.listener.OnBannerListener;
@@ -44,13 +44,17 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
-
-public class GoodsDetailsFragment extends BaseFragment {
+/**
+ * @CreatedbBy: liucun on 2018/9/11
+ * @Describe:
+ */
+public class AuctionDetailFragment extends BaseFragment {
 
     private Banner banner;
     private LinearLayout indicator;
     private TextView tvPrice;
     private TextView tvGoodsName;
+    private CountdownView countdownView;
     private TextView tvCountry;
     private TextView tvYear;
     private TextView tvDesc;
@@ -76,14 +80,14 @@ public class GoodsDetailsFragment extends BaseFragment {
     private RecommendAdapter recommendAdapter;
 
     private CompositeDisposable disposable;
-    private GoodsDetailBean goodsDetailBean;
+    private AuctionBean auctionBean;
 
-    public static GoodsDetailsFragment newInstance(GoodsDetailBean goodsDetailBean) {
-        GoodsDetailsFragment goodsDetailsFragment = new GoodsDetailsFragment();
+    public static AuctionDetailFragment newInstance(AuctionBean auctionBean) {
+        AuctionDetailFragment auctionDetailFragment = new AuctionDetailFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("goodsDetailBean", goodsDetailBean);
-        goodsDetailsFragment.setArguments(bundle);
-        return goodsDetailsFragment;
+        bundle.putSerializable("auctionBean", auctionBean);
+        auctionDetailFragment.setArguments(bundle);
+        return auctionDetailFragment;
     }
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -91,7 +95,6 @@ public class GoodsDetailsFragment extends BaseFragment {
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.tvLookAll://查看店铺
-                    ShopMainActivity.startShopMainActivity(getActivity(), goodsDetailBean.getShop().getShop_id());
                     break;
                 case R.id.rlEvaluate://查看店铺
                     EventManager.getInstance().notify(null, ConstantMsg.CHANGE_TO_EVALUATE);
@@ -102,7 +105,7 @@ public class GoodsDetailsFragment extends BaseFragment {
 
     @Override
     public void getContentView(LayoutInflater inflater, ViewGroup container) {
-        inflater.inflate(R.layout.goods_fragment_details, container, true);
+        inflater.inflate(R.layout.goods_fragment_auction_detail, container, true);
     }
 
     @Override
@@ -112,6 +115,7 @@ public class GoodsDetailsFragment extends BaseFragment {
 
         tvPrice = rootView.findViewById(R.id.tvPrice);
         tvGoodsName = rootView.findViewById(R.id.tvGoodsName);
+        countdownView = rootView.findViewById(R.id.countdownView);
         tvCountry = rootView.findViewById(R.id.tvCountry);
         tvYear = rootView.findViewById(R.id.tvYear);
         tvDesc = rootView.findViewById(R.id.tvDesc);
@@ -130,10 +134,9 @@ public class GoodsDetailsFragment extends BaseFragment {
 
         drag_text = rootView.findViewById(R.id.drag_text);
         webView = rootView.findViewById(R.id.webView);
-        new WebSettingUtil().initWebView(webView, getContext());
 
         disposable = new CompositeDisposable();
-        goodsDetailBean = (GoodsDetailBean) getArguments().getSerializable("goodsDetailBean");
+        auctionBean = (AuctionBean) getArguments().getSerializable("auctionBean");
     }
 
     @Override
@@ -148,8 +151,16 @@ public class GoodsDetailsFragment extends BaseFragment {
 
     private void initBannerData() {
         imageViews = new ArrayList<>();
-        bannerUrls = goodsDetailBean.getItem().getImages();
-
+        bannerUrls = new ArrayList<>();
+        String list_image = auctionBean.getItem_info().getList_image();
+        if (!TextUtils.isEmpty(list_image)) {
+            String[] split = list_image.split(",");
+            if (split.length > 0) {
+                for (String s : split) {
+                    bannerUrls.add(s);
+                }
+            }
+        }
         banner.setImages(bannerUrls)
                 .setImageLoader(new BannerGlideLoader())
                 .setBannerStyle(BannerConfig.NOT_INDICATOR)//去掉自带的indicator
@@ -205,16 +216,30 @@ public class GoodsDetailsFragment extends BaseFragment {
     }
 
     private void initCommonView() {
-        tvPrice.setText("¥" + goodsDetailBean.getItem().getPrice());
-        tvGoodsName.setText(goodsDetailBean.getItem().getTitle());
-        GlideUtils.loadImage(getActivity(), goodsDetailBean.getShop().getShop_logo(), imgStore);
-        tvStoreName.setText(goodsDetailBean.getShop().getShop_name());
-        tvStoreDesc.setText(goodsDetailBean.getShop().getShop_descript());
+        tvPrice.setText("¥" + auctionBean.getItem_info().getPrice());
+        tvGoodsName.setText(auctionBean.getItem_info().getTitle());
+        String end_time = auctionBean.getEnd_time();
+        try {
+            long endTime = 0;
+            if (!TextUtils.isEmpty(end_time)) {
+                endTime = Long.parseLong(end_time);
+            }
+            if ((endTime * 1000 - System.currentTimeMillis()) > 0) {
+                countdownView.start(endTime * 1000 - System.currentTimeMillis());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        // TODO: 2018/9/11 店铺信息
+//        GlideUtils.loadImage(getActivity(), auctionBean.getShop().getShop_logo(), imgStore);
+//        tvStoreName.setText(auctionBean.getShop().getShop_name());
+//        tvStoreDesc.setText(auctionBean.getShop().getShop_descript());
     }
 
 
     private void getEvaluateData() {
-        disposable.add(ApiUtils.getInstance().getEvaluateList(goodsDetailBean.getItem().getItem_id(), 1)
+        disposable.add(ApiUtils.getInstance().getEvaluateList(auctionBean.getItem_info().getItem_id(), 1)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean<EvaluateListBean>>() {
@@ -261,7 +286,7 @@ public class GoodsDetailsFragment extends BaseFragment {
     }
 
     private void initWebViewData() {
-        webView.loadUrl(goodsDetailBean.getDesc());
+        webView.loadUrl("https://github.com/ysnows");
     }
 
 
@@ -292,4 +317,3 @@ public class GoodsDetailsFragment extends BaseFragment {
 
 
 }
-
