@@ -193,6 +193,11 @@ public class ApiUtils {
         return apiService.getHomeLists("theme.pull.goods", "v1", "index", pageNo, 10);
     }
 
+    // image_type —— complaints 用户投诉商家图片, aftersales售后图片, rate 评价图片
+    public Observable<ResultBean<UploadImageBean>> userUploadImage(String imgBase64, String imageName,String image_type) {
+        return apiService.userUploadImage("image.upload", "v1", "base64", imgBase64, imageName, image_type);
+    }
+
     public Observable<ResultBean<UploadImageBean>> shopUploadImage(String imgBase64, String imageName) {
         return apiService.shopUploadImage("image.upload", "v1", "base64", imgBase64, imageName, "item", "0");
     }
@@ -205,9 +210,9 @@ public class ApiUtils {
         return apiService.getShopBrandList("category.platform.brand.get", "v1", class_id);
     }
 
-    public Observable<ResultBean> addGoods(String cat_id, String brand_id, String shop_cat_id, String title, String sub_title, String weight,
-                                           String price, String dlytmpl_id, String sku) {
-        return apiService.addGoods("item.create", "v1", cat_id, brand_id, shop_cat_id, title, sub_title, weight, price, dlytmpl_id, sku);
+    public Observable<ResultBean> addGoods(String cat_id, String brand_id, String shop_cat_id, String title, String sub_title, String weight, String list_image,
+                                           String price, String dlytmpl_id, String sku, String wap_desc) {
+        return apiService.addGoods("item.create", "v1", cat_id, brand_id, shop_cat_id, title, sub_title, weight, list_image, price, dlytmpl_id, sku, wap_desc, "1");
     }
 
     public Flowable<ResultBean<OrderListBean>> getOrderLists(String status, int pageNo) {

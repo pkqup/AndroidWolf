@@ -201,6 +201,13 @@ public interface ApiService {
                                                     @Field("tmpl") String payment_id, @Field("page_no") int page_no,
                                                     @Field("pagesize") int pagesize);
 
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Observable<ResultBean<UploadImageBean>> userUploadImage(@Field("method") String method, @Field("v") String v,
+                                                            @Field("upload_type") String upload_type, @Field("image") String image,
+                                                            @Field("image_input_title") String image_input_title,
+                                                            @Field("image_type") String image_type);
+
     @POST("index.php/shop/topapi")
     @FormUrlEncoded
     Observable<ResultBean<UploadImageBean>> shopUploadImage(@Field("method") String method, @Field("v") String v,
@@ -223,8 +230,9 @@ public interface ApiService {
                                     @Field("cat_id") String cat_id, @Field("brand_id") String brand_id,
                                     @Field("shop_cat_id") String shop_cat_id,
                                     @Field("title") String title, @Field("sub_title") String sub_title,
-                                    @Field("weight") String weight, @Field("price") String price,
-                                    @Field("dlytmpl_id") String dlytmpl_id, @Field("sku") String sku);
+                                    @Field("weight") String weight, @Field("list_image") String list_image, @Field("price") String price,
+                                    @Field("dlytmpl_id") String dlytmpl_id, @Field("sku") String sku,
+                                    @Field("wap_desc") String wap_desc, @Field("nospec") String nospec);
 
     @POST("index.php/topapi")
     @FormUrlEncoded

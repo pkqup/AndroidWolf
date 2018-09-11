@@ -153,6 +153,7 @@ public class HomeFragment extends BaseFragment {
             }
         }
     };
+    private CityPicker cityPicker;
 
 
     @Override
@@ -386,24 +387,26 @@ public class HomeFragment extends BaseFragment {
     }
 
     private void choiceCity() {
-        CityPicker.getInstance()
-                .setFragmentManager(getActivity().getSupportFragmentManager())
-                .setLocatedCity(locatedCity)
-                .setHotCities(hotCities)
-                .setCityLists(cityList)
-                .setOnPickListener(new OnPickListener() {
-                    @Override
-                    public void onPick(int position, City data) {
-                        if (data != null) {
-
+        if (cityPicker == null) {
+            cityPicker = CityPicker.getInstance()
+                    .setFragmentManager(getActivity().getSupportFragmentManager())
+                    .setLocatedCity(locatedCity)
+                    .setHotCities(hotCities)
+                    .setCityLists(cityList)
+                    .setOnPickListener(new OnPickListener() {
+                        @Override
+                        public void onPick(int position, City data) {
+                            if (data != null) {
+                                tvCity.setText(data.getName());
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onLocate() {
-                    }
-                })
-                .show();
+                        @Override
+                        public void onLocate() {
+                        }
+                    });
+        }
+        cityPicker.show();
     }
 
     /**

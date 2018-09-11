@@ -16,11 +16,14 @@ import com.chunlangjiu.app.abase.BaseActivity;
 import com.chunlangjiu.app.amain.bean.FirstClassBean;
 import com.chunlangjiu.app.goods.dialog.ClassPopWindow;
 import com.chunlangjiu.app.net.ApiUtils;
+import com.chunlangjiu.app.user.bean.AddressListBean;
 import com.chunlangjiu.app.user.bean.BrandListBean;
 import com.chunlangjiu.app.user.bean.ShopClassList;
+import com.chunlangjiu.app.user.bean.SkuBean;
 import com.chunlangjiu.app.user.bean.UploadImageBean;
 import com.chunlangjiu.app.user.dialog.BrandPopWindow;
 import com.chunlangjiu.app.util.GlideImageLoader;
+import com.google.gson.Gson;
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.lzy.imagepicker.ui.ImageGridActivity;
@@ -314,36 +317,46 @@ public class AddGoodsActivity extends BaseActivity {
     }
 
     private void openCamera(int requestCode) {
-        ImagePicker.getInstance().setSelectLimit(1);
         Intent intent = new Intent(this, ImageGridActivity.class);
         intent.putExtra(ImageGridActivity.EXTRAS_TAKE_PICKERS, true); // 是否是直接打开相机
         startActivityForResult(intent, requestCode);
     }
 
     private void openAlbum(int requestCode) {
-        ImagePicker.getInstance().setSelectLimit(1);
-        Intent intent1 = new Intent(this, ImageGridActivity.class);
-        startActivityForResult(intent1, requestCode);
+        Intent intent = new Intent(this, ImageGridActivity.class);
+        startActivityForResult(intent, requestCode);
     }
 
 
     private void checkData() {
-        if (mainPicLists == null || mainPicLists.size() == 0) {
+        if (TextUtils.isEmpty(classId)) {
+            ToastUtils.showShort("请选择分类");
+        } else if (TextUtils.isEmpty(brandId)) {
+            ToastUtils.showShort("请选择品牌");
+        } else if (TextUtils.isEmpty(etTitle.getText().toString().trim())) {
+            ToastUtils.showShort("请填写标题");
+        } else if (TextUtils.isEmpty(etPrice.getText().toString().trim())) {
+            ToastUtils.showShort("请填写价格");
+        } else if (TextUtils.isEmpty(etCount.getText().toString().trim())) {
+            ToastUtils.showShort("请填写库存");
+        } else if (TextUtils.isEmpty(etSize.getText().toString().trim())) {
+            ToastUtils.showShort("请填写容量");
+        } else if (mainPicLists == null || mainPicLists.size() == 0) {
             ToastUtils.showShort("请添加商品主图");
         } else if (detailPicLists == null || detailPicLists.size() == 0) {
             ToastUtils.showShort("请添加商品细节图");
         } else if (goodsPicLists == null || goodsPicLists.size() == 0) {
             ToastUtils.showShort("请添加商品图片");
         } else {
-            commit();
+            uploadImage();
         }
     }
 
-
-    private void commit() {
+    private void uploadImage() {
         if (base64Main == null || base64Detail == null || base64Goods == null) {
             ToastUtils.showShort("图片压缩失败，请重新选择图片");
         } else {
+            showLoadingDialog();
             Observable<ResultBean<UploadImageBean>> main = ApiUtils.getInstance().shopUploadImage(base64Main, mainPicLists.get(0).name);
             Observable<ResultBean<UploadImageBean>> detail = ApiUtils.getInstance().shopUploadImage(base64Detail, detailPicLists.get(0).name);
             Observable<ResultBean<UploadImageBean>> goods = ApiUtils.getInstance().shopUploadImage(base64Goods, goodsPicLists.get(0).name);
@@ -363,15 +376,53 @@ public class AddGoodsActivity extends BaseActivity {
                     .subscribe(new Consumer<List<String>>() {
                         @Override
                         public void accept(List<String> strings) throws Exception {
-                            KLog.e("----uploadImage success------");
+                            StringBuffer stringBuffer = new StringBuffer();
+                            for (int i = 0; i < strings.size(); i++) {
+                                if (i == strings.size() - 1) {
+                                    stringBuffer.append(strings.get(i));
+                                } else {
+                                    stringBuffer.append(strings.get(i)).append(",");
+                                }
+                            }
+                            commitGoods(stringBuffer.toString());
                         }
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
-                            KLog.e("----uploadImage fail------");
+                            hideLoadingDialog();
+                            ToastUtils.showShort("上传图片失败");
                         }
                     }));
         }
+    }
+
+    private void commitGoods(String images) {
+        SkuBean skuBean = new SkuBean();
+        skuBean.setPrice(etPrice.getText().toString().trim());
+        skuBean.setStore(etCount.getText().toString().trim());
+        List<SkuBean> list = new ArrayList<>();
+        list.add(skuBean);
+        String skuArray = new Gson().toJson(list);
+        disposable.add(ApiUtils.getInstance().addGoods(classId, brandId, classId, etTitle.getText().toString().trim(),
+                etSecondName.getText().toString().trim(), etSize.getText().toString().trim(), images,
+                etPrice.getText().toString().trim(), "15", skuArray, etGoodsDesc.getText().toString().trim())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean>() {
+                    @Override
+                    public void accept(ResultBean resultBean) throws Exception {
+                        hideLoadingDialog();
+                        ToastUtils.showShort("添加商品成功");
+                        KLog.e("add goods success");
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        ToastUtils.showShort("添加商品失败");
+                        hideLoadingDialog();
+                        KLog.e("add goods fail");
+                    }
+                }));
     }
 
 
