@@ -57,10 +57,10 @@ public class HomeAdapter extends BaseQuickAdapter<HomeBean, BaseViewHolder> {
                 GlideUtils.loadImage(context, item.getImgsrc(), imgPic);
                 viewHolder.setText(R.id.tv_name, item.getTitle());
                 viewHolder.setText(R.id.tvStartPriceStr, "原价：");
-                tvStartPrice.setText(item.getPrice());
+                tvStartPrice.setText("¥" + item.getPrice());
                 tvStartPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);  // 设置中划线并加清晰
                 viewHolder.setText(R.id.tvSellPriceStr, "");
-                viewHolder.setText(R.id.tvSellPrice, item.getPrice());
+                viewHolder.setText(R.id.tvSellPrice, "¥" + item.getPrice());
                 break;
             case HomeBean.ITEM_PIC:
 

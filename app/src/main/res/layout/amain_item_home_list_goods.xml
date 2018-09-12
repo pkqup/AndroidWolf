@@ -125,13 +125,13 @@
                 android:layout_height="wrap_content"
                 android:text="最高出价："
                 android:textColor="@color/t_gray"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/tvSellPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
                 android:text="¥5000.00"
                 android:textColor="@color/t_red"
                 android:textSize="@dimen/sp_mid" />

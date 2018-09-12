@@ -24,6 +24,7 @@ import com.chunlangjiu.app.amain.bean.HomeBean;
 import com.chunlangjiu.app.amain.bean.HomeListBean;
 import com.chunlangjiu.app.amain.bean.HomeModulesBean;
 import com.chunlangjiu.app.goods.activity.GoodsDetailsActivity;
+import com.chunlangjiu.app.goods.activity.GoodsListActivity;
 import com.chunlangjiu.app.goods.activity.SearchActivity;
 import com.chunlangjiu.app.goods.activity.ValuationActivity;
 import com.chunlangjiu.app.net.ApiUtils;
@@ -32,6 +33,7 @@ import com.chunlangjiu.app.user.activity.AddGoodsActivity;
 import com.chunlangjiu.app.util.AreaUtils;
 import com.chunlangjiu.app.util.ConstantMsg;
 import com.chunlangjiu.app.util.LocationUtils;
+import com.chunlangjiu.app.web.WebViewActivity;
 import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.glide.BannerGlideLoader;
 import com.pkqup.commonlibrary.glide.GlideUtils;
@@ -323,8 +325,7 @@ public class HomeFragment extends BaseFragment {
         banner.setOnBannerListener(new OnBannerListener() {
             @Override
             public void OnBannerClick(int position) {
-                // TODO: 2018/8/27 跳转广告
-                ToastUtils.showShort("点击了item" + position);
+                WebViewActivity.startWebViewActivity(getActivity(),bannerPicLists.get(position).getWebview());
             }
         });
     }
@@ -342,7 +343,7 @@ public class HomeFragment extends BaseFragment {
         brandAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                // TODO: 2018/8/27 跳转品牌
+                GoodsListActivity.startGoodsListActivity(getActivity(),brandLists.get(position).getCat_id(),brandLists.get(position).getCategoryname(),"");
             }
         });
     }
@@ -448,9 +449,9 @@ public class HomeFragment extends BaseFragment {
                 if (MODULE_SLIDER.equals(modules.get(i).getWidget())) {
                     updateBannerData(modules.get(i).getParams());
                 }
-                if (MODULE_ICONS_NAV.equals(modules.get(i).getWidget())) {
-                    updateIconData(modules.get(i).getParams());
-                }
+//                if (MODULE_ICONS_NAV.equals(modules.get(i).getWidget())) {
+//                    updateIconData(modules.get(i).getParams());
+//                }
                 if (MODULE_CATEGORY_NAV.equals(modules.get(i).getWidget())) {
                     updateBrandData(modules.get(i).getParams());
                 }
