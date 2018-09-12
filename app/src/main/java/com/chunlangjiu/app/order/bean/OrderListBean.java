@@ -1,5 +1,6 @@
 package com.chunlangjiu.app.order.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class OrderListBean {
@@ -111,6 +112,9 @@ public class OrderListBean {
         private String status_desc;
         private String shopname;
         private List<OrderBean> order;
+        private OrderBean sku;
+        private int num;
+        private long aftersales_bn;
 
         public long getTid() {
             return tid;
@@ -224,7 +228,31 @@ public class OrderListBean {
             this.order = order;
         }
 
-        public static class OrderBean {
+        public OrderBean getSku() {
+            return sku;
+        }
+
+        public void setSku(OrderBean sku) {
+            this.sku = sku;
+        }
+
+        public int getNum() {
+            return num;
+        }
+
+        public void setNum(int num) {
+            this.num = num;
+        }
+
+        public long getAftersales_bn() {
+            return aftersales_bn;
+        }
+
+        public void setAftersales_bn(long aftersales_bn) {
+            this.aftersales_bn = aftersales_bn;
+        }
+
+        public static class OrderBean implements Serializable {
             /**
              * title : ONex-OMS订单管理系统
              * num : 1
@@ -250,6 +278,8 @@ public class OrderListBean {
             private Object gift_data;
             private long tid;
             private int gift_count;
+            private String spec_nature_info;
+            private String price;
 
             public String getTitle() {
                 return title;
@@ -337,6 +367,22 @@ public class OrderListBean {
 
             public void setGift_count(int gift_count) {
                 this.gift_count = gift_count;
+            }
+
+            public String getSpec_nature_info() {
+                return spec_nature_info;
+            }
+
+            public void setSpec_nature_info(String spec_nature_info) {
+                this.spec_nature_info = spec_nature_info;
+            }
+
+            public String getPrice() {
+                return price;
+            }
+
+            public void setPrice(String price) {
+                this.price = price;
             }
         }
     }

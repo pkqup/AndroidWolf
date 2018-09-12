@@ -17,6 +17,7 @@ import com.chunlangjiu.app.goods.bean.PaymentBean;
 import com.chunlangjiu.app.goods.bean.ShopInfoBean;
 import com.chunlangjiu.app.order.bean.CancelOrderResultBean;
 import com.chunlangjiu.app.order.bean.CancelReasonBean;
+import com.chunlangjiu.app.order.bean.OrderAfterSaleReasonBean;
 import com.chunlangjiu.app.order.bean.OrderDetailBean;
 import com.chunlangjiu.app.store.bean.StoreClassListBean;
 import com.chunlangjiu.app.store.bean.StoreDetailBean;
@@ -27,6 +28,8 @@ import com.chunlangjiu.app.user.bean.MyNumBean;
 import com.chunlangjiu.app.user.bean.ShopClassList;
 import com.chunlangjiu.app.user.bean.UploadImageBean;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
+
+import org.json.JSONArray;
 
 import java.util.List;
 
@@ -254,14 +257,23 @@ public interface ApiService {
 
     @POST("index.php/topapi")
     @FormUrlEncoded
-    Flowable<ResultBean<OrderListBean>> getCancelOrderLists(@Field("method") String method, @Field("v") String v,
-                                                            @Field("status") String status, @Field("page_no") int page_no,
-                                                            @Field("pagesize") int pagesize);
+    Flowable<ResultBean<OrderListBean>> getAfterSaleOrderList(@Field("method") String method, @Field("v") String v,
+                                                              @Field("page_no") int page_no, @Field("pagesize") int pagesize);
 
     @POST("index.php/topapi")
     @FormUrlEncoded
     Flowable<ResultBean<OrderDetailBean>> getOrderDetail(@Field("method") String method, @Field("v") String v,
                                                          @Field("tid") String tid);
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<OrderDetailBean>> getAfterSaleOrderDetail(@Field("method") String method, @Field("v") String v,
+                                                                  @Field("aftersales_bn") String aftersales_bn, @Field("oid") String oid);
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean> confirmReceipt(@Field("method") String method, @Field("v") String v,
+                                        @Field("tid") String tid);
 
     @POST("index.php/topapi")
     @FormUrlEncoded
@@ -272,4 +284,21 @@ public interface ApiService {
     Flowable<ResultBean<CancelOrderResultBean>> cancelOrder(@Field("method") String method, @Field("v") String v,
                                                             @Field("tid") String tid, @Field("cancel_reason") String reason);
 
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean> addRate(@Field("method") String method, @Field("v") String v,
+                                 @Field("tid") String tid, @Field("rate_data") JSONArray rateData,
+                                 @Field("anony") boolean anony, @Field("tally_score") int tallyScore,
+                                 @Field("attitude_score") int attitudeScore, @Field("delivery_speed_score") int deliverySpeedScore);
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<OrderAfterSaleReasonBean>> getAfterSaleReason(@Field("method") String method, @Field("v") String v, @Field("oid") String oid);
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean> applyAfterSaleReason(@Field("method") String method, @Field("v") String v,
+                                              @Field("tid") String tid, @Field("oid") String oid,
+                                              @Field("reason") String reason, @Field("description") String description,
+                                              @Field("aftersales_type") String aftersales_type, @Field("evidence_pic") String evidence_pic);
 }

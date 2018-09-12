@@ -12,30 +12,20 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.chunlangjiu.app.R;
-import com.chunlangjiu.app.net.ApiUtils;
-import com.chunlangjiu.app.order.bean.CancelOrderResultBean;
-import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.pkqup.commonlibrary.util.SystemUtils;
-import com.pkqup.commonlibrary.util.ToastUtils;
 
 import java.util.List;
 
-import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.schedulers.Schedulers;
-
-public class CancelOrderDialog extends Dialog {
+public class OrderAfterSaleSendDialog extends Dialog {
     private Window window;
     private Context context;// 上下文
     private List<String> data;
     private RadioGroup rgReason;
     private LayoutInflater inflater;
 
+    private TextView tvTitle;
     private TextView tvOk;
     private TextView tvCancel;
-    private CompositeDisposable disposable;
-    private String tid;
 
     private CancelCallBack cancelCallBack;
 
@@ -44,11 +34,10 @@ public class CancelOrderDialog extends Dialog {
      *
      * @param context 上下文
      */
-    public CancelOrderDialog(Context context, List<String> data, String tid) {
+    public OrderAfterSaleSendDialog(Context context, List<String> data) {
         super(context, R.style.dialog_transparent);
         this.context = context;
         this.data = data;
-        this.tid = tid;
         inflater = LayoutInflater.from(context);
         initView();
         initData();
@@ -59,15 +48,15 @@ public class CancelOrderDialog extends Dialog {
      * ..<br/>
      */
     private void initView() {
-        setContentView(R.layout.order_dialog_cancel);
+        setContentView(R.layout.order_dialog_aftersale_send);
+        tvTitle = findViewById(R.id.tvTitle);
+        tvTitle.setText("请选择售后的理由");
         rgReason = findViewById(R.id.rgReason);
 
         tvOk = findViewById(R.id.tvOk);
         tvCancel = findViewById(R.id.tvCancel);
         tvOk.setOnClickListener(onClickListener);
         tvCancel.setOnClickListener(onClickListener);
-
-        disposable = new CompositeDisposable();
     }
 
     /**
@@ -106,9 +95,8 @@ public class CancelOrderDialog extends Dialog {
         }
     }
 
-    public void setData(List<String> data, String tid) {
+    public void setData(List<String> data) {
         this.data = data;
-        this.tid = tid;
         initData();
     }
 
@@ -117,7 +105,8 @@ public class CancelOrderDialog extends Dialog {
         public void onClick(View view) {
             switch (view.getId()) {
                 case R.id.tvOk:
-                    cancelOrder();
+                    cancelCallBack.confirmReason(data.get(rgReason.getCheckedRadioButtonId()));
+                    dismiss();
                     break;
                 case R.id.tvCancel:
                     dismiss();
@@ -126,33 +115,12 @@ public class CancelOrderDialog extends Dialog {
         }
     };
 
-    private void cancelOrder() {
-        disposable.add(ApiUtils.getInstance().cancelOrder(tid, data.get(rgReason.getCheckedRadioButtonId()))
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<ResultBean<CancelOrderResultBean>>() {
-                    @Override
-                    public void accept(ResultBean<CancelOrderResultBean> orderListBeanResultBean) throws Exception {
-                        if (0 == orderListBeanResultBean.getErrorcode()) {
-                            ToastUtils.showShort("取消订单成功");
-                            if (null != cancelCallBack) {
-                                cancelCallBack.cancelSuccess();
-                            }
-                        }
-                        dismiss();
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                    }
-                }));
-    }
 
     public void setCancelCallBack(CancelCallBack cancelCallBack) {
         this.cancelCallBack = cancelCallBack;
     }
 
     public interface CancelCallBack {
-        void cancelSuccess();
+        void confirmReason(String reason);
     }
 }

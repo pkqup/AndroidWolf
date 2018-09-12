@@ -15,18 +15,22 @@ import com.chunlangjiu.app.abase.BaseFragment;
 import com.chunlangjiu.app.goods.activity.ShopMainActivity;
 import com.chunlangjiu.app.net.ApiUtils;
 import com.chunlangjiu.app.order.activity.OrderDetailActivity;
+import com.chunlangjiu.app.order.activity.OrderEvaluationMainActivity;
 import com.chunlangjiu.app.order.activity.OrderMainActivity;
 import com.chunlangjiu.app.order.adapter.OrderListAdapter;
+import com.chunlangjiu.app.order.bean.CancelOrderResultBean;
 import com.chunlangjiu.app.order.bean.CancelReasonBean;
 import com.chunlangjiu.app.order.bean.OrderListBean;
 import com.chunlangjiu.app.order.dialog.CancelOrderDialog;
 import com.chunlangjiu.app.order.params.OrderParams;
 import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
+import com.pkqup.commonlibrary.util.ToastUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -116,11 +120,11 @@ public class OrderListFragment extends BaseFragment {
     private void delayLoad() {
         if (isVisiable && initViewFinished && !isLoaded) {
             isLoaded = true;
-            //展示
             Bundle arguments = getArguments();
             if (null != arguments) {
                 type = arguments.getInt(OrderParams.TYPE, 0);
                 target = arguments.getInt(OrderParams.TARGET, 0);
+                orderListAdapter.setType(type);
                 loadData();
             }
         }
@@ -146,11 +150,15 @@ public class OrderListFragment extends BaseFragment {
                         getNormalOrderList();
                         break;
                     case 4:
-                        getCancelOrderList();
+                        status = OrderParams.TRADE_CLOSED_BY_SYSTEM;
+                        getNormalOrderList();
                         break;
                 }
                 break;
             case 1:
+                break;
+            case 2:
+                getAfterSaleOrderList();
                 break;
         }
 
@@ -198,8 +206,8 @@ public class OrderListFragment extends BaseFragment {
                 }));
     }
 
-    private void getCancelOrderList() {
-        disposable.add(ApiUtils.getInstance().getCancelOrderLists(status, 1)
+    private void getAfterSaleOrderList() {
+        disposable.add(ApiUtils.getInstance().getAfterSaleOrderList(pageNo)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean<OrderListBean>>() {
@@ -207,16 +215,35 @@ public class OrderListFragment extends BaseFragment {
                     public void accept(ResultBean<OrderListBean> orderListBeanResultBean) throws Exception {
                         rlLoading.setVisibility(View.GONE);
                         refreshLayout.setVisibility(View.VISIBLE);
-
-                        listBeans.clear();
-                        listBeans.addAll(orderListBeanResultBean.getData().getList());
-                        orderListAdapter.notifyDataSetChanged();
+                        if (pageNo == orderListBeanResultBean.getData().getPagers().getTotal() / 10 + 1) {
+                            refreshLayout.setEnableLoadMore(false);
+                        } else {
+                            refreshLayout.setEnableLoadMore(true);
+                        }
+                        if (0 == orderListBeanResultBean.getErrorcode()) {
+                            if (1 == pageNo) {
+                                listBeans.clear();
+                            }
+                            listBeans.addAll(orderListBeanResultBean.getData().getList());
+                            orderListAdapter.notifyDataSetChanged();
+                        } else if (0 != orderListBeanResultBean.getErrorcode()) {
+                            if (1 < pageNo) {
+                                pageNo--;
+                            }
+                        }
+                        refreshLayout.finishLoadMore();
+                        refreshLayout.finishRefresh();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         rlLoading.setVisibility(View.GONE);
                         refreshLayout.setVisibility(View.VISIBLE);
+                        refreshLayout.finishLoadMore();
+                        refreshLayout.finishRefresh();
+                        if (1 < pageNo) {
+                            pageNo--;
+                        }
                     }
                 }));
     }
@@ -245,6 +272,29 @@ public class OrderListFragment extends BaseFragment {
                     }
                     break;
                 case R.id.tv2:
+                    switch (type) {
+                        case 0:
+                            switch (listBeans.get(Integer.parseInt(view.getTag().toString())).getStatus()) {
+                                case OrderParams.WAIT_BUYER_CONFIRM_GOODS:
+                                    tid = String.valueOf(listBeans.get(Integer.parseInt(view.getTag().toString())).getTid());
+                                    confirmReceipt();
+                                    break;
+                                case OrderParams.TRADE_FINISHED:
+                                    Intent intent = new Intent(getActivity(), OrderEvaluationMainActivity.class);
+                                    List<OrderListBean.ListBean.OrderBean> order = listBeans.get(Integer.parseInt(view.getTag().toString())).getOrder();
+                                    intent.putExtra(OrderParams.PRODUCTS, (Serializable) order);
+                                    startActivity(intent);
+                                    break;
+                                case OrderParams.WAIT_SELLER_SEND_GOODS:
+                                    tid = String.valueOf(listBeans.get(Integer.parseInt(view.getTag().toString())).getTid());
+                                    getCancelReason();
+                                    break;
+                                case OrderParams.TRADE_CLOSED_BY_SYSTEM:
+                                    //删除订单
+                                    break;
+                            }
+                            break;
+                    }
                     break;
             }
         }
@@ -279,9 +329,33 @@ public class OrderListFragment extends BaseFragment {
                 }));
     }
 
+    private void confirmReceipt() {
+        disposable.add(ApiUtils.getInstance().confirmReceipt(tid)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean>() {
+                    @Override
+                    public void accept(ResultBean resultBean) throws Exception {
+                        if (0 == resultBean.getErrorcode()) {
+                            ToastUtils.showShort("确认收货成功");
+                            refreshLayout.autoRefresh();
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                }));
+    }
+
     private void toOrderDetailActivity(View view) {
         Intent intent = new Intent(getActivity(), OrderDetailActivity.class);
-        intent.putExtra(OrderParams.ORDERID, listBeans.get(Integer.parseInt(view.getTag().toString())).getTid());
+        int position = Integer.parseInt(view.getTag().toString());
+        intent.putExtra(OrderParams.ORDERID, listBeans.get(position).getTid());
+        if (null != listBeans.get(position).getSku()) {
+            intent.putExtra(OrderParams.OID, listBeans.get(position).getSku().getOid());
+            intent.putExtra(OrderParams.AFTERSALESBN, listBeans.get(position).getAftersales_bn());
+        }
         intent.putExtra(OrderParams.TYPE, type);
         startActivity(intent);
     }

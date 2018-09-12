@@ -63,6 +63,30 @@ public class OrderListAdapter extends BaseQuickAdapter<OrderListBean.ListBean, B
                         tv2.setText("删除订单");
                         tv2.setVisibility(View.VISIBLE);
                         break;
+                    case OrderParams.WAIT_SELLER_SEND_GOODS:
+                        tv1.setVisibility(View.GONE);
+                        tv2.setText("申请退款");
+                        tv2.setVisibility(View.VISIBLE);
+                        break;
+                    case OrderParams.WAIT_BUYER_CONFIRM_GOODS:
+                        tv1.setVisibility(View.GONE);
+                        tv2.setText("确认收货");
+                        tv2.setVisibility(View.VISIBLE);
+                        break;
+                    case OrderParams.TRADE_FINISHED:
+                        tv1.setVisibility(View.GONE);
+                        tv2.setText("评价");
+                        tv2.setVisibility(View.VISIBLE);
+                        break;
+                }
+                break;
+            case 2:
+                switch (item.getStatus()){
+                    case OrderParams.WAIT_BUYER_PAY:
+                        tv1.setVisibility(View.GONE);
+                        tv2.setText("撤销申请");
+                        tv2.setVisibility(View.VISIBLE);
+                        break;
                 }
                 break;
         }
@@ -80,26 +104,48 @@ public class OrderListAdapter extends BaseQuickAdapter<OrderListBean.ListBean, B
         tvStore.setText(item.getShopname());
         tvStatus.setText(item.getStatus_desc());
 //        GlideUtils.loadImage(context, item.get(), imgStore);
-        tvTotalNum.setText(String.format("合计：¥%s", new BigDecimal(item.getPayment()).setScale(2, BigDecimal.ROUND_HALF_UP).toString()));
+//        tvTotalNum.setText(String.format("合计：¥%s", new BigDecimal(item.getPayment()).setScale(2, BigDecimal.ROUND_HALF_UP).toString()));
         llProducts.removeAllViews();
-        for (OrderListBean.ListBean.OrderBean orderBean : item.getOrder()) {
-            View inflate = inflater.inflate(R.layout.order_adapter_list_product_item, null);
-            ImageView imgProduct = inflate.findViewById(R.id.imgProduct);
-            GlideUtils.loadImage(context, orderBean.getPic_path(), imgProduct);
-            TextView tvProductName = inflate.findViewById(R.id.tvProductName);
-            tvProductName.setText(orderBean.getTitle());
-            TextView tvProductPrice = inflate.findViewById(R.id.tvProductPrice);
+        switch (type) {
+            case 0:
+                for (OrderListBean.ListBean.OrderBean orderBean : item.getOrder()) {
+                    View inflate = inflater.inflate(R.layout.order_adapter_list_product_item, null);
+                    ImageView imgProduct = inflate.findViewById(R.id.imgProduct);
+                    GlideUtils.loadImage(context, orderBean.getPic_path(), imgProduct);
+                    TextView tvProductName = inflate.findViewById(R.id.tvProductName);
+                    tvProductName.setText(orderBean.getTitle());
+                    TextView tvProductPrice = inflate.findViewById(R.id.tvProductPrice);
+//                    tvProductPrice.setText(String.format("¥%s", item.getSku().getPrice()));
+                    TextView tvProductDesc = inflate.findViewById(R.id.tvProductDesc);
+//                    tvProductDesc.setText(item.getSku().getSpec_nature_info());
 
-            TextView tvProductDesc = inflate.findViewById(R.id.tvProductDesc);
-//            tvProductDesc.setText(orderBean.get);
+                    TextView tvProductNum = inflate.findViewById(R.id.tvProductNum);
+                    tvProductNum.setText(String.format("x%d", orderBean.getNum()));
+                    llProducts.addView(inflate);
+                    if (llProducts.getChildCount() == item.getOrder().size()) {
+                        View view_line = inflate.findViewById(R.id.view_line);
+                        view_line.setVisibility(View.GONE);
+                    }
+                }
+                break;
+            case 2:
+                View inflate = inflater.inflate(R.layout.order_adapter_list_product_item, null);
+                ImageView imgProduct = inflate.findViewById(R.id.imgProduct);
+                GlideUtils.loadImage(context, item.getSku().getPic_path(), imgProduct);
+                TextView tvProductName = inflate.findViewById(R.id.tvProductName);
+                tvProductName.setText(item.getSku().getTitle());
+                TextView tvProductPrice = inflate.findViewById(R.id.tvProductPrice);
+                tvProductPrice.setText(String.format("¥%s", item.getSku().getPrice()));
 
-            TextView tvProductNum = inflate.findViewById(R.id.tvProductNum);
-            tvProductNum.setText(String.format("x%d", orderBean.getNum()));
-            llProducts.addView(inflate);
-            if (llProducts.getChildCount() == item.getOrder().size()) {
+                TextView tvProductDesc = inflate.findViewById(R.id.tvProductDesc);
+                tvProductDesc.setText(item.getSku().getSpec_nature_info());
+
+                TextView tvProductNum = inflate.findViewById(R.id.tvProductNum);
+                tvProductNum.setText(String.format("x%d", item.getNum()));
+                llProducts.addView(inflate);
                 View view_line = inflate.findViewById(R.id.view_line);
                 view_line.setVisibility(View.GONE);
-            }
+                break;
         }
     }
 }
