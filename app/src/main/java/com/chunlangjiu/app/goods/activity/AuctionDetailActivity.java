@@ -49,17 +49,11 @@ public class AuctionDetailActivity extends BaseActivity {
     RelativeLayout rlBottom;
     @BindView(R.id.tvBuy)
     TextView tvBuy;
-    @BindView(R.id.tvAddCart)
-    TextView tvAddCart;
 
     @BindView(R.id.rlChat)
     RelativeLayout rlChat;
     @BindView(R.id.rlCollect)
     RelativeLayout rlCollect;
-    @BindView(R.id.rlCart)
-    RelativeLayout rlCart;
-    @BindView(R.id.tvCartNum)
-    TextView tvCartNum;
 
     private BaseFragmentAdapter fragmentAdapter;
     private final String[] mTitles = {"商品", "详情", "评价"};
@@ -133,10 +127,8 @@ public class AuctionDetailActivity extends BaseActivity {
         imgBack.setOnClickListener(onClickListener);
         imgShare.setOnClickListener(onClickListener);
         tvBuy.setOnClickListener(onClickListenerLogin);
-        tvAddCart.setOnClickListener(onClickListenerLogin);
         rlChat.setOnClickListener(onClickListenerLogin);
         rlCollect.setOnClickListener(onClickListenerLogin);
-        rlCart.setOnClickListener(onClickListenerLogin);
 
         disposable = new CompositeDisposable();
     }
@@ -156,7 +148,7 @@ public class AuctionDetailActivity extends BaseActivity {
 
         mFragments = new ArrayList<>();
         mFragments.add(AuctionDetailFragment.newInstance(auctionBean));
-        mFragments.add(GoodsWebFragment.newInstance("https://www.baidu.com"));
+        mFragments.add(GoodsWebFragment.newInstance(""));
         mFragments.add(GoodsCommentFragment.newInstance(itemId));
         fragmentAdapter = new BaseFragmentAdapter(getSupportFragmentManager());
         fragmentAdapter.setLists(mFragments);

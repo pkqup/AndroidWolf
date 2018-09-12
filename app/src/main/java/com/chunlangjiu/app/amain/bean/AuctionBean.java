@@ -8,6 +8,7 @@ import java.io.Serializable;
  */
 public class AuctionBean implements Serializable {
 
+    private String desc;
     private String item_id;
     private String starting_price;
     private String status;
@@ -16,6 +17,14 @@ public class AuctionBean implements Serializable {
     private String begin_time;
     private String end_time;
     private ItemInfo item_info;
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
 
     public String getItem_id() {
         return item_id;
