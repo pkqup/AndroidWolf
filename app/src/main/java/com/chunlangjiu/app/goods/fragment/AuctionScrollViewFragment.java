@@ -18,7 +18,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseFragment;
-import com.chunlangjiu.app.amain.bean.AuctionBean;
+import com.chunlangjiu.app.amain.bean.AuctionListBean;
 import com.chunlangjiu.app.goods.bean.EvaluateListBean;
 import com.chunlangjiu.app.net.ApiUtils;
 import com.chunlangjiu.app.util.ConstantMsg;
@@ -76,9 +76,9 @@ public class AuctionScrollViewFragment extends BaseFragment {
     private RecommendAdapter recommendAdapter;
 
     private CompositeDisposable disposable;
-    private AuctionBean auctionBean;
+    private AuctionListBean.AuctionBean auctionBean;
 
-    public static AuctionScrollViewFragment newInstance(AuctionBean auctionBean) {
+    public static AuctionScrollViewFragment newInstance(AuctionListBean.AuctionBean auctionBean) {
         AuctionScrollViewFragment auctionScrollViewFragment = new AuctionScrollViewFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable("auctionBean", auctionBean);
@@ -129,7 +129,7 @@ public class AuctionScrollViewFragment extends BaseFragment {
         recyclerView = rootView.findViewById(R.id.recyclerView);
 
         disposable = new CompositeDisposable();
-        auctionBean = (AuctionBean) getArguments().getSerializable("auctionBean");
+        auctionBean = (AuctionListBean.AuctionBean) getArguments().getSerializable("auctionBean");
     }
 
     @Override
@@ -144,7 +144,7 @@ public class AuctionScrollViewFragment extends BaseFragment {
     private void initBannerData() {
         imageViews = new ArrayList<>();
         bannerUrls = new ArrayList<>();
-        String list_image = auctionBean.getItem_info().getList_image();
+        String list_image = auctionBean.getList_image();
         if (!TextUtils.isEmpty(list_image)) {
             String[] split = list_image.split(",");
             if (split.length > 0) {
@@ -208,8 +208,8 @@ public class AuctionScrollViewFragment extends BaseFragment {
     }
 
     private void initCommonView() {
-        tvPrice.setText("¥" + auctionBean.getItem_info().getPrice());
-        tvGoodsName.setText(auctionBean.getItem_info().getTitle());
+        tvPrice.setText("¥" + auctionBean.getPrice());
+        tvGoodsName.setText(auctionBean.getTitle());
         String end_time = auctionBean.getEnd_time();
         try {
             long endTime = 0;
@@ -231,7 +231,7 @@ public class AuctionScrollViewFragment extends BaseFragment {
 
 
     private void getEvaluateData() {
-        disposable.add(ApiUtils.getInstance().getEvaluateList(auctionBean.getItem_info().getItem_id(), 1)
+        disposable.add(ApiUtils.getInstance().getEvaluateList(auctionBean.getItem_id(), 1)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean<EvaluateListBean>>() {

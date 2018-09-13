@@ -15,8 +15,7 @@ import com.chunlangjiu.app.abase.BaseActivity;
 import com.chunlangjiu.app.abase.BaseApplication;
 import com.chunlangjiu.app.abase.BaseFragmentAdapter;
 import com.chunlangjiu.app.amain.activity.LoginActivity;
-import com.chunlangjiu.app.amain.bean.AuctionBean;
-import com.chunlangjiu.app.cart.CartActivity;
+import com.chunlangjiu.app.amain.bean.AuctionListBean;
 import com.chunlangjiu.app.goods.fragment.AuctionDetailFragment;
 import com.chunlangjiu.app.goods.fragment.GoodsCommentFragment;
 import com.chunlangjiu.app.goods.fragment.GoodsWebFragment;
@@ -60,7 +59,7 @@ public class AuctionDetailActivity extends BaseActivity {
     private List<Fragment> mFragments;
 
     private CompositeDisposable disposable;
-    private AuctionBean auctionBean;
+    private AuctionListBean.AuctionBean auctionBean;
     private String itemId;
 
 
@@ -98,7 +97,7 @@ public class AuctionDetailActivity extends BaseActivity {
     };
 
 
-    public static void startAuctionDetailsActivity(Activity activity, AuctionBean auctionBean) {
+    public static void startAuctionDetailsActivity(Activity activity, AuctionListBean.AuctionBean auctionBean) {
         Intent intent = new Intent(activity, AuctionDetailActivity.class);
         intent.putExtra("auctionInfo", auctionBean);
         activity.startActivity(intent);
@@ -134,7 +133,7 @@ public class AuctionDetailActivity extends BaseActivity {
     }
 
     private void initData() {
-        auctionBean = (AuctionBean) getIntent().getSerializableExtra("auctionInfo");
+        auctionBean = (AuctionListBean.AuctionBean) getIntent().getSerializableExtra("auctionInfo");
         itemId = auctionBean.getItem_id();
         updateView();
     }

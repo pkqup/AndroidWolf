@@ -1,6 +1,6 @@
 package com.chunlangjiu.app.net;
 
-import com.chunlangjiu.app.amain.bean.AuctionBean;
+import com.chunlangjiu.app.amain.bean.AuctionListBean;
 import com.chunlangjiu.app.amain.bean.CartCountBean;
 import com.chunlangjiu.app.amain.bean.CartListBean;
 import com.chunlangjiu.app.amain.bean.HomeListBean;
@@ -80,7 +80,7 @@ public class ApiUtils {
         return apiService.shopLogin("user.login", "v1", mobile, password);
     }
 
-    public Flowable<ResultBean<List<AuctionBean>>> getAuctionList() {
+    public Flowable<ResultBean<AuctionListBean>> getAuctionList() {
         return apiService.getAuctionList("item.auction.list", "v1");
     }
 

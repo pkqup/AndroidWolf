@@ -15,7 +15,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseFragment;
 import com.chunlangjiu.app.amain.adapter.AuctionListAdapter;
-import com.chunlangjiu.app.amain.bean.AuctionBean;
+import com.chunlangjiu.app.amain.bean.AuctionListBean;
 import com.chunlangjiu.app.goods.activity.AuctionDetailActivity;
 import com.chunlangjiu.app.net.ApiUtils;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
@@ -49,7 +49,7 @@ public class AuctionFragment extends BaseFragment {
 
     private SmartRefreshLayout refreshLayout;
     private RecyclerView recyclerView;
-    private List<AuctionBean> lists;
+    private List<AuctionListBean.AuctionBean> lists;
     private AuctionListAdapter linearAdapter;
 
     private CompositeDisposable disposable;
@@ -159,12 +159,12 @@ public class AuctionFragment extends BaseFragment {
         disposable.add(ApiUtils.getInstance().getAuctionList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<ResultBean<List<AuctionBean>>>() {
+                .subscribe(new Consumer<ResultBean<AuctionListBean>>() {
                     @Override
-                    public void accept(ResultBean<List<AuctionBean>> listResultBean) throws Exception {
+                    public void accept(ResultBean<AuctionListBean> listResultBean) throws Exception {
                         refreshLayout.finishRefresh();
-                        List<AuctionBean> data = listResultBean.getData();
-                        getListSuccess(data);
+                        List<AuctionListBean.AuctionBean> list = listResultBean.getData().getList();
+                        getListSuccess(list);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -174,7 +174,7 @@ public class AuctionFragment extends BaseFragment {
                 }));
     }
 
-    private void getListSuccess(List<AuctionBean> list) {
+    private void getListSuccess(List<AuctionListBean.AuctionBean> list) {
         if (list != null) {
             this.lists = list;
             linearAdapter.setNewData(lists);
