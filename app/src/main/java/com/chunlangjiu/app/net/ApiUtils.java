@@ -25,6 +25,7 @@ import com.chunlangjiu.app.order.bean.OrderListBean;
 import com.chunlangjiu.app.user.bean.AddressListBean;
 import com.chunlangjiu.app.user.bean.BrandListBean;
 import com.chunlangjiu.app.user.bean.MyNumBean;
+import com.chunlangjiu.app.user.bean.ShopCatIdList;
 import com.chunlangjiu.app.user.bean.ShopClassList;
 import com.chunlangjiu.app.user.bean.UploadImageBean;
 import com.pkqup.commonlibrary.net.HttpUtils;
@@ -220,13 +221,18 @@ public class ApiUtils {
         return apiService.getShopClassList("category.platform.get", "v1");
     }
 
+    public Flowable<ResultBean<ShopCatIdList>> getStoreClassList() {
+        return apiService.getStoreClassList("category.shop.get", "v1");
+    }
+
     public Flowable<ResultBean<BrandListBean>> getShopBrandList(String class_id) {
         return apiService.getShopBrandList("category.platform.brand.get", "v1", class_id);
     }
 
     public Observable<ResultBean> addGoods(String cat_id, String brand_id, String shop_cat_id, String title, String sub_title, String weight, String list_image,
-                                           String price, String dlytmpl_id, String sku, String wap_desc) {
-        return apiService.addGoods("item.create", "v1", cat_id, brand_id, shop_cat_id, title, sub_title, weight, list_image, price, dlytmpl_id, sku, wap_desc, "1");
+                                           String price, String dlytmpl_id, String sku, String label, String explain, String parameter) {
+        return apiService.addGoods("item.create", "v1", cat_id, brand_id, shop_cat_id, title, sub_title, weight, list_image,
+                price, dlytmpl_id, sku, label, explain, parameter,"ML","1");
     }
 
     public Flowable<ResultBean<OrderListBean>> getOrderLists(String status, int pageNo) {

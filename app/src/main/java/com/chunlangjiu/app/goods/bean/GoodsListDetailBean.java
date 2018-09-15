@@ -12,9 +12,46 @@ public class GoodsListDetailBean {
     private String title;
     private String image_default_id;
     private String price;
+    private String mkt_price;
+    private String label;
+    private String view_count ;//关注人数
+    private String rate_count  ;//评价条数
     private String sold_quantity;
     private List promotion;//促销信息
     private GiftDetail gift;
+
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
+
+    public String getView_count() {
+        return view_count;
+    }
+
+    public void setView_count(String view_count) {
+        this.view_count = view_count;
+    }
+
+    public String getRate_count() {
+        return rate_count;
+    }
+
+    public void setRate_count(String rate_count) {
+        this.rate_count = rate_count;
+    }
+
+    public String getMkt_price() {
+        return mkt_price;
+    }
+
+    public void setMkt_price(String mkt_price) {
+        this.mkt_price = mkt_price;
+    }
 
     public String getItem_id() {
         return item_id;

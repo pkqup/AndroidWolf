@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -205,9 +206,16 @@ public class ScrollViewFragment extends BaseFragment {
     private void initCommonView() {
         tvPrice.setText("¥" + goodsDetailBean.getItem().getPrice());
         tvGoodsName.setText(goodsDetailBean.getItem().getTitle());
+        tvCountry.setText(goodsDetailBean.getItem().getLabel());
+        tvDesc.setText(goodsDetailBean.getItem().getExplain());
         GlideUtils.loadImage(getActivity(), goodsDetailBean.getShop().getShop_logo(), imgStore);
         tvStoreName.setText(goodsDetailBean.getShop().getShop_name());
         tvStoreDesc.setText(goodsDetailBean.getShop().getShop_descript());
+        if (TextUtils.isEmpty(goodsDetailBean.getItem().getLabel())) {
+            tvCountry.setVisibility(View.GONE);
+        } else {
+            tvCountry.setVisibility(View.VISIBLE);
+        }
     }
 
 

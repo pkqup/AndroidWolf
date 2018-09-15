@@ -3,14 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingLeft="15dp"
-    android:paddingRight="15dp">
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/img_pic"
-        android:layout_width="140dp"
-        android:layout_height="140dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_marginTop="10dp"
         android:scaleType="centerCrop" />
 
@@ -94,7 +92,7 @@
             android:id="@+id/llStartPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="2dp"
             android:orientation="horizontal">
 
             <TextView
@@ -109,7 +107,6 @@
                 android:id="@+id/tvStartPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
                 android:textColor="@color/t_gray"
                 android:textSize="12sp"
                 tools:text="¥4000.00" />
@@ -133,7 +130,6 @@
                 android:id="@+id/tvSellPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
                 android:text="¥5000.00"
                 android:textColor="@color/t_red"
                 android:textSize="@dimen/sp_mid" />
@@ -146,7 +142,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/tv_country"
+                android:id="@+id/tvLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tv_name"
@@ -157,8 +153,7 @@
                 android:paddingRight="5dp"
                 android:paddingTop="2dp"
                 android:textColor="@color/t_black"
-                android:textSize="@dimen/sp_small"
-                android:visibility="gone"
+                android:textSize="12sp"
                 tools:text="法国" />
 
             <TextView
@@ -167,7 +162,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tv_name"
                 android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@id/tv_country"
+                android:layout_toRightOf="@id/tvLabel"
                 android:background="@color/bg_gray"
                 android:paddingBottom="2dp"
                 android:paddingLeft="5dp"
@@ -182,16 +177,16 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
+            android:layout_marginTop="2dp"
             android:orientation="horizontal"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <TextView
                 android:id="@+id/tv_attention"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/t_gray"
-                android:textSize="@dimen/sp_small"
+                android:textSize="10sp"
                 tools:text="300人关注" />
 
             <TextView
@@ -200,7 +195,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:textColor="@color/t_gray"
-                android:textSize="@dimen/sp_small"
+                android:textSize="10sp"
                 tools:text="30条评价" />
         </LinearLayout>
     </LinearLayout>

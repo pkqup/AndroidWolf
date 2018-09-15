@@ -13,9 +13,27 @@ public class HomeBean {
     private String item_id;
     private String title;
     private String price;
+    private String mkt_price;
+    private String label;
     private String image_default_id;
     private String imgsrc;
 
+
+    public String getMkt_price() {
+        return mkt_price;
+    }
+
+    public void setMkt_price(String mkt_price) {
+        this.mkt_price = mkt_price;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+    }
 
     public int getItemType() {
         return itemType;

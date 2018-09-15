@@ -37,11 +37,11 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/img_pic"
             android:layout_below="@id/tv_name"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="2dp"
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/tv_country"
+                android:id="@+id/tvLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
@@ -52,7 +52,6 @@
                 android:paddingTop="2dp"
                 android:textColor="@color/t_black"
                 android:textSize="12sp"
-                android:visibility="gone"
                 tools:text="法国" />
 
             <TextView
@@ -76,7 +75,7 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@id/img_pic"
             android:layout_below="@id/llFlag"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="2dp"
             android:orientation="horizontal">
 
             <TextView
@@ -91,7 +90,6 @@
                 android:id="@+id/tvStartPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
                 android:text="¥4000.00"
                 android:textColor="@color/t_gray"
                 android:textSize="12sp" />
@@ -117,7 +115,6 @@
                 android:id="@+id/tvSellPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
                 android:text="¥5000.00"
                 android:textColor="@color/t_red"
                 android:textSize="@dimen/sp_mid" />
