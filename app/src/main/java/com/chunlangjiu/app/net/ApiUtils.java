@@ -81,6 +81,10 @@ public class ApiUtils {
         return apiService.shopLogin("user.login", "v1", mobile, password);
     }
 
+    public Flowable<ResultBean> personAuth(String name, String idcard, String dentity, String dentity_front, String dentity_reverse) {
+        return apiService.personAuth("member.autonym", "v1", name, idcard, dentity, dentity_front, dentity_reverse);
+    }
+
     public Flowable<ResultBean<AuctionListBean>> getAuctionList() {
         return apiService.getAuctionList("item.auction.list", "v1");
     }
@@ -232,7 +236,7 @@ public class ApiUtils {
     public Observable<ResultBean> addGoods(String cat_id, String brand_id, String shop_cat_id, String title, String sub_title, String weight, String list_image,
                                            String price, String dlytmpl_id, String sku, String label, String explain, String parameter) {
         return apiService.addGoods("item.create", "v1", cat_id, brand_id, shop_cat_id, title, sub_title, weight, list_image,
-                price, dlytmpl_id, sku, label, explain, parameter,"ML","1");
+                price, dlytmpl_id, sku, label, explain, parameter, "ML", "1");
     }
 
     public Flowable<ResultBean<OrderListBean>> getOrderLists(String status, int pageNo) {

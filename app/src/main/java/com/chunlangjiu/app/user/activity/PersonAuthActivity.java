@@ -2,6 +2,7 @@ package com.chunlangjiu.app.user.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -12,19 +13,32 @@ import android.widget.TextView;
 
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
+import com.chunlangjiu.app.net.ApiUtils;
+import com.chunlangjiu.app.user.bean.UploadImageBean;
+import com.chunlangjiu.app.util.ConstantMsg;
 import com.chunlangjiu.app.util.GlideImageLoader;
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.lzy.imagepicker.ui.ImageGridActivity;
 import com.lzy.imagepicker.view.CropImageView;
 import com.pkqup.commonlibrary.dialog.ChoicePhotoDialog;
+import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.glide.GlideUtils;
+import com.pkqup.commonlibrary.net.bean.ResultBean;
+import com.pkqup.commonlibrary.util.FileUtils;
 import com.pkqup.commonlibrary.util.SizeUtils;
+import com.pkqup.commonlibrary.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function3;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @CreatedbBy: liucun on 2018/7/15.
@@ -68,7 +82,7 @@ public class PersonAuthActivity extends BaseActivity {
     @BindView(R.id.tvCommit)
     TextView tvCommit;
 
-
+    private CompositeDisposable disposable;
     private ChoicePhotoDialog frontDialog;
     private ChoicePhotoDialog behindDialog;
     private ChoicePhotoDialog personDialog;
@@ -76,6 +90,9 @@ public class PersonAuthActivity extends BaseActivity {
     private ArrayList<ImageItem> frontLists;
     private ArrayList<ImageItem> behindLists;
     private ArrayList<ImageItem> personLists;
+    private String base64HandCard;
+    private String base64Front;
+    private String base64Reverse;
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -93,9 +110,13 @@ public class PersonAuthActivity extends BaseActivity {
                 case R.id.rlPerson:
                     showPersonDialog();
                     break;
+                case R.id.tvCommit:
+                    checkData();
+                    break;
             }
         }
     };
+
 
     @Override
     public void setTitleView() {
@@ -112,7 +133,7 @@ public class PersonAuthActivity extends BaseActivity {
     }
 
     private void initImagePicker() {
-        int picWidth = (SizeUtils.getScreenWidth() - SizeUtils.dp2px(30))/2;
+        int picWidth = (SizeUtils.getScreenWidth() - SizeUtils.dp2px(30)) / 2;
         int picHeight = (picWidth / 8) * 5;
         ViewGroup.LayoutParams layoutParamsOne = rlFront.getLayoutParams();
         layoutParamsOne.width = picWidth;
@@ -149,9 +170,11 @@ public class PersonAuthActivity extends BaseActivity {
     }
 
     private void initView() {
+        disposable = new CompositeDisposable();
         rlFront.setOnClickListener(onClickListener);
         rlBehind.setOnClickListener(onClickListener);
         rlPerson.setOnClickListener(onClickListener);
+        tvCommit.setOnClickListener(onClickListener);
     }
 
     private void showFrontDialog() {
@@ -230,16 +253,99 @@ public class PersonAuthActivity extends BaseActivity {
             if (data != null) {
                 if (requestCode == REQUEST_CODE_SELECT_FRONT) {
                     frontLists = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
-                    GlideUtils.loadImage(PersonAuthActivity.this,frontLists.get(0).path,imgFrontPic);
+                    ImageItem imageItem = frontLists.get(0);
+                    int index = imageItem.path.lastIndexOf("/");
+                    imageItem.name = imageItem.path.substring(index + 1, imageItem.path.length());
+                    base64Front = FileUtils.imgToBase64(frontLists.get(0).path);
+                    GlideUtils.loadImage(PersonAuthActivity.this, frontLists.get(0).path, imgFrontPic);
                 } else if (requestCode == REQUEST_CODE_SELECT_BEHIND) {
                     behindLists = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
-                    GlideUtils.loadImage(PersonAuthActivity.this,behindLists.get(0).path,imgBehindPic);
+                    ImageItem imageItem = behindLists.get(0);
+                    int index = imageItem.path.lastIndexOf("/");
+                    imageItem.name = imageItem.path.substring(index + 1, imageItem.path.length());
+                    base64Reverse = FileUtils.imgToBase64(behindLists.get(0).path);
+                    GlideUtils.loadImage(PersonAuthActivity.this, behindLists.get(0).path, imgBehindPic);
                 } else if (requestCode == REQUEST_CODE_SELECT_PERSON) {
                     personLists = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
-                    GlideUtils.loadImage(PersonAuthActivity.this,personLists.get(0).path,imgCardPic);
+                    ImageItem imageItem = personLists.get(0);
+                    int index = imageItem.path.lastIndexOf("/");
+                    imageItem.name = imageItem.path.substring(index + 1, imageItem.path.length());
+                    base64HandCard = FileUtils.imgToBase64(personLists.get(0).path);
+                    GlideUtils.loadImage(PersonAuthActivity.this, personLists.get(0).path, imgCardPic);
                 }
 
             }
         }
     }
+
+    private void checkData() {
+        if (TextUtils.isEmpty(etName.getText().toString().trim())) {
+            ToastUtils.showShort("请填写名字");
+        } else if (TextUtils.isEmpty(etCardNum.getText().toString().trim())) {
+            ToastUtils.showShort("请填写身份证号码");
+        } else if (base64Front == null) {
+            ToastUtils.showShort("请上传身份证正面图片");
+        } else if (base64Reverse == null) {
+            ToastUtils.showShort("请上传身份证反面图片");
+        } else if (base64HandCard == null) {
+            ToastUtils.showShort("请上传手持身份证图片");
+        } else {
+            uploadImage();
+        }
+    }
+
+
+    private void uploadImage() {
+        showLoadingDialog();
+        Observable<ResultBean<UploadImageBean>> front = ApiUtils.getInstance().userUploadImage(base64Front, frontLists.get(0).name, "");
+        Observable<ResultBean<UploadImageBean>> behind = ApiUtils.getInstance().userUploadImage(base64Reverse, behindLists.get(0).name, "");
+        Observable<ResultBean<UploadImageBean>> handCard = ApiUtils.getInstance().userUploadImage(base64HandCard, personLists.get(0).name, "");
+        disposable.add(Observable.zip(front, behind, handCard, new Function3<ResultBean<UploadImageBean>, ResultBean<UploadImageBean>,
+                ResultBean<UploadImageBean>, List<String>>() {
+            @Override
+            public List<String> apply(ResultBean<UploadImageBean> uploadImageBeanResultBean, ResultBean<UploadImageBean> uploadImageBeanResultBean2,
+                                      ResultBean<UploadImageBean> uploadImageBeanResultBean3) throws Exception {
+                List<String> imageLists = new ArrayList<>();
+                imageLists.add(uploadImageBeanResultBean.getData().getUrl());
+                imageLists.add(uploadImageBeanResultBean2.getData().getUrl());
+                imageLists.add(uploadImageBeanResultBean3.getData().getUrl());
+                return imageLists;
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<String>>() {
+                    @Override
+                    public void accept(List<String> strings) throws Exception {
+                        commitAuth(strings);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        hideLoadingDialog();
+                        ToastUtils.showShort("上传图片失败");
+                    }
+                }));
+    }
+
+    private void commitAuth(List<String> strings) {
+        disposable.add(ApiUtils.getInstance().personAuth(etName.getText().toString().trim(), etCardNum.getText().toString().trim(),
+                strings.get(0), strings.get(1), strings.get(2))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean>() {
+                    @Override
+                    public void accept(ResultBean resultBean) throws Exception {
+                        hideLoadingDialog();
+                        ToastUtils.showShort("实名认证成功");
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        hideLoadingDialog();
+                        ToastUtils.showShort("实名认证失败");
+                    }
+                }));
+    }
+
+
 }

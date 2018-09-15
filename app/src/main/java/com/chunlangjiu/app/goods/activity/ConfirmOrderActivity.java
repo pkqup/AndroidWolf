@@ -28,6 +28,8 @@ import com.chunlangjiu.app.goods.bean.PaymentBean;
 import com.chunlangjiu.app.goods.bean.ShippingTypeBean;
 import com.chunlangjiu.app.goods.dialog.PayDialog;
 import com.chunlangjiu.app.net.ApiUtils;
+import com.chunlangjiu.app.order.activity.OrderMainActivity;
+import com.chunlangjiu.app.order.params.OrderParams;
 import com.chunlangjiu.app.user.activity.AddressListActivity;
 import com.chunlangjiu.app.user.bean.AddressListDetailBean;
 import com.chunlangjiu.app.util.ConstantMsg;
@@ -419,6 +421,7 @@ public class ConfirmOrderActivity extends BaseActivity {
                     Toast.makeText(ConfirmOrderActivity.this, "支付失败", Toast.LENGTH_SHORT).show();
                     finish();
                 }
+                toOrderMainActivity(0,0);
             }
         }
     };
@@ -502,6 +505,14 @@ public class ConfirmOrderActivity extends BaseActivity {
                 //支付取消
                 ToastUtils.showShort("支付失败");
             }
+            toOrderMainActivity(0,0);
         }
+    }
+
+    private void toOrderMainActivity(int type, int target) {
+        Intent intent = new Intent(this, OrderMainActivity.class);
+        intent.putExtra(OrderParams.TYPE, type);
+        intent.putExtra(OrderParams.TARGET, target);
+        startActivity(intent);
     }
 }

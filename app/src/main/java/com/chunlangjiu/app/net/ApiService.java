@@ -63,6 +63,13 @@ public interface ApiService {
 
     @POST("index.php/topapi")
     @FormUrlEncoded
+    Flowable<ResultBean> personAuth(@Field("method") String method, @Field("v") String v,
+                                    @Field("name") String name, @Field("idcard") String idcard,
+                                    @Field("dentity") String dentity, @Field("dentity_front") String dentity_front,
+                                    @Field("dentity_reverse") String dentity_reverse);
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
     Flowable<ResultBean<AuctionListBean>> getAuctionList(@Field("method") String method, @Field("v") String v);
 
     @POST("index.php/topapi")
@@ -253,7 +260,7 @@ public interface ApiService {
                                     @Field("weight") String weight, @Field("list_image") String list_image, @Field("price") String price,
                                     @Field("dlytmpl_id") String dlytmpl_id, @Field("sku") String sku,
                                     @Field("label") String label, @Field("explain") String explain,
-                                    @Field("parameter") String parameter,  @Field("unit") String unit,  @Field("nospec") String nospec);
+                                    @Field("parameter") String parameter, @Field("unit") String unit, @Field("nospec") String nospec);
 
     @POST("index.php/topapi")
     @FormUrlEncoded
