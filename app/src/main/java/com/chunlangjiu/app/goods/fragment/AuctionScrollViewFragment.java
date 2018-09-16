@@ -20,10 +20,12 @@ import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseFragment;
 import com.chunlangjiu.app.amain.bean.AuctionListBean;
 import com.chunlangjiu.app.goods.bean.EvaluateListBean;
+import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
 import com.chunlangjiu.app.net.ApiUtils;
 import com.chunlangjiu.app.util.ConstantMsg;
 import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.glide.BannerGlideLoader;
+import com.pkqup.commonlibrary.glide.GlideUtils;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.pkqup.commonlibrary.util.SizeUtils;
 import com.pkqup.commonlibrary.util.TimeUtils;
@@ -76,12 +78,12 @@ public class AuctionScrollViewFragment extends BaseFragment {
     private RecommendAdapter recommendAdapter;
 
     private CompositeDisposable disposable;
-    private AuctionListBean.AuctionBean auctionBean;
+    private GoodsDetailBean goodsDetailBean;
 
-    public static AuctionScrollViewFragment newInstance(AuctionListBean.AuctionBean auctionBean) {
+    public static AuctionScrollViewFragment newInstance(GoodsDetailBean goodsDetailBean) {
         AuctionScrollViewFragment auctionScrollViewFragment = new AuctionScrollViewFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("auctionBean", auctionBean);
+        bundle.putSerializable("goodsDetailBean", goodsDetailBean);
         auctionScrollViewFragment.setArguments(bundle);
         return auctionScrollViewFragment;
     }
@@ -129,7 +131,7 @@ public class AuctionScrollViewFragment extends BaseFragment {
         recyclerView = rootView.findViewById(R.id.recyclerView);
 
         disposable = new CompositeDisposable();
-        auctionBean = (AuctionListBean.AuctionBean) getArguments().getSerializable("auctionBean");
+        goodsDetailBean = (GoodsDetailBean) getArguments().getSerializable("goodsDetailBean");
     }
 
     @Override
@@ -144,15 +146,7 @@ public class AuctionScrollViewFragment extends BaseFragment {
     private void initBannerData() {
         imageViews = new ArrayList<>();
         bannerUrls = new ArrayList<>();
-        String list_image = auctionBean.getList_image();
-        if (!TextUtils.isEmpty(list_image)) {
-            String[] split = list_image.split(",");
-            if (split.length > 0) {
-                for (String s : split) {
-                    bannerUrls.add(s);
-                }
-            }
-        }
+        bannerUrls = goodsDetailBean.getItem().getImages();
         banner.setImages(bannerUrls)
                 .setImageLoader(new BannerGlideLoader())
                 .setBannerStyle(BannerConfig.NOT_INDICATOR)//去掉自带的indicator
@@ -208,9 +202,11 @@ public class AuctionScrollViewFragment extends BaseFragment {
     }
 
     private void initCommonView() {
-        tvPrice.setText("¥" + auctionBean.getPrice());
-        tvGoodsName.setText(auctionBean.getTitle());
-        String end_time = auctionBean.getEnd_time();
+        tvPrice.setText("¥" + goodsDetailBean.getItem().getPrice());
+        tvGoodsName.setText(goodsDetailBean.getItem().getTitle());
+
+        // TODO: 2018/9/16 竞拍数据结构暂时不对
+/*        String end_time = goodsDetailBean.getItem().getCat_id();
         try {
             long endTime = 0;
             if (!TextUtils.isEmpty(end_time)) {
@@ -221,17 +217,16 @@ public class AuctionScrollViewFragment extends BaseFragment {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }
+        }*/
 
-        // TODO: 2018/9/11 店铺信息
-//        GlideUtils.loadImage(getActivity(), auctionBean.getShop().getShop_logo(), imgStore);
-//        tvStoreName.setText(auctionBean.getShop().getShop_name());
-//        tvStoreDesc.setText(auctionBean.getShop().getShop_descript());
+        GlideUtils.loadImage(getActivity(), goodsDetailBean.getShop().getShop_logo(), imgStore);
+        tvStoreName.setText(goodsDetailBean.getShop().getShop_name());
+        tvStoreDesc.setText(goodsDetailBean.getShop().getShop_descript());
     }
 
 
     private void getEvaluateData() {
-        disposable.add(ApiUtils.getInstance().getEvaluateList(auctionBean.getItem_id(), 1)
+        disposable.add(ApiUtils.getInstance().getEvaluateList(goodsDetailBean.getItem().getItem_id(), 1)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean<EvaluateListBean>>() {

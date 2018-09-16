@@ -137,7 +137,7 @@ public class AuctionFragment extends BaseFragment {
         linearAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                AuctionDetailActivity.startAuctionDetailsActivity(getActivity(), lists.get(position));
+                AuctionDetailActivity.startAuctionDetailsActivity(getActivity(), lists.get(position).getItem_id());
             }
         });
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

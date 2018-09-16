@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseFragment;
 import com.chunlangjiu.app.amain.bean.AuctionListBean;
+import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
 import com.pkqup.commonlibrary.view.verticalview.VerticalSlide;
 
 /**
@@ -21,10 +22,10 @@ public class AuctionDetailFragment extends BaseFragment {
     private BaseFragment bottomFragment;
 
 
-    public static AuctionDetailFragment newInstance(AuctionListBean.AuctionBean auctionBean) {
+    public static AuctionDetailFragment newInstance(GoodsDetailBean goodsDetailBean) {
         AuctionDetailFragment auctionDetailFragment = new AuctionDetailFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable("auctionBean", auctionBean);
+        bundle.putSerializable("goodsDetailBean", goodsDetailBean);
         auctionDetailFragment.setArguments(bundle);
         return auctionDetailFragment;
     }
@@ -37,10 +38,10 @@ public class AuctionDetailFragment extends BaseFragment {
 
     @Override
     public void initView() {
-        AuctionListBean.AuctionBean auctionBean = (AuctionListBean.AuctionBean) getArguments().getSerializable("auctionBean");
+        GoodsDetailBean goodsDetailBean = (GoodsDetailBean) getArguments().getSerializable("goodsDetailBean");
         verticalSlide = rootView.findViewById(R.id.dragLayout);
-        topFragment = AuctionScrollViewFragment.newInstance(auctionBean);
-        bottomFragment = GoodsWebFragment.newInstance(auctionBean.getDesc());
+        topFragment = AuctionScrollViewFragment.newInstance(goodsDetailBean);
+        bottomFragment = GoodsWebFragment.newInstance(goodsDetailBean.getDesc());
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.first, topFragment);
         transaction.replace(R.id.second, bottomFragment);

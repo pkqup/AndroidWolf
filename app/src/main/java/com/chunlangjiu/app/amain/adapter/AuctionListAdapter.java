@@ -1,9 +1,11 @@
 package com.chunlangjiu.app.amain.adapter;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -22,7 +24,6 @@ public class AuctionListAdapter extends BaseQuickAdapter<AuctionListBean.Auction
 
     private Context context;
 
-
     public AuctionListAdapter(Context context, int layoutResId, List<AuctionListBean.AuctionBean> data) {
         super(layoutResId, data);
         this.context = context;
@@ -31,13 +32,22 @@ public class AuctionListAdapter extends BaseQuickAdapter<AuctionListBean.Auction
     @Override
     protected void convert(BaseViewHolder helper, AuctionListBean.AuctionBean item) {
         ImageView imageView = helper.getView(R.id.img_pic);
+        TextView tvStartPrice = helper.getView(R.id.tvStartPrice);
         GlideUtils.loadImage(context, item.getImage_default_id(), imageView);
         helper.setText(R.id.tv_name, item.getTitle());
-        helper.setText(R.id.tvStartPrice, item.getStarting_price());
-        helper.setText(R.id.tvSellPrice, item.getStarting_price());
+        helper.setText(R.id.tvStartPrice, "¥" + item.getAuction_starting_price());
+        tvStartPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);  // 设置中划线并加清晰
+        helper.setText(R.id.tvSellPrice, "¥" + item.getAuction_starting_price());
+
+        TextView tvLabel = helper.getView(R.id.tvLabel);
+        if (TextUtils.isEmpty(item.getLabel())) {
+            tvLabel.setVisibility(View.GONE);
+        } else {
+            tvLabel.setVisibility(View.VISIBLE);
+        }
 
         CountdownView countdownView = helper.getView(R.id.countdownView);
-        String end_time = item.getEnd_time();
+        String end_time = item.getAuction_end_time();
         try {
             long endTime = 0;
             if (!TextUtils.isEmpty(end_time)) {
@@ -60,7 +70,7 @@ public class AuctionListAdapter extends BaseQuickAdapter<AuctionListBean.Auction
         countdownView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
             @Override
             public void onViewAttachedToWindow(View view) {
-                String end_time = item.getEnd_time();
+                String end_time = item.getAuction_end_time();
                 try {
                     long endTime = 0;
                     if (!TextUtils.isEmpty(end_time)) {

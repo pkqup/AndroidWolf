@@ -22,14 +22,6 @@ public class AuctionListBean implements Serializable {
     public class AuctionBean implements Serializable{
 
         private String item_id;
-        private String desc;
-        private String starting_price;
-        private String status;
-        private String store;
-        private String number;
-        private String begin_time;
-        private String end_time;
-
         private String shop_id;
         private String cat_id;
         private String brand_id;
@@ -43,6 +35,80 @@ public class AuctionListBean implements Serializable {
         private String unit;
         private String image_default_id;
         private String list_image;
+        private String label;
+        private String explain;
+
+        private String desc;
+        private String auction_starting_price;
+        private String auction_status;
+        private String auction_store;
+        private String auction_begin_time;
+        private String auction_end_time;
+        private String auction_number;
+
+        public String getExplain() {
+            return explain;
+        }
+
+        public void setExplain(String explain) {
+            this.explain = explain;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public void setLabel(String label) {
+            this.label = label;
+        }
+
+        public String getAuction_starting_price() {
+            return auction_starting_price;
+        }
+
+        public void setAuction_starting_price(String auction_starting_price) {
+            this.auction_starting_price = auction_starting_price;
+        }
+
+        public String getAuction_status() {
+            return auction_status;
+        }
+
+        public void setAuction_status(String auction_status) {
+            this.auction_status = auction_status;
+        }
+
+        public String getAuction_store() {
+            return auction_store;
+        }
+
+        public void setAuction_store(String auction_store) {
+            this.auction_store = auction_store;
+        }
+
+        public String getAuction_begin_time() {
+            return auction_begin_time;
+        }
+
+        public void setAuction_begin_time(String auction_begin_time) {
+            this.auction_begin_time = auction_begin_time;
+        }
+
+        public String getAuction_end_time() {
+            return auction_end_time;
+        }
+
+        public void setAuction_end_time(String auction_end_time) {
+            this.auction_end_time = auction_end_time;
+        }
+
+        public String getAuction_number() {
+            return auction_number;
+        }
+
+        public void setAuction_number(String auction_number) {
+            this.auction_number = auction_number;
+        }
 
         public String getDesc() {
             return desc;
@@ -58,54 +124,6 @@ public class AuctionListBean implements Serializable {
 
         public void setItem_id(String item_id) {
             this.item_id = item_id;
-        }
-
-        public String getStarting_price() {
-            return starting_price;
-        }
-
-        public void setStarting_price(String starting_price) {
-            this.starting_price = starting_price;
-        }
-
-        public String getStatus() {
-            return status;
-        }
-
-        public void setStatus(String status) {
-            this.status = status;
-        }
-
-        public String getStore() {
-            return store;
-        }
-
-        public void setStore(String store) {
-            this.store = store;
-        }
-
-        public String getNumber() {
-            return number;
-        }
-
-        public void setNumber(String number) {
-            this.number = number;
-        }
-
-        public String getBegin_time() {
-            return begin_time;
-        }
-
-        public void setBegin_time(String begin_time) {
-            this.begin_time = begin_time;
-        }
-
-        public String getEnd_time() {
-            return end_time;
-        }
-
-        public void setEnd_time(String end_time) {
-            this.end_time = end_time;
         }
 
         public String getShop_id() {

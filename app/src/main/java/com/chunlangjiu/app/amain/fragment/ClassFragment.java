@@ -133,9 +133,9 @@ public class ClassFragment extends BaseFragment {
                     public void accept(ResultBean<MainClassBean> mainClassBean) throws Exception {
                         rlContent.setVisibility(View.VISIBLE);
                         rlLoading.setVisibility(View.GONE);
-                        mainClassBean.getData().getCategorys().get(0).setSelect(true);
                         firstLists = mainClassBean.getData().getCategorys();
-                        firstAdapter.setNewData(mainClassBean.getData().getCategorys());
+                        firstLists.get(0).setSelect(true);
+                        firstAdapter.setNewData(firstLists);
                         secondList = mainClassBean.getData().getCategorys().get(0).getLv2();
                         secondClassAdapter.setLists(secondList);
                         int groupCount = exListView.getCount();
@@ -164,7 +164,7 @@ public class ClassFragment extends BaseFragment {
                         firstLists.get(i).setSelect(false);
                     }
                 }
-                firstAdapter.notifyDataSetChanged();
+                firstAdapter.setNewData(firstLists);
 
                 secondClassAdapter.setLists(new ArrayList<SecondClassBean>());
                 secondClassAdapter.setLists(secondList);
