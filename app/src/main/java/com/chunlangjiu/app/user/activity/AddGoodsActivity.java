@@ -109,6 +109,14 @@ public class AddGoodsActivity extends BaseActivity {
     @BindView(R.id.imgGoodsPic)
     ImageView imgGoodsPic;
 
+    @BindView(R.id.imgDeleteMainPic)
+    ImageView imgDeleteMainPic;
+    @BindView(R.id.imgDeleteDescPic)
+    ImageView imgDeleteDescPic;
+    @BindView(R.id.imgDeleteGoodsPic)
+    ImageView imgDeleteGoodsPic;
+
+
     @BindView(R.id.etGoodsDesc)
     EditText etGoodsDesc;
 
@@ -179,6 +187,12 @@ public class AddGoodsActivity extends BaseActivity {
                 case R.id.rlGoodsPic:
                     showPhotoDialog(REQUEST_CODE_SELECT_GOODS_PIC);
                     break;
+                case R.id.imgDeleteMainPic:
+                    break;
+                case R.id.imgDeleteDescPic:
+                    break;
+                case R.id.imgDeleteGoodsPic:
+                    break;
                 case R.id.tvCommit:
                     checkData();
                     break;
@@ -211,14 +225,24 @@ public class AddGoodsActivity extends BaseActivity {
         llDescPic.setLayoutParams(layoutParams);
         llGoodsPic.setLayoutParams(layoutParams);
 
-        rlMainPic.setOnClickListener(onClickListener);
-        rlDescPic.setOnClickListener(onClickListener);
-        rlGoodsPic.setOnClickListener(onClickListener);
-        tvCommit.setOnClickListener(onClickListener);
+
+        RelativeLayout.LayoutParams imgDeleteGoodsPicLayoutParams = (RelativeLayout.LayoutParams) imgDeleteGoodsPic.getLayoutParams();
+        imgDeleteGoodsPicLayoutParams.leftMargin = picSize - SizeUtils.dp2px(12);
+        imgDeleteGoodsPic.setLayoutParams(imgDeleteGoodsPicLayoutParams);
 
         rlChoiceClass.setOnClickListener(onClickListener);
         rlChoicePlateClass.setOnClickListener(onClickListener);
         rlChoiceBrand.setOnClickListener(onClickListener);
+
+        rlMainPic.setOnClickListener(onClickListener);
+        rlDescPic.setOnClickListener(onClickListener);
+        rlGoodsPic.setOnClickListener(onClickListener);
+
+        imgDeleteMainPic.setOnClickListener(onClickListener);
+        imgDeleteDescPic.setOnClickListener(onClickListener);
+        imgDeleteGoodsPic.setOnClickListener(onClickListener);
+
+        tvCommit.setOnClickListener(onClickListener);
     }
 
     private void initImagePicker() {
@@ -465,13 +489,13 @@ public class AddGoodsActivity extends BaseActivity {
         String skuArray = new Gson().toJson(list);
 
         List<AddGoodsValueBean> valueBeanList = new ArrayList<>();
-        valueBeanList.add(new AddGoodsValueBean("类型",etType.getText().toString().trim()));
-        valueBeanList.add(new AddGoodsValueBean("容量",etSize.getText().toString().trim()));
-        valueBeanList.add(new AddGoodsValueBean("酒庄",etChateau.getText().toString().trim()));
-        valueBeanList.add(new AddGoodsValueBean("系列",etSeries.getText().toString().trim()));
-        valueBeanList.add(new AddGoodsValueBean("包装",etPackage.getText().toString().trim()));
-        valueBeanList.add(new AddGoodsValueBean("酒精度",etAlco.getText().toString().trim()));
-        valueBeanList.add(new AddGoodsValueBean("产地",etArea.getText().toString().trim()));
+        valueBeanList.add(new AddGoodsValueBean("类型", etType.getText().toString().trim()));
+        valueBeanList.add(new AddGoodsValueBean("容量", etSize.getText().toString().trim()));
+        valueBeanList.add(new AddGoodsValueBean("酒庄", etChateau.getText().toString().trim()));
+        valueBeanList.add(new AddGoodsValueBean("系列", etSeries.getText().toString().trim()));
+        valueBeanList.add(new AddGoodsValueBean("包装", etPackage.getText().toString().trim()));
+        valueBeanList.add(new AddGoodsValueBean("酒精度", etAlco.getText().toString().trim()));
+        valueBeanList.add(new AddGoodsValueBean("产地", etArea.getText().toString().trim()));
         String parameter = new Gson().toJson(valueBeanList);
 
         disposable.add(ApiUtils.getInstance().addGoods(classId, brandId, shopClassId, etTitle.getText().toString().trim(),
