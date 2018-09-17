@@ -555,7 +555,7 @@ public class AddGoodsActivity extends BaseActivity {
                     @Override
                     public void accept(ResultBean resultBean) throws Exception {
                         hideLoadingDialog();
-                        ToastUtils.showShort("添加商品成功");
+                        startActivity(new Intent(AddGoodsActivity.this,AddGoodsSuccessActivity.class));
                         finish();
                     }
                 }, new Consumer<Throwable>() {

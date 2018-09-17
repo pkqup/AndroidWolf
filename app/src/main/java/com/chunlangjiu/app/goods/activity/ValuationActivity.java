@@ -13,7 +13,9 @@ import android.widget.TextView;
 
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
+import com.chunlangjiu.app.net.ApiUtils;
 import com.chunlangjiu.app.user.activity.AddGoodsActivity;
+import com.chunlangjiu.app.user.bean.UploadImageBean;
 import com.chunlangjiu.app.util.GlideImageLoader;
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.bean.ImageItem;
@@ -21,14 +23,19 @@ import com.lzy.imagepicker.ui.ImageGridActivity;
 import com.lzy.imagepicker.view.CropImageView;
 import com.pkqup.commonlibrary.dialog.ChoicePhotoDialog;
 import com.pkqup.commonlibrary.glide.GlideUtils;
+import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.pkqup.commonlibrary.util.FileUtils;
 import com.pkqup.commonlibrary.util.SizeUtils;
 import com.pkqup.commonlibrary.util.ToastUtils;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
+import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @CreatedbBy: liucun on 2018/7/16
@@ -124,8 +131,6 @@ public class ValuationActivity extends BaseActivity {
                     break;
                 case R.id.tvCommit:
                     checkData();
-                    startActivity(new Intent(ValuationActivity.this, ValuationSuccessActivity.class));
-                    finish();
                     break;
             }
         }
@@ -287,7 +292,78 @@ public class ValuationActivity extends BaseActivity {
             ToastUtils.showShort("请填写品牌产地");
         } else if (TextUtils.isEmpty(etSeries.getText().toString().trim())) {
             ToastUtils.showShort("请填写所属系列");
+        } else {
+            uploadImageNew();
         }
+    }
+
+    private void uploadImageNew() {
+        showLoadingDialog();
+        final List<String> base64Lists = new ArrayList<>();
+        List<String> nameLists = new ArrayList<>();
+        final List<String> imageLists = new ArrayList<>();
+        if (base64Main != null) {
+            base64Lists.add(base64Main);
+            nameLists.add(mainPicLists.get(0).name);
+        }
+        if (base64Detail != null) {
+            base64Lists.add(base64Detail);
+            nameLists.add(detailPicLists.get(0).name);
+        }
+        if (base64Goods != null) {
+            base64Lists.add(base64Goods);
+            nameLists.add(goodsPicLists.get(0).name);
+        }
+        for (int i = 0; i < base64Lists.size(); i++) {
+            disposable.add(ApiUtils.getInstance().userUploadImage(base64Lists.get(i), nameLists.get(i),"rate")
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<ResultBean<UploadImageBean>>() {
+                        @Override
+                        public void accept(ResultBean<UploadImageBean> uploadImageBeanResultBean) throws Exception {
+                            hideLoadingDialog();
+                            imageLists.add(uploadImageBeanResultBean.getData().getUrl());
+                            if (imageLists.size() == base64Lists.size()) {
+                                StringBuffer stringBuffer = new StringBuffer();
+                                for (int i = 0; i < imageLists.size(); i++) {
+                                    if (i == imageLists.size() - 1) {
+                                        stringBuffer.append(imageLists.get(i));
+                                    } else {
+                                        stringBuffer.append(imageLists.get(i)).append(",");
+                                    }
+                                }
+                                valuationGoods(stringBuffer.toString());
+                            }
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            hideLoadingDialog();
+                            ToastUtils.showShort("上传图片失败");
+                        }
+                    }));
+        }
+    }
+
+    private void valuationGoods(String imgUrls) {
+        disposable.add(ApiUtils.getInstance().valuationGoods(etTitle.getText().toString().trim(), etLocation.getText().toString().trim(),
+                imgUrls, etSeries.getText().toString().trim())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean>() {
+                    @Override
+                    public void accept(ResultBean resultBean) throws Exception {
+                        hideLoadingDialog();
+                        startActivity(new Intent(ValuationActivity.this, ValuationSuccessActivity.class));
+                        finish();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        ToastUtils.showShort("估价失败");
+                        hideLoadingDialog();
+                    }
+                }));
     }
 
     @Override

@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_gray"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="210dp"
+        android:background="@color/bg_white">
+
+
+        <ImageView
+            android:id="@+id/imgSuccess"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="50dp"
+            android:src="@mipmap/publish_success" />
+
+        <TextView
+            android:id="@+id/tvSuccessStr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/imgSuccess"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:text="商品发布成功"
+            android:textColor="@color/t_black"
+            android:textSize="@dimen/sp_mid" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvSuccessStr"
+            android:layout_marginTop="30dp"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvGoodsManager"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_gray_stroke"
+                android:gravity="center"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
+                android:text="商品管理"
+                android:textColor="@color/t_black"
+                android:textSize="@dimen/sp_mid" />
+
+            <TextView
+                android:id="@+id/tvCheckGoodsManager"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/bg_gray_stroke"
+                android:gravity="center"
+                android:paddingBottom="4dp"
+                android:paddingTop="4dp"
+                android:text="审核商品管理"
+                android:textColor="@color/t_black"
+                android:textSize="@dimen/sp_mid" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="18dp"
+        android:text="商品发布说明："
+        android:textColor="@color/t_gray"
+        android:textSize="12sp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="4dp"
+        android:text="           您的发布需要进行审核，请前往审核商品管理查看商品的审核状态，如审核成功，商品将自动进入仓库商品，您可前往仓库商品进行上架或设为竞拍等操作。"
+        android:textColor="@color/t_gray"
+        android:textSize="12sp" />
+</LinearLayout>
