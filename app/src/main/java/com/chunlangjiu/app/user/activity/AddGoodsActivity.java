@@ -188,10 +188,13 @@ public class AddGoodsActivity extends BaseActivity {
                     showPhotoDialog(REQUEST_CODE_SELECT_GOODS_PIC);
                     break;
                 case R.id.imgDeleteMainPic:
+                    deleteMainPic();
                     break;
                 case R.id.imgDeleteDescPic:
+                    deleteDescPic();
                     break;
                 case R.id.imgDeleteGoodsPic:
+                    deleteGoodsPic();
                     break;
                 case R.id.tvCommit:
                     checkData();
@@ -225,9 +228,8 @@ public class AddGoodsActivity extends BaseActivity {
         llDescPic.setLayoutParams(layoutParams);
         llGoodsPic.setLayoutParams(layoutParams);
 
-
         RelativeLayout.LayoutParams imgDeleteGoodsPicLayoutParams = (RelativeLayout.LayoutParams) imgDeleteGoodsPic.getLayoutParams();
-        imgDeleteGoodsPicLayoutParams.leftMargin = picSize - SizeUtils.dp2px(12);
+        imgDeleteGoodsPicLayoutParams.leftMargin = picSize - SizeUtils.dp2px(15);
         imgDeleteGoodsPic.setLayoutParams(imgDeleteGoodsPicLayoutParams);
 
         rlChoiceClass.setOnClickListener(onClickListener);
@@ -425,15 +427,60 @@ public class AddGoodsActivity extends BaseActivity {
             ToastUtils.showShort("请填写库存");
         } else if (TextUtils.isEmpty(etSize.getText().toString().trim())) {
             ToastUtils.showShort("请填写容量");
-        } else if (mainPicLists == null || mainPicLists.size() == 0) {
-            ToastUtils.showShort("请添加商品主图");
-        } else if (detailPicLists == null || detailPicLists.size() == 0) {
-            ToastUtils.showShort("请添加商品细节图");
-        } else if (goodsPicLists == null || goodsPicLists.size() == 0) {
-            ToastUtils.showShort("请添加商品图片");
+        } else if (mainPicLists == null && detailPicLists == null && goodsPicLists == null) {
+            ToastUtils.showShort("请添加图片");
         } else {
-            uploadImage();
+            uploadImageNew();
         }
+    }
+
+    private void uploadImageNew() {
+        showLoadingDialog();
+        final List<String> base64Lists = new ArrayList<>();
+        List<String> nameLists = new ArrayList<>();
+        final List<String> imageLists = new ArrayList<>();
+        if (base64Main != null) {
+            base64Lists.add(base64Main);
+            nameLists.add(mainPicLists.get(0).name);
+        }
+        if (base64Detail != null) {
+            base64Lists.add(base64Detail);
+            nameLists.add(detailPicLists.get(0).name);
+        }
+        if (base64Goods != null) {
+            base64Lists.add(base64Goods);
+            nameLists.add(goodsPicLists.get(0).name);
+        }
+        for (int i = 0; i < base64Lists.size(); i++) {
+            disposable.add(ApiUtils.getInstance().shopUploadImage(base64Lists.get(i), nameLists.get(i))
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<ResultBean<UploadImageBean>>() {
+                        @Override
+                        public void accept(ResultBean<UploadImageBean> uploadImageBeanResultBean) throws Exception {
+                            hideLoadingDialog();
+                            imageLists.add(uploadImageBeanResultBean.getData().getUrl());
+                            if (imageLists.size() == base64Lists.size()) {
+                                StringBuffer stringBuffer = new StringBuffer();
+                                for (int i = 0; i < imageLists.size(); i++) {
+                                    if (i == imageLists.size() - 1) {
+                                        stringBuffer.append(imageLists.get(i));
+                                    } else {
+                                        stringBuffer.append(imageLists.get(i)).append(",");
+                                    }
+                                }
+                                commitGoods(stringBuffer.toString());
+                            }
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            hideLoadingDialog();
+                            ToastUtils.showShort("上传图片失败");
+                        }
+                    }));
+        }
+
     }
 
     private void uploadImage() {
@@ -509,7 +556,6 @@ public class AddGoodsActivity extends BaseActivity {
                     public void accept(ResultBean resultBean) throws Exception {
                         hideLoadingDialog();
                         ToastUtils.showShort("添加商品成功");
-                        KLog.e("add goods success");
                         finish();
                     }
                 }, new Consumer<Throwable>() {
@@ -517,7 +563,6 @@ public class AddGoodsActivity extends BaseActivity {
                     public void accept(Throwable throwable) throws Exception {
                         ToastUtils.showShort("添加商品失败");
                         hideLoadingDialog();
-                        KLog.e("add goods fail");
                     }
                 }));
     }
@@ -536,6 +581,8 @@ public class AddGoodsActivity extends BaseActivity {
                         int index = imageItem.path.lastIndexOf("/");
                         imageItem.name = imageItem.path.substring(index + 1, imageItem.path.length());
                         base64Main = FileUtils.imgToBase64(mainPicLists.get(0).path);
+                        imgMainPic.setVisibility(View.VISIBLE);
+                        imgDeleteMainPic.setVisibility(View.VISIBLE);
                         GlideUtils.loadImage(AddGoodsActivity.this, mainPicLists.get(0).path, imgMainPic);
                     } else if (requestCode == REQUEST_CODE_SELECT_DETAIL_PIC) {
                         detailPicLists = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
@@ -543,6 +590,8 @@ public class AddGoodsActivity extends BaseActivity {
                         int index = imageItem.path.lastIndexOf("/");
                         imageItem.name = imageItem.path.substring(index + 1, imageItem.path.length());
                         base64Detail = FileUtils.imgToBase64(detailPicLists.get(0).path);
+                        imgDescPic.setVisibility(View.VISIBLE);
+                        imgDeleteDescPic.setVisibility(View.VISIBLE);
                         GlideUtils.loadImage(AddGoodsActivity.this, detailPicLists.get(0).path, imgDescPic);
                     } else if (requestCode == REQUEST_CODE_SELECT_GOODS_PIC) {
                         goodsPicLists = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
@@ -550,6 +599,8 @@ public class AddGoodsActivity extends BaseActivity {
                         int index = imageItem.path.lastIndexOf("/");
                         imageItem.name = imageItem.path.substring(index + 1, imageItem.path.length());
                         base64Goods = FileUtils.imgToBase64(goodsPicLists.get(0).path);
+                        imgGoodsPic.setVisibility(View.VISIBLE);
+                        imgDeleteGoodsPic.setVisibility(View.VISIBLE);
                         GlideUtils.loadImage(AddGoodsActivity.this, goodsPicLists.get(0).path, imgGoodsPic);
                     }
                 }
@@ -559,6 +610,26 @@ public class AddGoodsActivity extends BaseActivity {
         }
     }
 
+    private void deleteMainPic() {
+        mainPicLists = null;
+        base64Main = null;
+        imgMainPic.setVisibility(View.GONE);
+        imgDeleteMainPic.setVisibility(View.GONE);
+    }
+
+    private void deleteDescPic() {
+        detailPicLists = null;
+        base64Detail = null;
+        imgDescPic.setVisibility(View.GONE);
+        imgDeleteDescPic.setVisibility(View.GONE);
+    }
+
+    private void deleteGoodsPic() {
+        goodsPicLists = null;
+        base64Goods = null;
+        imgGoodsPic.setVisibility(View.GONE);
+        imgDeleteGoodsPic.setVisibility(View.GONE);
+    }
 
     @Override
     protected void onDestroy() {
