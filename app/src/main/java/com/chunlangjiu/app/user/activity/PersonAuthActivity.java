@@ -297,9 +297,9 @@ public class PersonAuthActivity extends BaseActivity {
 
     private void uploadImage() {
         showLoadingDialog();
-        Observable<ResultBean<UploadImageBean>> front = ApiUtils.getInstance().userUploadImage(base64Front, frontLists.get(0).name, "");
-        Observable<ResultBean<UploadImageBean>> behind = ApiUtils.getInstance().userUploadImage(base64Reverse, behindLists.get(0).name, "");
-        Observable<ResultBean<UploadImageBean>> handCard = ApiUtils.getInstance().userUploadImage(base64HandCard, personLists.get(0).name, "");
+        Observable<ResultBean<UploadImageBean>> front = ApiUtils.getInstance().userUploadImage(base64Front, frontLists.get(0).name, "rate");
+        Observable<ResultBean<UploadImageBean>> behind = ApiUtils.getInstance().userUploadImage(base64Reverse, behindLists.get(0).name, "rate");
+        Observable<ResultBean<UploadImageBean>> handCard = ApiUtils.getInstance().userUploadImage(base64HandCard, personLists.get(0).name, "rate");
         disposable.add(Observable.zip(front, behind, handCard, new Function3<ResultBean<UploadImageBean>, ResultBean<UploadImageBean>,
                 ResultBean<UploadImageBean>, List<String>>() {
             @Override

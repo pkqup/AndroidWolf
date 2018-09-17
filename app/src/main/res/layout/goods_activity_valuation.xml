@@ -29,7 +29,8 @@
             <RelativeLayout
                 android:id="@+id/rlChoiceClass"
                 android:layout_width="match_parent"
-                android:layout_height="44dp">
+                android:layout_height="44dp"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/tvClassStr"
@@ -185,76 +186,95 @@
                 android:textSize="@dimen/sp_mid" />
 
 
-            <LinearLayout
-                android:id="@+id/llMainPic"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="170dp"
-                android:orientation="horizontal"
-                android:paddingBottom="10dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp">
+                android:layout_height="wrap_content">
 
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
+                <LinearLayout
+                    android:id="@+id/llMainPic"
+                    android:layout_width="match_parent"
+                    android:layout_height="170dp"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp">
 
-                    <ImageView
-                        android:id="@+id/imgMainEx"
-                        android:layout_width="match_parent"
+                    <RelativeLayout
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:background="@color/bg_red"
-                        android:scaleType="centerCrop" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="34dp"
-                        android:layout_alignParentBottom="true"
-                        android:background="#99000000"
-                        android:gravity="center"
-                        android:text="示例图"
-                        android:textColor="@color/t_white"
-                        android:textSize="12sp" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_gray_stroke">
-
-                    <LinearLayout
-                        android:id="@+id/llChoiceMainPic"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:gravity="center"
-                        android:orientation="vertical">
+                        android:layout_weight="1">
 
                         <ImageView
-                            android:layout_width="33dp"
-                            android:layout_height="29dp"
-                            android:background="@mipmap/camera" />
+                            android:id="@+id/imgMainEx"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:src="@mipmap/example_main" />
 
                         <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="34dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="#99000000"
+                            android:gravity="center"
+                            android:text="示例图"
+                            android:textColor="@color/t_white"
+                            android:textSize="12sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rlMainPic"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_gray_stroke">
+
+                        <LinearLayout
+                            android:id="@+id/llChoiceMainPic"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="13dp"
-                            android:text="上传商品主图"
-                            android:textColor="@color/t_gray"
-                            android:textSize="@dimen/sp_small" />
+                            android:layout_centerInParent="true"
+                            android:gravity="center"
+                            android:orientation="vertical">
 
-                    </LinearLayout>
+                            <ImageView
+                                android:layout_width="33dp"
+                                android:layout_height="29dp"
+                                android:background="@mipmap/camera" />
 
-                    <ImageView
-                        android:id="@+id/imgMainPic"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="centerCrop" />
-                </RelativeLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="13dp"
+                                android:text="上传商品主图"
+                                android:textColor="@color/t_gray"
+                                android:textSize="@dimen/sp_small" />
 
-            </LinearLayout>
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/imgMainPic"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop" />
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/imgDeleteMainPic"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="-5dp"
+                    android:layout_marginTop="-5dp"
+                    android:padding="8dp"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/delete_ic"
+                    android:visibility="gone" />
+            </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -270,128 +290,168 @@
                 android:textColor="@color/t_black"
                 android:textSize="@dimen/sp_mid" />
 
-
-            <LinearLayout
-                android:id="@+id/llDescPic"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="170dp"
-                android:orientation="horizontal"
-                android:paddingBottom="10dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp">
+                android:layout_height="wrap_content">
 
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
+                <LinearLayout
+                    android:id="@+id/llDescPic"
+                    android:layout_width="match_parent"
+                    android:layout_height="170dp"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp">
 
-                    <ImageView
-                        android:id="@+id/imgDescEx"
-                        android:layout_width="match_parent"
+                    <RelativeLayout
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:background="@color/bg_red"
-                        android:scaleType="centerCrop" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="34dp"
-                        android:layout_alignParentBottom="true"
-                        android:background="#99000000"
-                        android:gravity="center"
-                        android:text="示例图"
-                        android:textColor="@color/t_white"
-                        android:textSize="12sp" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_gray_stroke">
-
-                    <LinearLayout
-                        android:id="@+id/llChoiceDescPic"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:gravity="center"
-                        android:orientation="vertical">
+                        android:layout_weight="1">
 
                         <ImageView
-                            android:layout_width="33dp"
-                            android:layout_height="29dp"
-                            android:background="@mipmap/camera" />
+                            android:id="@+id/imgDescEx"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:src="@mipmap/example_detail" />
 
                         <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="34dp"
+                            android:layout_alignParentBottom="true"
+                            android:background="#99000000"
+                            android:gravity="center"
+                            android:text="示例图"
+                            android:textColor="@color/t_white"
+                            android:textSize="12sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rlDescPic"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_gray_stroke">
+
+                        <LinearLayout
+                            android:id="@+id/llChoiceDescPic"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="13dp"
-                            android:text="瓶口水位线"
-                            android:textColor="@color/t_gray"
-                            android:textSize="@dimen/sp_small" />
+                            android:layout_centerInParent="true"
+                            android:gravity="center"
+                            android:orientation="vertical">
 
-                    </LinearLayout>
+                            <ImageView
+                                android:layout_width="33dp"
+                                android:layout_height="29dp"
+                                android:background="@mipmap/camera" />
 
-                    <ImageView
-                        android:id="@+id/imgDescPic"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:scaleType="centerCrop" />
-                </RelativeLayout>
-            </LinearLayout>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="13dp"
+                                android:text="瓶口水位线"
+                                android:textColor="@color/t_gray"
+                                android:textSize="@dimen/sp_small" />
 
-            <LinearLayout
-                android:id="@+id/llGoodsPic"
-                android:layout_width="match_parent"
-                android:layout_height="170dp"
-                android:orientation="horizontal"
-                android:paddingBottom="10dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp">
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_gray_stroke">
-
-                    <LinearLayout
-                        android:id="@+id/llChoiceGoodsPic"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:gravity="center"
-                        android:orientation="vertical">
+                        </LinearLayout>
 
                         <ImageView
-                            android:layout_width="21dp"
-                            android:layout_height="21dp"
-                            android:background="@mipmap/address_add" />
+                            android:id="@+id/imgDescPic"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop" />
+                    </RelativeLayout>
+                </LinearLayout>
 
-                        <TextView
+                <ImageView
+                    android:id="@+id/imgDeleteDescPic"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="-5dp"
+                    android:layout_marginTop="-5dp"
+                    android:padding="8dp"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/delete_ic"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:id="@+id/llGoodsPic"
+                    android:layout_width="match_parent"
+                    android:layout_height="170dp"
+                    android:layout_marginTop="10dp"
+                    android:orientation="horizontal"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp">
+
+                    <RelativeLayout
+                        android:id="@+id/rlGoodsPic"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_gray_stroke">
+
+                        <LinearLayout
+                            android:id="@+id/llChoiceGoodsPic"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="13dp"
-                            android:text="添加商品图片"
-                            android:textColor="@color/t_gray"
-                            android:textSize="@dimen/sp_small" />
+                            android:layout_centerInParent="true"
+                            android:gravity="center"
+                            android:orientation="vertical">
 
-                    </LinearLayout>
+                            <ImageView
+                                android:layout_width="21dp"
+                                android:layout_height="21dp"
+                                android:background="@mipmap/address_add" />
 
-                    <ImageView
-                        android:id="@+id/imgGoodsPic"
-                        android:layout_width="match_parent"
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="13dp"
+                                android:text="添加商品图片"
+                                android:textColor="@color/t_gray"
+                                android:textSize="@dimen/sp_small" />
+
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/imgGoodsPic"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop" />
+
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
                         android:layout_height="match_parent"
-                        android:scaleType="centerCrop" />
-                </RelativeLayout>
+                        android:layout_marginLeft="10dp"
+                        android:layout_weight="1" />
+                </LinearLayout>
 
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginLeft="10dp"
-                    android:layout_weight="1" />
-            </LinearLayout>
+                <ImageView
+                    android:id="@+id/imgDeleteGoodsPic"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_marginTop="-5dp"
+                    android:layout_marginLeft="170dp"
+                    android:padding="8dp"
+                    android:scaleType="centerCrop"
+                    android:src="@mipmap/delete_ic"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
         </LinearLayout>
     </ScrollView>
 
