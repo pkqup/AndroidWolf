@@ -106,9 +106,9 @@ public class OrderMainActivity extends BaseActivity {
                 titleName.setText("我的订单");
                 tabLayout.addTab(tabLayout.newTab().setText("全部"));
                 tabLayout.addTab(tabLayout.newTab().setText("待付款"));
+                tabLayout.addTab(tabLayout.newTab().setText("待发货"));
                 tabLayout.addTab(tabLayout.newTab().setText("待收货"));
                 tabLayout.addTab(tabLayout.newTab().setText("已完成"));
-                tabLayout.addTab(tabLayout.newTab().setText("已取消"));
                 break;
             case 1:
                 tabLayout.addTab(tabLayout.newTab().setText("全部"));
@@ -126,6 +126,7 @@ public class OrderMainActivity extends BaseActivity {
                 tabLayout.addTab(tabLayout.newTab().setText("退款完成"));
                 break;
             case 3:
+                titleName.setText("订单管理");
                 tabLayout.addTab(tabLayout.newTab().setText("全部"));
                 tabLayout.addTab(tabLayout.newTab().setText("待付款"));
                 tabLayout.addTab(tabLayout.newTab().setText("待发货"));
@@ -133,6 +134,7 @@ public class OrderMainActivity extends BaseActivity {
                 tabLayout.addTab(tabLayout.newTab().setText("已取消"));
                 break;
             case 4:
+                titleName.setText("售后订单");
                 tabLayout.addTab(tabLayout.newTab().setText("全部"));
                 tabLayout.addTab(tabLayout.newTab().setText("待处理"));
                 tabLayout.addTab(tabLayout.newTab().setText("待退货"));

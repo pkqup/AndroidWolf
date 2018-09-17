@@ -48,6 +48,7 @@ public class OrderDetailBean {
      */
 
     private long tid;
+    private long aftersales_bn;
     private String shipping_type;
     private String status;
     private String payment;
@@ -84,10 +85,16 @@ public class OrderDetailBean {
     private String shipping_type_name;
     private String status_desc;
     private boolean is_buyer_rate;
+    private String pay_name;
+    private int close_time;// 剩余的支付时间。
+    private int end_time;// 订单完成时间。
+    private int consign_time;//发货时间
     private String shopname;
-//    private LogiBean logi;
+    private String shoplogo;
+    //    private LogiBean logi;
 //    private List<?> cancelInfo;
     private List<OrdersBean> orders;
+    private OrdersBean order;
 
     public long getTid() {
         return tid;
@@ -95,6 +102,14 @@ public class OrderDetailBean {
 
     public void setTid(long tid) {
         this.tid = tid;
+    }
+
+    public long getAftersales_bn() {
+        return aftersales_bn;
+    }
+
+    public void setAftersales_bn(long aftersales_bn) {
+        this.aftersales_bn = aftersales_bn;
     }
 
     public String getShipping_type() {
@@ -385,6 +400,38 @@ public class OrderDetailBean {
         this.is_buyer_rate = is_buyer_rate;
     }
 
+    public String getPay_name() {
+        return pay_name;
+    }
+
+    public void setPay_name(String pay_name) {
+        this.pay_name = pay_name;
+    }
+
+    public int getClose_time() {
+        return close_time;
+    }
+
+    public void setClose_time(int close_time) {
+        this.close_time = close_time;
+    }
+
+    public int getEnd_time() {
+        return end_time;
+    }
+
+    public void setEnd_time(int end_time) {
+        this.end_time = end_time;
+    }
+
+    public int getConsign_time() {
+        return consign_time;
+    }
+
+    public void setConsign_time(int consign_time) {
+        this.consign_time = consign_time;
+    }
+
     public String getShopname() {
         return shopname;
     }
@@ -393,7 +440,15 @@ public class OrderDetailBean {
         this.shopname = shopname;
     }
 
-//    public LogiBean getLogi() {
+    public String getShoplogo() {
+        return shoplogo;
+    }
+
+    public void setShoplogo(String shoplogo) {
+        this.shoplogo = shoplogo;
+    }
+
+    //    public LogiBean getLogi() {
 //        return logi;
 //    }
 //
@@ -415,6 +470,14 @@ public class OrderDetailBean {
 
     public void setOrders(List<OrdersBean> orders) {
         this.orders = orders;
+    }
+
+    public OrdersBean getOrder() {
+        return order;
+    }
+
+    public void setOrder(OrdersBean order) {
+        this.order = order;
     }
 
     public static class LogiBean {
@@ -483,7 +546,7 @@ public class OrderDetailBean {
         }
     }
 
-    public static class OrdersBean implements Serializable{
+    public static class OrdersBean implements Serializable {
         /**
          * price : 0.100
          * aftersales_status : null
@@ -523,6 +586,7 @@ public class OrderDetailBean {
         private long oid;
         private boolean refund_enabled;
         private boolean changing_enabled;
+        private String payment;
 
         public String getPrice() {
             return price;
@@ -666,6 +730,14 @@ public class OrderDetailBean {
 
         public void setChanging_enabled(boolean changing_enabled) {
             this.changing_enabled = changing_enabled;
+        }
+
+        public String getPayment() {
+            return payment;
+        }
+
+        public void setPayment(String payment) {
+            this.payment = payment;
         }
     }
 }

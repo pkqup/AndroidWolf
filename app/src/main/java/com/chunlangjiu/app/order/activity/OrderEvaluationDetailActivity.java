@@ -2,12 +2,14 @@ package com.chunlangjiu.app.order.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.signature.ObjectKey;
@@ -15,6 +17,7 @@ import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
 import com.chunlangjiu.app.net.ApiUtils;
 import com.chunlangjiu.app.order.adapter.OrderEvaluationPicAdapter;
+import com.chunlangjiu.app.order.bean.OrderDetailBean;
 import com.chunlangjiu.app.order.bean.OrderEvaluationPicBean;
 import com.chunlangjiu.app.order.bean.OrderListBean;
 import com.chunlangjiu.app.order.params.OrderParams;
@@ -52,8 +55,12 @@ import me.zhanghai.android.materialratingbar.MaterialRatingBar;
 
 public class OrderEvaluationDetailActivity extends BaseActivity {
     public static final int REQUEST_CODE_SELECT_PIC = 1001;
-    @BindView(R.id.imgProduct)
-    ImageView imgProduct;
+    @BindView(R.id.imgStore)
+    ImageView imgStore;
+    @BindView(R.id.tvStore)
+    TextView tvStore;
+    @BindView(R.id.llProducts)
+    LinearLayout llProducts;
     @BindView(R.id.rbEvaluation)
     MaterialRatingBar rbEvaluation;
     @BindView(R.id.etContent)
@@ -62,9 +69,6 @@ public class OrderEvaluationDetailActivity extends BaseActivity {
     TextView tvCommit;
     @BindView(R.id.cbAnonymous)
     CheckBox cbAnonymous;
-
-    private String tid;
-    private String oid;
 
     private int codeType;
     private ChoicePhotoDialog photoDialog;
@@ -81,6 +85,8 @@ public class OrderEvaluationDetailActivity extends BaseActivity {
 
     private List<String> uploadImageUrls;
     private int orderEvaluationPicBeanListSize;
+
+    private OrderListBean.ListBean listBean;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,10 +106,34 @@ public class OrderEvaluationDetailActivity extends BaseActivity {
     private void initData() {
         uploadImageUrls = new ArrayList<>();
         disposable = new CompositeDisposable();
-        OrderListBean.ListBean.OrderBean orderBean = (OrderListBean.ListBean.OrderBean) getIntent().getSerializableExtra(OrderParams.PRODUCTS);
-        GlideUtils.loadImage(this, orderBean.getPic_path(), imgProduct);
-        tid = String.valueOf(orderBean.getTid());
-        oid = String.valueOf(orderBean.getOid());
+        listBean = (OrderListBean.ListBean) getIntent().getSerializableExtra(OrderParams.PRODUCTS);
+
+        GlideUtils.loadImage(getApplicationContext(), listBean.getShop_logo(), imgStore);
+        tvStore.setText(listBean.getShopname());
+
+        List<OrderListBean.ListBean.OrderBean> order = listBean.getOrder();
+        LayoutInflater inflater = LayoutInflater.from(this);
+        for (int i = 0; i <= order.size() - 1; i++) {
+            OrderListBean.ListBean.OrderBean orderBean = order.get(i);
+            View inflate = inflater.inflate(R.layout.order_adapter_list_product_item, null);
+            ImageView imgProduct = inflate.findViewById(R.id.imgProduct);
+            GlideUtils.loadImage(getApplicationContext(), orderBean.getPic_path(), imgProduct);
+            TextView tvProductName = inflate.findViewById(R.id.tvProductName);
+            tvProductName.setText(orderBean.getTitle());
+            TextView tvProductPrice = inflate.findViewById(R.id.tvProductPrice);
+            tvProductPrice.setText(String.format("¥%s", new BigDecimal(orderBean.getPrice()).setScale(2, BigDecimal.ROUND_HALF_UP).toString()));
+            TextView tvProductDesc = inflate.findViewById(R.id.tvProductDesc);
+            tvProductDesc.setText(orderBean.getSpec_nature_info());
+            TextView tvAfterSale = inflate.findViewById(R.id.tvAfterSale);
+            tvAfterSale.setVisibility(View.GONE);
+            TextView tvProductNum = inflate.findViewById(R.id.tvProductNum);
+            tvProductNum.setText(String.format("x%d", orderBean.getNum()));
+            llProducts.addView(inflate);
+            if (llProducts.getChildCount() == order.size()) {
+                View view_line = inflate.findViewById(R.id.view_line);
+                view_line.setVisibility(View.GONE);
+            }
+        }
 
         orderEvaluationPicBeanList = new ArrayList<>();
         orderEvaluationPicBean = new OrderEvaluationPicBean();
@@ -288,38 +318,41 @@ public class OrderEvaluationDetailActivity extends BaseActivity {
 
     private void commitContent() {
         JSONArray jsonArray = new JSONArray();
-        JSONObject object = new JSONObject();
         try {
-            object.put("oid", oid);
-            StringBuilder ratePic = new StringBuilder();
-            for (int i = 0; i <= uploadImageUrls.size() - 1; i++) {
-                if (i == uploadImageUrls.size() - 1) {
-                    ratePic.append(uploadImageUrls.get(i));
-                } else {
-                    ratePic.append(uploadImageUrls.get(i)).append(",");
+            List<OrderListBean.ListBean.OrderBean> order = listBean.getOrder();
+            for (OrderListBean.ListBean.OrderBean orderBean : order) {
+                JSONObject object = new JSONObject();
+                object.put("oid", String.valueOf(orderBean.getOid()));
+                StringBuilder ratePic = new StringBuilder();
+                for (int i = 0; i <= uploadImageUrls.size() - 1; i++) {
+                    if (i == uploadImageUrls.size() - 1) {
+                        ratePic.append(uploadImageUrls.get(i));
+                    } else {
+                        ratePic.append(uploadImageUrls.get(i)).append(",");
+                    }
                 }
+                object.put("rate_pic", ratePic.toString());
+                int rating = new BigDecimal(rbEvaluation.getRating()).intValue();
+                switch (rating) {
+                    case 1:
+                    case 2:
+                        object.put("result", "bad");
+                        break;
+                    case 3:
+                        object.put("result", "neutral");
+                        break;
+                    case 4:
+                    case 5:
+                        object.put("result", "good");
+                        break;
+                }
+                object.put("content", etContent.getText().toString());
+                jsonArray.put(object);
             }
-            object.put("rate_pic", ratePic.toString());
-            int rating = new BigDecimal(rbEvaluation.getRating()).intValue();
-            switch (rating) {
-                case 1:
-                case 2:
-                    object.put("result", "bad");
-                    break;
-                case 3:
-                    object.put("result", "neutral");
-                    break;
-                case 4:
-                case 5:
-                    object.put("result", "good");
-                    break;
-            }
-            object.put("content", etContent.getText().toString());
-            jsonArray.put(object);
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        disposable.add(ApiUtils.getInstance().addRate(tid, jsonArray, cbAnonymous.isChecked(), 5, 5, 5)
+        disposable.add(ApiUtils.getInstance().addRate(String.valueOf(listBean.getTid()), jsonArray, cbAnonymous.isChecked(), 5, 5, 5)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean>() {

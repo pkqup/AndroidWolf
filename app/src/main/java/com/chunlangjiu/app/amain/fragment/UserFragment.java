@@ -152,16 +152,20 @@ public class UserFragment extends BaseFragment {
                     startActivity(new Intent(getActivity(), CompanyAuthActivity.class));
                     break;
                 case R.id.rlOrderManager:// 订单管理
-                    toOrderMainActivity(0, 0);
+                    if (llSellAuction.isShown()) {
+                        toOrderMainActivity(3, 0);
+                    } else {
+                        toOrderMainActivity(0, 0);
+                    }
                     break;
                 case R.id.rlOrderOne:// 买家待付款
                     toOrderMainActivity(0, 1);
                     break;
                 case R.id.rlOrderTwo:// 买家待收货
-                    toOrderMainActivity(0, 2);
+                    toOrderMainActivity(0, 3);
                     break;
-                case R.id.rlOrderThree:// 买家待评价
-                    startActivity(new Intent(getActivity(), OrderApplyForAfterSaleActivity.class));
+                case R.id.rlOrderThree:// 买家待发货
+                    toOrderMainActivity(0, 2);
                     break;
                 case R.id.rlOrderFour:// 买家售后订单
                     toOrderMainActivity(2, 0);
@@ -170,12 +174,15 @@ public class UserFragment extends BaseFragment {
                     toOrderMainActivity(0, 0);
                     break;
                 case R.id.rlSellOrderOne:// 卖家待付款
+                    toOrderMainActivity(3, 1);
                     break;
                 case R.id.rlSellOrderTwo:// 卖家待发货
+                    toOrderMainActivity(3, 2);
                     break;
                 case R.id.rlSellOrderThree:// 卖家售后订单
                     break;
                 case R.id.rlSellOrderFour:// 卖家全部订单
+                    toOrderMainActivity(3, 0);
                     break;
                 case R.id.rlAuctionManager:// 竞拍订单管理
                     break;

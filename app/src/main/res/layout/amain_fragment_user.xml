@@ -35,9 +35,9 @@
                 android:background="@drawable/bg_white_stroke"
                 android:gravity="center"
                 android:text="请登录"
-                android:visibility="visible"
                 android:textColor="@color/t_white"
-                android:textSize="@dimen/sp_mid" />
+                android:textSize="@dimen/sp_mid"
+                android:visibility="visible" />
 
 
             <RelativeLayout
@@ -80,9 +80,9 @@
                     android:paddingLeft="5dp"
                     android:paddingRight="5dp"
                     android:paddingTop="1dp"
+                    android:text="个人"
                     android:textColor="@color/bg_black"
-                    android:textSize="10sp"
-                    android:text="个人" />
+                    android:textSize="10sp" />
 
                 <LinearLayout
                     android:id="@+id/llAuth"
@@ -293,6 +293,48 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/rlOrderThree"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/imgOrderThree"
+                    android:layout_width="24dp"
+                    android:layout_height="22dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="14dp"
+                    android:src="@mipmap/order_icon_two" />
+
+                <TextView
+                    android:id="@+id/tvOrderThree"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/imgOrderThree"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:text="待发货"
+                    android:textColor="@color/t_black"
+                    android:textSize="@dimen/sp_small" />
+
+                <TextView
+                    android:id="@+id/tvOrderThreeNum"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginLeft="-15dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_toRightOf="@id/imgOrderThree"
+                    android:background="@drawable/cart_num_bg"
+                    android:gravity="center"
+                    android:textColor="@color/t_white"
+                    android:textSize="10sp"
+                    android:visibility="gone"
+                    tools:text="1" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/rlOrderTwo"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -325,48 +367,6 @@
                     android:layout_marginLeft="-15dp"
                     android:layout_marginTop="8dp"
                     android:layout_toRightOf="@id/imgOrderTwo"
-                    android:background="@drawable/cart_num_bg"
-                    android:gravity="center"
-                    android:textColor="@color/t_white"
-                    android:textSize="10sp"
-                    android:visibility="gone"
-                    tools:text="1" />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/rlOrderThree"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/imgOrderThree"
-                    android:layout_width="24dp"
-                    android:layout_height="22dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="14dp"
-                    android:src="@mipmap/order_icon_three" />
-
-                <TextView
-                    android:id="@+id/tvOrderThree"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/imgOrderThree"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="10dp"
-                    android:text="待评价"
-                    android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_small" />
-
-                <TextView
-                    android:id="@+id/tvOrderThreeNum"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginLeft="-15dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_toRightOf="@id/imgOrderThree"
                     android:background="@drawable/cart_num_bg"
                     android:gravity="center"
                     android:textColor="@color/t_white"

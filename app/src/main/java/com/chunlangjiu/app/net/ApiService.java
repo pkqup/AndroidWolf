@@ -17,6 +17,7 @@ import com.chunlangjiu.app.goods.bean.PaymentBean;
 import com.chunlangjiu.app.goods.bean.ShopInfoBean;
 import com.chunlangjiu.app.order.bean.CancelOrderResultBean;
 import com.chunlangjiu.app.order.bean.CancelReasonBean;
+import com.chunlangjiu.app.order.bean.LogisticsBean;
 import com.chunlangjiu.app.order.bean.OrderAfterSaleReasonBean;
 import com.chunlangjiu.app.order.bean.OrderDetailBean;
 import com.chunlangjiu.app.store.bean.StoreClassListBean;
@@ -257,7 +258,7 @@ public interface ApiService {
 
     @POST("index.php/topapi")
     @FormUrlEncoded
-    Flowable<ResultBean<OrderListBean>> getAfterSaleOrderList(@Field("method") String method, @Field("v") String v,
+    Flowable<ResultBean<OrderListBean>> getAfterSaleOrderList(@Field("method") String method, @Field("v") String v, @Field("status") String status,
                                                               @Field("page_no") int page_no, @Field("pagesize") int pagesize);
 
     @POST("index.php/topapi")
@@ -301,4 +302,39 @@ public interface ApiService {
                                               @Field("tid") String tid, @Field("oid") String oid,
                                               @Field("reason") String reason, @Field("description") String description,
                                               @Field("aftersales_type") String aftersales_type, @Field("evidence_pic") String evidence_pic);
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean> delete(@Field("method") String method, @Field("v") String v, @Field("tid") String tid);
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<LogisticsBean>> getLogisticsList(@Field("method") String method, @Field("v") String v);
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean> sendLogistics(@Field("method") String method, @Field("v") String v,
+                                       @Field("aftersales_bn") String aftersales_bn, @Field("corp_code")
+                                               String corp_code, @Field("logi_name") String logi_name, @Field("logi_no") String logi_no);
+
+    @POST("index.php/shop/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<OrderListBean>> getSellerOrderLists(@Field("method") String method, @Field("v") String v,
+                                                            @Field("status") String status, @Field("page_no") int page_no,
+                                                            @Field("page_size") int page_size, @Field("fields") String fields);
+
+    @POST("index.php/shop/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<OrderDetailBean>> getSellerOrderDetail(@Field("method") String method, @Field("v") String v,
+                                                               @Field("tid") String tid, @Field("fields") String fields);
+
+    @POST("index.php/shop/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean> sendSellerLogistics(@Field("method") String method, @Field("v") String v,
+                                             @Field("tid") String tid, @Field("corp_code")
+                                                     String corp_code, @Field("logi_no") String logi_no);
+
+    @POST("index.php/shop/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<CancelReasonBean>> getSellerCancelReason(@Field("method") String method, @Field("v") String v);
 }
