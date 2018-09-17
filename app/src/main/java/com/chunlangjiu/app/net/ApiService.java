@@ -1,6 +1,6 @@
 package com.chunlangjiu.app.net;
 
-import com.chunlangjiu.app.amain.bean.AuctionBean;
+import com.chunlangjiu.app.amain.bean.AuctionListBean;
 import com.chunlangjiu.app.amain.bean.CartCountBean;
 import com.chunlangjiu.app.amain.bean.CartListBean;
 import com.chunlangjiu.app.amain.bean.HomeListBean;
@@ -26,6 +26,7 @@ import com.chunlangjiu.app.order.bean.OrderListBean;
 import com.chunlangjiu.app.user.bean.AddressListBean;
 import com.chunlangjiu.app.user.bean.BrandListBean;
 import com.chunlangjiu.app.user.bean.MyNumBean;
+import com.chunlangjiu.app.user.bean.ShopCatIdList;
 import com.chunlangjiu.app.user.bean.ShopClassList;
 import com.chunlangjiu.app.user.bean.UploadImageBean;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
@@ -63,7 +64,14 @@ public interface ApiService {
 
     @POST("index.php/topapi")
     @FormUrlEncoded
-    Flowable<ResultBean<List<AuctionBean>>> getAuctionList(@Field("method") String method, @Field("v") String v);
+    Flowable<ResultBean> personAuth(@Field("method") String method, @Field("v") String v,
+                                    @Field("name") String name, @Field("idcard") String idcard,
+                                    @Field("dentity") String dentity, @Field("dentity_front") String dentity_front,
+                                    @Field("dentity_reverse") String dentity_reverse);
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<AuctionListBean>> getAuctionList(@Field("method") String method, @Field("v") String v);
 
     @POST("index.php/topapi")
     @FormUrlEncoded
@@ -237,6 +245,10 @@ public interface ApiService {
 
     @POST("index.php/shop/topapi")
     @FormUrlEncoded
+    Flowable<ResultBean<ShopCatIdList>> getStoreClassList(@Field("method") String method, @Field("v") String v);
+
+    @POST("index.php/shop/topapi")
+    @FormUrlEncoded
     Flowable<ResultBean<BrandListBean>> getShopBrandList(@Field("method") String method, @Field("v") String v, @Field("cat_id") String cat_id);
 
     //添加商品
@@ -248,7 +260,8 @@ public interface ApiService {
                                     @Field("title") String title, @Field("sub_title") String sub_title,
                                     @Field("weight") String weight, @Field("list_image") String list_image, @Field("price") String price,
                                     @Field("dlytmpl_id") String dlytmpl_id, @Field("sku") String sku,
-                                    @Field("wap_desc") String wap_desc, @Field("nospec") String nospec);
+                                    @Field("label") String label, @Field("explain") String explain,
+                                    @Field("parameter") String parameter, @Field("unit") String unit, @Field("nospec") String nospec);
 
     @POST("index.php/topapi")
     @FormUrlEncoded

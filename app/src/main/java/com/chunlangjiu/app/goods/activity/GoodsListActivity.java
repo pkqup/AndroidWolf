@@ -514,10 +514,22 @@ public class GoodsListActivity extends BaseActivity {
             GlideUtils.loadImage(GoodsListActivity.this, item.getImage_default_id(), imgPic);
             helper.setText(R.id.tv_name, item.getTitle());
             helper.setText(R.id.tvStartPriceStr, "原价：");
-            tvStartPrice.setText(item.getPrice());
+            tvStartPrice.setText(item.getMkt_price());
             tvStartPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);  // 设置中划线并加清晰
             helper.setText(R.id.tvSellPriceStr, "");
             helper.setText(R.id.tvSellPrice, item.getPrice());
+
+            LinearLayout llTime = helper.getView(R.id.llTime);
+            llTime.setVisibility(View.GONE);
+            helper.setText(R.id.tvLabel, item.getLabel());
+            TextView tvLabel = helper.getView(R.id.tvLabel);
+            if (TextUtils.isEmpty(item.getLabel())) {
+                tvLabel.setVisibility(View.GONE);
+            } else {
+                tvLabel.setVisibility(View.VISIBLE);
+            }
+            helper.setText(R.id.tv_attention, item.getView_count()+"人关注");
+            helper.setText(R.id.tv_evaluate, item.getRate_count()+"条评价");
         }
     }
 
@@ -539,10 +551,20 @@ public class GoodsListActivity extends BaseActivity {
 
             TextView tvStartPrice = helper.getView(R.id.tvStartPrice);
             helper.setText(R.id.tvStartPriceStr, "原价：");
-            tvStartPrice.setText(item.getPrice());
+            tvStartPrice.setText(item.getMkt_price());
             tvStartPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);  // 设置中划线并加清晰
             helper.setText(R.id.tvSellPriceStr, "");
             helper.setText(R.id.tvSellPrice, item.getPrice());
+
+            helper.setText(R.id.tvLabel, item.getLabel());
+            TextView tvLabel = helper.getView(R.id.tvLabel);
+            if (TextUtils.isEmpty(item.getLabel())) {
+                tvLabel.setVisibility(View.GONE);
+            } else {
+                tvLabel.setVisibility(View.VISIBLE);
+            }
+            helper.setText(R.id.tvAttention, item.getView_count()+"人关注");
+            helper.setText(R.id.tvEvaluate, item.getRate_count()+"条评价");
         }
     }
 

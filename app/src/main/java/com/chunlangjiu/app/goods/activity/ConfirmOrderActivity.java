@@ -1,8 +1,11 @@
 package com.chunlangjiu.app.goods.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -11,7 +14,9 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.alipay.sdk.app.PayTask;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
 import com.chunlangjiu.app.goods.adapter.ConfirmOrderGoodsAdapter;
@@ -23,9 +28,12 @@ import com.chunlangjiu.app.goods.bean.PaymentBean;
 import com.chunlangjiu.app.goods.bean.ShippingTypeBean;
 import com.chunlangjiu.app.goods.dialog.PayDialog;
 import com.chunlangjiu.app.net.ApiUtils;
+import com.chunlangjiu.app.order.activity.OrderMainActivity;
+import com.chunlangjiu.app.order.params.OrderParams;
 import com.chunlangjiu.app.user.activity.AddressListActivity;
 import com.chunlangjiu.app.user.bean.AddressListDetailBean;
 import com.chunlangjiu.app.util.ConstantMsg;
+import com.chunlangjiu.app.util.PayResult;
 import com.google.gson.Gson;
 import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
@@ -37,6 +45,7 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -51,6 +60,7 @@ import io.reactivex.schedulers.Schedulers;
 public class ConfirmOrderActivity extends BaseActivity {
 
     private static final int CHOICE_ADDRESS = 1000;
+    private static final int SDK_PAY_FLAG = 1;
 
     @BindView(R.id.scrollView)
     ScrollView scrollView;
@@ -390,8 +400,48 @@ public class ConfirmOrderActivity extends BaseActivity {
         wxapi.sendReq(request);
     }
 
-    private void invokeZhifubaoPay(ResultBean data) {
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if(msg.what==SDK_PAY_FLAG){
+                @SuppressWarnings("unchecked")
+                PayResult payResult = new PayResult((Map<String, String>) msg.obj);
+                /**
+                 对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
+                 */
+                String resultInfo = payResult.getResult();// 同步返回需要验证的信息
+                String resultStatus = payResult.getResultStatus();
+                // 判断resultStatus 为9000则代表支付成功
+                if (TextUtils.equals(resultStatus, "9000")) {
+                    // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
+                    Toast.makeText(ConfirmOrderActivity.this, "支付成功", Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
+                    Toast.makeText(ConfirmOrderActivity.this, "支付失败", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+                toOrderMainActivity(0,0);
+            }
+        }
+    };
 
+    private void invokeZhifubaoPay(ResultBean data) {
+        final String url = data.getUrl();
+        Runnable payRunnable = new Runnable() {
+            @Override
+            public void run() {
+                PayTask alipay = new PayTask(ConfirmOrderActivity.this);
+                Map<String, String> stringStringMap = alipay.payV2(url, true);
+                Message msg = new Message();
+                msg.what = SDK_PAY_FLAG;
+                msg.obj = stringStringMap;
+                mHandler.sendMessage(msg);
+            }
+        };
+        // 必须异步调用
+        Thread payThread = new Thread(payRunnable);
+        payThread.start();
     }
 
     private void invokeYuePay(ResultBean data) {
@@ -446,13 +496,23 @@ public class ConfirmOrderActivity extends BaseActivity {
             if (code == 0) {
                 //支付成功
                 ToastUtils.showShort("支付成功");
-                EventManager.getInstance().notify(null,ConstantMsg.UPDATE_CART_LIST);
+                EventManager.getInstance().notify(null, ConstantMsg.UPDATE_CART_LIST);
                 finish();
             } else if (code == -1) {
                 //支付错误
+                ToastUtils.showShort("支付失败");
             } else if (code == -2) {
                 //支付取消
+                ToastUtils.showShort("支付失败");
             }
+            toOrderMainActivity(0,0);
         }
+    }
+
+    private void toOrderMainActivity(int type, int target) {
+        Intent intent = new Intent(this, OrderMainActivity.class);
+        intent.putExtra(OrderParams.TYPE, type);
+        intent.putExtra(OrderParams.TARGET, target);
+        startActivity(intent);
     }
 }

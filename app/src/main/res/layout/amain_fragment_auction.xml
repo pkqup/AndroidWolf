@@ -84,7 +84,9 @@
                 android:id="@+id/recycle_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/bg_white" />
+                android:background="@color/bg_white"
+                android:paddingLeft="15dp"
+                android:paddingRight="15dp" />
         </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
     </LinearLayout>

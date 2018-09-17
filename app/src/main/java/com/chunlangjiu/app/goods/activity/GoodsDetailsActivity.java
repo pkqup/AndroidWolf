@@ -166,7 +166,7 @@ public class GoodsDetailsActivity extends BaseActivity {
         rlCollect.setOnClickListener(onClickListenerLogin);
         rlCart.setOnClickListener(onClickListenerLogin);
 
-        itemId = getIntent().getStringExtra("goodsId");//itemId=79  测试id
+        itemId = getIntent().getStringExtra("goodsId");
         disposable = new CompositeDisposable();
     }
 

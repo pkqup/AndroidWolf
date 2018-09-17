@@ -13,8 +13,8 @@ import android.widget.TextView;
 
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
-import com.chunlangjiu.app.amain.bean.AuctionBean;
-import com.chunlangjiu.app.goods.bean.OrderGoodsBean;
+import com.chunlangjiu.app.amain.bean.AuctionListBean;
+import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
 import com.chunlangjiu.app.goods.bean.PaymentBean;
 import com.chunlangjiu.app.goods.dialog.PayDialog;
 import com.chunlangjiu.app.net.ApiUtils;
@@ -24,7 +24,6 @@ import com.chunlangjiu.app.util.ConstantMsg;
 import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.glide.GlideUtils;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
-import com.pkqup.commonlibrary.util.BigDecimalUtils;
 import com.pkqup.commonlibrary.util.ToastUtils;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
@@ -97,13 +96,13 @@ public class AuctionConfirmOrderActivity extends BaseActivity {
     private String payMehtodId;//支付方式类型
 
 
-    private AuctionBean auctionBean;
+    private GoodsDetailBean goodsDetailBean;
     private String addressId = "";
     private List<PaymentBean.PaymentInfo> payList;
 
-    public static void startConfirmOrderActivity(Activity activity, AuctionBean auctionBean) {
+    public static void startConfirmOrderActivity(Activity activity, GoodsDetailBean goodsDetailBean) {
         Intent intent = new Intent(activity, AuctionConfirmOrderActivity.class);
-        intent.putExtra("auctionBean", auctionBean);
+        intent.putExtra("goodsDetailBean", goodsDetailBean);
         activity.startActivity(intent);
     }
 
@@ -162,17 +161,16 @@ public class AuctionConfirmOrderActivity extends BaseActivity {
     }
 
     private void initData() {
-        auctionBean = (AuctionBean) getIntent().getSerializableExtra("auctionBean");
+        goodsDetailBean = (GoodsDetailBean) getIntent().getSerializableExtra("goodsDetailBean");
 
-        // TODO: 2018/9/11 需要返回店铺的信息才能显示
-        GlideUtils.loadImage(this, auctionBean.getItem_info().getImage_default_id(), img_store);
-        tv_store_name.setText(auctionBean.getItem_info().getTitle());
+        GlideUtils.loadImage(this, goodsDetailBean.getShop().getShop_logo(), img_store);
+        tv_store_name.setText(goodsDetailBean.getShop().getShop_name());
 
-        GlideUtils.loadImage(this, auctionBean.getItem_info().getImage_default_id(), img_pic);
-        tv_name.setText(auctionBean.getItem_info().getTitle());
-        tv_price.setText(auctionBean.getItem_info().getPrice());
-        tvGivePrice.setText(auctionBean.getItem_info().getPrice());
-        tvPayPrice.setText(auctionBean.getItem_info().getPrice());
+        GlideUtils.loadImage(this, goodsDetailBean.getItem().getImage_default_id(), img_pic);
+        tv_name.setText(goodsDetailBean.getItem().getTitle());
+        tv_price.setText(goodsDetailBean.getItem().getPrice());
+        tvGivePrice.setText(goodsDetailBean.getItem().getPrice());
+        tvPayPrice.setText(goodsDetailBean.getItem().getPrice());
     }
 
 

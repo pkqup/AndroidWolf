@@ -16,14 +16,17 @@ import com.chunlangjiu.app.abase.BaseActivity;
 import com.chunlangjiu.app.amain.bean.FirstClassBean;
 import com.chunlangjiu.app.goods.dialog.ClassPopWindow;
 import com.chunlangjiu.app.net.ApiUtils;
-import com.chunlangjiu.app.user.bean.AddressListBean;
+import com.chunlangjiu.app.user.bean.AddGoodsValueBean;
 import com.chunlangjiu.app.user.bean.BrandListBean;
+import com.chunlangjiu.app.user.bean.ShopCatIdList;
 import com.chunlangjiu.app.user.bean.ShopClassList;
 import com.chunlangjiu.app.user.bean.SkuBean;
 import com.chunlangjiu.app.user.bean.UploadImageBean;
 import com.chunlangjiu.app.user.dialog.BrandPopWindow;
+import com.chunlangjiu.app.user.dialog.ShopClassPopWindow;
 import com.chunlangjiu.app.util.GlideImageLoader;
 import com.google.gson.Gson;
+import com.loc.a;
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.lzy.imagepicker.ui.ImageGridActivity;
@@ -62,6 +65,10 @@ public class AddGoodsActivity extends BaseActivity {
     RelativeLayout rlChoiceClass;
     @BindView(R.id.tvClass)
     TextView tvClass;
+    @BindView(R.id.rlChoicePlateClass)
+    RelativeLayout rlChoicePlateClass;
+    @BindView(R.id.tvPlateClass)
+    TextView tvPlateClass;
     @BindView(R.id.rlChoiceBrand)
     RelativeLayout rlChoiceBrand;
     @BindView(R.id.tvBrand)
@@ -102,6 +109,14 @@ public class AddGoodsActivity extends BaseActivity {
     @BindView(R.id.imgGoodsPic)
     ImageView imgGoodsPic;
 
+    @BindView(R.id.imgDeleteMainPic)
+    ImageView imgDeleteMainPic;
+    @BindView(R.id.imgDeleteDescPic)
+    ImageView imgDeleteDescPic;
+    @BindView(R.id.imgDeleteGoodsPic)
+    ImageView imgDeleteGoodsPic;
+
+
     @BindView(R.id.etGoodsDesc)
     EditText etGoodsDesc;
 
@@ -123,7 +138,12 @@ public class AddGoodsActivity extends BaseActivity {
     @BindView(R.id.tvCommit)
     TextView tvCommit;
 
-    //三级分类列表
+    //店铺分类列表
+    private List<ShopCatIdList.Children> shopClassLists;
+    private ShopClassPopWindow shopPopWindow;
+    private String shopClassId;
+
+    //平台三级分类列表
     private List<FirstClassBean> categoryLists;
     private ClassPopWindow classPopWindow;
     private String classId;
@@ -150,6 +170,9 @@ public class AddGoodsActivity extends BaseActivity {
                     finish();
                     break;
                 case R.id.rlChoiceClass:
+                    showShopClassPopWindow();
+                    break;
+                case R.id.rlChoicePlateClass:
                     showClassPopWindow();
                     break;
                 case R.id.rlChoiceBrand:
@@ -163,6 +186,12 @@ public class AddGoodsActivity extends BaseActivity {
                     break;
                 case R.id.rlGoodsPic:
                     showPhotoDialog(REQUEST_CODE_SELECT_GOODS_PIC);
+                    break;
+                case R.id.imgDeleteMainPic:
+                    break;
+                case R.id.imgDeleteDescPic:
+                    break;
+                case R.id.imgDeleteGoodsPic:
                     break;
                 case R.id.tvCommit:
                     checkData();
@@ -196,13 +225,24 @@ public class AddGoodsActivity extends BaseActivity {
         llDescPic.setLayoutParams(layoutParams);
         llGoodsPic.setLayoutParams(layoutParams);
 
+
+        RelativeLayout.LayoutParams imgDeleteGoodsPicLayoutParams = (RelativeLayout.LayoutParams) imgDeleteGoodsPic.getLayoutParams();
+        imgDeleteGoodsPicLayoutParams.leftMargin = picSize - SizeUtils.dp2px(12);
+        imgDeleteGoodsPic.setLayoutParams(imgDeleteGoodsPicLayoutParams);
+
+        rlChoiceClass.setOnClickListener(onClickListener);
+        rlChoicePlateClass.setOnClickListener(onClickListener);
+        rlChoiceBrand.setOnClickListener(onClickListener);
+
         rlMainPic.setOnClickListener(onClickListener);
         rlDescPic.setOnClickListener(onClickListener);
         rlGoodsPic.setOnClickListener(onClickListener);
-        tvCommit.setOnClickListener(onClickListener);
 
-        rlChoiceClass.setOnClickListener(onClickListener);
-        rlChoiceBrand.setOnClickListener(onClickListener);
+        imgDeleteMainPic.setOnClickListener(onClickListener);
+        imgDeleteDescPic.setOnClickListener(onClickListener);
+        imgDeleteGoodsPic.setOnClickListener(onClickListener);
+
+        tvCommit.setOnClickListener(onClickListener);
     }
 
     private void initImagePicker() {
@@ -222,6 +262,29 @@ public class AddGoodsActivity extends BaseActivity {
 
 
     private void initData() {
+        //获取店铺分类
+        disposable.add(ApiUtils.getInstance().getStoreClassList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<ShopCatIdList>>() {
+                    @Override
+                    public void accept(ResultBean<ShopCatIdList> shopCatIdListResultBean) throws Exception {
+                        List<ShopCatIdList.Category> category = shopCatIdListResultBean.getData().getCategory();
+                        shopClassLists = new ArrayList<>();
+                        for (int i = 0; i < category.size(); i++) {
+                            List<ShopCatIdList.Children> children = category.get(i).getChildren();
+                            shopClassLists.addAll(children);
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                    }
+                }));
+
+
+        //获取平台分类
         disposable.add(ApiUtils.getInstance().getShopClassList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -238,9 +301,29 @@ public class AddGoodsActivity extends BaseActivity {
                 }));
     }
 
+
+    private void showShopClassPopWindow() {
+        if (shopClassLists == null || shopClassLists.size() == 0) {
+            ToastUtils.showShort("暂无分类");
+        } else {
+            if (shopPopWindow == null) {
+                shopPopWindow = new ShopClassPopWindow(this, shopClassLists, shopClassId);
+                shopPopWindow.setCallBack(new ShopClassPopWindow.CallBack() {
+                    @Override
+                    public void choiceBrand(String brandName, String brandId) {
+                        shopClassId = brandId;
+                        tvClass.setText(brandName);
+                    }
+                });
+            }
+            shopPopWindow.showAsDropDown(rlChoiceClass, 0, 1);
+        }
+    }
+
+
     private void showClassPopWindow() {
         if (categoryLists == null || categoryLists.size() == 0) {
-            ToastUtils.showShort("暂无分类");
+            ToastUtils.showShort("暂无平台分类");
         } else {
             if (classPopWindow == null) {
                 classPopWindow = new ClassPopWindow(this, categoryLists, classId);
@@ -248,7 +331,7 @@ public class AddGoodsActivity extends BaseActivity {
                     @Override
                     public void choiceClass(String name, String id) {
                         classId = id;
-                        tvClass.setText(name);
+                        tvPlateClass.setText(name);
                         getBrandLists();
                     }
                 });
@@ -269,7 +352,6 @@ public class AddGoodsActivity extends BaseActivity {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-
                     }
                 }));
     }
@@ -329,8 +411,10 @@ public class AddGoodsActivity extends BaseActivity {
 
 
     private void checkData() {
-        if (TextUtils.isEmpty(classId)) {
+        if (TextUtils.isEmpty(shopClassId)) {
             ToastUtils.showShort("请选择分类");
+        } else if (TextUtils.isEmpty(classId)) {
+            ToastUtils.showShort("请选择平台分类");
         } else if (TextUtils.isEmpty(brandId)) {
             ToastUtils.showShort("请选择品牌");
         } else if (TextUtils.isEmpty(etTitle.getText().toString().trim())) {
@@ -403,9 +487,21 @@ public class AddGoodsActivity extends BaseActivity {
         List<SkuBean> list = new ArrayList<>();
         list.add(skuBean);
         String skuArray = new Gson().toJson(list);
-        disposable.add(ApiUtils.getInstance().addGoods(classId, brandId, classId, etTitle.getText().toString().trim(),
+
+        List<AddGoodsValueBean> valueBeanList = new ArrayList<>();
+        valueBeanList.add(new AddGoodsValueBean("类型", etType.getText().toString().trim()));
+        valueBeanList.add(new AddGoodsValueBean("容量", etSize.getText().toString().trim()));
+        valueBeanList.add(new AddGoodsValueBean("酒庄", etChateau.getText().toString().trim()));
+        valueBeanList.add(new AddGoodsValueBean("系列", etSeries.getText().toString().trim()));
+        valueBeanList.add(new AddGoodsValueBean("包装", etPackage.getText().toString().trim()));
+        valueBeanList.add(new AddGoodsValueBean("酒精度", etAlco.getText().toString().trim()));
+        valueBeanList.add(new AddGoodsValueBean("产地", etArea.getText().toString().trim()));
+        String parameter = new Gson().toJson(valueBeanList);
+
+        disposable.add(ApiUtils.getInstance().addGoods(classId, brandId, shopClassId, etTitle.getText().toString().trim(),
                 etSecondName.getText().toString().trim(), etSize.getText().toString().trim(), images,
-                etPrice.getText().toString().trim(), "15", skuArray, etGoodsDesc.getText().toString().trim())
+                etPrice.getText().toString().trim(), "15", skuArray, etTag.getText().toString().trim(),
+                etGoodsDesc.getText().toString().trim(), parameter)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean>() {
@@ -414,6 +510,7 @@ public class AddGoodsActivity extends BaseActivity {
                         hideLoadingDialog();
                         ToastUtils.showShort("添加商品成功");
                         KLog.e("add goods success");
+                        finish();
                     }
                 }, new Consumer<Throwable>() {
                     @Override

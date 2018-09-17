@@ -105,6 +105,7 @@ dependencies {
     implementation 'com.amap.api:location:4.0.1'
     //个推
     implementation 'com.getui:sdk:2.12.4.0'
+    //微信支付
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:5.1.6'
 
 }

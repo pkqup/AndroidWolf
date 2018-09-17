@@ -2,6 +2,7 @@ package com.chunlangjiu.app.amain.adapter;
 
 import android.content.Context;
 import android.graphics.Paint;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -57,10 +58,17 @@ public class HomeAdapter extends BaseQuickAdapter<HomeBean, BaseViewHolder> {
                 GlideUtils.loadImage(context, item.getImgsrc(), imgPic);
                 viewHolder.setText(R.id.tv_name, item.getTitle());
                 viewHolder.setText(R.id.tvStartPriceStr, "原价：");
-                tvStartPrice.setText(item.getPrice());
+                tvStartPrice.setText("¥" + item.getMkt_price());
                 tvStartPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);  // 设置中划线并加清晰
                 viewHolder.setText(R.id.tvSellPriceStr, "");
-                viewHolder.setText(R.id.tvSellPrice, item.getPrice());
+                viewHolder.setText(R.id.tvSellPrice, "¥" + item.getPrice());
+                viewHolder.setText(R.id.tvLabel, item.getLabel());
+                TextView tvLabel = viewHolder.getView(R.id.tvLabel);
+                if (TextUtils.isEmpty(item.getLabel())) {
+                    tvLabel.setVisibility(View.GONE);
+                } else {
+                    tvLabel.setVisibility(View.VISIBLE);
+                }
                 break;
             case HomeBean.ITEM_PIC:
 
