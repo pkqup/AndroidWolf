@@ -28,6 +28,7 @@ import com.chunlangjiu.app.user.bean.MyNumBean;
 import com.chunlangjiu.app.user.bean.ShopCatIdList;
 import com.chunlangjiu.app.user.bean.ShopClassList;
 import com.chunlangjiu.app.user.bean.UploadImageBean;
+import com.chunlangjiu.app.user.bean.UserInfoBean;
 import com.pkqup.commonlibrary.net.HttpUtils;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 
@@ -81,8 +82,20 @@ public class ApiUtils {
         return apiService.shopLogin("user.login", "v1", mobile, password);
     }
 
+    public Flowable<ResultBean<UserInfoBean>> getUserInfo() {
+        return apiService.getUserInfo("member.basics.get", "v1");
+    }
+
+    public Flowable<ResultBean> setHeadImg(String url) {
+        return apiService.setHeadImg("member.setImg", "v1", url);
+    }
+
     public Flowable<ResultBean> personAuth(String name, String idcard, String dentity, String dentity_front, String dentity_reverse) {
         return apiService.personAuth("member.autonym", "v1", name, idcard, dentity, dentity_front, dentity_reverse);
+    }
+
+    public Flowable<ResultBean> valuationGoods(String title, String name, String imgs, String series) {
+        return apiService.valuationGoods("member.evaluate", "v1", title, name, imgs, series);
     }
 
     public Flowable<ResultBean<AuctionListBean>> getAuctionList() {
@@ -140,7 +153,7 @@ public class ApiUtils {
     }
 
     //获取我的模块的数量上标
-    public Flowable<ResultBean<MyNumBean>> getMyNumFlag(String addressId) {
+    public Flowable<ResultBean<MyNumBean>> getMyNumFlag() {
         return apiService.getMyNumFlag("member.index", "v1");
     }
 

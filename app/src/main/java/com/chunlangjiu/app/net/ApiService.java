@@ -28,6 +28,7 @@ import com.chunlangjiu.app.user.bean.MyNumBean;
 import com.chunlangjiu.app.user.bean.ShopCatIdList;
 import com.chunlangjiu.app.user.bean.ShopClassList;
 import com.chunlangjiu.app.user.bean.UploadImageBean;
+import com.chunlangjiu.app.user.bean.UserInfoBean;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 
 import org.json.JSONArray;
@@ -60,6 +61,14 @@ public interface ApiService {
     Flowable<ResultBean<LoginBean>> shopLogin(@Field("method") String method, @Field("v") String v,
                                               @Field("account") String account, @Field("password") String password);
 
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<UserInfoBean>> getUserInfo(@Field("method") String method, @Field("v") String v);
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean> setHeadImg(@Field("method") String method, @Field("v") String v,
+                                               @Field("img_url") String img_url);
 
     @POST("index.php/topapi")
     @FormUrlEncoded
@@ -67,6 +76,12 @@ public interface ApiService {
                                     @Field("name") String name, @Field("idcard") String idcard,
                                     @Field("dentity") String dentity, @Field("dentity_front") String dentity_front,
                                     @Field("dentity_reverse") String dentity_reverse);
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean> valuationGoods(@Field("method") String method, @Field("v") String v,
+                                        @Field("title") String title, @Field("name") String name,
+                                        @Field("img") String img, @Field("series") String series);
 
     @POST("index.php/topapi")
     @FormUrlEncoded

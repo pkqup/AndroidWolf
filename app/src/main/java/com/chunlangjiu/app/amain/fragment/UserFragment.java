@@ -2,6 +2,7 @@ package com.chunlangjiu.app.amain.fragment;
 
 import android.content.Intent;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,9 @@ import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseApplication;
 import com.chunlangjiu.app.abase.BaseFragment;
 import com.chunlangjiu.app.amain.activity.LoginActivity;
+import com.chunlangjiu.app.amain.bean.CartListBean;
+import com.chunlangjiu.app.amain.bean.LoginBean;
+import com.chunlangjiu.app.net.ApiUtils;
 import com.chunlangjiu.app.order.activity.OrderApplyForAfterSaleActivity;
 import com.chunlangjiu.app.order.activity.OrderMainActivity;
 import com.chunlangjiu.app.order.params.OrderParams;
@@ -21,11 +25,31 @@ import com.chunlangjiu.app.user.activity.AddGoodsActivity;
 import com.chunlangjiu.app.user.activity.AddressListActivity;
 import com.chunlangjiu.app.user.activity.CompanyAuthActivity;
 import com.chunlangjiu.app.user.activity.PersonAuthActivity;
+import com.chunlangjiu.app.user.bean.MyNumBean;
+import com.chunlangjiu.app.user.bean.UploadImageBean;
+import com.chunlangjiu.app.user.bean.UserInfoBean;
 import com.chunlangjiu.app.util.ConstantMsg;
+import com.chunlangjiu.app.util.GlideImageLoader;
 import com.chunlangjiu.app.web.WebViewActivity;
+import com.lzy.imagepicker.ImagePicker;
+import com.lzy.imagepicker.bean.ImageItem;
+import com.lzy.imagepicker.ui.ImageGridActivity;
+import com.lzy.imagepicker.view.CropImageView;
+import com.pkqup.commonlibrary.dialog.ChoicePhotoDialog;
 import com.pkqup.commonlibrary.eventmsg.EventManager;
+import com.pkqup.commonlibrary.glide.GlideUtils;
+import com.pkqup.commonlibrary.net.bean.ResultBean;
+import com.pkqup.commonlibrary.util.FileUtils;
+import com.pkqup.commonlibrary.util.ToastUtils;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 
 /**
@@ -132,6 +156,8 @@ public class UserFragment extends BaseFragment {
     private static final int TYPE_SELLER = 1;//卖家中心
     private int userType = TYPE_BUYER;
 
+    private CompositeDisposable disposable;
+
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -143,6 +169,9 @@ public class UserFragment extends BaseFragment {
                 case R.id.tvToLogin:
                     break;
                 case R.id.imgSetting:
+                    break;
+                case R.id.imgHead:
+                    setHeadIcon();
                     break;
                 case R.id.tvChangeType:// 切换买/卖家中心
                     changeUserType();
@@ -223,7 +252,6 @@ public class UserFragment extends BaseFragment {
         }
     };
 
-
     @Override
     public void getContentView(LayoutInflater inflater, ViewGroup container) {
         inflater.inflate(R.layout.amain_fragment_user, container, true);
@@ -240,6 +268,7 @@ public class UserFragment extends BaseFragment {
         imgSetting.setOnClickListener(onClickListener);
 
         imgHead = rootView.findViewById(R.id.imgHead);
+        imgHead.setOnClickListener(onClickListener);
         tvName = rootView.findViewById(R.id.tvName);
         tvAccountType = rootView.findViewById(R.id.tvAccountType);
 
@@ -406,20 +435,109 @@ public class UserFragment extends BaseFragment {
 
     @Override
     public void initData() {
+        disposable = new CompositeDisposable();
         EventManager.getInstance().registerListener(onNotifyListener);
+        initImagePicker();
+        getUserInfo();
+        getOrderNumIndex();
+    }
+
+
+    private void initImagePicker() {
+        ImagePicker imagePicker = ImagePicker.getInstance();
+        imagePicker.setImageLoader(new GlideImageLoader());   //设置图片加载器
+        imagePicker.setShowCamera(true);                      //显示拍照按钮
+        imagePicker.setMultiMode(false);
+        imagePicker.setCrop(true);                            //允许裁剪（单选才有效）
+        imagePicker.setSaveRectangle(true);                   //是否按矩形区域保存
+        imagePicker.setSelectLimit(1);                        //选中数量限制
+        imagePicker.setStyle(CropImageView.Style.CIRCLE);  //裁剪框的形状
+        imagePicker.setFocusWidth(800);                       //裁剪框的宽度。单位像素（圆形自动取宽高最小值）
+        imagePicker.setFocusHeight(800);                      //裁剪框的高度。单位像素（圆形自动取宽高最小值）
+        imagePicker.setOutPutX(500);                         //保存文件的宽度。单位像素
+        imagePicker.setOutPutY(500);                         //保存文件的高度。单位像素
+    }
+
+    private void getUserInfo() {
+        disposable.add(ApiUtils.getInstance().getUserInfo()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<UserInfoBean>>() {
+                    @Override
+                    public void accept(ResultBean<UserInfoBean> userInfoBeanResultBean) throws Exception {
+                        // TODO: 2018/9/17 显示头像和用户名
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                }));
+    }
+
+    private void getOrderNumIndex() {
+        disposable.add(ApiUtils.getInstance().getMyNumFlag()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<MyNumBean>>() {
+                    @Override
+                    public void accept(ResultBean<MyNumBean> myNumBeanResultBean) throws Exception {
+                        MyNumBean data = myNumBeanResultBean.getData();
+                        if (data != null) {
+                            tvOrderOneNum.setText(data.getWait_pay_num());
+                            tvOrderOneNum.setVisibility(TextUtils.isEmpty(data.getWait_pay_num()) ? View.GONE : View.VISIBLE);
+                            tvOrderTwoNum.setText(data.getWait_send_goods_num());
+                            tvOrderTwoNum.setVisibility(TextUtils.isEmpty(data.getWait_send_goods_num()) ? View.GONE : View.VISIBLE);
+                            tvOrderThreeNum.setText(data.getWait_confirm_goods_num());
+                            tvOrderThreeNum.setVisibility(TextUtils.isEmpty(data.getWait_confirm_goods_num()) ? View.GONE : View.VISIBLE);
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                }));
+    }
+
+
+    private ChoicePhotoDialog photoDialog;
+    public static final int REQUEST_CODE_CHOICE_HEAD = 1001;
+
+    /**
+     * 设置头像
+     */
+    private void setHeadIcon() {
+        if (photoDialog == null) {
+            photoDialog = new ChoicePhotoDialog(getActivity());
+            photoDialog.setCallBackListener(new ChoicePhotoDialog.OnCallBackListener() {
+                @Override
+                public void takePhoto() {
+                    openCamera(REQUEST_CODE_CHOICE_HEAD);
+                }
+
+                @Override
+                public void toPhotoAlbum() {
+                    openAlbum(REQUEST_CODE_CHOICE_HEAD);
+                }
+            });
+        }
+        photoDialog.show();
+    }
+
+    private void openCamera(int requestCode) {
+        Intent intent = new Intent(getActivity(), ImageGridActivity.class);
+        intent.putExtra(ImageGridActivity.EXTRAS_TAKE_PICKERS, true); // 是否是直接打开相机
+        startActivityForResult(intent, requestCode);
+    }
+
+    private void openAlbum(int requestCode) {
+        Intent intent = new Intent(getActivity(), ImageGridActivity.class);
+        startActivityForResult(intent, requestCode);
     }
 
     private void changeUserType() {
         userType = userType == TYPE_BUYER ? TYPE_SELLER : TYPE_BUYER;
         showUserTypeView();
     }
-
-
-    private void toOrderWeb() {
-        WebViewActivity.startWebViewActivity(getActivity(),
-                "http://mall.chunlangjiu.com/wap/trade-list.html?token=" + BaseApplication.getToken());
-    }
-
 
     private EventManager.OnNotifyListener onNotifyListener = new EventManager.OnNotifyListener() {
         @Override
@@ -434,16 +552,78 @@ public class UserFragment extends BaseFragment {
         }
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        EventManager.getInstance().unRegisterListener(onNotifyListener);
-    }
-
     private void toOrderMainActivity(int type, int target) {
         Intent intent = new Intent(getActivity(), OrderMainActivity.class);
         intent.putExtra(OrderParams.TYPE, type);
         intent.putExtra(OrderParams.TARGET, target);
         startActivity(intent);
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        try {
+            if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
+                //添加图片返回
+                if (data != null) {
+                    if (requestCode == REQUEST_CODE_CHOICE_HEAD) {
+                        ArrayList<ImageItem> mainPicLists = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+                        ImageItem imageItem = mainPicLists.get(0);
+                        int index = imageItem.path.lastIndexOf("/");
+                        imageItem.name = imageItem.path.substring(index + 1, imageItem.path.length());
+                        String base64Head = FileUtils.imgToBase64(mainPicLists.get(0).path);
+                        uploadHeadIcon(mainPicLists, base64Head);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void uploadHeadIcon(ArrayList<ImageItem> mainPicLists, String base64Head) {
+        showLoadingDialog();
+        disposable.add(ApiUtils.getInstance().userUploadImage(base64Head, mainPicLists.get(0).name, "rate")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<UploadImageBean>>() {
+                    @Override
+                    public void accept(ResultBean<UploadImageBean> uploadImageBeanResultBean) throws Exception {
+                        setHeadUrl(uploadImageBeanResultBean.getData().getUrl());
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        hideLoadingDialog();
+                        ToastUtils.showShort("上传头像失败");
+                    }
+                }));
+    }
+
+    private void setHeadUrl(final String url) {
+        disposable.add(ApiUtils.getInstance().setHeadImg(url)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean>() {
+                    @Override
+                    public void accept(ResultBean loginBeanResultBean) throws Exception {
+                        hideLoadingDialog();
+                        GlideUtils.loadImage(getActivity(), url, imgHead);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        hideLoadingDialog();
+                        ToastUtils.showShort("设置头像失败");
+                    }
+                }));
+    }
+
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventManager.getInstance().unRegisterListener(onNotifyListener);
+    }
+
 }
