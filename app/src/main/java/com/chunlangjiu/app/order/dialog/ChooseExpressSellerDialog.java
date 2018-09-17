@@ -122,6 +122,7 @@ public class ChooseExpressSellerDialog extends Dialog {
     public void setData(List<LogisticsBean.ListBean> data, String tid) {
         this.data = data;
         this.tid = tid;
+        etExpressCode.setText("");
         initData();
     }
 

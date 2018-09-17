@@ -1,9 +1,12 @@
 package com.chunlangjiu.app.order.activity;
 
+import android.annotation.SuppressLint;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -11,9 +14,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.alipay.sdk.app.PayTask;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
+import com.chunlangjiu.app.goods.bean.CreateOrderBean;
+import com.chunlangjiu.app.goods.bean.PaymentBean;
+import com.chunlangjiu.app.goods.dialog.PayDialog;
 import com.chunlangjiu.app.net.ApiUtils;
 import com.chunlangjiu.app.order.bean.CancelOrderResultBean;
 import com.chunlangjiu.app.order.bean.CancelReasonBean;
@@ -22,18 +30,27 @@ import com.chunlangjiu.app.order.bean.OrderDetailBean;
 import com.chunlangjiu.app.order.bean.OrderListBean;
 import com.chunlangjiu.app.order.dialog.CancelOrderDialog;
 import com.chunlangjiu.app.order.dialog.ChooseExpressDialog;
+import com.chunlangjiu.app.order.dialog.ChooseExpressSellerDialog;
+import com.chunlangjiu.app.order.dialog.SellerCancelOrderDialog;
 import com.chunlangjiu.app.order.params.OrderParams;
+import com.chunlangjiu.app.util.ConstantMsg;
+import com.chunlangjiu.app.util.PayResult;
 import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.glide.GlideUtils;
+import com.pkqup.commonlibrary.net.HttpUtils;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.pkqup.commonlibrary.util.TimeUtils;
 import com.pkqup.commonlibrary.util.ToastUtils;
 import com.pkqup.commonlibrary.view.countdownview.CountdownView;
+import com.tencent.mm.opensdk.modelpay.PayReq;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -130,6 +147,17 @@ public class OrderDetailActivity extends BaseActivity {
     private String tid;
     private ChooseExpressDialog chooseExpressDialog;
     private String aftersales_bn;
+    private SellerCancelOrderDialog sellerCancelOrderDialog;
+    private ChooseExpressSellerDialog chooseExpressSellerDialog;
+
+    private List<PaymentBean.PaymentInfo> payList;
+    private int payMehtod;//默认微信支付
+    private String payMehtodId;//支付方式类型
+    private PayDialog payDialog;
+    private IWXAPI wxapi;
+    private static final int SDK_PAY_FLAG = 1;
+    private ResultBean<CreateOrderBean> createOrderBeanResultBean;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,6 +175,10 @@ public class OrderDetailActivity extends BaseActivity {
     }
 
     private void initData() {
+        EventManager.getInstance().registerListener(onNotifyListener);
+        wxapi = WXAPIFactory.createWXAPI(this, null);
+        wxapi.registerApp("wx0e1869b241d7234f");
+
         type = getIntent().getIntExtra(OrderParams.TYPE, 0);
         oid = String.valueOf(getIntent().getLongExtra(OrderParams.OID, 0));
         aftersalesBn = String.valueOf(getIntent().getLongExtra(OrderParams.AFTERSALESBN, 0));
@@ -216,6 +248,26 @@ public class OrderDetailActivity extends BaseActivity {
                             }
                         }));
                 break;
+            case 4:
+                disposable.add(ApiUtils.getInstance().getSellerAfterSaleOrderDetail(aftersalesBn, oid)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Consumer<ResultBean<OrderDetailBean>>() {
+                            @Override
+                            public void accept(ResultBean<OrderDetailBean> orderDetailBeanResultBean) throws Exception {
+                                orderDetailBean = orderDetailBeanResultBean.getData();
+                                processData();
+                                rlLoading.setVisibility(View.GONE);
+                            }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(Throwable throwable) throws Exception {
+                                rlLoading.setVisibility(View.GONE);
+
+                                Log.e(OrderDetailActivity.class.getSimpleName(), throwable.toString());
+                            }
+                        }));
+                break;
         }
     }
 
@@ -266,6 +318,8 @@ public class OrderDetailActivity extends BaseActivity {
                         if (0 == type) {
                             tv1.setText("删除订单");
                             tv2.setText("重新购买");
+                            tv1.setVisibility(View.VISIBLE);
+                            tv2.setVisibility(View.VISIBLE);
                         } else {
                             tv1.setVisibility(View.GONE);
                             tv2.setVisibility(View.GONE);
@@ -373,6 +427,7 @@ public class OrderDetailActivity extends BaseActivity {
                 tvPaymentTips.setText("实付金额：");
                 break;
             case 2:
+            case 4:
                 tvRightContentDesc.setVisibility(View.GONE);
                 tvRightContent.setVisibility(View.GONE);
                 countdownView.setVisibility(View.GONE);
@@ -386,31 +441,50 @@ public class OrderDetailActivity extends BaseActivity {
                     case "0":
                         llAfterSaleSendTime.setVisibility(View.GONE);
                         llAfterSalePayTime.setVisibility(View.GONE);
-
-                        tv1.setVisibility(View.GONE);
-                        tv2.setText("撤销申请");
-                        tv2.setVisibility(View.VISIBLE);
+                        if (2 == type) {
+                            tv1.setVisibility(View.GONE);
+                            tv2.setText("撤销申请");
+                            tv2.setVisibility(View.VISIBLE);
+                        } else {
+                            tv1.setText("拒绝申请");
+                            tv1.setVisibility(View.VISIBLE);
+                            tv2.setText("同意申请");
+                            tv2.setVisibility(View.VISIBLE);
+                        }
                         break;
                     case "1":
                         llAfterSaleSendTime.setVisibility(View.GONE);
                         llAfterSalePayTime.setVisibility(View.GONE);
-
-                        tv1.setText("撤销申请");
-                        tv1.setVisibility(View.VISIBLE);
-                        tv2.setText("退货发货");
-                        tv2.setVisibility(View.VISIBLE);
+                        if (2 == type) {
+                            tv1.setText("撤销申请");
+                            tv1.setVisibility(View.VISIBLE);
+                            tv2.setText("退货发货");
+                            tv2.setVisibility(View.VISIBLE);
+                        } else {
+                            if ("2".equals(orderDetailBean.getProgress())) {
+                                tv1.setVisibility(View.GONE);
+                                tv2.setText("同意退款");
+                                tv2.setVisibility(View.VISIBLE);
+                            } else {
+                                tv1.setVisibility(View.GONE);
+                                tv2.setVisibility(View.GONE);
+                            }
+                        }
                         break;
                     case "2":
                         llAfterSalePayTime.setVisibility(View.GONE);
-
                         tv1.setVisibility(View.GONE);
                         tv2.setVisibility(View.GONE);
                         break;
                     case "3":
-
-                        tv1.setVisibility(View.GONE);
-                        tv2.setText("删除");
-                        tv2.setVisibility(View.VISIBLE);
+                        if (2 == type) {
+                            tv1.setVisibility(View.GONE);
+                            tv2.setText("删除");
+                            tv2.setVisibility(View.VISIBLE);
+                        } else {
+                            tv1.setVisibility(View.GONE);
+                            tv2.setVisibility(View.GONE);
+                        }
                         break;
                 }
                 llPayType.setVisibility(View.GONE);
@@ -476,17 +550,9 @@ public class OrderDetailActivity extends BaseActivity {
                                     break;
                             }
                             break;
-                        case 2:
-                            switch (orderDetailBean.getStatus()) {
-                                case "0":
-                                    break;
-                                case "1":
-                                    break;
-                                case "2":
-                                    break;
-                                case "3":
-                                    break;
-                            }
+                        case 3:
+                            tid = String.valueOf(orderDetailBean.getTid());
+                            getSellerCancelReason();
                             break;
                     }
                     break;
@@ -494,6 +560,17 @@ public class OrderDetailActivity extends BaseActivity {
                     switch (type) {
                         case 0:
                             switch (orderDetailBean.getStatus()) {
+                                case OrderParams.TRADE_CLOSED_BY_SYSTEM:
+                                case OrderParams.WAIT_BUYER_PAY:
+                                    if (countdownView.getRemainTime() > 1000) {
+                                        tid = String.valueOf(orderDetailBean.getTid());
+                                        repay();
+                                    } else {
+                                        if (OrderParams.WAIT_BUYER_PAY.equals(orderDetailBean.getStatus())) {
+                                            ToastUtils.showShort("已到支付结束时间");
+                                        }
+                                    }
+                                    break;
                                 case OrderParams.WAIT_BUYER_CONFIRM_GOODS:
                                     tid = String.valueOf(orderDetailBean.getTid());
                                     confirmReceipt();
@@ -524,8 +601,192 @@ public class OrderDetailActivity extends BaseActivity {
                                     break;
                             }
                             break;
+                        case 3:
+                            tid = String.valueOf(orderDetailBean.getTid());
+                            getSellerLogisticsList();
+                            break;
                     }
                     break;
+            }
+        }
+    };
+
+    private void repay() {
+        disposable.add(ApiUtils.getInstance().repay(tid, "true")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<CreateOrderBean>>() {
+                    @Override
+                    public void accept(final ResultBean<CreateOrderBean> resultBean) throws Exception {
+                        if (0 == resultBean.getErrorcode()) {
+                            createOrderBeanResultBean = resultBean;
+                            getPayment();
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                }));
+    }
+
+    private void getPayment() {
+        disposable.add(ApiUtils.getInstance().getPayment()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<PaymentBean>>() {
+                    @Override
+                    public void accept(ResultBean<PaymentBean> paymentBeanResultBean) throws Exception {
+                        hideLoadingDialog();
+                        payList = paymentBeanResultBean.getData().getList();
+                        if (payList == null || payList.size() == 0) {
+                            ToastUtils.showShort("获取支付方式失败");
+                        } else {
+                            payDialog = new PayDialog(OrderDetailActivity.this, payList);
+                            payDialog.setCallBack(new PayDialog.CallBack() {
+                                @Override
+                                public void choicePayMethod(int payMethod, String payMethodId) {
+                                    payDo(payMethod, payMethodId);
+                                }
+                            });
+                            payDialog.show();
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        hideLoadingDialog();
+                    }
+                }));
+    }
+
+    private void payDo(int payMethod, String payMethodId) {
+        this.payMehtod = payMethod;
+        this.payMehtodId = payMethodId;
+        disposable.add(ApiUtils.getInstance().payDo(createOrderBeanResultBean.getData().getPayment_id(), payMehtodId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean>() {
+                    @Override
+                    public void accept(ResultBean resultBean) throws Exception {
+                        hideLoadingDialog();
+                        invokePay(resultBean);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        hideLoadingDialog();
+                    }
+                }));
+    }
+
+    private void invokePay(ResultBean data) {
+        switch (payMehtod) {
+            case 0:
+                invokeWeixinPay(data);
+                break;
+            case 1:
+                invokeZhifubaoPay(data);
+                break;
+            case 2:
+                invokeYuePay(data);
+                break;
+            case 3:
+                invokeDaePay(data);
+                break;
+        }
+    }
+
+    private void invokeWeixinPay(ResultBean data) {
+        PayReq request = new PayReq();
+        request.appId = "wx0e1869b241d7234f";
+        request.partnerId = data.getPartnerid();
+        request.prepayId = data.getPrepayid();
+        request.packageValue = data.getPackageName();
+        request.nonceStr = data.getNoncestr();
+        request.timeStamp = data.getTimestamp();
+        request.sign = data.getSign();
+        wxapi.sendReq(request);
+    }
+
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == SDK_PAY_FLAG) {
+                @SuppressWarnings("unchecked")
+                PayResult payResult = new PayResult((Map<String, String>) msg.obj);
+                /**
+                 对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
+                 */
+                String resultInfo = payResult.getResult();// 同步返回需要验证的信息
+                String resultStatus = payResult.getResultStatus();
+                // 判断resultStatus 为9000则代表支付成功
+                if (TextUtils.equals(resultStatus, "9000")) {
+                    // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
+                    Toast.makeText(OrderDetailActivity.this, "支付成功", Toast.LENGTH_SHORT).show();
+                    finish();
+                    EventManager.getInstance().notify(null, OrderParams.REFRESH_ORDER_LIST);
+                } else {
+                    // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
+                    Toast.makeText(OrderDetailActivity.this, "支付失败", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    };
+
+    private void invokeZhifubaoPay(ResultBean data) {
+        final String url = data.getUrl();
+        Runnable payRunnable = new Runnable() {
+            @Override
+            public void run() {
+                PayTask alipay = new PayTask(OrderDetailActivity.this);
+                Map<String, String> stringStringMap = alipay.payV2(url, true);
+                Message msg = new Message();
+                msg.what = SDK_PAY_FLAG;
+                msg.obj = stringStringMap;
+                mHandler.sendMessage(msg);
+            }
+        };
+        // 必须异步调用
+        Thread payThread = new Thread(payRunnable);
+        payThread.start();
+    }
+
+    private void invokeYuePay(ResultBean data) {
+
+    }
+
+    private void invokeDaePay(ResultBean data) {
+
+    }
+
+    private void weixinPaySuccess(Object object, String eventTag) {
+        if (eventTag.equals(ConstantMsg.WEIXIN_PAY_CALLBACK)) {
+            int code = (int) object;
+            if (code == 0) {
+                //支付成功
+                ToastUtils.showShort("支付成功");
+                finish();
+                EventManager.getInstance().notify(null, OrderParams.REFRESH_ORDER_LIST);
+                EventManager.getInstance().notify(null, ConstantMsg.UPDATE_CART_LIST);
+            } else if (code == -1) {
+                //支付错误
+                ToastUtils.showShort("支付失败");
+            } else if (code == -2) {
+                //支付取消
+                ToastUtils.showShort("支付失败");
+            }
+        }
+    }
+
+    private EventManager.OnNotifyListener onNotifyListener = new EventManager.OnNotifyListener() {
+        @Override
+        public void onNotify(Object object, String eventTag) {
+            if (OrderParams.REFRESH_ORDER_LIST.equals(eventTag)) {
+                finish();
+                EventManager.getInstance().notify(null, OrderParams.REFRESH_ORDER_LIST);
+            } else {
+                weixinPaySuccess(object, eventTag);
             }
         }
     };
@@ -632,10 +893,79 @@ public class OrderDetailActivity extends BaseActivity {
                 }));
     }
 
+    private void getSellerCancelReason() {
+        disposable.add(ApiUtils.getInstance().getSellerCancelReason()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<CancelReasonBean>>() {
+                    @Override
+                    public void accept(ResultBean<CancelReasonBean> cancelReasonBeanResultBean) throws Exception {
+                        List<String> list = cancelReasonBeanResultBean.getData().getList();
+                        if (null == sellerCancelOrderDialog) {
+                            sellerCancelOrderDialog = new SellerCancelOrderDialog(OrderDetailActivity.this, list, tid);
+                            sellerCancelOrderDialog.setCancelCallBack(new SellerCancelOrderDialog.CancelCallBack() {
+                                @Override
+                                public void cancelSuccess() {
+                                    finish();
+                                    EventManager.getInstance().notify(null, OrderParams.REFRESH_ORDER_LIST);
+                                }
+                            });
+                        } else {
+                            sellerCancelOrderDialog.setData(list, tid);
+                        }
+                        sellerCancelOrderDialog.show();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                    }
+                }));
+    }
+
+    private void getSellerLogisticsList() {
+        HttpUtils.USER_TOKEN = true;
+        disposable.add(ApiUtils.getInstance().getLogisticsList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<LogisticsBean>>() {
+                    @Override
+                    public void accept(ResultBean<LogisticsBean> logisticsBeanResultBean) throws Exception {
+                        HttpUtils.USER_TOKEN = false;
+                        if (0 == logisticsBeanResultBean.getErrorcode()) {
+                            LogisticsBean data = logisticsBeanResultBean.getData();
+                            if (null == chooseExpressSellerDialog) {
+                                chooseExpressSellerDialog = new ChooseExpressSellerDialog(OrderDetailActivity.this, data.getList(), tid);
+                                chooseExpressSellerDialog.setCallBack(new ChooseExpressSellerDialog.CallBack() {
+                                    @Override
+                                    public void sendExpressSuccess() {
+                                        finish();
+                                        EventManager.getInstance().notify(null, OrderParams.REFRESH_ORDER_LIST);
+                                    }
+                                });
+                            } else {
+                                chooseExpressSellerDialog.setData(data.getList(), aftersales_bn);
+                            }
+                            chooseExpressSellerDialog.show();
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                }));
+    }
+
     public void copy() {
         ClipData text = ClipData.newPlainText("chunLangOrderId", String.valueOf(orderDetailBean.getTid()));
         myClipboard.setPrimaryClip(text);
         ToastUtils.showShort("订单号已复制");
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        disposable.dispose();
+        EventManager.getInstance().unRegisterListener(onNotifyListener);
+    }
 }

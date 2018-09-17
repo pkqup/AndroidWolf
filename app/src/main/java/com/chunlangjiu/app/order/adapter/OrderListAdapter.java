@@ -92,19 +92,20 @@ public class OrderListAdapter extends BaseQuickAdapter<OrderListBean.ListBean, B
                         tv2.setVisibility(View.VISIBLE);
                         break;
                     case "1":
-                        tv1.setText("撤销申请");
-                        tv1.setVisibility(View.VISIBLE);
-                        tv2.setText("退货发货");
-                        tv2.setVisibility(View.VISIBLE);
+                        if ("1".equals(item.getProgress())) {
+                            tv1.setText("撤销申请");
+                            tv1.setVisibility(View.VISIBLE);
+                            tv2.setText("退货发货");
+                            tv2.setVisibility(View.VISIBLE);
+                        } else {
+                            tv1.setVisibility(View.GONE);
+                            tv2.setText("撤销申请");
+                            tv2.setVisibility(View.VISIBLE);
+                        }
                         break;
                     case "2":
                         tv1.setVisibility(View.GONE);
-                        tv2.setVisibility(View.GONE);
-                        break;
-                    case "3":
-                        tv1.setVisibility(View.GONE);
                         tv2.setText("删除");
-                        tv2.setVisibility(View.VISIBLE);
                         break;
                 }
                 break;
@@ -119,6 +120,30 @@ public class OrderListAdapter extends BaseQuickAdapter<OrderListBean.ListBean, B
                             tv1.setVisibility(View.VISIBLE);
                             tv2.setText("发货");
                             tv2.setVisibility(View.VISIBLE);
+                        }
+                        break;
+                    default:
+                        tv1.setVisibility(View.GONE);
+                        tv2.setVisibility(View.GONE);
+                        break;
+                }
+                break;
+            case 4:
+                switch (item.getStatus()) {
+                    case "0":
+                        tv1.setText("拒绝申请");
+                        tv1.setVisibility(View.VISIBLE);
+                        tv2.setText("同意申请");
+                        tv2.setVisibility(View.VISIBLE);
+                        break;
+                    case "1":
+                        if ("2".equals(item.getProgress())) {
+                            tv1.setVisibility(View.GONE);
+                            tv2.setText("同意退款");
+                            tv2.setVisibility(View.VISIBLE);
+                        } else {
+                            tv1.setVisibility(View.GONE);
+                            tv2.setVisibility(View.GONE);
                         }
                         break;
                     default:

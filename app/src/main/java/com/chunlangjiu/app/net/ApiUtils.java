@@ -244,8 +244,8 @@ public class ApiUtils {
         return apiService.getOrderLists("trade.list", "v1", status, pageNo, 10);
     }
 
-    public Flowable<ResultBean<OrderListBean>> getAfterSaleOrderList(String status, int pageNo) {
-        return apiService.getAfterSaleOrderList("member.aftersales.list", "v1", status, pageNo, 10);
+    public Flowable<ResultBean<OrderListBean>> getAfterSaleOrderList(String status, String progress, int pageNo) {
+        return apiService.getAfterSaleOrderList("member.aftersales.list", "v1", status, progress, pageNo, 10);
     }
 
     public Flowable<ResultBean<OrderDetailBean>> getOrderDetail(String tid) {
@@ -292,6 +292,10 @@ public class ApiUtils {
         return apiService.sendLogistics("logistics.send", "v1", aftersales_bn, corp_code, logi_name, logi_no);
     }
 
+    public Flowable<ResultBean<CreateOrderBean>> repay(String tid, String merge) {
+        return apiService.repay("payment.pay.create", "v1", tid, merge);
+    }
+
     public Flowable<ResultBean<OrderListBean>> getSellerOrderLists(String status, int pageNo) {
         return apiService.getSellerOrderLists("trade.list", "v1", status, pageNo, 10, "*");
     }
@@ -308,7 +312,19 @@ public class ApiUtils {
         return apiService.getSellerCancelReason("trade.cancel.shop.reason", "v1");
     }
 
-//    public Flowable<ResultBean<CancelOrderResultBean>> sellerCancelOrder(String tid, String reason) {
-//        return apiService.sellerCancelOrder("trade.close.shop", "v1", tid, reason);
-//    }
+    public Flowable<ResultBean<CancelOrderResultBean>> sellerCancelOrder(String tid, String reason) {
+        return apiService.sellerCancelOrder("trade.close.shop", "v1", tid, reason);
+    }
+
+    public Flowable<ResultBean<OrderListBean>> getSellerAfterSaleOrderList(String status, String progress, int pageNo) {
+        return apiService.getSellerAfterSaleOrderList("aftersales.list", "v1", status, progress, pageNo, 10, "*");
+    }
+
+    public Flowable<ResultBean<OrderDetailBean>> getSellerAfterSaleOrderDetail(String aftersales_bn, String oid) {
+        return apiService.getSellerAfterSaleOrderDetail("aftersales.get", "v1", aftersales_bn, oid, "*");
+    }
+
+    public Flowable<ResultBean> applySellerAfterSale(String aftersales_bn, String check_result, String total_price, String refunds_reason) {
+        return apiService.applySellerAfterSale("trade.cancel.shop.check", "v1", aftersales_bn, check_result, total_price, refunds_reason);
+    }
 }

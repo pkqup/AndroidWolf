@@ -51,6 +51,7 @@ public class OrderDetailBean {
     private long aftersales_bn;
     private String shipping_type;
     private String status;
+    private String progress;
     private String payment;
     private String points_fee;
     private String cancel_status;
@@ -81,7 +82,7 @@ public class OrderDetailBean {
     private String invoice_main;
     private String invoice_vat_main;
     private String cancel_reason;
-    private int refund_fee;
+    private String refund_fee;
     private String shipping_type_name;
     private String status_desc;
     private boolean is_buyer_rate;
@@ -126,6 +127,14 @@ public class OrderDetailBean {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getProgress() {
+        return progress;
+    }
+
+    public void setProgress(String progress) {
+        this.progress = progress;
     }
 
     public String getPayment() {
@@ -368,11 +377,11 @@ public class OrderDetailBean {
         this.cancel_reason = cancel_reason;
     }
 
-    public int getRefund_fee() {
+    public String getRefund_fee() {
         return refund_fee;
     }
 
-    public void setRefund_fee(int refund_fee) {
+    public void setRefund_fee(String refund_fee) {
         this.refund_fee = refund_fee;
     }
 

@@ -111,6 +111,7 @@ public class OrderListBean {
         private int shop_id;
         private int user_id;
         private String status;
+        private String progress;
         private String cancel_status;
         private String payment;
         private String pay_type;
@@ -156,6 +157,14 @@ public class OrderListBean {
 
         public void setStatus(String status) {
             this.status = status;
+        }
+
+        public String getProgress() {
+            return progress;
+        }
+
+        public void setProgress(String progress) {
+            this.progress = progress;
         }
 
         public String getCancel_status() {

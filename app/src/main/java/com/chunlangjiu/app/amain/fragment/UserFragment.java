@@ -24,6 +24,7 @@ import com.chunlangjiu.app.user.activity.PersonAuthActivity;
 import com.chunlangjiu.app.util.ConstantMsg;
 import com.chunlangjiu.app.web.WebViewActivity;
 import com.pkqup.commonlibrary.eventmsg.EventManager;
+import com.pkqup.commonlibrary.net.HttpUtils;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -180,6 +181,7 @@ public class UserFragment extends BaseFragment {
                     toOrderMainActivity(3, 2);
                     break;
                 case R.id.rlSellOrderThree:// 卖家售后订单
+                    toOrderMainActivity(4, 0);
                     break;
                 case R.id.rlSellOrderFour:// 卖家全部订单
                     toOrderMainActivity(3, 0);
@@ -375,6 +377,7 @@ public class UserFragment extends BaseFragment {
 
     private void showUserTypeView() {
         if (userType == TYPE_BUYER) {
+            HttpUtils.USER_TOKEN = true;
             //买家中心
             rlBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.bg_low_black));
             tvChangeType.setText("切换到卖家中心");
@@ -392,6 +395,7 @@ public class UserFragment extends BaseFragment {
             rlBankCard.setVisibility(View.GONE);
             llMyManagerSecond.setVisibility(View.VISIBLE);
         } else {
+            HttpUtils.USER_TOKEN = false;
             //卖家中心
             rlBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.bg_red));
             tvChangeType.setText("切换到买家中心");

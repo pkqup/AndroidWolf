@@ -271,7 +271,7 @@ public interface ApiService {
 
     @POST("index.php/topapi")
     @FormUrlEncoded
-    Flowable<ResultBean<OrderListBean>> getAfterSaleOrderList(@Field("method") String method, @Field("v") String v, @Field("status") String status,
+    Flowable<ResultBean<OrderListBean>> getAfterSaleOrderList(@Field("method") String method, @Field("v") String v, @Field("status") String status, @Field("progress") String progress,
                                                               @Field("page_no") int page_no, @Field("pagesize") int pagesize);
 
     @POST("index.php/topapi")
@@ -330,6 +330,10 @@ public interface ApiService {
                                        @Field("aftersales_bn") String aftersales_bn, @Field("corp_code")
                                                String corp_code, @Field("logi_name") String logi_name, @Field("logi_no") String logi_no);
 
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<CreateOrderBean>> repay(@Field("method") String method, @Field("v") String v, @Field("tid") String tid, @Field("merge") String merge);
+
     @POST("index.php/shop/topapi")
     @FormUrlEncoded
     Flowable<ResultBean<OrderListBean>> getSellerOrderLists(@Field("method") String method, @Field("v") String v,
@@ -350,4 +354,26 @@ public interface ApiService {
     @POST("index.php/shop/topapi")
     @FormUrlEncoded
     Flowable<ResultBean<CancelReasonBean>> getSellerCancelReason(@Field("method") String method, @Field("v") String v);
+
+    @POST("index.php/shop/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<CancelOrderResultBean>> sellerCancelOrder(@Field("method") String method, @Field("v") String v,
+                                                                  @Field("tid") String tid, @Field("cancel_reason") String reason);
+
+    @POST("index.php/shop/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<OrderListBean>> getSellerAfterSaleOrderList(@Field("method") String method, @Field("v") String v, @Field("status") String status, @Field("progress") String progress,
+                                                                    @Field("page_no") int page_no, @Field("pagesize") int pagesize, @Field("fields") String fields);
+
+    @POST("index.php/shop/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<OrderDetailBean>> getSellerAfterSaleOrderDetail(@Field("method") String method, @Field("v") String v,
+                                                                        @Field("aftersales_bn") String aftersales_bn, @Field("oid") String oid, @Field("fields") String fields);
+
+    @POST("index.php/shop/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean> applySellerAfterSale(@Field("method") String method, @Field("v") String v,
+                                              @Field("aftersales_bn") String aftersales_bn, @Field("check_result") String check_result,
+                                              @Field("total_price") String total_price, @Field("refunds_reason") String refunds_reason);
+
 }

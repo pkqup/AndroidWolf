@@ -8,7 +8,7 @@
     <include
         android:id="@+id/rlLoading"
         layout="@layout/abase_activity_loading_view"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -519,7 +519,7 @@
     <LinearLayout
         android:id="@+id/llBottom"
         android:layout_width="match_parent"
-        android:layout_height="36dp"
+        android:layout_height="wrap_content"
         android:background="@color/white"
         android:gravity="center_vertical|end"
         android:orientation="horizontal">
@@ -527,7 +527,7 @@
         <TextView
             android:id="@+id/tv1"
             android:layout_width="80dp"
-            android:layout_height="match_parent"
+            android:layout_height="36dp"
             android:background="@drawable/bg_white_soild_gray_stroke"
             android:gravity="center"
             android:text="取消订单"
@@ -537,7 +537,7 @@
         <TextView
             android:id="@+id/tv2"
             android:layout_width="80dp"
-            android:layout_height="match_parent"
+            android:layout_height="36dp"
             android:layout_marginLeft="12dp"
             android:layout_marginStart="12dp"
             android:background="@drawable/bg_red_soild"

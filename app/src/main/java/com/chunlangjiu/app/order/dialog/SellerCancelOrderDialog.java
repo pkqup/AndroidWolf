@@ -127,7 +127,7 @@ public class SellerCancelOrderDialog extends Dialog {
     };
 
     private void cancelOrder() {
-        disposable.add(ApiUtils.getInstance().cancelOrder(tid, data.get(rgReason.getCheckedRadioButtonId()))
+        disposable.add(ApiUtils.getInstance().sellerCancelOrder(tid, data.get(rgReason.getCheckedRadioButtonId()))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean<CancelOrderResultBean>>() {
