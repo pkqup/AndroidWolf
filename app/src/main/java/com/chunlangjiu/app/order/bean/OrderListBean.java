@@ -12,6 +12,7 @@ public class OrderListBean {
 
     private PagersBean pagers;
     private CurSymbolBean cur_symbol;
+    private int count;
     private List<ListBean> list;
 
     public PagersBean getPagers() {
@@ -36,6 +37,14 @@ public class OrderListBean {
 
     public void setList(List<ListBean> list) {
         this.list = list;
+    }
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
     }
 
     public static class PagersBean {
@@ -80,7 +89,7 @@ public class OrderListBean {
         }
     }
 
-    public static class ListBean {
+    public static class ListBean implements Serializable{
         /**
          * tid : 2430526000020082
          * shop_id : 3
@@ -102,6 +111,7 @@ public class OrderListBean {
         private int shop_id;
         private int user_id;
         private String status;
+        private String progress;
         private String cancel_status;
         private String payment;
         private String pay_type;
@@ -110,6 +120,7 @@ public class OrderListBean {
         private boolean is_buyer_rate;
         private int totalItem;
         private String status_desc;
+        private String shop_logo;
         private String shopname;
         private List<OrderBean> order;
         private OrderBean sku;
@@ -146,6 +157,14 @@ public class OrderListBean {
 
         public void setStatus(String status) {
             this.status = status;
+        }
+
+        public String getProgress() {
+            return progress;
+        }
+
+        public void setProgress(String progress) {
+            this.progress = progress;
         }
 
         public String getCancel_status() {
@@ -210,6 +229,14 @@ public class OrderListBean {
 
         public void setStatus_desc(String status_desc) {
             this.status_desc = status_desc;
+        }
+
+        public String getShop_logo() {
+            return shop_logo;
+        }
+
+        public void setShop_logo(String shop_logo) {
+            this.shop_logo = shop_logo;
         }
 
         public String getShopname() {
@@ -280,6 +307,7 @@ public class OrderListBean {
             private int gift_count;
             private String spec_nature_info;
             private String price;
+            private String payment;
 
             public String getTitle() {
                 return title;
@@ -383,6 +411,14 @@ public class OrderListBean {
 
             public void setPrice(String price) {
                 this.price = price;
+            }
+
+            public String getPayment() {
+                return payment;
+            }
+
+            public void setPayment(String payment) {
+                this.payment = payment;
             }
         }
     }

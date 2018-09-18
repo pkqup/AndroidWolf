@@ -75,17 +75,80 @@ public class OrderListAdapter extends BaseQuickAdapter<OrderListBean.ListBean, B
                         break;
                     case OrderParams.TRADE_FINISHED:
                         tv1.setVisibility(View.GONE);
-                        tv2.setText("评价");
-                        tv2.setVisibility(View.VISIBLE);
+                        if (item.isIs_buyer_rate()) {
+                            tv2.setVisibility(View.GONE);
+                        } else {
+                            tv2.setText("评价");
+                            tv2.setVisibility(View.VISIBLE);
+                        }
                         break;
                 }
                 break;
             case 2:
-                switch (item.getStatus()){
-                    case OrderParams.WAIT_BUYER_PAY:
+                switch (item.getStatus()) {
+                    case "0":
                         tv1.setVisibility(View.GONE);
                         tv2.setText("撤销申请");
                         tv2.setVisibility(View.VISIBLE);
+                        break;
+                    case "1":
+                        if ("1".equals(item.getProgress())) {
+                            tv1.setText("撤销申请");
+                            tv1.setVisibility(View.VISIBLE);
+                            tv2.setText("退货发货");
+                            tv2.setVisibility(View.VISIBLE);
+                        } else {
+                            tv1.setVisibility(View.GONE);
+                            tv2.setText("撤销申请");
+                            tv2.setVisibility(View.VISIBLE);
+                        }
+                        break;
+                    case "2":
+                        tv1.setVisibility(View.GONE);
+                        tv2.setText("删除");
+                        break;
+                }
+                break;
+            case 3:
+                switch (item.getStatus()) {
+                    case OrderParams.WAIT_SELLER_SEND_GOODS:
+                        if ("REFUND_PROCESS".equals(item.getCancel_status())) {
+                            tv1.setVisibility(View.GONE);
+                            tv2.setVisibility(View.GONE);
+                        } else {
+                            tv1.setText("无货");
+                            tv1.setVisibility(View.VISIBLE);
+                            tv2.setText("发货");
+                            tv2.setVisibility(View.VISIBLE);
+                        }
+                        break;
+                    default:
+                        tv1.setVisibility(View.GONE);
+                        tv2.setVisibility(View.GONE);
+                        break;
+                }
+                break;
+            case 4:
+                switch (item.getStatus()) {
+                    case "0":
+                        tv1.setText("拒绝申请");
+                        tv1.setVisibility(View.VISIBLE);
+                        tv2.setText("同意申请");
+                        tv2.setVisibility(View.VISIBLE);
+                        break;
+                    case "1":
+                        if ("2".equals(item.getProgress())) {
+                            tv1.setVisibility(View.GONE);
+                            tv2.setText("同意退款");
+                            tv2.setVisibility(View.VISIBLE);
+                        } else {
+                            tv1.setVisibility(View.GONE);
+                            tv2.setVisibility(View.GONE);
+                        }
+                        break;
+                    default:
+                        tv1.setVisibility(View.GONE);
+                        tv2.setVisibility(View.GONE);
                         break;
                 }
                 break;
@@ -103,11 +166,11 @@ public class OrderListAdapter extends BaseQuickAdapter<OrderListBean.ListBean, B
         tv2.setOnClickListener(onClickListener);
         tvStore.setText(item.getShopname());
         tvStatus.setText(item.getStatus_desc());
-//        GlideUtils.loadImage(context, item.get(), imgStore);
-//        tvTotalNum.setText(String.format("合计：¥%s", new BigDecimal(item.getPayment()).setScale(2, BigDecimal.ROUND_HALF_UP).toString()));
+        GlideUtils.loadImage(context, item.getShop_logo(), imgStore);
         llProducts.removeAllViews();
         switch (type) {
             case 0:
+            case 3:
                 for (OrderListBean.ListBean.OrderBean orderBean : item.getOrder()) {
                     View inflate = inflater.inflate(R.layout.order_adapter_list_product_item, null);
                     ImageView imgProduct = inflate.findViewById(R.id.imgProduct);
@@ -115,9 +178,9 @@ public class OrderListAdapter extends BaseQuickAdapter<OrderListBean.ListBean, B
                     TextView tvProductName = inflate.findViewById(R.id.tvProductName);
                     tvProductName.setText(orderBean.getTitle());
                     TextView tvProductPrice = inflate.findViewById(R.id.tvProductPrice);
-//                    tvProductPrice.setText(String.format("¥%s", item.getSku().getPrice()));
+                    tvProductPrice.setText(String.format("¥%s", new BigDecimal(orderBean.getPrice()).setScale(2, BigDecimal.ROUND_HALF_UP).toString()));
                     TextView tvProductDesc = inflate.findViewById(R.id.tvProductDesc);
-//                    tvProductDesc.setText(item.getSku().getSpec_nature_info());
+                    tvProductDesc.setText(orderBean.getSpec_nature_info());
 
                     TextView tvProductNum = inflate.findViewById(R.id.tvProductNum);
                     tvProductNum.setText(String.format("x%d", orderBean.getNum()));
@@ -127,15 +190,17 @@ public class OrderListAdapter extends BaseQuickAdapter<OrderListBean.ListBean, B
                         view_line.setVisibility(View.GONE);
                     }
                 }
+                tvTotalNum.setText(String.format("共%s件商品;合计：¥%s", new BigDecimal(item.getTotalItem()).setScale(0, BigDecimal.ROUND_HALF_UP).toString(), new BigDecimal(item.getPayment()).setScale(2, BigDecimal.ROUND_HALF_UP).toString()));
                 break;
             case 2:
+            case 4:
                 View inflate = inflater.inflate(R.layout.order_adapter_list_product_item, null);
                 ImageView imgProduct = inflate.findViewById(R.id.imgProduct);
                 GlideUtils.loadImage(context, item.getSku().getPic_path(), imgProduct);
                 TextView tvProductName = inflate.findViewById(R.id.tvProductName);
                 tvProductName.setText(item.getSku().getTitle());
                 TextView tvProductPrice = inflate.findViewById(R.id.tvProductPrice);
-                tvProductPrice.setText(String.format("¥%s", item.getSku().getPrice()));
+                tvProductPrice.setText(String.format("¥%s", new BigDecimal(item.getSku().getPrice()).setScale(2, BigDecimal.ROUND_HALF_UP).toString()));
 
                 TextView tvProductDesc = inflate.findViewById(R.id.tvProductDesc);
                 tvProductDesc.setText(item.getSku().getSpec_nature_info());
@@ -145,6 +210,7 @@ public class OrderListAdapter extends BaseQuickAdapter<OrderListBean.ListBean, B
                 llProducts.addView(inflate);
                 View view_line = inflate.findViewById(R.id.view_line);
                 view_line.setVisibility(View.GONE);
+                tvTotalNum.setText(String.format("共%s件商品;合计：¥%s", new BigDecimal(item.getTotalItem()).setScale(0, BigDecimal.ROUND_HALF_UP).toString(), new BigDecimal(item.getSku().getPayment()).setScale(2, BigDecimal.ROUND_HALF_UP).toString()));
                 break;
         }
     }

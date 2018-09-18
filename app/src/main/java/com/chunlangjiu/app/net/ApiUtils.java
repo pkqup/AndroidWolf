@@ -17,6 +17,7 @@ import com.chunlangjiu.app.goods.bean.PaymentBean;
 import com.chunlangjiu.app.goods.bean.ShopInfoBean;
 import com.chunlangjiu.app.order.bean.CancelOrderResultBean;
 import com.chunlangjiu.app.order.bean.CancelReasonBean;
+import com.chunlangjiu.app.order.bean.LogisticsBean;
 import com.chunlangjiu.app.order.bean.OrderAfterSaleReasonBean;
 import com.chunlangjiu.app.order.bean.OrderDetailBean;
 import com.chunlangjiu.app.store.bean.StoreClassListBean;
@@ -256,8 +257,8 @@ public class ApiUtils {
         return apiService.getOrderLists("trade.list", "v1", status, pageNo, 10);
     }
 
-    public Flowable<ResultBean<OrderListBean>> getAfterSaleOrderList(int pageNo) {
-        return apiService.getAfterSaleOrderList("member.aftersales.list", "v1", pageNo, 10);
+    public Flowable<ResultBean<OrderListBean>> getAfterSaleOrderList(String status, String progress, int pageNo) {
+        return apiService.getAfterSaleOrderList("member.aftersales.list", "v1", status, progress, pageNo, 10);
     }
 
     public Flowable<ResultBean<OrderDetailBean>> getOrderDetail(String tid) {
@@ -292,5 +293,51 @@ public class ApiUtils {
         return apiService.applyAfterSaleReason("member.aftersales.apply", "v1", tid, oid, reason, description, "REFUND_GOODS", evidence_pic);
     }
 
+    public Flowable<ResultBean> delete(String tid) {
+        return apiService.delete("trade.delete", "v1", tid);
+    }
 
+    public Flowable<ResultBean<LogisticsBean>> getLogisticsList() {
+        return apiService.getLogisticsList("logistics.list.get", "v1");
+    }
+
+    public Flowable<ResultBean> sendLogistics(String aftersales_bn, String corp_code, String logi_name, String logi_no) {
+        return apiService.sendLogistics("logistics.send", "v1", aftersales_bn, corp_code, logi_name, logi_no);
+    }
+
+    public Flowable<ResultBean<CreateOrderBean>> repay(String tid, String merge) {
+        return apiService.repay("payment.pay.create", "v1", tid, merge);
+    }
+
+    public Flowable<ResultBean<OrderListBean>> getSellerOrderLists(String status, int pageNo) {
+        return apiService.getSellerOrderLists("trade.list", "v1", status, pageNo, 10, "*");
+    }
+
+    public Flowable<ResultBean<OrderDetailBean>> getSellerOrderDetail(String tid) {
+        return apiService.getSellerOrderDetail("trade.info", "v1", tid, "*");
+    }
+
+    public Flowable<ResultBean> sendSellerLogistics(String tid, String corp_code, String logi_no) {
+        return apiService.sendSellerLogistics("trade.delivery.shop", "v1", tid, corp_code, logi_no);
+    }
+
+    public Flowable<ResultBean<CancelReasonBean>> getSellerCancelReason() {
+        return apiService.getSellerCancelReason("trade.cancel.shop.reason", "v1");
+    }
+
+    public Flowable<ResultBean<CancelOrderResultBean>> sellerCancelOrder(String tid, String reason) {
+        return apiService.sellerCancelOrder("trade.close.shop", "v1", tid, reason);
+    }
+
+    public Flowable<ResultBean<OrderListBean>> getSellerAfterSaleOrderList(String status, String progress, int pageNo) {
+        return apiService.getSellerAfterSaleOrderList("aftersales.list", "v1", status, progress, pageNo, 10, "*");
+    }
+
+    public Flowable<ResultBean<OrderDetailBean>> getSellerAfterSaleOrderDetail(String aftersales_bn, String oid) {
+        return apiService.getSellerAfterSaleOrderDetail("aftersales.get", "v1", aftersales_bn, oid, "*");
+    }
+
+    public Flowable<ResultBean> applySellerAfterSale(String aftersales_bn, String check_result, String total_price, String refunds_reason) {
+        return apiService.applySellerAfterSale("trade.cancel.shop.check", "v1", aftersales_bn, check_result, total_price, refunds_reason);
+    }
 }

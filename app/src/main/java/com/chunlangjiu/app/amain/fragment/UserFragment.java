@@ -44,6 +44,7 @@ import com.pkqup.commonlibrary.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.pkqup.commonlibrary.net.HttpUtils;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -181,16 +182,20 @@ public class UserFragment extends BaseFragment {
                     startActivity(new Intent(getActivity(), CompanyAuthActivity.class));
                     break;
                 case R.id.rlOrderManager:// 订单管理
-                    toOrderMainActivity(0, 0);
+                    if (llSellAuction.isShown()) {
+                        toOrderMainActivity(3, 0);
+                    } else {
+                        toOrderMainActivity(0, 0);
+                    }
                     break;
                 case R.id.rlOrderOne:// 买家待付款
                     toOrderMainActivity(0, 1);
                     break;
                 case R.id.rlOrderTwo:// 买家待收货
-                    toOrderMainActivity(0, 2);
+                    toOrderMainActivity(0, 3);
                     break;
-                case R.id.rlOrderThree:// 买家待评价
-                    startActivity(new Intent(getActivity(), OrderApplyForAfterSaleActivity.class));
+                case R.id.rlOrderThree:// 买家待发货
+                    toOrderMainActivity(0, 2);
                     break;
                 case R.id.rlOrderFour:// 买家售后订单
                     toOrderMainActivity(2, 0);
@@ -199,12 +204,16 @@ public class UserFragment extends BaseFragment {
                     toOrderMainActivity(0, 0);
                     break;
                 case R.id.rlSellOrderOne:// 卖家待付款
+                    toOrderMainActivity(3, 1);
                     break;
                 case R.id.rlSellOrderTwo:// 卖家待发货
+                    toOrderMainActivity(3, 2);
                     break;
                 case R.id.rlSellOrderThree:// 卖家售后订单
+                    toOrderMainActivity(4, 0);
                     break;
                 case R.id.rlSellOrderFour:// 卖家全部订单
+                    toOrderMainActivity(3, 0);
                     break;
                 case R.id.rlAuctionManager:// 竞拍订单管理
                     break;
@@ -397,6 +406,7 @@ public class UserFragment extends BaseFragment {
 
     private void showUserTypeView() {
         if (userType == TYPE_BUYER) {
+            HttpUtils.USER_TOKEN = true;
             //买家中心
             rlBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.bg_low_black));
             tvChangeType.setText("切换到卖家中心");
@@ -414,6 +424,7 @@ public class UserFragment extends BaseFragment {
             rlBankCard.setVisibility(View.GONE);
             llMyManagerSecond.setVisibility(View.VISIBLE);
         } else {
+            HttpUtils.USER_TOKEN = false;
             //卖家中心
             rlBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.bg_red));
             tvChangeType.setText("切换到买家中心");

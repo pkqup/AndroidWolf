@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -7,7 +8,7 @@
     <include
         android:id="@+id/rlLoading"
         layout="@layout/abase_activity_loading_view"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -58,6 +59,29 @@
                         android:id="@+id/tvRightContent"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
+
+                    <com.pkqup.commonlibrary.view.countdownview.CountdownView
+                        android:id="@+id/countdownView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginStart="5dp"
+                        app:isConvertDaysToHours="true"
+                        app:isHideTimeBackground="false"
+                        app:isShowDay="false"
+                        app:isShowHour="true"
+                        app:isShowMillisecond="false"
+                        app:isShowMinute="true"
+                        app:isShowSecond="true"
+                        app:suffixGravity="center"
+                        app:suffixTextColor="@color/t_black"
+                        app:suffixTextSize="16sp"
+                        app:timeBgColor="@color/bg_red"
+                        app:timeBgRadius="3dp"
+                        app:timeBgSize="20dp"
+                        app:timeTextColor="@color/t_white"
+                        app:timeTextSize="16sp" />
+
                 </LinearLayout>
 
             </LinearLayout>
@@ -254,10 +278,35 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/llFinishTime"
+                android:layout_width="match_parent"
+                android:layout_height="36dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:visibility="visible">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="完成时间：" />
+
+                <TextView
+                    android:id="@+id/tvFinishTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/llAfterSaleTme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="12dp"
@@ -285,6 +334,7 @@
                         android:layout_height="wrap_content" />
 
                 </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/llAfterSaleSendTime"
                     android:layout_width="match_parent"
@@ -308,6 +358,7 @@
                         android:layout_height="wrap_content" />
 
                 </LinearLayout>
+
                 <LinearLayout
                     android:id="@+id/llAfterSalePayTime"
                     android:layout_width="match_parent"
@@ -334,52 +385,60 @@
 
             </LinearLayout>
 
+            <LinearLayout
+                android:id="@+id/llUserInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="12dp"
+                    android:background="@color/bg_gray" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginStart="8dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvUserInfo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/black" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginStart="8dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvAddress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+            </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="12dp"
                 android:background="@color/bg_gray" />
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="36dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/tvUserInfo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/black" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="36dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginStart="8dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/tvAddress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="12dp"
-                android:background="@color/bg_gray" />
-
-            <LinearLayout
+                android:id="@+id/llTotalPrice"
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
                 android:layout_marginEnd="8dp"
@@ -403,6 +462,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/llSendPrice"
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
                 android:layout_marginEnd="8dp"
@@ -441,6 +501,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/tvPaymentTips"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="实付金额：" />
@@ -458,7 +519,7 @@
     <LinearLayout
         android:id="@+id/llBottom"
         android:layout_width="match_parent"
-        android:layout_height="36dp"
+        android:layout_height="wrap_content"
         android:background="@color/white"
         android:gravity="center_vertical|end"
         android:orientation="horizontal">
@@ -466,7 +527,7 @@
         <TextView
             android:id="@+id/tv1"
             android:layout_width="80dp"
-            android:layout_height="match_parent"
+            android:layout_height="36dp"
             android:background="@drawable/bg_white_soild_gray_stroke"
             android:gravity="center"
             android:text="取消订单"
@@ -476,7 +537,7 @@
         <TextView
             android:id="@+id/tv2"
             android:layout_width="80dp"
-            android:layout_height="match_parent"
+            android:layout_height="36dp"
             android:layout_marginLeft="12dp"
             android:layout_marginStart="12dp"
             android:background="@drawable/bg_red_soild"
