@@ -26,10 +26,8 @@ import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
 import com.chunlangjiu.app.amain.bean.FirstClassBean;
 import com.chunlangjiu.app.amain.bean.MainClassBean;
-import com.chunlangjiu.app.amain.bean.ThirdClassBean;
 import com.chunlangjiu.app.goods.adapter.FilterBrandAdapter;
 import com.chunlangjiu.app.goods.adapter.FilterStoreAdapter;
-import com.chunlangjiu.app.goods.bean.ClassBean;
 import com.chunlangjiu.app.goods.bean.FilterBrandBean;
 import com.chunlangjiu.app.goods.bean.FilterListBean;
 import com.chunlangjiu.app.goods.bean.FilterStoreBean;
@@ -39,7 +37,6 @@ import com.chunlangjiu.app.goods.dialog.ClassPopWindow;
 import com.chunlangjiu.app.net.ApiUtils;
 import com.pkqup.commonlibrary.glide.GlideUtils;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
-import com.pkqup.commonlibrary.net.exception.ApiException;
 import com.pkqup.commonlibrary.util.KeyBoardUtils;
 import com.pkqup.commonlibrary.util.SizeUtils;
 import com.pkqup.commonlibrary.util.ToastUtils;
@@ -47,9 +44,7 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.socks.library.KLog;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,8 +62,8 @@ public class GoodsListActivity extends BaseActivity {
 
     private static final String ORDER_ALL = "modified_time";//综合
     private static final String ORDER_NEW = "list_time";//新品
-    private static final String ORDER_PRICE_ASC = "price_asc";//价格升序
-    private static final String ORDER_PRICE_DESC = "price_desc";//价格降序
+    private static final String ORDER_PRICE_UP = "price_asc";//价格升序
+    private static final String ORDER_PRICE_DOWN = "price_desc";//价格降序
 
     @BindView(R.id.drawerLayout)
     DrawerLayout drawerLayout;
@@ -154,13 +149,13 @@ public class GoodsListActivity extends BaseActivity {
                     changeListType();
                     break;
                 case R.id.tv_all:
-                    changeSort(0);
+                    changeSortAll();
                     break;
                 case R.id.tv_new:
-                    changeSort(1);
+                    changeSortNew();
                     break;
                 case R.id.sortPrice:
-                    changeSort(2);
+                    changeSortPrice();
                     break;
                 case R.id.tv_class:
                     showClassPopWindow();
@@ -452,33 +447,42 @@ public class GoodsListActivity extends BaseActivity {
         }
     }
 
+    private void changeSortAll() {
+        if (!orderBy.equals(ORDER_ALL)) {
+            orderBy = ORDER_ALL;
+            tvAll.setSelected(true);
+            tvNew.setSelected(false);
+            tvPrice.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.goods_price_sort), null);
+            getGoodsList(1, true);
+        }
+    }
 
-    private void changeSort(int index) {
-        if (selectIndex != index) {
-            selectIndex = index;
-            if (index == 0) {
-                orderBy = ORDER_ALL;
-            } else if (index == 1) {
-                orderBy = ORDER_NEW;
-            } else if (index == 2) {
-                orderBy = ORDER_PRICE_ASC;
-            }
-            for (int i = 0; i < sortTextViewLists.size(); i++) {
-                if (i == index) {
-                    sortTextViewLists.get(i).setSelected(true);
-                } else {
-                    sortTextViewLists.get(i).setSelected(false);
-                }
-            }
+    private void changeSortNew() {
+        if (!orderBy.equals(ORDER_NEW)) {
+            orderBy = ORDER_NEW;
+            tvAll.setSelected(false);
+            tvNew.setSelected(true);
+            tvPrice.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.goods_price_sort), null);
+            getGoodsList(1, true);
+        }
+    }
+
+    private void changeSortPrice() {
+        if (!orderBy.equals(ORDER_PRICE_UP) && !orderBy.equals(ORDER_PRICE_DOWN)) {
+            orderBy = ORDER_PRICE_UP;
+            tvPrice.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.goods_price_sort_up), null);
+            getGoodsList(1, true);
         } else {
-            if (index == 2) {
-                if (orderBy.equals(ORDER_PRICE_ASC)) {
-                    orderBy = ORDER_PRICE_DESC;
-                } else {
-                    orderBy = ORDER_PRICE_ASC;
-                }
+            if (orderBy.equals(ORDER_PRICE_UP)) {
+                orderBy = ORDER_PRICE_DOWN;
+                tvPrice.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.goods_price_sort_down), null);
+            } else {
+                orderBy = ORDER_PRICE_UP;
+                tvPrice.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.goods_price_sort_up), null);
             }
         }
+        tvAll.setSelected(false);
+        tvNew.setSelected(false);
         getGoodsList(1, true);
     }
 
@@ -528,8 +532,8 @@ public class GoodsListActivity extends BaseActivity {
             } else {
                 tvLabel.setVisibility(View.VISIBLE);
             }
-            helper.setText(R.id.tv_attention, item.getView_count()+"人关注");
-            helper.setText(R.id.tv_evaluate, item.getRate_count()+"条评价");
+            helper.setText(R.id.tv_attention, item.getView_count() + "人关注");
+            helper.setText(R.id.tv_evaluate, item.getRate_count() + "条评价");
         }
     }
 
@@ -563,8 +567,8 @@ public class GoodsListActivity extends BaseActivity {
             } else {
                 tvLabel.setVisibility(View.VISIBLE);
             }
-            helper.setText(R.id.tvAttention, item.getView_count()+"人关注");
-            helper.setText(R.id.tvEvaluate, item.getRate_count()+"条评价");
+            helper.setText(R.id.tvAttention, item.getView_count() + "人关注");
+            helper.setText(R.id.tvEvaluate, item.getRate_count() + "条评价");
         }
     }
 

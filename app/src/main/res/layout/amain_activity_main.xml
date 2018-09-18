@@ -28,7 +28,6 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/bg_tab_select"
                 android:gravity="center_horizontal|center_vertical"
                 android:orientation="vertical">
 
@@ -37,7 +36,7 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginTop="5dp"
-                    android:background="@mipmap/tab_one"
+                    android:background="@drawable/tab_one_image_select"
                     android:scaleType="centerCrop" />
 
                 <TextView
@@ -55,7 +54,6 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/bg_tab_select"
                 android:gravity="center_horizontal|center_vertical"
                 android:orientation="vertical">
 
@@ -64,7 +62,7 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginTop="5dp"
-                    android:background="@mipmap/tab_two"
+                    android:background="@drawable/tab_two_image_select"
                     android:scaleType="centerCrop" />
 
                 <TextView
@@ -94,7 +92,6 @@
                     android:id="@+id/tab_four"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@drawable/bg_tab_select"
                     android:gravity="center_horizontal|center_vertical"
                     android:orientation="vertical">
 
@@ -103,7 +100,7 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_marginTop="5dp"
-                        android:background="@mipmap/tab_four"
+                        android:background="@drawable/tab_four_image_select"
                         android:scaleType="centerCrop" />
 
                     <TextView
@@ -135,7 +132,6 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:background="@drawable/bg_tab_select"
                 android:gravity="center_horizontal|center_vertical"
                 android:orientation="vertical">
 
@@ -144,7 +140,7 @@
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:layout_marginTop="5dp"
-                    android:background="@mipmap/tab_five"
+                    android:background="@drawable/tab_five_image_select"
                     android:scaleType="centerCrop" />
 
                 <TextView
@@ -168,30 +164,33 @@
         android:layout_height="62dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/bg_red_circle" />
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/bg_white_circle" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="56dp"
+        android:layout_height="70dp"
         android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_centerHorizontal="true">
 
         <ImageView
             android:id="@+id/tab_three_image"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:background="@mipmap/tab_three" />
+            android:layout_width="30dp"
+            android:layout_height="25dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/tab_three_image_select" />
 
         <TextView
             android:id="@+id/tab_three_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@id/tab_three_image"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
             android:text="竞拍"
-            android:textColor="@color/t_white"
+            android:textColor="@color/main_tab_color"
             android:textSize="12sp" />
 
-    </LinearLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

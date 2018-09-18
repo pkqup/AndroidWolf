@@ -178,8 +178,7 @@ public class UserFragment extends BaseFragment {
                     changeUserType();
                     break;
                 case R.id.tvAuthRealName:// 企业/个人认证
-                    startActivity(new Intent(getActivity(), PersonAuthActivity.class));
-                    startActivity(new Intent(getActivity(), CompanyAuthActivity.class));
+                    toAuthActivity();
                     break;
                 case R.id.rlOrderManager:// 订单管理
                     if (llSellAuction.isShown()) {
@@ -260,6 +259,7 @@ public class UserFragment extends BaseFragment {
             }
         }
     };
+
 
     @Override
     public void getContentView(LayoutInflater inflater, ViewGroup container) {
@@ -548,6 +548,11 @@ public class UserFragment extends BaseFragment {
     private void changeUserType() {
         userType = userType == TYPE_BUYER ? TYPE_SELLER : TYPE_BUYER;
         showUserTypeView();
+    }
+
+    private void toAuthActivity() {
+        startActivity(new Intent(getActivity(), PersonAuthActivity.class));
+//        startActivity(new Intent(getActivity(), CompanyAuthActivity.class));
     }
 
     private EventManager.OnNotifyListener onNotifyListener = new EventManager.OnNotifyListener() {
