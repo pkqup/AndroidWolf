@@ -2,6 +2,7 @@ package com.chunlangjiu.app.goods.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.GridLayoutManager;
@@ -24,10 +25,11 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
 import com.chunlangjiu.app.amain.bean.FirstClassBean;
-import com.chunlangjiu.app.amain.bean.GoodsListInfoBean;
+import com.chunlangjiu.app.amain.bean.MainClassBean;
 import com.chunlangjiu.app.goods.adapter.FilterBrandAdapter;
 import com.chunlangjiu.app.goods.adapter.FilterStoreAdapter;
 import com.chunlangjiu.app.goods.bean.FilterBrandBean;
+import com.chunlangjiu.app.goods.bean.FilterListBean;
 import com.chunlangjiu.app.goods.bean.FilterStoreBean;
 import com.chunlangjiu.app.goods.bean.GoodsListBean;
 import com.chunlangjiu.app.goods.bean.GoodsListDetailBean;
@@ -64,8 +66,8 @@ public class ShopMainActivity extends BaseActivity {
 
     private static final String ORDER_ALL = "modified_time";//综合
     private static final String ORDER_NEW = "list_time";//新品
-    private static final String ORDER_PRICE_ASC = "price_asc";//价格升序
-    private static final String ORDER_PRICE_DESC = "price_desc";//价格降序
+    private static final String ORDER_PRICE_UP = "price_asc";//价格升序
+    private static final String ORDER_PRICE_DOWN = "price_desc";//价格降序
 
     @BindView(R.id.imgShow)
     ImageView imgShow;
@@ -175,19 +177,23 @@ public class ShopMainActivity extends BaseActivity {
                     changeShopDesc();
                     break;
                 case R.id.tv_all:
-                    changeSort(0);
+                    changeSortAll();
                     break;
                 case R.id.tv_new:
-                    changeSort(1);
+                    changeSortNew();
                     break;
                 case R.id.sortPrice:
-                    changeSort(2);
+                    changeSortPrice();
                     break;
                 case R.id.tv_class:
                     showClassPopWindow();
                     break;
                 case R.id.sortFilter:
                     showDrawerLayout();
+                    break;
+                case R.id.tvReset://重置筛选条件
+                    break;
+                case R.id.tvConfirm://确认筛选条件
                     break;
             }
         }
@@ -339,6 +345,8 @@ public class ShopMainActivity extends BaseActivity {
         shopId = getIntent().getStringExtra("shopId");
         getShopInfo();
         getGoodsList(1, true);
+        getClassData();
+        getFilterData();
     }
 
     private void getShopInfo() {
@@ -417,6 +425,50 @@ public class ShopMainActivity extends BaseActivity {
         }
     }
 
+    private void getClassData() {
+        disposable.add(ApiUtils.getInstance().getMainClass()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<MainClassBean>>() {
+                    @Override
+                    public void accept(ResultBean<MainClassBean> mainClassBean) throws Exception {
+                        categoryLists = mainClassBean.getData().getCategorys();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                }));
+    }
+
+
+    private void getFilterData() {
+        disposable.add(ApiUtils.getInstance().getFilterData(classId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<FilterListBean>>() {
+                    @Override
+                    public void accept(ResultBean<FilterListBean> filterListBeanResultBean) throws Exception {
+                        List<FilterBrandBean> brands = filterListBeanResultBean.getData().getBrand();
+                        List<FilterStoreBean> cats = filterListBeanResultBean.getData().getCat();
+                        if (brands != null) {
+                            brandLists = brands;
+                            filterBrandAdapter.setNewData(brandLists);
+                        }
+
+                        if (cats != null) {
+                            storeLists = cats;
+                            filterStoreAdapter.setNewData(storeLists);
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                }));
+    }
+
     private void changeListType() {
         if (listType) {
             //列表切换到网格
@@ -447,34 +499,45 @@ public class ShopMainActivity extends BaseActivity {
         }
     }
 
-    private void changeSort(int index) {
-        if (selectIndex != index) {
-            selectIndex = index;
-            if (index == 0) {
-                orderBy = ORDER_ALL;
-            } else if (index == 1) {
-                orderBy = ORDER_NEW;
-            } else if (index == 2) {
-                orderBy = ORDER_PRICE_ASC;
-            }
-            for (int i = 0; i < sortTextViewLists.size(); i++) {
-                if (i == index) {
-                    sortTextViewLists.get(i).setSelected(true);
-                } else {
-                    sortTextViewLists.get(i).setSelected(false);
-                }
-            }
+    private void changeSortAll() {
+        if (!orderBy.equals(ORDER_ALL)) {
+            orderBy = ORDER_ALL;
+            tvAll.setSelected(true);
+            tvNew.setSelected(false);
+            tvPrice.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.goods_price_sort), null);
+            getGoodsList(1, true);
+        }
+    }
+
+    private void changeSortNew() {
+        if (!orderBy.equals(ORDER_NEW)) {
+            orderBy = ORDER_NEW;
+            tvAll.setSelected(false);
+            tvNew.setSelected(true);
+            tvPrice.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.goods_price_sort), null);
+            getGoodsList(1, true);
+        }
+    }
+
+    private void changeSortPrice() {
+        if (!orderBy.equals(ORDER_PRICE_UP) && !orderBy.equals(ORDER_PRICE_DOWN)) {
+            orderBy = ORDER_PRICE_UP;
+            tvPrice.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.goods_price_sort_up), null);
+            getGoodsList(1, true);
         } else {
-            if (index == 2) {
-                if (orderBy.equals(ORDER_PRICE_ASC)) {
-                    orderBy = ORDER_PRICE_DESC;
-                } else {
-                    orderBy = ORDER_PRICE_ASC;
-                }
+            if (orderBy.equals(ORDER_PRICE_UP)) {
+                orderBy = ORDER_PRICE_DOWN;
+                tvPrice.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.goods_price_sort_down), null);
+            } else {
+                orderBy = ORDER_PRICE_UP;
+                tvPrice.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.goods_price_sort_up), null);
             }
         }
+        tvAll.setSelected(false);
+        tvNew.setSelected(false);
         getGoodsList(1, true);
     }
+
 
     private void showDrawerLayout() {
         if (drawerLayout.isDrawerOpen(Gravity.END)) {
@@ -500,6 +563,7 @@ public class ShopMainActivity extends BaseActivity {
                         titleName.setText(className);
                         pageNum = 1;
                         getGoodsList(pageNum, true);
+                        getFilterData();
                     }
                 });
             }
@@ -515,8 +579,27 @@ public class ShopMainActivity extends BaseActivity {
         @Override
         protected void convert(BaseViewHolder helper, GoodsListDetailBean item) {
             ImageView imgPic = helper.getView(R.id.img_pic);
+            TextView tvStartPrice = helper.getView(R.id.tvStartPrice);
+
             GlideUtils.loadImage(ShopMainActivity.this, item.getImage_default_id(), imgPic);
             helper.setText(R.id.tv_name, item.getTitle());
+            helper.setText(R.id.tvStartPriceStr, "原价：");
+            tvStartPrice.setText(item.getMkt_price());
+            tvStartPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);  // 设置中划线并加清晰
+            helper.setText(R.id.tvSellPriceStr, "");
+            helper.setText(R.id.tvSellPrice, item.getPrice());
+
+            LinearLayout llTime = helper.getView(R.id.llTime);
+            llTime.setVisibility(View.GONE);
+            helper.setText(R.id.tvLabel, item.getLabel());
+            TextView tvLabel = helper.getView(R.id.tvLabel);
+            if (TextUtils.isEmpty(item.getLabel())) {
+                tvLabel.setVisibility(View.GONE);
+            } else {
+                tvLabel.setVisibility(View.VISIBLE);
+            }
+            helper.setText(R.id.tv_attention, item.getView_count() + "人关注");
+            helper.setText(R.id.tv_evaluate, item.getRate_count() + "条评价");
         }
     }
 
@@ -533,9 +616,25 @@ public class ShopMainActivity extends BaseActivity {
             layoutParams.width = picWidth;
             layoutParams.height = picWidth;
             imgPic.setLayoutParams(layoutParams);
-
             GlideUtils.loadImage(ShopMainActivity.this, item.getImage_default_id(), imgPic);
             helper.setText(R.id.tv_name, item.getTitle());
+
+            TextView tvStartPrice = helper.getView(R.id.tvStartPrice);
+            helper.setText(R.id.tvStartPriceStr, "原价：");
+            tvStartPrice.setText(item.getMkt_price());
+            tvStartPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);  // 设置中划线并加清晰
+            helper.setText(R.id.tvSellPriceStr, "");
+            helper.setText(R.id.tvSellPrice, item.getPrice());
+
+            helper.setText(R.id.tvLabel, item.getLabel());
+            TextView tvLabel = helper.getView(R.id.tvLabel);
+            if (TextUtils.isEmpty(item.getLabel())) {
+                tvLabel.setVisibility(View.GONE);
+            } else {
+                tvLabel.setVisibility(View.VISIBLE);
+            }
+            helper.setText(R.id.tvAttention, item.getView_count() + "人关注");
+            helper.setText(R.id.tvEvaluate, item.getRate_count() + "条评价");
         }
     }
 

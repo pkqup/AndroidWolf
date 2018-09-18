@@ -102,6 +102,7 @@ public class GoodsListActivity extends BaseActivity {
     @BindView(R.id.recyclerViewStore)
     RecyclerView recyclerViewStore;//名庄列表
 
+
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
     @BindView(R.id.recycle_view)
@@ -162,6 +163,10 @@ public class GoodsListActivity extends BaseActivity {
                     break;
                 case R.id.sortFilter:
                     showDrawerLayout();
+                    break;
+                case R.id.tvReset://重置筛选条件
+                    break;
+                case R.id.tvConfirm://确认筛选条件
                     break;
             }
         }
@@ -231,6 +236,9 @@ public class GoodsListActivity extends BaseActivity {
     }
 
     private void initDrawerLayout() {
+        tvReset.setOnClickListener(onClickListener);
+        tvConfirm.setOnClickListener(onClickListener);
+
         drawerLayout.closeDrawer(Gravity.END);
         drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.END);
         drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
@@ -254,7 +262,6 @@ public class GoodsListActivity extends BaseActivity {
         ViewGroup.LayoutParams layoutParams = rightView.getLayoutParams();
         layoutParams.width = SizeUtils.getScreenWidth() - SizeUtils.dp2px(100);
         rightView.setLayoutParams(layoutParams);
-
 
         brandLists = new ArrayList<>();
         filterBrandAdapter = new FilterBrandAdapter(R.layout.goods_item_pop_class, brandLists);
