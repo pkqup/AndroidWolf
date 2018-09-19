@@ -62,6 +62,7 @@ public class AuctionScrollViewFragment extends BaseFragment {
     private TextView tvPrice;
     private TextView tvGoodsName;
     private CountdownView countdownView;
+    private TextView tvType;
     private TextView tvPriceList;
     private TextView tvCountry;
     private TextView tvYear;
@@ -129,6 +130,7 @@ public class AuctionScrollViewFragment extends BaseFragment {
         tvPrice = rootView.findViewById(R.id.tvPrice);
         tvGoodsName = rootView.findViewById(R.id.tvGoodsName);
         countdownView = rootView.findViewById(R.id.countdownView);
+        tvType = rootView.findViewById(R.id.tvType);
         tvPriceList = rootView.findViewById(R.id.tvPriceList);
         tvPriceList.setOnClickListener(onClickListener);
         tvCountry = rootView.findViewById(R.id.tvCountry);
@@ -238,9 +240,21 @@ public class AuctionScrollViewFragment extends BaseFragment {
             e.printStackTrace();
         }
 
+        String status = goodsDetailBean.getItem().getAuction().getStatus();
+        if ("true".equals(status)) {
+            //明拍
+            tvType.setText("明拍");
+        } else {
+            tvType.setText("暗拍");
+            tvPriceList.setVisibility(View.GONE);
+        }
+
+
         GlideUtils.loadImage(getActivity(), goodsDetailBean.getShop().getShop_logo(), imgStore);
         tvStoreName.setText(goodsDetailBean.getShop().getShop_name());
         tvStoreDesc.setText(goodsDetailBean.getShop().getShop_descript());
+
+
     }
 
 

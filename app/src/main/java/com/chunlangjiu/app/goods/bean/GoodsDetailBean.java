@@ -487,6 +487,15 @@ public class GoodsDetailBean implements Serializable{
         private String status;
         private String max_price;
         private String check;
+        private String pledge;
+
+        public String getPledge() {
+            return pledge;
+        }
+
+        public void setPledge(String pledge) {
+            this.pledge = pledge;
+        }
 
         public String getMax_price() {
             return max_price;

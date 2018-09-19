@@ -64,6 +64,8 @@ public class AuctionDetailActivity extends BaseActivity {
 
     @BindView(R.id.rlBottom)
     RelativeLayout rlBottom;
+    @BindView(R.id.tvPayMoney)
+    TextView tvPayMoney;
     @BindView(R.id.tvBuy)
     TextView tvBuy;
 
@@ -187,6 +189,7 @@ public class AuctionDetailActivity extends BaseActivity {
         } else {
             tvBuy.setText("立即出价");
         }
+        tvPayMoney.setText("应付定金:¥" + goodsDetailBean.getItem().getAuction().getPledge());
 
         tab.setVisibility(View.VISIBLE);
         imgShare.setVisibility(View.VISIBLE);

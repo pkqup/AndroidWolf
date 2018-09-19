@@ -181,8 +181,8 @@ public class AuctionConfirmOrderActivity extends BaseActivity {
         GlideUtils.loadImage(this, goodsDetailBean.getItem().getImage_default_id(), img_pic);
         tv_name.setText(goodsDetailBean.getItem().getTitle());
         tv_price.setText("¥" +goodsDetailBean.getItem().getPrice());
-        tvGivePrice.setText("¥" + goodsDetailBean.getItem().getPrice());
-        tvPayPrice.setText(goodsDetailBean.getItem().getPrice());
+        tvGivePrice.setText("¥" + goodsDetailBean.getItem().getAuction().getPledge());
+        tvPayPrice.setText(goodsDetailBean.getItem().getAuction().getPledge());
     }
 
 
