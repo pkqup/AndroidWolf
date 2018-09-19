@@ -12,6 +12,7 @@ import com.chunlangjiu.app.goods.bean.CreateAuctionBean;
 import com.chunlangjiu.app.goods.bean.CreateOrderBean;
 import com.chunlangjiu.app.goods.bean.EvaluateListBean;
 import com.chunlangjiu.app.goods.bean.FilterListBean;
+import com.chunlangjiu.app.goods.bean.GivePriceBean;
 import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
 import com.chunlangjiu.app.goods.bean.GoodsListBean;
 import com.chunlangjiu.app.goods.bean.PaymentBean;
@@ -118,6 +119,18 @@ public class ApiUtils {
 
     public Flowable<ResultBean<GoodsDetailBean>> getGoodsDetail(String item_id) {
         return apiService.getGoodsDetail("item.detail", "v1", item_id);
+    }
+
+    public Flowable<ResultBean<GoodsDetailBean>> getGoodsDetailWithToken(String item_id,String token) {
+        return apiService.getGoodsDetailWithToken("item.detail", "v1",token, item_id);
+    }
+
+    public Flowable<ResultBean<GoodsDetailBean>> getAuctionGoodsDetail(String auctionitem_id) {
+        return apiService.getAuctionGoodsDetail("item.auction.detail", "v1", auctionitem_id);
+    }
+
+    public Flowable<ResultBean<List<GivePriceBean>>> getAuctionPriceList(String auctionitem_id) {
+        return apiService.getAuctionPriceList("item.auction.get", "v1", auctionitem_id);
     }
 
     public Flowable<ResultBean<FilterListBean>> getFilterData(String cat_id) {

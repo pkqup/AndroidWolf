@@ -2,9 +2,9 @@
 <com.pkqup.commonlibrary.view.verticalview.VerticalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/scrollView"
     android:background="@color/bg_white"
     android:orientation="vertical">
 
@@ -59,17 +59,18 @@
             android:textSize="@dimen/sp_mid"
             tools:text="法国红酒" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="15dp"
-            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/tvTimeStr"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:text="剩余时间"
                 android:textColor="@color/t_gray"
                 android:textSize="12sp" />
@@ -79,6 +80,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
+                android:layout_toRightOf="@id/tvTimeStr"
                 app:isConvertDaysToHours="false"
                 app:isHideTimeBackground="false"
                 app:isShowDay="true"
@@ -94,7 +96,23 @@
                 app:timeBgSize="20dp"
                 app:timeTextColor="@color/t_white"
                 app:timeTextSize="16sp" />
-        </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvPriceList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="15dp"
+                android:background="@drawable/orange_bg_stroke"
+                android:paddingBottom="4dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="4dp"
+                android:text="查看竞拍出价"
+                android:textColor="@color/t_orange"
+                android:textSize="12sp" />
+
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"

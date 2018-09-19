@@ -12,6 +12,7 @@ import com.chunlangjiu.app.goods.bean.CreateAuctionBean;
 import com.chunlangjiu.app.goods.bean.CreateOrderBean;
 import com.chunlangjiu.app.goods.bean.EvaluateListBean;
 import com.chunlangjiu.app.goods.bean.FilterListBean;
+import com.chunlangjiu.app.goods.bean.GivePriceBean;
 import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
 import com.chunlangjiu.app.goods.bean.GoodsListBean;
 import com.chunlangjiu.app.goods.bean.PaymentBean;
@@ -116,10 +117,24 @@ public interface ApiService {
 
     @POST("index.php/topapi")
     @FormUrlEncoded
+    Flowable<ResultBean<GoodsDetailBean>> getGoodsDetailWithToken(@Field("method") String method, @Field("v") String v,
+                                                                  @Field("token") String token, @Field("item_id") String item_id);
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<GoodsDetailBean>> getAuctionGoodsDetail(@Field("method") String method, @Field("v") String v,
+                                                                @Field("auctionitem_id") String auctionitem_id);
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<List<GivePriceBean>>> getAuctionPriceList(@Field("method") String method, @Field("v") String v,
+                                                                  @Field("auctionitem_id") String auctionitem_id);
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
     Flowable<ResultBean<EvaluateListBean>> getEvaluateList(@Field("method") String method, @Field("v") String v,
                                                            @Field("rate_type") int rate_type, @Field("item_id") String item_id,
                                                            @Field("page_no") int page_no, @Field("page_size") int page_size);
-
 
     @POST("index.php/topapi")
     @FormUrlEncoded

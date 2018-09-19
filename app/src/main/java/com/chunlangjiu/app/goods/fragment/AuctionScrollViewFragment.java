@@ -20,8 +20,11 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseFragment;
 import com.chunlangjiu.app.amain.bean.AuctionListBean;
+import com.chunlangjiu.app.goods.activity.ShopMainActivity;
 import com.chunlangjiu.app.goods.bean.EvaluateListBean;
+import com.chunlangjiu.app.goods.bean.GivePriceBean;
 import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
+import com.chunlangjiu.app.goods.dialog.PriceListDialog;
 import com.chunlangjiu.app.net.ApiUtils;
 import com.chunlangjiu.app.util.ConstantMsg;
 import com.pkqup.commonlibrary.eventmsg.EventManager;
@@ -30,6 +33,7 @@ import com.pkqup.commonlibrary.glide.GlideUtils;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.pkqup.commonlibrary.util.SizeUtils;
 import com.pkqup.commonlibrary.util.TimeUtils;
+import com.pkqup.commonlibrary.util.ToastUtils;
 import com.pkqup.commonlibrary.view.countdownview.CountdownView;
 import com.pkqup.commonlibrary.view.verticalview.VerticalScrollView;
 import com.youth.banner.Banner;
@@ -58,6 +62,7 @@ public class AuctionScrollViewFragment extends BaseFragment {
     private TextView tvPrice;
     private TextView tvGoodsName;
     private CountdownView countdownView;
+    private TextView tvPriceList;
     private TextView tvCountry;
     private TextView tvYear;
     private TextView tvDesc;
@@ -82,6 +87,7 @@ public class AuctionScrollViewFragment extends BaseFragment {
 
     private CompositeDisposable disposable;
     private GoodsDetailBean goodsDetailBean;
+    private List<GivePriceBean> priceList;//出价列表
 
     public static AuctionScrollViewFragment newInstance(GoodsDetailBean goodsDetailBean) {
         AuctionScrollViewFragment auctionScrollViewFragment = new AuctionScrollViewFragment();
@@ -95,14 +101,19 @@ public class AuctionScrollViewFragment extends BaseFragment {
         @Override
         public void onClick(View view) {
             switch (view.getId()) {
-                case R.id.tvLookAll://查看店铺
+                case R.id.tvPriceList://查看出价
+                    showPriceListDialog();
                     break;
-                case R.id.rlEvaluate://查看店铺
+                case R.id.tvLookAll://查看店铺
+                    ShopMainActivity.startShopMainActivity(getActivity(), goodsDetailBean.getShop().getShop_id());
+                    break;
+                case R.id.rlEvaluate://查看评价
                     EventManager.getInstance().notify(null, ConstantMsg.CHANGE_TO_EVALUATE);
                     break;
             }
         }
     };
+
 
     @Override
     public void getContentView(LayoutInflater inflater, ViewGroup container) {
@@ -118,6 +129,8 @@ public class AuctionScrollViewFragment extends BaseFragment {
         tvPrice = rootView.findViewById(R.id.tvPrice);
         tvGoodsName = rootView.findViewById(R.id.tvGoodsName);
         countdownView = rootView.findViewById(R.id.countdownView);
+        tvPriceList = rootView.findViewById(R.id.tvPriceList);
+        tvPriceList.setOnClickListener(onClickListener);
         tvCountry = rootView.findViewById(R.id.tvCountry);
         tvYear = rootView.findViewById(R.id.tvYear);
         tvDesc = rootView.findViewById(R.id.tvDesc);
@@ -144,6 +157,7 @@ public class AuctionScrollViewFragment extends BaseFragment {
         initCommonView();
         initRecommendView();
         getEvaluateData();
+        getPriceList();
     }
 
 
@@ -330,8 +344,38 @@ public class AuctionScrollViewFragment extends BaseFragment {
         }
     }
 
-    public void goTop(){
+    public void goTop() {
         scrollView.goTop();
+    }
+
+
+    private void getPriceList() {
+        disposable.add(ApiUtils.getInstance().getAuctionPriceList(goodsDetailBean.getItem().getAuction().getAuctionitem_id())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<List<GivePriceBean>>>() {
+                    @Override
+                    public void accept(ResultBean<List<GivePriceBean>> listResultBean) throws Exception {
+                        priceList = listResultBean.getData();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                }));
+    }
+
+    private PriceListDialog priceListDialog;
+
+    private void showPriceListDialog() {
+        if (priceList == null || priceList.size() == 0) {
+            ToastUtils.showShort("暂无出价");
+        } else {
+            if (priceListDialog == null) {
+                priceListDialog = new PriceListDialog(getActivity(), priceList);
+            }
+            priceListDialog.show();
+        }
     }
 
 }

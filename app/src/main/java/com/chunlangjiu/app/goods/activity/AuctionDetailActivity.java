@@ -30,6 +30,7 @@ import com.chunlangjiu.app.util.ShareUtils;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
+import com.pkqup.commonlibrary.util.SPUtils;
 import com.pkqup.commonlibrary.util.ToastUtils;
 import com.pkqup.commonlibrary.view.MyViewPager;
 import com.umeng.socialize.UMShareListener;
@@ -118,7 +119,6 @@ public class AuctionDetailActivity extends BaseActivity {
     };
 
 
-
     public static void startAuctionDetailsActivity(Activity activity, String itemId) {
         Intent intent = new Intent(activity, AuctionDetailActivity.class);
         intent.putExtra("itemId", itemId);
@@ -161,7 +161,7 @@ public class AuctionDetailActivity extends BaseActivity {
 
     private void getGoodsDetail() {
         showLoadingDialog();
-        disposable.add(ApiUtils.getInstance().getGoodsDetail(itemId)
+        disposable.add(ApiUtils.getInstance().getGoodsDetailWithToken(itemId, (String) SPUtils.get("token", ""))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean<GoodsDetailBean>>() {
@@ -181,6 +181,13 @@ public class AuctionDetailActivity extends BaseActivity {
     }
 
     private void updateView() {
+        String check = goodsDetailBean.getItem().getAuction().getCheck();
+        if ("true".equals(check)) {
+            tvBuy.setText("修改出价");
+        } else {
+            tvBuy.setText("立即出价");
+        }
+
         tab.setVisibility(View.VISIBLE);
         imgShare.setVisibility(View.VISIBLE);
         viewPager.setVisibility(View.VISIBLE);
@@ -226,17 +233,21 @@ public class AuctionDetailActivity extends BaseActivity {
 
 
     private void toConfirmOrder() {
-//        AuctionConfirmOrderActivity.startConfirmOrderActivity(this, goodsDetailBean);
-        if (inputPriceDialog == null) {
-            inputPriceDialog = new InputPriceDialog(this);
-            inputPriceDialog.setCallBackListener(new InputPriceDialog.OnCallBackListener() {
-                @Override
-                public void commitPrice(String price) {
-                    editGivePrice(price);
-                }
-            });
+        String check = goodsDetailBean.getItem().getAuction().getCheck();
+        if ("true".equals(check)) {
+            if (inputPriceDialog == null) {
+                inputPriceDialog = new InputPriceDialog(this);
+                inputPriceDialog.setCallBackListener(new InputPriceDialog.OnCallBackListener() {
+                    @Override
+                    public void commitPrice(String price) {
+                        editGivePrice(price);
+                    }
+                });
+            }
+            inputPriceDialog.show();
+        } else {
+            AuctionConfirmOrderActivity.startConfirmOrderActivity(this, goodsDetailBean);
         }
-        inputPriceDialog.show();
     }
 
     private void editGivePrice(String price) {
