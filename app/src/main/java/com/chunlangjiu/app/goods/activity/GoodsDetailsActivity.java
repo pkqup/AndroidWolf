@@ -130,6 +130,7 @@ public class GoodsDetailsActivity extends BaseActivity {
             }
         }
     };
+    private GoodsDetailsFragment goodsDetailsFragment;
 
 
     public static void startGoodsDetailsActivity(Activity activity, String goodsId) {
@@ -230,7 +231,8 @@ public class GoodsDetailsActivity extends BaseActivity {
         rlBottom.setVisibility(View.VISIBLE);
 
         mFragments = new ArrayList<>();
-        mFragments.add(GoodsDetailsFragment.newInstance(goodsDetailBean));
+        goodsDetailsFragment = GoodsDetailsFragment.newInstance(goodsDetailBean);
+        mFragments.add(goodsDetailsFragment);
         mFragments.add(GoodsWebFragment.newInstance(goodsDetailBean.getDesc()));
         mFragments.add(GoodsCommentFragment.newInstance(itemId));
         fragmentAdapter = new BaseFragmentAdapter(getSupportFragmentManager());
@@ -271,8 +273,25 @@ public class GoodsDetailsActivity extends BaseActivity {
         @Override
         public void onNotify(Object object, String eventTag) {
             changeToEvaluate(eventTag);
+            changeSlide(object, eventTag);
         }
     };
+
+    /**
+     * 图文详情滑动变化
+     *
+     * @param object
+     * @param eventTag
+     */
+    private void changeSlide(Object object, String eventTag) {
+        if (eventTag.equals(ConstantMsg.GOODS_SLIDE_CHANGE)) {
+            int pageType = (int) object;
+            if (pageType == 0) {
+                viewPager.setCurrentItem(1);
+                goodsDetailsFragment.goTop();
+            }
+        }
+    }
 
     /**
      * 跳转到评价tab

@@ -157,8 +157,17 @@ public class GoodsDetailBean implements Serializable{
         private String store;
         private String default_sku_id;
 
-        private String label;
-        private String explain;
+        private String label;//标签
+        private String explain;//商品说明
+        private Auction auction;
+
+        public Auction getAuction() {
+            return auction;
+        }
+
+        public void setAuction(Auction auction) {
+            this.auction = auction;
+        }
 
         public String getLabel() {
             return label;
@@ -462,6 +471,117 @@ public class GoodsDetailBean implements Serializable{
 
         public void setStore(String store) {
             this.store = store;
+        }
+    }
+
+    public class Auction implements Serializable{
+        private String data;
+        private String auctionitem_id;
+        private String item_id;
+        private String starting_price;
+        private String auction_status;
+        private String store;
+        private String number;
+        private String begin_time;
+        private String end_time;
+        private String status;
+        private String max_price;
+        private String check;
+
+        public String getMax_price() {
+            return max_price;
+        }
+
+        public void setMax_price(String max_price) {
+            this.max_price = max_price;
+        }
+
+        public String getCheck() {
+            return check;
+        }
+
+        public void setCheck(String check) {
+            this.check = check;
+        }
+
+        public String getData() {
+            return data;
+        }
+
+        public void setData(String data) {
+            this.data = data;
+        }
+
+        public String getAuctionitem_id() {
+            return auctionitem_id;
+        }
+
+        public void setAuctionitem_id(String auctionitem_id) {
+            this.auctionitem_id = auctionitem_id;
+        }
+
+        public String getItem_id() {
+            return item_id;
+        }
+
+        public void setItem_id(String item_id) {
+            this.item_id = item_id;
+        }
+
+        public String getStarting_price() {
+            return starting_price;
+        }
+
+        public void setStarting_price(String starting_price) {
+            this.starting_price = starting_price;
+        }
+
+        public String getAuction_status() {
+            return auction_status;
+        }
+
+        public void setAuction_status(String auction_status) {
+            this.auction_status = auction_status;
+        }
+
+        public String getStore() {
+            return store;
+        }
+
+        public void setStore(String store) {
+            this.store = store;
+        }
+
+        public String getNumber() {
+            return number;
+        }
+
+        public void setNumber(String number) {
+            this.number = number;
+        }
+
+        public String getBegin_time() {
+            return begin_time;
+        }
+
+        public void setBegin_time(String begin_time) {
+            this.begin_time = begin_time;
+        }
+
+        public String getEnd_time() {
+            return end_time;
+        }
+
+        public void setEnd_time(String end_time) {
+            this.end_time = end_time;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
         }
     }
 

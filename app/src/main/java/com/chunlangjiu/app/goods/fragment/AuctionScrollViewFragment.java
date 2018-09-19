@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
@@ -30,6 +31,7 @@ import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.pkqup.commonlibrary.util.SizeUtils;
 import com.pkqup.commonlibrary.util.TimeUtils;
 import com.pkqup.commonlibrary.view.countdownview.CountdownView;
+import com.pkqup.commonlibrary.view.verticalview.VerticalScrollView;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.listener.OnBannerListener;
@@ -50,6 +52,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class AuctionScrollViewFragment extends BaseFragment {
 
+    private VerticalScrollView scrollView;
     private Banner banner;
     private LinearLayout indicator;
     private TextView tvPrice;
@@ -108,6 +111,7 @@ public class AuctionScrollViewFragment extends BaseFragment {
 
     @Override
     public void initView() {
+        scrollView = rootView.findViewById(R.id.scrollView);
         banner = rootView.findViewById(R.id.banner);
         indicator = rootView.findViewById(R.id.indicator);
 
@@ -205,25 +209,54 @@ public class AuctionScrollViewFragment extends BaseFragment {
         tvPrice.setText("¥" + goodsDetailBean.getItem().getPrice());
         tvGoodsName.setText(goodsDetailBean.getItem().getTitle());
 
-        // TODO: 2018/9/16 竞拍数据结构暂时不对
-/*        String end_time = goodsDetailBean.getItem().getCat_id();
         try {
+            GoodsDetailBean.Auction auction = goodsDetailBean.getItem().getAuction();
+            String end_time = auction.getEnd_time();
             long endTime = 0;
             if (!TextUtils.isEmpty(end_time)) {
                 endTime = Long.parseLong(end_time);
             }
             if ((endTime * 1000 - System.currentTimeMillis()) > 0) {
                 countdownView.start(endTime * 1000 - System.currentTimeMillis());
+                dealWithLifeCycle();
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }*/
+        }
 
         GlideUtils.loadImage(getActivity(), goodsDetailBean.getShop().getShop_logo(), imgStore);
         tvStoreName.setText(goodsDetailBean.getShop().getShop_name());
         tvStoreDesc.setText(goodsDetailBean.getShop().getShop_descript());
     }
 
+
+    /**
+     * 以下两个接口代替 activity.onStart() 和 activity.onStop(), 控制 timer 的开关
+     */
+    private void dealWithLifeCycle() {
+        countdownView.addOnAttachStateChangeListener(new View.OnAttachStateChangeListener() {
+            @Override
+            public void onViewAttachedToWindow(View view) {
+                String end_time = goodsDetailBean.getItem().getAuction().getEnd_time();
+                try {
+                    long endTime = 0;
+                    if (!TextUtils.isEmpty(end_time)) {
+                        endTime = Long.parseLong(end_time);
+                    }
+                    if ((endTime * 1000 - System.currentTimeMillis()) > 0) {
+                        countdownView.start(endTime * 1000 - System.currentTimeMillis());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onViewDetachedFromWindow(View view) {
+                countdownView.stop();
+            }
+        });
+    }
 
     private void getEvaluateData() {
         disposable.add(ApiUtils.getInstance().getEvaluateList(goodsDetailBean.getItem().getItem_id(), 1)
@@ -297,5 +330,8 @@ public class AuctionScrollViewFragment extends BaseFragment {
         }
     }
 
+    public void goTop(){
+        scrollView.goTop();
+    }
 
 }

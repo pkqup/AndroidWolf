@@ -17,7 +17,10 @@ import com.chunlangjiu.app.abase.BaseApplication;
 import com.chunlangjiu.app.abase.BaseFragmentAdapter;
 import com.chunlangjiu.app.amain.activity.LoginActivity;
 import com.chunlangjiu.app.amain.bean.AuctionListBean;
+import com.chunlangjiu.app.cart.ChoiceNumDialog;
+import com.chunlangjiu.app.goods.bean.CreateAuctionBean;
 import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
+import com.chunlangjiu.app.goods.dialog.InputPriceDialog;
 import com.chunlangjiu.app.goods.fragment.AuctionDetailFragment;
 import com.chunlangjiu.app.goods.fragment.GoodsCommentFragment;
 import com.chunlangjiu.app.goods.fragment.GoodsWebFragment;
@@ -27,6 +30,8 @@ import com.chunlangjiu.app.util.ShareUtils;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
+import com.pkqup.commonlibrary.util.ToastUtils;
+import com.pkqup.commonlibrary.view.MyViewPager;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
@@ -75,6 +80,10 @@ public class AuctionDetailActivity extends BaseActivity {
     private GoodsDetailBean goodsDetailBean;
     private String skuId;
 
+    private InputPriceDialog inputPriceDialog;
+
+    private AuctionDetailFragment auctionDetailFragment;
+
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -109,7 +118,8 @@ public class AuctionDetailActivity extends BaseActivity {
     };
 
 
-    public static void startAuctionDetailsActivity(Activity activity,String itemId) {
+
+    public static void startAuctionDetailsActivity(Activity activity, String itemId) {
         Intent intent = new Intent(activity, AuctionDetailActivity.class);
         intent.putExtra("itemId", itemId);
         activity.startActivity(intent);
@@ -175,9 +185,9 @@ public class AuctionDetailActivity extends BaseActivity {
         imgShare.setVisibility(View.VISIBLE);
         viewPager.setVisibility(View.VISIBLE);
         rlBottom.setVisibility(View.VISIBLE);
-
+        auctionDetailFragment = AuctionDetailFragment.newInstance(goodsDetailBean);
         mFragments = new ArrayList<>();
-        mFragments.add(AuctionDetailFragment.newInstance(goodsDetailBean));
+        mFragments.add(auctionDetailFragment);
         mFragments.add(GoodsWebFragment.newInstance(goodsDetailBean.getDesc()));
         mFragments.add(GoodsCommentFragment.newInstance(itemId));
         fragmentAdapter = new BaseFragmentAdapter(getSupportFragmentManager());
@@ -216,15 +226,46 @@ public class AuctionDetailActivity extends BaseActivity {
 
 
     private void toConfirmOrder() {
-        AuctionConfirmOrderActivity.startConfirmOrderActivity(this, goodsDetailBean);
+//        AuctionConfirmOrderActivity.startConfirmOrderActivity(this, goodsDetailBean);
+        if (inputPriceDialog == null) {
+            inputPriceDialog = new InputPriceDialog(this);
+            inputPriceDialog.setCallBackListener(new InputPriceDialog.OnCallBackListener() {
+                @Override
+                public void commitPrice(String price) {
+                    editGivePrice(price);
+                }
+            });
+        }
+        inputPriceDialog.show();
+    }
+
+    private void editGivePrice(String price) {
+        showLoadingDialog();
+        disposable.add(ApiUtils.getInstance().auctionAddPrice(goodsDetailBean.getItem().getAuction().getAuctionitem_id(), price)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean>() {
+                    @Override
+                    public void accept(ResultBean resultBean) throws Exception {
+                        hideLoadingDialog();
+                        ToastUtils.showShort("修改出价成功");
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        hideLoadingDialog();
+                    }
+                }));
     }
 
     private EventManager.OnNotifyListener onNotifyListener = new EventManager.OnNotifyListener() {
         @Override
         public void onNotify(Object object, String eventTag) {
             changeToEvaluate(eventTag);
+            changeSlide(object, eventTag);
         }
     };
+
 
     /**
      * 跳转到评价tab
@@ -234,6 +275,23 @@ public class AuctionDetailActivity extends BaseActivity {
     private void changeToEvaluate(String eventTag) {
         if (eventTag.equals(ConstantMsg.CHANGE_TO_EVALUATE)) {
             viewPager.setCurrentItem(2);
+        }
+    }
+
+
+    /**
+     * 图文详情滑动变化
+     *
+     * @param object
+     * @param eventTag
+     */
+    private void changeSlide(Object object, String eventTag) {
+        if (eventTag.equals(ConstantMsg.AUCTION_SLIDE_CHANGE)) {
+            int pageType = (int) object;
+            if (pageType == 0) {
+                viewPager.setCurrentItem(1);
+                auctionDetailFragment.goTop();
+            }
         }
     }
 

@@ -8,6 +8,7 @@ import com.chunlangjiu.app.amain.bean.HomeModulesBean;
 import com.chunlangjiu.app.amain.bean.LoginBean;
 import com.chunlangjiu.app.amain.bean.MainClassBean;
 import com.chunlangjiu.app.goods.bean.ConfirmOrderBean;
+import com.chunlangjiu.app.goods.bean.CreateAuctionBean;
 import com.chunlangjiu.app.goods.bean.CreateOrderBean;
 import com.chunlangjiu.app.goods.bean.EvaluateListBean;
 import com.chunlangjiu.app.goods.bean.FilterListBean;
@@ -69,7 +70,7 @@ public interface ApiService {
     @POST("index.php/topapi")
     @FormUrlEncoded
     Flowable<ResultBean> setHeadImg(@Field("method") String method, @Field("v") String v,
-                                               @Field("img_url") String img_url);
+                                    @Field("img_url") String img_url);
 
     @POST("index.php/topapi")
     @FormUrlEncoded
@@ -227,6 +228,18 @@ public interface ApiService {
     @FormUrlEncoded
     Flowable<ResultBean> payDo(@Field("method") String method, @Field("v") String v,
                                @Field("payment_id") String payment_id, @Field("pay_app_id") String pay_app_id);
+
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<CreateAuctionBean>> createAuctionOrder(@Field("method") String method, @Field("v") String v,
+                                                               @Field("auctionitem_id") String auctionitem_id, @Field("addr_id") String addr_id,
+                                                               @Field("price") String price);
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean> auctionAddPrice(@Field("method") String method, @Field("v") String v,
+                                         @Field("auctionitem_id") String auctionitem_id, @Field("price") String price);
 
     @POST("index.php/topapi")
     @FormUrlEncoded

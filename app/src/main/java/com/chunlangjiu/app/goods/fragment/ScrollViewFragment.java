@@ -31,6 +31,7 @@ import com.pkqup.commonlibrary.glide.GlideUtils;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.pkqup.commonlibrary.util.SizeUtils;
 import com.pkqup.commonlibrary.util.TimeUtils;
+import com.pkqup.commonlibrary.view.verticalview.VerticalScrollView;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.listener.OnBannerListener;
@@ -52,6 +53,7 @@ import io.reactivex.schedulers.Schedulers;
 public class ScrollViewFragment extends BaseFragment {
 
 
+    private VerticalScrollView scrollView;
     private Banner banner;
     private LinearLayout indicator;
     private TextView tvPrice;
@@ -111,6 +113,7 @@ public class ScrollViewFragment extends BaseFragment {
 
     @Override
     public void initView() {
+        scrollView = rootView.findViewById(R.id.scrollView);
         banner = rootView.findViewById(R.id.banner);
         indicator = rootView.findViewById(R.id.indicator);
 
@@ -292,4 +295,8 @@ public class ScrollViewFragment extends BaseFragment {
         }
     }
 
+
+    public void goTop(){
+        scrollView.goTop();
+    }
 }

@@ -8,6 +8,7 @@ import com.chunlangjiu.app.amain.bean.HomeModulesBean;
 import com.chunlangjiu.app.amain.bean.LoginBean;
 import com.chunlangjiu.app.amain.bean.MainClassBean;
 import com.chunlangjiu.app.goods.bean.ConfirmOrderBean;
+import com.chunlangjiu.app.goods.bean.CreateAuctionBean;
 import com.chunlangjiu.app.goods.bean.CreateOrderBean;
 import com.chunlangjiu.app.goods.bean.EvaluateListBean;
 import com.chunlangjiu.app.goods.bean.FilterListBean;
@@ -217,6 +218,15 @@ public class ApiUtils {
     public Flowable<ResultBean> payDo(String payment_id, String payment_type) {
         return apiService.payDo("payment.pay.do", "v1", payment_id, payment_type);
     }
+
+    public Flowable<ResultBean<CreateAuctionBean>> createAuctionOrder(String auctionitem_id, String addr_id, String price) {
+        return apiService.createAuctionOrder("payment.pay.auctionCreate", "v1", auctionitem_id, addr_id,price);
+    }
+
+    public Flowable<ResultBean> auctionAddPrice(String auctionitem_id,  String price) {
+        return apiService.auctionAddPrice("item.auction.userAdd", "v1", auctionitem_id, price);
+    }
+
 
     public Flowable<ResultBean<HomeModulesBean>> getHomeModules() {
         return apiService.getHomeModules("theme.modules", "v1", "index");
