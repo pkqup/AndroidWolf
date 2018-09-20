@@ -485,9 +485,27 @@ public class GoodsDetailBean implements Serializable{
         private String begin_time;
         private String end_time;
         private String status;
-        private String max_price;
-        private String check;
-        private String pledge;
+        private String max_price;//最高出价
+        private String check;//是否已经出过价
+        private String pledge;//定金
+        private String original_bid;//自己当前的出价
+        private String is_pay;//是否支付过定金
+
+        public String getOriginal_bid() {
+            return original_bid;
+        }
+
+        public void setOriginal_bid(String original_bid) {
+            this.original_bid = original_bid;
+        }
+
+        public String getIs_pay() {
+            return is_pay;
+        }
+
+        public void setIs_pay(String is_pay) {
+            this.is_pay = is_pay;
+        }
 
         public String getPledge() {
             return pledge;

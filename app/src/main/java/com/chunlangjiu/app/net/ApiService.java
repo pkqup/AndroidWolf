@@ -25,6 +25,7 @@ import com.chunlangjiu.app.order.bean.OrderDetailBean;
 import com.chunlangjiu.app.store.bean.StoreClassListBean;
 import com.chunlangjiu.app.store.bean.StoreDetailBean;
 import com.chunlangjiu.app.order.bean.OrderListBean;
+import com.chunlangjiu.app.store.bean.StoreListBean;
 import com.chunlangjiu.app.user.bean.AddressListBean;
 import com.chunlangjiu.app.user.bean.BrandListBean;
 import com.chunlangjiu.app.user.bean.MyNumBean;
@@ -181,9 +182,9 @@ public interface ApiService {
     //获取名庄对应分类下的列表
     @POST("index.php/topapi")
     @FormUrlEncoded
-    Flowable<ResultBean> getStoreList(@Field("method") String method, @Field("v") String v,
-                                      @Field("chateaucat_id") String chateaucat_id,
-                                      @Field("page_no") int page_no, @Field("page_size") int page_size);
+    Flowable<ResultBean<StoreListBean>> getStoreList(@Field("method") String method, @Field("v") String v,
+                                                     @Field("chateaucat_id") String chateaucat_id,
+                                                     @Field("page_no") int page_no, @Field("page_size") int page_size);
 
     //获取名庄详情
     @POST("index.php/topapi")

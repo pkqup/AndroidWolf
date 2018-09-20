@@ -25,6 +25,7 @@ import com.chunlangjiu.app.order.bean.OrderDetailBean;
 import com.chunlangjiu.app.store.bean.StoreClassListBean;
 import com.chunlangjiu.app.store.bean.StoreDetailBean;
 import com.chunlangjiu.app.order.bean.OrderListBean;
+import com.chunlangjiu.app.store.bean.StoreListBean;
 import com.chunlangjiu.app.user.bean.AddressListBean;
 import com.chunlangjiu.app.user.bean.BrandListBean;
 import com.chunlangjiu.app.user.bean.MyNumBean;
@@ -176,8 +177,8 @@ public class ApiUtils {
         return apiService.getStoreClass("category.chateauCat", "v1");
     }
 
-    public Flowable<ResultBean> getStoreList(String id, int pageNum) {
-        return apiService.getStoreList("category.chateauList", "v1", id, pageNum, 20);
+    public Flowable<ResultBean<StoreListBean>> getStoreList(String id, int pageNum) {
+        return apiService.getStoreList("category.chateauList", "v1", id, pageNum, 100);
     }
 
     public Flowable<ResultBean<StoreDetailBean>> getStoreDetail(String id) {

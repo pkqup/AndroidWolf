@@ -82,7 +82,8 @@ public class StoreListActivity extends BaseActivity {
         storeAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                StoreDetailsActivity.startStoreDetailActivity(StoreListActivity.this, "1");
+                StoreSearchActivity.startStoreSearchActivity(StoreListActivity.this,lists.get(position).getChateaucat_name(),
+                        lists.get(position).getChateaucat_id());
             }
         });
     }

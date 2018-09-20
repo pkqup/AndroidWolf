@@ -186,10 +186,11 @@ public class AuctionDetailActivity extends BaseActivity {
         String check = goodsDetailBean.getItem().getAuction().getCheck();
         if ("true".equals(check)) {
             tvBuy.setText("修改出价");
+            tvPayMoney.setText("已付定金:¥" + goodsDetailBean.getItem().getAuction().getPledge());
         } else {
             tvBuy.setText("立即出价");
+            tvPayMoney.setText("应付定金:¥" + goodsDetailBean.getItem().getAuction().getPledge());
         }
-        tvPayMoney.setText("应付定金:¥" + goodsDetailBean.getItem().getAuction().getPledge());
 
         tab.setVisibility(View.VISIBLE);
         imgShare.setVisibility(View.VISIBLE);
@@ -239,10 +240,11 @@ public class AuctionDetailActivity extends BaseActivity {
         String check = goodsDetailBean.getItem().getAuction().getCheck();
         if ("true".equals(check)) {
             if (inputPriceDialog == null) {
-                inputPriceDialog = new InputPriceDialog(this);
-                inputPriceDialog.setCallBackListener(new InputPriceDialog.OnCallBackListener() {
+                inputPriceDialog = new InputPriceDialog(this,goodsDetailBean.getItem().getAuction().getMax_price(),
+                        goodsDetailBean.getItem().getAuction().getOriginal_bid());
+                inputPriceDialog.setCallBack(new InputPriceDialog.CallBack() {
                     @Override
-                    public void commitPrice(String price) {
+                    public void editPrice(String price) {
                         editGivePrice(price);
                     }
                 });
@@ -263,11 +265,13 @@ public class AuctionDetailActivity extends BaseActivity {
                     public void accept(ResultBean resultBean) throws Exception {
                         hideLoadingDialog();
                         ToastUtils.showShort("修改出价成功");
+                        finish();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         hideLoadingDialog();
+                        ToastUtils.showShort("修改出价失败");
                     }
                 }));
     }
