@@ -1,5 +1,6 @@
 package com.chunlangjiu.app.amain.fragment;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,7 +14,9 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chunlangjiu.app.R;
+import com.chunlangjiu.app.abase.BaseApplication;
 import com.chunlangjiu.app.abase.BaseFragment;
+import com.chunlangjiu.app.amain.activity.LoginActivity;
 import com.chunlangjiu.app.amain.adapter.AuctionListAdapter;
 import com.chunlangjiu.app.amain.bean.AuctionListBean;
 import com.chunlangjiu.app.goods.activity.AuctionDetailActivity;
@@ -137,7 +140,11 @@ public class AuctionFragment extends BaseFragment {
         linearAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                AuctionDetailActivity.startAuctionDetailsActivity(getActivity(), lists.get(position).getItem_id());
+                if (BaseApplication.isLogin()) {
+                    AuctionDetailActivity.startAuctionDetailsActivity(getActivity(), lists.get(position).getItem_id());
+                } else {
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                }
             }
         });
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));

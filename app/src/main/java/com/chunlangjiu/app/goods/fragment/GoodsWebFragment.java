@@ -46,4 +46,8 @@ public class GoodsWebFragment extends BaseFragment {
 
     }
 
+    public void goTop(){
+        webView.goTop();
+    }
+
 }

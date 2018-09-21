@@ -2,6 +2,7 @@
 <com.pkqup.commonlibrary.view.verticalview.VerticalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg_white"
@@ -58,17 +59,18 @@
             android:textSize="@dimen/sp_mid"
             tools:text="法国红酒" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="15dp"
-            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/tvTimeStr"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:text="剩余时间"
                 android:textColor="@color/t_gray"
                 android:textSize="12sp" />
@@ -77,23 +79,67 @@
                 android:id="@+id/countdownView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                app:isConvertDaysToHours="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="4dp"
+                android:layout_toRightOf="@id/tvTimeStr"
+                app:isConvertDaysToHours="false"
                 app:isHideTimeBackground="false"
-                app:isShowDay="false"
+                app:isShowDay="true"
                 app:isShowHour="true"
                 app:isShowMillisecond="false"
                 app:isShowMinute="true"
                 app:isShowSecond="true"
                 app:suffixGravity="center"
                 app:suffixTextColor="@color/t_black"
-                app:suffixTextSize="16sp"
+                app:suffixTextSize="14sp"
                 app:timeBgColor="@color/bg_red"
                 app:timeBgRadius="3dp"
-                app:timeBgSize="20dp"
+                app:timeBgSize="17dp"
                 app:timeTextColor="@color/t_white"
-                app:timeTextSize="16sp" />
-        </LinearLayout>
+                app:timeTextSize="14sp" />
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="15dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="竞拍方式:"
+                    android:textColor="@color/t_gray"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tvType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="明拍"
+                    android:textColor="@color/t_black"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/tvPriceList"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:background="@drawable/orange_bg_stroke"
+                    android:paddingBottom="4dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingTop="4dp"
+                    android:text="查看竞拍出价"
+                    android:textColor="@color/t_orange"
+                    android:textSize="10sp" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -212,12 +258,12 @@
                 android:layout_marginTop="14dp"
                 android:background="@drawable/orange_bg_stroke"
                 android:paddingBottom="4dp"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
                 android:paddingTop="4dp"
                 android:text="查看全部商品"
                 android:textColor="@color/t_orange"
-                android:textSize="12sp" />
+                android:textSize="10sp" />
         </RelativeLayout>
 
         <View

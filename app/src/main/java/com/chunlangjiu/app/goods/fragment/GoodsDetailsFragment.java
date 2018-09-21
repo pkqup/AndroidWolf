@@ -8,14 +8,16 @@ import android.view.ViewGroup;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseFragment;
 import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
+import com.chunlangjiu.app.util.ConstantMsg;
+import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.view.verticalview.VerticalSlide;
 
 
 public class GoodsDetailsFragment extends BaseFragment {
 
     private VerticalSlide verticalSlide;
-    private BaseFragment topFragment;
-    private BaseFragment bottomFragment;
+    private ScrollViewFragment topFragment;
+    private GoodsWebFragment bottomFragment;
 
     public static GoodsDetailsFragment newInstance(GoodsDetailBean goodsDetailBean) {
         GoodsDetailsFragment goodsDetailsFragment = new GoodsDetailsFragment();
@@ -45,7 +47,7 @@ public class GoodsDetailsFragment extends BaseFragment {
         verticalSlide.setOnShowNextPageListener(new VerticalSlide.OnShowNextPageListener() {
             @Override
             public void onShowNextPage(int showType) {
-
+                EventManager.getInstance().notify(showType, ConstantMsg.GOODS_SLIDE_CHANGE);
             }
         });
     }
@@ -53,6 +55,21 @@ public class GoodsDetailsFragment extends BaseFragment {
     @Override
     public void initData() {
 
+    }
+
+    public void goTop() {
+        verticalSlide.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                bottomFragment.goTop();
+                verticalSlide.goTop(new VerticalSlide.OnGoTopListener() {
+                    @Override
+                    public void goTop() {
+                        topFragment.goTop();
+                    }
+                });
+            }
+        },500);
     }
 
 }

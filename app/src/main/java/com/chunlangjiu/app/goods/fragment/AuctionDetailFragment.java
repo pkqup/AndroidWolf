@@ -9,6 +9,8 @@ import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseFragment;
 import com.chunlangjiu.app.amain.bean.AuctionListBean;
 import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
+import com.chunlangjiu.app.util.ConstantMsg;
+import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.view.verticalview.VerticalSlide;
 
 /**
@@ -18,8 +20,8 @@ import com.pkqup.commonlibrary.view.verticalview.VerticalSlide;
 public class AuctionDetailFragment extends BaseFragment {
 
     private VerticalSlide verticalSlide;
-    private BaseFragment topFragment;
-    private BaseFragment bottomFragment;
+    private AuctionScrollViewFragment topFragment;
+    private GoodsWebFragment bottomFragment;
 
 
     public static AuctionDetailFragment newInstance(GoodsDetailBean goodsDetailBean) {
@@ -50,7 +52,7 @@ public class AuctionDetailFragment extends BaseFragment {
         verticalSlide.setOnShowNextPageListener(new VerticalSlide.OnShowNextPageListener() {
             @Override
             public void onShowNextPage(int showType) {
-
+                EventManager.getInstance().notify(showType, ConstantMsg.AUCTION_SLIDE_CHANGE);
             }
         });
     }
@@ -60,6 +62,20 @@ public class AuctionDetailFragment extends BaseFragment {
 
     }
 
+    public void goTop(){
+        verticalSlide.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                bottomFragment.goTop();
+                verticalSlide.goTop(new VerticalSlide.OnGoTopListener() {
+                    @Override
+                    public void goTop() {
+                        topFragment.goTop();
+                    }
+                });
+            }
+        },500);
+    }
 
 
 }

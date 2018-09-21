@@ -1,8 +1,11 @@
 package com.chunlangjiu.app.goods.activity;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -10,17 +13,24 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.alipay.sdk.app.PayTask;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
 import com.chunlangjiu.app.amain.bean.AuctionListBean;
+import com.chunlangjiu.app.goods.bean.CreateAuctionBean;
+import com.chunlangjiu.app.goods.bean.CreateOrderBean;
 import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
 import com.chunlangjiu.app.goods.bean.PaymentBean;
 import com.chunlangjiu.app.goods.dialog.PayDialog;
 import com.chunlangjiu.app.net.ApiUtils;
+import com.chunlangjiu.app.order.activity.OrderMainActivity;
+import com.chunlangjiu.app.order.params.OrderParams;
 import com.chunlangjiu.app.user.activity.AddressListActivity;
 import com.chunlangjiu.app.user.bean.AddressListDetailBean;
 import com.chunlangjiu.app.util.ConstantMsg;
+import com.chunlangjiu.app.util.PayResult;
 import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.glide.GlideUtils;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
@@ -30,6 +40,7 @@ import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -44,6 +55,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class AuctionConfirmOrderActivity extends BaseActivity {
 
+    private static final int SDK_PAY_FLAG = 1;
     private static final int CHOICE_ADDRESS = 1000;
 
     @BindView(R.id.scrollView)
@@ -168,9 +180,9 @@ public class AuctionConfirmOrderActivity extends BaseActivity {
 
         GlideUtils.loadImage(this, goodsDetailBean.getItem().getImage_default_id(), img_pic);
         tv_name.setText(goodsDetailBean.getItem().getTitle());
-        tv_price.setText(goodsDetailBean.getItem().getPrice());
-        tvGivePrice.setText(goodsDetailBean.getItem().getPrice());
-        tvPayPrice.setText(goodsDetailBean.getItem().getPrice());
+        tv_price.setText("¥" +goodsDetailBean.getItem().getPrice());
+        tvGivePrice.setText("¥" + goodsDetailBean.getItem().getAuction().getPledge());
+        tvPayPrice.setText(goodsDetailBean.getItem().getAuction().getPledge());
     }
 
 
@@ -255,7 +267,40 @@ public class AuctionConfirmOrderActivity extends BaseActivity {
     }
 
     private void commitOrder() {
+        showLoadingDialog();
+        disposable.add(ApiUtils.getInstance().createAuctionOrder(goodsDetailBean.getItem().getAuction().getAuctionitem_id(),
+                addressId, etPrice.getText().toString().trim())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<CreateAuctionBean>>() {
+                    @Override
+                    public void accept(ResultBean<CreateAuctionBean> createAuctionBeanResultBean) throws Exception {
+                        payMoney(createAuctionBeanResultBean.getData());
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        hideLoadingDialog();
+                    }
+                }));
+    }
 
+    private void payMoney(CreateAuctionBean data) {
+        disposable.add(ApiUtils.getInstance().payDo(data.getPayment_id(), payMehtodId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean>() {
+                    @Override
+                    public void accept(ResultBean resultBean) throws Exception {
+                        hideLoadingDialog();
+                        invokePay(resultBean);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        hideLoadingDialog();
+                    }
+                }));
     }
 
 
@@ -288,8 +333,49 @@ public class AuctionConfirmOrderActivity extends BaseActivity {
         wxapi.sendReq(request);
     }
 
-    private void invokeZhifubaoPay(ResultBean data) {
 
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (msg.what == SDK_PAY_FLAG) {
+                @SuppressWarnings("unchecked")
+                PayResult payResult = new PayResult((Map<String, String>) msg.obj);
+                /**
+                 对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
+                 */
+                String resultInfo = payResult.getResult();// 同步返回需要验证的信息
+                String resultStatus = payResult.getResultStatus();
+                // 判断resultStatus 为9000则代表支付成功
+                if (TextUtils.equals(resultStatus, "9000")) {
+                    // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
+                    Toast.makeText(AuctionConfirmOrderActivity.this, "支付成功", Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
+                    Toast.makeText(AuctionConfirmOrderActivity.this, "支付失败", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+                toOrderMainActivity(0, 0);
+            }
+        }
+    };
+
+    private void invokeZhifubaoPay(ResultBean data) {
+        final String url = data.getUrl();
+        Runnable payRunnable = new Runnable() {
+            @Override
+            public void run() {
+                PayTask alipay = new PayTask(AuctionConfirmOrderActivity.this);
+                Map<String, String> stringStringMap = alipay.payV2(url, true);
+                Message msg = new Message();
+                msg.what = SDK_PAY_FLAG;
+                msg.obj = stringStringMap;
+                mHandler.sendMessage(msg);
+            }
+        };
+        // 必须异步调用
+        Thread payThread = new Thread(payRunnable);
+        payThread.start();
     }
 
     private void invokeYuePay(ResultBean data) {
@@ -348,9 +434,19 @@ public class AuctionConfirmOrderActivity extends BaseActivity {
                 finish();
             } else if (code == -1) {
                 //支付错误
+                ToastUtils.showShort("支付失败");
             } else if (code == -2) {
                 //支付取消
+                ToastUtils.showShort("支付失败");
             }
+            toOrderMainActivity(0, 0);
         }
+    }
+
+    private void toOrderMainActivity(int type, int target) {
+        Intent intent = new Intent(this, OrderMainActivity.class);
+        intent.putExtra(OrderParams.TYPE, type);
+        intent.putExtra(OrderParams.TARGET, target);
+        startActivity(intent);
     }
 }

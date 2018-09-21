@@ -8,9 +8,11 @@ import com.chunlangjiu.app.amain.bean.HomeModulesBean;
 import com.chunlangjiu.app.amain.bean.LoginBean;
 import com.chunlangjiu.app.amain.bean.MainClassBean;
 import com.chunlangjiu.app.goods.bean.ConfirmOrderBean;
+import com.chunlangjiu.app.goods.bean.CreateAuctionBean;
 import com.chunlangjiu.app.goods.bean.CreateOrderBean;
 import com.chunlangjiu.app.goods.bean.EvaluateListBean;
 import com.chunlangjiu.app.goods.bean.FilterListBean;
+import com.chunlangjiu.app.goods.bean.GivePriceBean;
 import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
 import com.chunlangjiu.app.goods.bean.GoodsListBean;
 import com.chunlangjiu.app.goods.bean.PaymentBean;
@@ -24,6 +26,7 @@ import com.chunlangjiu.app.order.bean.OrderDetailBean;
 import com.chunlangjiu.app.store.bean.StoreClassListBean;
 import com.chunlangjiu.app.store.bean.StoreDetailBean;
 import com.chunlangjiu.app.order.bean.OrderListBean;
+import com.chunlangjiu.app.store.bean.StoreListBean;
 import com.chunlangjiu.app.user.bean.AddressListBean;
 import com.chunlangjiu.app.user.bean.BrandListBean;
 import com.chunlangjiu.app.user.bean.MyNumBean;
@@ -116,10 +119,24 @@ public interface ApiService {
 
     @POST("index.php/topapi")
     @FormUrlEncoded
+    Flowable<ResultBean<GoodsDetailBean>> getGoodsDetailWithToken(@Field("method") String method, @Field("v") String v,
+                                                                  @Field("token") String token, @Field("item_id") String item_id);
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<GoodsDetailBean>> getAuctionGoodsDetail(@Field("method") String method, @Field("v") String v,
+                                                                @Field("auctionitem_id") String auctionitem_id);
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<List<GivePriceBean>>> getAuctionPriceList(@Field("method") String method, @Field("v") String v,
+                                                                  @Field("auctionitem_id") String auctionitem_id);
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
     Flowable<ResultBean<EvaluateListBean>> getEvaluateList(@Field("method") String method, @Field("v") String v,
                                                            @Field("rate_type") int rate_type, @Field("item_id") String item_id,
                                                            @Field("page_no") int page_no, @Field("page_size") int page_size);
-
 
     @POST("index.php/topapi")
     @FormUrlEncoded
@@ -166,9 +183,9 @@ public interface ApiService {
     //获取名庄对应分类下的列表
     @POST("index.php/topapi")
     @FormUrlEncoded
-    Flowable<ResultBean> getStoreList(@Field("method") String method, @Field("v") String v,
-                                      @Field("chateaucat_id") String chateaucat_id,
-                                      @Field("page_no") int page_no, @Field("page_size") int page_size);
+    Flowable<ResultBean<StoreListBean>> getStoreList(@Field("method") String method, @Field("v") String v,
+                                                     @Field("chateaucat_id") String chateaucat_id,
+                                                     @Field("page_no") int page_no, @Field("page_size") int page_size);
 
     //获取名庄详情
     @POST("index.php/topapi")
@@ -228,6 +245,18 @@ public interface ApiService {
     @FormUrlEncoded
     Flowable<ResultBean> payDo(@Field("method") String method, @Field("v") String v,
                                @Field("payment_id") String payment_id, @Field("pay_app_id") String pay_app_id);
+
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<CreateAuctionBean>> createAuctionOrder(@Field("method") String method, @Field("v") String v,
+                                                               @Field("auctionitem_id") String auctionitem_id, @Field("addr_id") String addr_id,
+                                                               @Field("price") String price);
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean> auctionAddPrice(@Field("method") String method, @Field("v") String v,
+                                         @Field("auctionitem_id") String auctionitem_id, @Field("price") String price);
 
     @POST("index.php/topapi")
     @FormUrlEncoded

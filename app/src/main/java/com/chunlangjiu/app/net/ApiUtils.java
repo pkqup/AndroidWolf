@@ -8,9 +8,11 @@ import com.chunlangjiu.app.amain.bean.HomeModulesBean;
 import com.chunlangjiu.app.amain.bean.LoginBean;
 import com.chunlangjiu.app.amain.bean.MainClassBean;
 import com.chunlangjiu.app.goods.bean.ConfirmOrderBean;
+import com.chunlangjiu.app.goods.bean.CreateAuctionBean;
 import com.chunlangjiu.app.goods.bean.CreateOrderBean;
 import com.chunlangjiu.app.goods.bean.EvaluateListBean;
 import com.chunlangjiu.app.goods.bean.FilterListBean;
+import com.chunlangjiu.app.goods.bean.GivePriceBean;
 import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
 import com.chunlangjiu.app.goods.bean.GoodsListBean;
 import com.chunlangjiu.app.goods.bean.PaymentBean;
@@ -24,6 +26,7 @@ import com.chunlangjiu.app.order.bean.OrderDetailBean;
 import com.chunlangjiu.app.store.bean.StoreClassListBean;
 import com.chunlangjiu.app.store.bean.StoreDetailBean;
 import com.chunlangjiu.app.order.bean.OrderListBean;
+import com.chunlangjiu.app.store.bean.StoreListBean;
 import com.chunlangjiu.app.user.bean.AddressListBean;
 import com.chunlangjiu.app.user.bean.BrandListBean;
 import com.chunlangjiu.app.user.bean.MyNumBean;
@@ -120,6 +123,18 @@ public class ApiUtils {
         return apiService.getGoodsDetail("item.detail", "v1", item_id);
     }
 
+    public Flowable<ResultBean<GoodsDetailBean>> getGoodsDetailWithToken(String item_id,String token) {
+        return apiService.getGoodsDetailWithToken("item.detail", "v1",token, item_id);
+    }
+
+    public Flowable<ResultBean<GoodsDetailBean>> getAuctionGoodsDetail(String auctionitem_id) {
+        return apiService.getAuctionGoodsDetail("item.auction.detail", "v1", auctionitem_id);
+    }
+
+    public Flowable<ResultBean<List<GivePriceBean>>> getAuctionPriceList(String auctionitem_id) {
+        return apiService.getAuctionPriceList("item.auction.get", "v1", auctionitem_id);
+    }
+
     public Flowable<ResultBean<FilterListBean>> getFilterData(String cat_id) {
         return apiService.getFilterData("item.filterItems", "v1", cat_id);
     }
@@ -163,8 +178,8 @@ public class ApiUtils {
         return apiService.getStoreClass("category.chateauCat", "v1");
     }
 
-    public Flowable<ResultBean> getStoreList(String id, int pageNum) {
-        return apiService.getStoreList("category.chateauList", "v1", id, pageNum, 20);
+    public Flowable<ResultBean<StoreListBean>> getStoreList(String id, int pageNum) {
+        return apiService.getStoreList("category.chateauList", "v1", id, pageNum, 100);
     }
 
     public Flowable<ResultBean<StoreDetailBean>> getStoreDetail(String id) {
@@ -218,6 +233,15 @@ public class ApiUtils {
     public Flowable<ResultBean> payDo(String payment_id, String payment_type) {
         return apiService.payDo("payment.pay.do", "v1", payment_id, payment_type);
     }
+
+    public Flowable<ResultBean<CreateAuctionBean>> createAuctionOrder(String auctionitem_id, String addr_id, String price) {
+        return apiService.createAuctionOrder("payment.pay.auctionCreate", "v1", auctionitem_id, addr_id,price);
+    }
+
+    public Flowable<ResultBean> auctionAddPrice(String auctionitem_id,  String price) {
+        return apiService.auctionAddPrice("item.auction.userAdd", "v1", auctionitem_id, price);
+    }
+
 
     public Flowable<ResultBean<HomeModulesBean>> getHomeModules() {
         return apiService.getHomeModules("theme.modules", "v1", "index");

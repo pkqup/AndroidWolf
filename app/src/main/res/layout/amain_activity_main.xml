@@ -4,11 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.pkqup.commonlibrary.view.MyViewPager
-        android:id="@+id/view_pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/rlBottom" />
 
     <RelativeLayout
         android:id="@+id/rlBottom"
@@ -193,4 +188,10 @@
 
     </RelativeLayout>
 
+
+    <com.pkqup.commonlibrary.view.MyViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/rlBottom" />
 </RelativeLayout>
