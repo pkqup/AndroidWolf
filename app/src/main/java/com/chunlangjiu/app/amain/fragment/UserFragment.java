@@ -44,6 +44,7 @@ import com.pkqup.commonlibrary.util.ToastUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import com.pkqup.commonlibrary.net.HttpUtils;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -70,6 +71,7 @@ public class UserFragment extends BaseFragment {
     private TextView tvAccountType;
     private TextView tvChangeType;
     private TextView tvAuthRealName;
+    private TextView tvAuthCompany;
 
     private LinearLayout llCanUseMoney;
     private TextView tvCanUseMoney;
@@ -177,8 +179,11 @@ public class UserFragment extends BaseFragment {
                 case R.id.tvChangeType:// 切换买/卖家中心
                     changeUserType();
                     break;
-                case R.id.tvAuthRealName:// 企业/个人认证
+                case R.id.tvAuthRealName:// 个人认证
                     toAuthActivity();
+                    break;
+                case R.id.tvAuthCompany:// 升级为企业(进入企业认证)
+                    toAuthCompanyActivity();
                     break;
                 case R.id.rlOrderManager:// 订单管理
                     if (llSellAuction.isShown()) {
@@ -285,6 +290,8 @@ public class UserFragment extends BaseFragment {
         tvChangeType.setOnClickListener(onClickListener);
         tvAuthRealName = rootView.findViewById(R.id.tvAuthRealName);
         tvAuthRealName.setOnClickListener(onClickListener);
+        tvAuthCompany = rootView.findViewById(R.id.tvAuthCompany);
+        tvAuthCompany.setOnClickListener(onClickListener);
 
         llCanUseMoney = rootView.findViewById(R.id.llCanUseMoney);
         llCanUseMoney.setOnClickListener(onClickListener);
@@ -409,7 +416,8 @@ public class UserFragment extends BaseFragment {
             HttpUtils.USER_TOKEN = true;
             //买家中心
             rlBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.bg_low_black));
-            tvChangeType.setText("切换到卖家中心");
+            tvChangeType.setText("卖家中心");
+            tvAuthCompany.setVisibility(View.VISIBLE);
             llNotUseMoney.setVisibility(View.GONE);
 
             llBuyOrder.setVisibility(View.VISIBLE);
@@ -427,7 +435,8 @@ public class UserFragment extends BaseFragment {
             HttpUtils.USER_TOKEN = false;
             //卖家中心
             rlBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.bg_red));
-            tvChangeType.setText("切换到买家中心");
+            tvChangeType.setText("买家中心");
+            tvAuthCompany.setVisibility(View.GONE);
             llNotUseMoney.setVisibility(View.VISIBLE);
 
             llBuyOrder.setVisibility(View.GONE);
@@ -552,8 +561,12 @@ public class UserFragment extends BaseFragment {
 
     private void toAuthActivity() {
         startActivity(new Intent(getActivity(), PersonAuthActivity.class));
-//        startActivity(new Intent(getActivity(), CompanyAuthActivity.class));
     }
+
+    private void toAuthCompanyActivity() {
+        startActivity(new Intent(getActivity(), CompanyAuthActivity.class));
+    }
+
 
     private EventManager.OnNotifyListener onNotifyListener = new EventManager.OnNotifyListener() {
         @Override
