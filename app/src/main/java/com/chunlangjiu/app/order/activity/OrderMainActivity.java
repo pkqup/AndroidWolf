@@ -111,6 +111,7 @@ public class OrderMainActivity extends BaseActivity {
                 tabLayout.addTab(tabLayout.newTab().setText("已完成"));
                 break;
             case 1:
+                titleName.setText("竞拍订单管理");
                 tabLayout.addTab(tabLayout.newTab().setText("全部"));
                 tabLayout.addTab(tabLayout.newTab().setText("待付定金"));
                 tabLayout.addTab(tabLayout.newTab().setText("竞拍中"));

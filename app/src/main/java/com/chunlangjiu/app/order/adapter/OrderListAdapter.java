@@ -84,6 +84,22 @@ public class OrderListAdapter extends BaseQuickAdapter<OrderListBean.ListBean, B
                         break;
                 }
                 break;
+            case 1:
+                tv1.setVisibility(View.GONE);
+                switch (item.getStatus()) {
+                    case "0":
+                        tv2.setText("去付定金");
+                        tv2.setVisibility(View.VISIBLE);
+                        break;
+                    case "1":
+                        tv2.setText("修改出价");
+                        tv2.setVisibility(View.VISIBLE);
+                        break;
+                    default:
+                        tv2.setVisibility(View.GONE);
+                        break;
+                }
+                break;
             case 2:
                 switch (item.getStatus()) {
                     case "0":
@@ -170,6 +186,7 @@ public class OrderListAdapter extends BaseQuickAdapter<OrderListBean.ListBean, B
         llProducts.removeAllViews();
         switch (type) {
             case 0:
+            case 1:
             case 3:
                 for (OrderListBean.ListBean.OrderBean orderBean : item.getOrder()) {
                     View inflate = inflater.inflate(R.layout.order_adapter_list_product_item, null);

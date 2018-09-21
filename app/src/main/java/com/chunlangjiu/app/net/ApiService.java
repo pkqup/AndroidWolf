@@ -15,6 +15,7 @@ import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
 import com.chunlangjiu.app.goods.bean.GoodsListBean;
 import com.chunlangjiu.app.goods.bean.PaymentBean;
 import com.chunlangjiu.app.goods.bean.ShopInfoBean;
+import com.chunlangjiu.app.order.bean.AuctionOrderListBean;
 import com.chunlangjiu.app.order.bean.CancelOrderResultBean;
 import com.chunlangjiu.app.order.bean.CancelReasonBean;
 import com.chunlangjiu.app.order.bean.LogisticsBean;
@@ -69,7 +70,7 @@ public interface ApiService {
     @POST("index.php/topapi")
     @FormUrlEncoded
     Flowable<ResultBean> setHeadImg(@Field("method") String method, @Field("v") String v,
-                                               @Field("img_url") String img_url);
+                                    @Field("img_url") String img_url);
 
     @POST("index.php/topapi")
     @FormUrlEncoded
@@ -283,6 +284,17 @@ public interface ApiService {
     Flowable<ResultBean<OrderListBean>> getOrderLists(@Field("method") String method, @Field("v") String v,
                                                       @Field("status") String status, @Field("page_no") int page_no,
                                                       @Field("pagesize") int pagesize);
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<List<AuctionOrderListBean>>> getAuctionOrderLists(@Field("method") String method, @Field("v") String v,
+                                                                          @Field("status") String status, @Field("page_no") int page_no,
+                                                                          @Field("page_size") int pagesize, @Field("fields") String fields);
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<OrderDetailBean>> getAuctionOrderDetail(@Field("method") String method, @Field("v") String v,
+                                                                @Field("auctionitem_id") String auctionitem_id);
 
     @POST("index.php/topapi")
     @FormUrlEncoded

@@ -18,7 +18,6 @@ import android.widget.Toast;
 import com.alipay.sdk.app.PayTask;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseFragment;
-import com.chunlangjiu.app.goods.activity.ConfirmOrderActivity;
 import com.chunlangjiu.app.goods.activity.ShopMainActivity;
 import com.chunlangjiu.app.goods.bean.CreateOrderBean;
 import com.chunlangjiu.app.goods.bean.PaymentBean;
@@ -28,6 +27,7 @@ import com.chunlangjiu.app.order.activity.OrderDetailActivity;
 import com.chunlangjiu.app.order.activity.OrderEvaluationDetailActivity;
 import com.chunlangjiu.app.order.activity.OrderMainActivity;
 import com.chunlangjiu.app.order.adapter.OrderListAdapter;
+import com.chunlangjiu.app.order.bean.AuctionOrderListBean;
 import com.chunlangjiu.app.order.bean.CancelReasonBean;
 import com.chunlangjiu.app.order.bean.LogisticsBean;
 import com.chunlangjiu.app.order.bean.OrderListBean;
@@ -96,6 +96,7 @@ public class OrderListFragment extends BaseFragment {
     private IWXAPI wxapi;
     private static final int SDK_PAY_FLAG = 1;
     private ResultBean<CreateOrderBean> createOrderBeanResultBean;
+    private String paymentId;
 
     @Override
     public void onAttach(Context context) {
@@ -190,6 +191,24 @@ public class OrderListFragment extends BaseFragment {
                 getNormalOrderList();
                 break;
             case 1:
+                switch (target) {
+                    case 0:
+                        status = "";
+                        break;
+                    case 1:
+                        status = "0";
+                        break;
+                    case 2:
+                        status = "1";
+                        break;
+                    case 3:
+                        status = "2";
+                        break;
+                    case 4:
+                        status = "3";
+                        break;
+                }
+                getAuctionOrderLists();
                 break;
             case 2:
                 switch (target) {
@@ -285,6 +304,71 @@ public class OrderListFragment extends BaseFragment {
                             }
                             if (null != orderListBeanResultBean.getData() && null != orderListBeanResultBean.getData().getList()) {
                                 listBeans.addAll(orderListBeanResultBean.getData().getList());
+                            }
+                            orderListAdapter.notifyDataSetChanged();
+                        } else if (0 != orderListBeanResultBean.getErrorcode()) {
+                            if (1 < pageNo) {
+                                pageNo--;
+                            }
+                        }
+                        refreshLayout.finishLoadMore();
+                        refreshLayout.finishRefresh();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        rlLoading.setVisibility(View.GONE);
+                        refreshLayout.setVisibility(View.VISIBLE);
+                        refreshLayout.finishLoadMore();
+                        refreshLayout.finishRefresh();
+                        if (1 < pageNo) {
+                            pageNo--;
+                        }
+                    }
+                }));
+    }
+
+    private void getAuctionOrderLists() {
+        disposable.add(ApiUtils.getInstance().getAuctionOrderLists(status, pageNo)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<List<AuctionOrderListBean>>>() {
+                    @Override
+                    public void accept(ResultBean<List<AuctionOrderListBean>> orderListBeanResultBean) throws Exception {
+                        rlLoading.setVisibility(View.GONE);
+                        refreshLayout.setVisibility(View.VISIBLE);
+//                        if (null == orderListBeanResultBean.getData().getPagers() || pageNo == orderListBeanResultBean.getData().getPagers().getTotal() / 10 + 1) {
+//                            refreshLayout.setEnableLoadMore(false);
+//                        } else {
+//                            refreshLayout.setEnableLoadMore(true);
+//                        }
+                        if (0 == orderListBeanResultBean.getErrorcode()) {
+                            if (1 == pageNo) {
+                                listBeans.clear();
+                            }
+                            List<AuctionOrderListBean> data = orderListBeanResultBean.getData();
+                            if (null != data && !data.isEmpty()) {
+                                for (AuctionOrderListBean bean : data) {
+                                    OrderListBean.ListBean listBean = new OrderListBean.ListBean();
+                                    listBean.setShopname(bean.getItem().getShopname());
+                                    listBean.setShop_logo(bean.getItem().getShoplogo());
+                                    listBean.setShop_id(bean.getItem().getShop_id());
+                                    listBean.setTotalItem(1);
+                                    listBean.setPayment(bean.getCur_money());
+                                    listBean.setStatus(bean.getStatus());
+                                    listBean.setPaymentId(bean.getPayment_id());
+                                    listBean.setAuctionitem_id(bean.getAuctionitem_id());
+
+                                    List<OrderListBean.ListBean.OrderBean> order = new ArrayList<>();
+                                    OrderListBean.ListBean.OrderBean orderBean = new OrderListBean.ListBean.OrderBean();
+                                    orderBean.setNum(1);
+                                    orderBean.setTitle(bean.getItem().getTitle());
+                                    orderBean.setPrice(bean.getAuction().getStarting_price());
+                                    order.add(orderBean);
+                                    listBean.setOrder(order);
+
+                                    listBeans.add(listBean);
+                                }
                             }
                             orderListAdapter.notifyDataSetChanged();
                         } else if (0 != orderListBeanResultBean.getErrorcode()) {
@@ -534,6 +618,14 @@ public class OrderListFragment extends BaseFragment {
                                     break;
                             }
                             break;
+                        case 1:
+                            switch (listBeans.get(Integer.parseInt(view.getTag().toString())).getStatus()) {
+                                case "0":
+                                    paymentId = listBeans.get(Integer.parseInt(view.getTag().toString())).getPaymentId();
+                                    getPayment();
+                                    break;
+                            }
+                            break;
                         case 2:
                             switch (listBeans.get(Integer.parseInt(view.getTag().toString())).getStatus()) {
                                 case "1":
@@ -608,6 +700,7 @@ public class OrderListFragment extends BaseFragment {
                     public void accept(final ResultBean<CreateOrderBean> resultBean) throws Exception {
                         if (0 == resultBean.getErrorcode()) {
                             createOrderBeanResultBean = resultBean;
+                            paymentId = createOrderBeanResultBean.getData().getPayment_id();
                             getPayment();
                         }
                     }
@@ -651,7 +744,7 @@ public class OrderListFragment extends BaseFragment {
     private void payDo(int payMethod, String payMethodId) {
         this.payMehtod = payMethod;
         this.payMehtodId = payMethodId;
-        disposable.add(ApiUtils.getInstance().payDo(createOrderBeanResultBean.getData().getPayment_id(), payMehtodId)
+        disposable.add(ApiUtils.getInstance().payDo(paymentId, payMehtodId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean>() {
@@ -822,6 +915,7 @@ public class OrderListFragment extends BaseFragment {
             intent.putExtra(OrderParams.OID, listBeans.get(position).getSku().getOid());
             intent.putExtra(OrderParams.AFTERSALESBN, listBeans.get(position).getAftersales_bn());
         }
+        intent.putExtra(OrderParams.AUCTIONITEMID, listBeans.get(position).getAuctionitem_id());
         OrderListBean.ListBean listBean = listBeans.get(Integer.parseInt(view.getTag().toString()));
         intent.putExtra(OrderParams.PRODUCTS, listBean);
         intent.putExtra(OrderParams.TYPE, type);

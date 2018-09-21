@@ -7,6 +7,7 @@ public class OrderParams {
     public static final String OID = "oid";//子订单id
     public static final String AFTERSALESBN = "aftersales_bn";
     public static final String PRODUCTS = "products";//传递商品的key
+    public static final String AUCTIONITEMID="auctionitemId";
 
     public static final String WAIT_BUYER_PAY = "WAIT_BUYER_PAY";//等待付款
     public static final String WAIT_SELLER_SEND_GOODS = "WAIT_SELLER_SEND_GOODS";//待发货
