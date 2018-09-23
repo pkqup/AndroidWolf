@@ -146,7 +146,8 @@ public class OrderDetailBean {
     private Object default_weight;
     private DefaultAddressBean default_address;
     private List<?> spec_desc;
-    private List<?> auction;
+    private AuctionBean auction;
+    private PaymentsBean payments;
 
     public long getTid() {
         return tid;
@@ -940,12 +941,20 @@ public class OrderDetailBean {
         this.spec_desc = spec_desc;
     }
 
-    public List<?> getAuction() {
+    public AuctionBean getAuction() {
         return auction;
     }
 
-    public void setAuction(List<?> auction) {
+    public void setAuction(AuctionBean auction) {
         this.auction = auction;
+    }
+
+    public PaymentsBean getPayments() {
+        return payments;
+    }
+
+    public void setPayments(PaymentsBean payments) {
+        this.payments = payments;
     }
 
     public static class LogiBean {
@@ -1302,6 +1311,447 @@ public class OrderDetailBean {
 
         public void setDef_addr(int def_addr) {
             this.def_addr = def_addr;
+        }
+    }
+
+    public static class AuctionBean {
+        /**
+         * auctionitem_id : 1
+         * item_id : 178
+         * starting_price : 1.000
+         * auction_status : true
+         * store : 100
+         * number : 0
+         * begin_time : 1537229439
+         * end_time : 1538093439
+         * status : f
+         * pledge : 0
+         * is_pay : true
+         * original_bid : 2588888.000
+         */
+
+        private int auctionitem_id;
+        private int item_id;
+        private String starting_price;
+        private String max_price;
+        private String auction_status;
+        private int store;
+        private int number;
+        private int begin_time;
+        private int end_time;
+        private String status;
+        private String pledge;
+        private String is_pay;
+        private String original_bid;
+
+        public int getAuctionitem_id() {
+            return auctionitem_id;
+        }
+
+        public void setAuctionitem_id(int auctionitem_id) {
+            this.auctionitem_id = auctionitem_id;
+        }
+
+        public int getItem_id() {
+            return item_id;
+        }
+
+        public void setItem_id(int item_id) {
+            this.item_id = item_id;
+        }
+
+        public String getStarting_price() {
+            return starting_price;
+        }
+
+        public void setStarting_price(String starting_price) {
+            this.starting_price = starting_price;
+        }
+
+        public String getMax_price() {
+            return max_price;
+        }
+
+        public void setMax_price(String max_price) {
+            this.max_price = max_price;
+        }
+
+        public String getAuction_status() {
+            return auction_status;
+        }
+
+        public void setAuction_status(String auction_status) {
+            this.auction_status = auction_status;
+        }
+
+        public int getStore() {
+            return store;
+        }
+
+        public void setStore(int store) {
+            this.store = store;
+        }
+
+        public int getNumber() {
+            return number;
+        }
+
+        public void setNumber(int number) {
+            this.number = number;
+        }
+
+        public int getBegin_time() {
+            return begin_time;
+        }
+
+        public void setBegin_time(int begin_time) {
+            this.begin_time = begin_time;
+        }
+
+        public int getEnd_time() {
+            return end_time;
+        }
+
+        public void setEnd_time(int end_time) {
+            this.end_time = end_time;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
+
+        public String getPledge() {
+            return pledge;
+        }
+
+        public void setPledge(String pledge) {
+            this.pledge = pledge;
+        }
+
+        public String getIs_pay() {
+            return is_pay;
+        }
+
+        public void setIs_pay(String is_pay) {
+            this.is_pay = is_pay;
+        }
+
+        public String getOriginal_bid() {
+            return original_bid;
+        }
+
+        public void setOriginal_bid(String original_bid) {
+            this.original_bid = original_bid;
+        }
+    }
+
+    public static class PaymentsBean {
+        /**
+         * payment_id : 2018091851985110
+         * money : 0.100
+         * cur_money : 0.100
+         * status : succ
+         * user_id : 81
+         * auctionitem_id : 1
+         * user_name : 81
+         * pay_app_id : null
+         * pay_name : null
+         * payed_time : null
+         * account : null
+         * bank : null
+         * pay_account : null
+         * currency : null
+         * paycost : null
+         * pay_ver : null
+         * ip : null
+         * created_time : 1537285907
+         * modified_time : 1537285907
+         * memo : 押金支付
+         * return_url : null
+         * next_page : null
+         * disabled : 0
+         * trade_no : null
+         * thirdparty_account : null
+         * type : auction
+         * addr_id : 226
+         * next_url : null
+         * groomcode : null
+         * price : 10.000
+         */
+
+        private String payment_id;
+        private String money;
+        private String cur_money;
+        private String status;
+        private int user_id;
+        private int auctionitem_id;
+        private String user_name;
+        private Object pay_app_id;
+        private Object pay_name;
+        private Object payed_time;
+        private Object account;
+        private Object bank;
+        private Object pay_account;
+        private Object currency;
+        private Object paycost;
+        private Object pay_ver;
+        private Object ip;
+        private int created_time;
+        private int modified_time;
+        private String memo;
+        private Object return_url;
+        private Object next_page;
+        private int disabled;
+        private Object trade_no;
+        private Object thirdparty_account;
+        private String type;
+        private String addr_id;
+        private Object next_url;
+        private Object groomcode;
+        private String price;
+
+        public String getPayment_id() {
+            return payment_id;
+        }
+
+        public void setPayment_id(String payment_id) {
+            this.payment_id = payment_id;
+        }
+
+        public String getMoney() {
+            return money;
+        }
+
+        public void setMoney(String money) {
+            this.money = money;
+        }
+
+        public String getCur_money() {
+            return cur_money;
+        }
+
+        public void setCur_money(String cur_money) {
+            this.cur_money = cur_money;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
+
+        public int getUser_id() {
+            return user_id;
+        }
+
+        public void setUser_id(int user_id) {
+            this.user_id = user_id;
+        }
+
+        public int getAuctionitem_id() {
+            return auctionitem_id;
+        }
+
+        public void setAuctionitem_id(int auctionitem_id) {
+            this.auctionitem_id = auctionitem_id;
+        }
+
+        public String getUser_name() {
+            return user_name;
+        }
+
+        public void setUser_name(String user_name) {
+            this.user_name = user_name;
+        }
+
+        public Object getPay_app_id() {
+            return pay_app_id;
+        }
+
+        public void setPay_app_id(Object pay_app_id) {
+            this.pay_app_id = pay_app_id;
+        }
+
+        public Object getPay_name() {
+            return pay_name;
+        }
+
+        public void setPay_name(Object pay_name) {
+            this.pay_name = pay_name;
+        }
+
+        public Object getPayed_time() {
+            return payed_time;
+        }
+
+        public void setPayed_time(Object payed_time) {
+            this.payed_time = payed_time;
+        }
+
+        public Object getAccount() {
+            return account;
+        }
+
+        public void setAccount(Object account) {
+            this.account = account;
+        }
+
+        public Object getBank() {
+            return bank;
+        }
+
+        public void setBank(Object bank) {
+            this.bank = bank;
+        }
+
+        public Object getPay_account() {
+            return pay_account;
+        }
+
+        public void setPay_account(Object pay_account) {
+            this.pay_account = pay_account;
+        }
+
+        public Object getCurrency() {
+            return currency;
+        }
+
+        public void setCurrency(Object currency) {
+            this.currency = currency;
+        }
+
+        public Object getPaycost() {
+            return paycost;
+        }
+
+        public void setPaycost(Object paycost) {
+            this.paycost = paycost;
+        }
+
+        public Object getPay_ver() {
+            return pay_ver;
+        }
+
+        public void setPay_ver(Object pay_ver) {
+            this.pay_ver = pay_ver;
+        }
+
+        public Object getIp() {
+            return ip;
+        }
+
+        public void setIp(Object ip) {
+            this.ip = ip;
+        }
+
+        public int getCreated_time() {
+            return created_time;
+        }
+
+        public void setCreated_time(int created_time) {
+            this.created_time = created_time;
+        }
+
+        public int getModified_time() {
+            return modified_time;
+        }
+
+        public void setModified_time(int modified_time) {
+            this.modified_time = modified_time;
+        }
+
+        public String getMemo() {
+            return memo;
+        }
+
+        public void setMemo(String memo) {
+            this.memo = memo;
+        }
+
+        public Object getReturn_url() {
+            return return_url;
+        }
+
+        public void setReturn_url(Object return_url) {
+            this.return_url = return_url;
+        }
+
+        public Object getNext_page() {
+            return next_page;
+        }
+
+        public void setNext_page(Object next_page) {
+            this.next_page = next_page;
+        }
+
+        public int getDisabled() {
+            return disabled;
+        }
+
+        public void setDisabled(int disabled) {
+            this.disabled = disabled;
+        }
+
+        public Object getTrade_no() {
+            return trade_no;
+        }
+
+        public void setTrade_no(Object trade_no) {
+            this.trade_no = trade_no;
+        }
+
+        public Object getThirdparty_account() {
+            return thirdparty_account;
+        }
+
+        public void setThirdparty_account(Object thirdparty_account) {
+            this.thirdparty_account = thirdparty_account;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        public String getAddr_id() {
+            return addr_id;
+        }
+
+        public void setAddr_id(String addr_id) {
+            this.addr_id = addr_id;
+        }
+
+        public Object getNext_url() {
+            return next_url;
+        }
+
+        public void setNext_url(Object next_url) {
+            this.next_url = next_url;
+        }
+
+        public Object getGroomcode() {
+            return groomcode;
+        }
+
+        public void setGroomcode(Object groomcode) {
+            this.groomcode = groomcode;
+        }
+
+        public String getPrice() {
+            return price;
+        }
+
+        public void setPrice(String price) {
+            this.price = price;
         }
     }
 }

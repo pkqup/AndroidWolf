@@ -208,7 +208,7 @@ public class OrderDetailActivity extends BaseActivity {
                         }));
                 break;
             case 1:
-                disposable.add(ApiUtils.getInstance().getAuctionOrderDetail(String.valueOf(getIntent().getLongExtra(OrderParams.AUCTIONITEMID, 0)))
+                disposable.add(ApiUtils.getInstance().getAuctionOrderDetail(String.valueOf(getIntent().getIntExtra(OrderParams.AUCTIONITEMID, 0)))
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Consumer<ResultBean<OrderDetailBean>>() {
@@ -543,31 +543,31 @@ public class OrderDetailActivity extends BaseActivity {
                 break;
             case 1:
                 tv1.setVisibility(View.GONE);
-                switch (orderDetailBean.getStatus()) {
-                    case "0":
-                        tvRightContentDesc.setText("剩余支付时间：");
-                        int close_time = orderDetailBean.getClose_time();
-                        try {
-                            int i = close_time * 1000;
-                            countdownView.start(i);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        tvRightContent.setVisibility(View.GONE);
-                        tv2.setText("去付定金");
-                        tv2.setVisibility(View.VISIBLE);
-                        llPayTime.setVisibility(View.GONE);
-                        llSendTime.setVisibility(View.GONE);
-                        llFinishTime.setVisibility(View.GONE);
-                        break;
-                    case "1":
-                        tv2.setText("修改出价");
-                        tv2.setVisibility(View.VISIBLE);
-                        break;
-                    default:
-                        tv2.setVisibility(View.GONE);
-                        break;
-                }
+//                switch (orderDetailBean.getStatus()) {
+//                    case "0":
+//                        tvRightContentDesc.setText("剩余支付时间：");
+//                        int close_time = orderDetailBean.getClose_time();
+//                        try {
+//                            int i = close_time * 1000;
+//                            countdownView.start(i);
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                        tvRightContent.setVisibility(View.GONE);
+//                        tv2.setText("去付定金");
+//                        tv2.setVisibility(View.VISIBLE);
+//                        llPayTime.setVisibility(View.GONE);
+//                        llSendTime.setVisibility(View.GONE);
+//                        llFinishTime.setVisibility(View.GONE);
+//                        break;
+//                    case "1":
+//                        tv2.setText("修改出价");
+//                        tv2.setVisibility(View.VISIBLE);
+//                        break;
+//                    default:
+//                        tv2.setVisibility(View.GONE);
+//                        break;
+//                }
                 llAfterSaleTme.setVisibility(View.GONE);
 
                 inflater = LayoutInflater.from(this);
@@ -586,11 +586,22 @@ public class OrderDetailActivity extends BaseActivity {
                 view_line = inflate.findViewById(R.id.view_line);
                 view_line.setVisibility(View.GONE);
 
-                tvTotalPrice.setText(String.format("¥%s", new BigDecimal(orderDetailBean.getTotal_fee()).setScale(2, BigDecimal.ROUND_HALF_UP).toString()));
-                tvSendPrice.setText(String.format("¥%s", new BigDecimal(orderDetailBean.getPost_fee()).setScale(2, BigDecimal.ROUND_HALF_UP).toString()));
+                tvTotalPrice.setText(String.format("¥%s", new BigDecimal(orderDetailBean.getAuction().getStarting_price()).setScale(2, BigDecimal.ROUND_HALF_UP).toString()));
+//                tvSendPrice.setText(String.format("¥%s", new BigDecimal(orderDetailBean.getAuction().getMax_price()).setScale(2, BigDecimal.ROUND_HALF_UP).toString()));
+                LinearLayout llTips3 = findViewById(R.id.llTips3);
+                llTips3.setVisibility(View.VISIBLE);
+                TextView tvContent3 = findViewById(R.id.tvContent3);
+                tvContent3.setText(String.format("¥%s", new BigDecimal(orderDetailBean.getOriginal_bid()).setScale(2, BigDecimal.ROUND_HALF_UP).toString()));
                 OrderDetailBean.DefaultAddressBean default_address = orderDetailBean.getDefault_address();
                 tvUserInfo.setText(String.format("%s\u3000%s", default_address.getName(), default_address.getMobile()));
                 tvAddress.setText(String.format("%s%s", default_address.getArea(), default_address.getAddr()));
+                TextView tvTips1 = findViewById(R.id.tvTips1);
+                tvTips1.setText("商品起拍价：");
+                TextView tvTips2 = findViewById(R.id.tvTips2);
+                tvTips2.setText("当前最高出价：");
+                TextView tvPaymentTips = findViewById(R.id.tvPaymentTips);
+                tvPaymentTips.setText("应付定金：");
+                tvPayment.setText(String.format("¥%s", new BigDecimal(orderDetailBean.getAuction().getPledge()).setScale(2, BigDecimal.ROUND_HALF_UP).toString()));
                 break;
         }
     }

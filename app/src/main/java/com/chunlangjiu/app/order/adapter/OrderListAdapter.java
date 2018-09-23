@@ -207,7 +207,7 @@ public class OrderListAdapter extends BaseQuickAdapter<OrderListBean.ListBean, B
                         view_line.setVisibility(View.GONE);
                     }
                 }
-                tvTotalNum.setText(String.format("共%s件商品;合计：¥%s", new BigDecimal(item.getTotalItem()).setScale(0, BigDecimal.ROUND_HALF_UP).toString(), new BigDecimal(item.getPayment()).setScale(2, BigDecimal.ROUND_HALF_UP).toString()));
+//                tvTotalNum.setText(String.format("共%s件商品;合计：¥%s", new BigDecimal(item.getTotalItem()).setScale(0, BigDecimal.ROUND_HALF_UP).toString(), new BigDecimal(item.getPayment()).setScale(2, BigDecimal.ROUND_HALF_UP).toString()));
                 break;
             case 2:
             case 4:

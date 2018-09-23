@@ -128,6 +128,7 @@ public class OrderListBean {
         private long aftersales_bn;
         private String paymentId;
         private int auctionitem_id;
+        private AuctionOrderListBean.AuctionBean auction;
 
         public long getTid() {
             return tid;
@@ -295,6 +296,14 @@ public class OrderListBean {
 
         public void setAuctionitem_id(int auctionitem_id) {
             this.auctionitem_id = auctionitem_id;
+        }
+
+        public AuctionOrderListBean.AuctionBean getAuction() {
+            return auction;
+        }
+
+        public void setAuction(AuctionOrderListBean.AuctionBean auction) {
+            this.auction = auction;
         }
 
         public static class OrderBean implements Serializable {

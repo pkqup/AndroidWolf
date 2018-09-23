@@ -21,6 +21,7 @@ import com.chunlangjiu.app.abase.BaseFragment;
 import com.chunlangjiu.app.goods.activity.ShopMainActivity;
 import com.chunlangjiu.app.goods.bean.CreateOrderBean;
 import com.chunlangjiu.app.goods.bean.PaymentBean;
+import com.chunlangjiu.app.goods.dialog.InputPriceDialog;
 import com.chunlangjiu.app.goods.dialog.PayDialog;
 import com.chunlangjiu.app.net.ApiUtils;
 import com.chunlangjiu.app.order.activity.OrderDetailActivity;
@@ -97,6 +98,10 @@ public class OrderListFragment extends BaseFragment {
     private static final int SDK_PAY_FLAG = 1;
     private ResultBean<CreateOrderBean> createOrderBeanResultBean;
     private String paymentId;
+
+    private InputPriceDialog inputPriceDialog;
+
+    private int position;
 
     @Override
     public void onAttach(Context context) {
@@ -358,6 +363,7 @@ public class OrderListFragment extends BaseFragment {
                                     listBean.setStatus(bean.getStatus());
                                     listBean.setPaymentId(bean.getPayment_id());
                                     listBean.setAuctionitem_id(bean.getAuctionitem_id());
+                                    listBean.setAuction(bean.getAuction());
 
                                     List<OrderListBean.ListBean.OrderBean> order = new ArrayList<>();
                                     OrderListBean.ListBean.OrderBean orderBean = new OrderListBean.ListBean.OrderBean();
@@ -624,6 +630,9 @@ public class OrderListFragment extends BaseFragment {
                                     paymentId = listBeans.get(Integer.parseInt(view.getTag().toString())).getPaymentId();
                                     getPayment();
                                     break;
+                                case "1":
+                                    toConfirmOrder(view);
+                                    break;
                             }
                             break;
                         case 2:
@@ -690,6 +699,44 @@ public class OrderListFragment extends BaseFragment {
             }
         }
     };
+
+    private void toConfirmOrder(View view) {
+//        position = Integer.parseInt(view.getTag().toString());
+//        if (inputPriceDialog == null) {
+//            inputPriceDialog = new InputPriceDialog(activity, listBeans.get(position).getAuction().getMax_price(),
+//                    listBeans.get(Integer.parseInt(view.getTag().toString())).getAuction().getOriginal_bid());
+//            inputPriceDialog.setCallBack(new InputPriceDialog.CallBack() {
+//                @Override
+//                public void editPrice(String price) {
+//                    editGivePrice(price);
+//                }
+//            });
+//        } else {
+//            inputPriceDialog.updatePrice();
+//        }
+//        inputPriceDialog.show();
+    }
+
+    private void editGivePrice(String price) {
+        showLoadingDialog();
+        disposable.add(ApiUtils.getInstance().auctionAddPrice(String.valueOf(listBeans.get(position).getAuction().getAuctionitem_id()), price)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean>() {
+                    @Override
+                    public void accept(ResultBean resultBean) throws Exception {
+                        hideLoadingDialog();
+                        ToastUtils.showShort("修改出价成功");
+                        refreshLayout.autoRefresh();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        hideLoadingDialog();
+                        ToastUtils.showShort("修改出价失败");
+                    }
+                }));
+    }
 
     private void repay() {
         disposable.add(ApiUtils.getInstance().repay(tid, "true")

@@ -1,5 +1,6 @@
 package com.chunlangjiu.app.order.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 public class AuctionOrderListBean {
@@ -97,7 +98,7 @@ public class AuctionOrderListBean {
         this.type = type;
     }
 
-    public static class AuctionBean {
+    public static class AuctionBean implements Serializable{
         /**
          * auctionitem_id : 1
          * item_id : 178
@@ -119,6 +120,7 @@ public class AuctionOrderListBean {
         private int begin_time;
         private int end_time;
         private String status;
+        private String max_price;
 
         public int getAuctionitem_id() {
             return auctionitem_id;
@@ -190,6 +192,14 @@ public class AuctionOrderListBean {
 
         public void setStatus(String status) {
             this.status = status;
+        }
+
+        public String getMax_price() {
+            return max_price;
+        }
+
+        public void setMax_price(String max_price) {
+            this.max_price = max_price;
         }
     }
 
@@ -302,7 +312,7 @@ public class AuctionOrderListBean {
         private Object default_weight;
         private String shopname;
         private String shoplogo;
-        private List<?> spec_desc;
+//        private List<?> spec_desc;
 
         public int getItem_id() {
             return item_id;
@@ -720,12 +730,12 @@ public class AuctionOrderListBean {
             this.shoplogo = shoplogo;
         }
 
-        public List<?> getSpec_desc() {
-            return spec_desc;
-        }
-
-        public void setSpec_desc(List<?> spec_desc) {
-            this.spec_desc = spec_desc;
-        }
+//        public List<?> getSpec_desc() {
+//            return spec_desc;
+//        }
+//
+//        public void setSpec_desc(List<?> spec_desc) {
+//            this.spec_desc = spec_desc;
+//        }
     }
 }
