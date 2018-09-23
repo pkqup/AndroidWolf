@@ -17,7 +17,9 @@ import android.widget.TextView;
 import com.amap.api.location.AMapLocation;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chunlangjiu.app.R;
+import com.chunlangjiu.app.abase.BaseApplication;
 import com.chunlangjiu.app.abase.BaseFragment;
+import com.chunlangjiu.app.amain.activity.LoginActivity;
 import com.chunlangjiu.app.amain.adapter.BrandAdapter;
 import com.chunlangjiu.app.amain.adapter.HomeAdapter;
 import com.chunlangjiu.app.amain.bean.HomeBean;
@@ -30,6 +32,9 @@ import com.chunlangjiu.app.goods.activity.ValuationActivity;
 import com.chunlangjiu.app.net.ApiUtils;
 import com.chunlangjiu.app.store.activity.StoreListActivity;
 import com.chunlangjiu.app.user.activity.AddGoodsActivity;
+import com.chunlangjiu.app.user.activity.PersonAuthActivity;
+import com.chunlangjiu.app.user.bean.AuthStatusBean;
+import com.chunlangjiu.app.user.bean.UploadImageBean;
 import com.chunlangjiu.app.util.AreaUtils;
 import com.chunlangjiu.app.util.ConstantMsg;
 import com.chunlangjiu.app.util.LocationUtils;
@@ -61,11 +66,13 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
@@ -105,6 +112,7 @@ public class HomeFragment extends BaseFragment {
     private TextView tvStrFive;
 
     //品牌推荐
+    private LinearLayout llBrand;
     private RecyclerView recyclerViewBrand;
     private BrandAdapter brandAdapter;
     private List<HomeModulesBean.Pic> brandLists;
@@ -122,6 +130,7 @@ public class HomeFragment extends BaseFragment {
     private List<City> cityList;//所有的城市列表
 
     private CompositeDisposable disposable;
+    private CityPicker cityPicker;
     private int pageNo = 1;//请求页数
     private List<HomeModulesBean.Pic> bannerPicLists;
     private List<HomeModulesBean.Pic> iconPicLists;
@@ -144,18 +153,21 @@ public class HomeFragment extends BaseFragment {
                     EventManager.getInstance().notify(null, ConstantMsg.MSG_PAGE_CLASS);
                     break;
                 case R.id.llSell://我要卖酒
-                    startActivity(new Intent(getActivity(), AddGoodsActivity.class));
+                    checkStatus();
                     break;
                 case R.id.llSearch://名庄查询
                     startActivity(new Intent(getActivity(), StoreListActivity.class));
                     break;
                 case R.id.llEvaluate://名酒估价
-                    startActivity(new Intent(getActivity(), ValuationActivity.class));
+                    if (BaseApplication.isLogin()) {
+                        startActivity(new Intent(getActivity(), ValuationActivity.class));
+                    } else {
+                        startActivity(new Intent(getActivity(), LoginActivity.class));
+                    }
                     break;
             }
         }
     };
-    private CityPicker cityPicker;
 
 
     @Override
@@ -196,6 +208,7 @@ public class HomeFragment extends BaseFragment {
         llIconFour.setOnClickListener(onClickListener);
         llIconFive.setOnClickListener(onClickListener);
 
+        llBrand = headerView.findViewById(R.id.llBrand);
         recyclerViewBrand = headerView.findViewById(R.id.recyclerViewBrand);
 
         rlLoading = rootView.findViewById(R.id.rlLoading);
@@ -325,7 +338,7 @@ public class HomeFragment extends BaseFragment {
         banner.setOnBannerListener(new OnBannerListener() {
             @Override
             public void OnBannerClick(int position) {
-                WebViewActivity.startWebViewActivity(getActivity(),bannerPicLists.get(position).getWebview());
+                WebViewActivity.startWebViewActivity(getActivity(), bannerPicLists.get(position).getWebview(), "");
             }
         });
     }
@@ -343,7 +356,7 @@ public class HomeFragment extends BaseFragment {
         brandAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                GoodsListActivity.startGoodsListActivity(getActivity(),brandLists.get(position).getCat_id(),brandLists.get(position).getCategoryname(),"");
+                GoodsListActivity.startGoodsListActivity(getActivity(), brandLists.get(position).getCat_id(), brandLists.get(position).getCategoryname(), "");
             }
         });
     }
@@ -504,9 +517,12 @@ public class HomeFragment extends BaseFragment {
     private void updateBrandData(HomeModulesBean.Params params) {
         brandPicLists = params.getPic();
         if (brandPicLists != null && brandPicLists.size() > 0) {
+            llBrand.setVisibility(View.VISIBLE);
             brandLists.clear();
             brandLists.addAll(brandPicLists);
             brandAdapter.setNewData(brandLists);
+        } else {
+            llBrand.setVisibility(View.GONE);
         }
         recyclerView.post(new Runnable() {
             @Override
@@ -549,6 +565,11 @@ public class HomeFragment extends BaseFragment {
             pageNo++;
             lists.addAll(newLists);
         }
+        if (lists.size() == 0) {
+            refreshLayout.setEnableLoadMore(false);//设置不能加载更多
+        } else {
+            refreshLayout.setEnableLoadMore(true);//设置不能加载更多
+        }
         if (lists.size() < 10) {
             refreshLayout.setFooterHeight(30);
             refreshLayout.finishLoadMoreWithNoMoreData();//显示没有更多数据
@@ -556,6 +577,42 @@ public class HomeFragment extends BaseFragment {
             refreshLayout.setNoMoreData(false);
         }
         homeAdapter.setNewData(lists);
+    }
+
+    private void checkStatus() {
+        if (BaseApplication.isLogin()) {
+            showLoadingDialog();
+            Observable<ResultBean<AuthStatusBean>> personAuthStatus = ApiUtils.getInstance().getPersonAuthStatus();
+            Observable<ResultBean<AuthStatusBean>> companyAuthStatus = ApiUtils.getInstance().getCompanyAuthStatus();
+            disposable.add(Observable.zip(personAuthStatus, companyAuthStatus, new BiFunction<ResultBean<AuthStatusBean>, ResultBean<AuthStatusBean>, List<AuthStatusBean>>() {
+                @Override
+                public List<AuthStatusBean> apply(ResultBean<AuthStatusBean> uploadImageBeanResultBean, ResultBean<AuthStatusBean> uploadImageBeanResultBean2) throws Exception {
+                    List<AuthStatusBean> imageLists = new ArrayList<>();
+                    imageLists.add(uploadImageBeanResultBean.getData());
+                    imageLists.add(uploadImageBeanResultBean2.getData());
+                    return imageLists;
+                }
+            }).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<List<AuthStatusBean>>() {
+                        @Override
+                        public void accept(List<AuthStatusBean> authStatusBeans) throws Exception {
+                            hideLoadingDialog();
+                            if (AuthStatusBean.AUTH_SUCCESS.equals(authStatusBeans.get(0).getStatus()) || AuthStatusBean.AUTH_SUCCESS.equals(authStatusBeans.get(1).getStatus())) {
+                                startActivity(new Intent(getActivity(), AddGoodsActivity.class));
+                            } else {
+                                startActivity(new Intent(getActivity(), PersonAuthActivity.class));
+                            }
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            hideLoadingDialog();
+                        }
+                    }));
+        } else {
+            startActivity(new Intent(getActivity(), LoginActivity.class));
+        }
     }
 
 

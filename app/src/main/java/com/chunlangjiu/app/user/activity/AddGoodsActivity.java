@@ -413,9 +413,7 @@ public class AddGoodsActivity extends BaseActivity {
 
 
     private void checkData() {
-        if (TextUtils.isEmpty(shopClassId)) {
-            ToastUtils.showShort("请选择分类");
-        } else if (TextUtils.isEmpty(classId)) {
+        if (TextUtils.isEmpty(classId)) {
             ToastUtils.showShort("请选择平台分类");
         } else if (TextUtils.isEmpty(brandId)) {
             ToastUtils.showShort("请选择品牌");
@@ -555,7 +553,7 @@ public class AddGoodsActivity extends BaseActivity {
                     @Override
                     public void accept(ResultBean resultBean) throws Exception {
                         hideLoadingDialog();
-                        startActivity(new Intent(AddGoodsActivity.this,AddGoodsSuccessActivity.class));
+                        startActivity(new Intent(AddGoodsActivity.this, AddGoodsSuccessActivity.class));
                         finish();
                     }
                 }, new Consumer<Throwable>() {

@@ -196,7 +196,7 @@ public class CompanyAuthActivity extends BaseActivity {
 
     private void initData() {
         getAreaData();
-        getAuthStatus();
+//        getAuthStatus();
     }
 
     private void getAuthStatus() {

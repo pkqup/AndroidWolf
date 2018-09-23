@@ -105,11 +105,11 @@ public class ApiUtils {
                 address,company_phone,license_img,shopuser_identity_img_z);
     }
 
-    public Flowable<ResultBean<AuthStatusBean>> getPersonAuthStatus() {
+    public Observable<ResultBean<AuthStatusBean>> getPersonAuthStatus() {
         return apiService.getPersonAuthStatus("member.get.autonym", "v1");
     }
 
-    public Flowable<ResultBean<AuthStatusBean>> getCompanyAuthStatus() {
+    public Observable<ResultBean<AuthStatusBean>> getCompanyAuthStatus() {
         return apiService.getCompanyAuthStatus("member.get.enterprise", "v1");
     }
 

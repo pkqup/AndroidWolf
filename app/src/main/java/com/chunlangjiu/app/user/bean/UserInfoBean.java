@@ -10,6 +10,15 @@ public class UserInfoBean {
     private String login_account;
     private String username;
     private String name;
+    private String head_portrait;
+
+    public String getHead_portrait() {
+        return head_portrait;
+    }
+
+    public void setHead_portrait(String head_portrait) {
+        this.head_portrait = head_portrait;
+    }
 
     public String getLogin_account() {
         return login_account;

@@ -180,6 +180,10 @@ public class PersonAuthActivity extends BaseActivity {
     }
 
     private void initData() {
+//        getStatus();
+    }
+
+    private void getStatus() {
         disposable.add(ApiUtils.getInstance().getPersonAuthStatus()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

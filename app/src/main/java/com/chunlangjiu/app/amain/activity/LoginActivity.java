@@ -14,6 +14,7 @@ import com.chunlangjiu.app.amain.bean.LoginBean;
 import com.chunlangjiu.app.amain.bean.MainClassBean;
 import com.chunlangjiu.app.net.ApiUtils;
 import com.chunlangjiu.app.util.ConstantMsg;
+import com.chunlangjiu.app.web.WebViewActivity;
 import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.pkqup.commonlibrary.util.SPUtils;
@@ -40,6 +41,8 @@ public class LoginActivity extends BaseActivity {
     TextView tvGetCode;
     @BindView(R.id.tvLogin)
     TextView tvLogin;
+    @BindView(R.id.tvLicence)
+    TextView tvLicence;
 
     private CompositeDisposable disposable;
 
@@ -59,8 +62,12 @@ public class LoginActivity extends BaseActivity {
                 case R.id.tvLogin:
                     checkSmsCode();
                     break;
+                case R.id.tvLicence:
+                    toLicence();
+                    break;
             }
         }
+
     };
 
 
@@ -81,6 +88,7 @@ public class LoginActivity extends BaseActivity {
         disposable = new CompositeDisposable();
         tvGetCode.setOnClickListener(onClickListener);
         tvLogin.setOnClickListener(onClickListener);
+        tvLicence.setOnClickListener(onClickListener);
     }
 
 
@@ -140,12 +148,15 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void login() {
+        showLoadingDialog();
         disposable.add(ApiUtils.getInstance().login(etPhone.getText().toString(), etAuthCode.getText().toString())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean<LoginBean>>() {
                     @Override
                     public void accept(ResultBean<LoginBean> loginBeanResultBean) throws Exception {
+                        hideLoadingDialog();
+                        ToastUtils.showShort("登录成功");
                         SPUtils.put("token", loginBeanResultBean.getData().getAccessToken());
                         BaseApplication.setToken(loginBeanResultBean.getData().getAccessToken());
                         BaseApplication.initToken();
@@ -155,9 +166,15 @@ public class LoginActivity extends BaseActivity {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        hideLoadingDialog();
                         ToastUtils.showShort("登录失败");
                     }
                 }));
+    }
+
+
+    private void toLicence() {
+        WebViewActivity.startWebViewActivity(this, ConstantMsg.WEB_URL_LICENSE, "醇狼APP隐私政策");
     }
 
 

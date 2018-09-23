@@ -1,5 +1,6 @@
 package com.chunlangjiu.app.amain.fragment;
 
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -12,7 +13,9 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chunlangjiu.app.R;
+import com.chunlangjiu.app.abase.BaseApplication;
 import com.chunlangjiu.app.abase.BaseFragment;
+import com.chunlangjiu.app.amain.activity.LoginActivity;
 import com.chunlangjiu.app.amain.adapter.CartGoodsListAdapter;
 import com.chunlangjiu.app.amain.bean.CartGoodsBean;
 import com.chunlangjiu.app.amain.bean.CartListBean;
@@ -54,6 +57,11 @@ import io.reactivex.schedulers.Schedulers;
  * @Describe:
  */
 public class CartFragment extends BaseFragment {
+
+
+    private RelativeLayout rlContent;
+    private RelativeLayout rlLogin;
+    private TextView tvLogin;
 
     private RefreshLayout refreshLayout;
     private SwipeMenuRecyclerView recycleView;
@@ -101,6 +109,9 @@ public class CartFragment extends BaseFragment {
                 case R.id.tv_delete:
                     deleteMulGoods();
                     break;
+                case R.id.tvLogin:
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                    break;
             }
         }
     };
@@ -132,6 +143,11 @@ public class CartFragment extends BaseFragment {
     public void initView() {
         EventManager.getInstance().registerListener(onNotifyListener);
         disposable = new CompositeDisposable();
+
+        rlContent = rootView.findViewById(R.id.rlContent);
+        rlLogin = rootView.findViewById(R.id.rlLogin);
+        tvLogin = rootView.findViewById(R.id.tvLogin);
+        tvLogin.setOnClickListener(onClickListener);
 
         img_back = rootView.findViewById(R.id.img_back);
         tvEditFinish = rootView.findViewById(R.id.tvEditFinish);
@@ -234,7 +250,14 @@ public class CartFragment extends BaseFragment {
 
     @Override
     public void initData() {
-        getCartList();
+        if (BaseApplication.isLogin()) {
+            getCartList();
+        } else {
+            imgEdit.setVisibility(View.GONE);
+            rlContent.setVisibility(View.GONE);
+            rl_bottom.setVisibility(View.GONE);
+            rlLogin.setVisibility(View.VISIBLE);
+        }
     }
 
     private void getCartList() {
@@ -290,11 +313,20 @@ public class CartFragment extends BaseFragment {
                 }
                 goodsMaps.put(shopBean, goodsLists);
             }
+            if (isEdit) {
+                imgEdit.setVisibility(View.GONE);
+                tvEditFinish.setVisibility(View.VISIBLE);
+            } else {
+                imgEdit.setVisibility(View.VISIBLE);
+                tvEditFinish.setVisibility(View.GONE);
+            }
             updateRecycleViewList();
             updateCheckAll();
             updateTotalPrice();
         } else {
             //无数据
+            imgEdit.setVisibility(View.GONE);
+            tvEditFinish.setVisibility(View.GONE);
             rl_bottom.setVisibility(View.GONE);
             recycleView.setVisibility(View.GONE);
             rlEmptyView.setVisibility(View.VISIBLE);
@@ -698,6 +730,7 @@ public class CartFragment extends BaseFragment {
         @Override
         public void onNotify(Object object, String eventTag) {
             updateCartList(eventTag);
+            loginSuccess(eventTag);
         }
     };
 
@@ -706,4 +739,18 @@ public class CartFragment extends BaseFragment {
             getCartList();
         }
     }
+
+    private void loginSuccess(String eventTag) {
+        if (eventTag.equals(ConstantMsg.LOGIN_SUCCESS)) {
+            requestData();
+        }
+    }
+
+    private void requestData() {
+        rlContent.setVisibility(View.VISIBLE);
+        rl_bottom.setVisibility(View.VISIBLE);
+        rlLogin.setVisibility(View.GONE);
+        getCartList();
+    }
+
 }

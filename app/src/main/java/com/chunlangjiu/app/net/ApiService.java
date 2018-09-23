@@ -92,11 +92,11 @@ public interface ApiService {
                                      @Field("shopuser_identity_img_z") String shopuser_identity_img_z);
     @POST("index.php/topapi")
     @FormUrlEncoded
-    Flowable<ResultBean<AuthStatusBean>> getPersonAuthStatus(@Field("method") String method, @Field("v") String v);
+    Observable<ResultBean<AuthStatusBean>> getPersonAuthStatus(@Field("method") String method, @Field("v") String v);
 
     @POST("index.php/topapi")
     @FormUrlEncoded
-    Flowable<ResultBean<AuthStatusBean>> getCompanyAuthStatus(@Field("method") String method, @Field("v") String v);
+    Observable<ResultBean<AuthStatusBean>> getCompanyAuthStatus(@Field("method") String method, @Field("v") String v);
 
     @POST("index.php/topapi")
     @FormUrlEncoded

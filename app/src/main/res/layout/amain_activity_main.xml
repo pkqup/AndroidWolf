@@ -154,6 +154,15 @@
             android:background="@color/line" />
     </RelativeLayout>
 
+
+
+
+    <com.pkqup.commonlibrary.view.MyViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/rlBottom" />
+
     <RelativeLayout
         android:layout_width="62dp"
         android:layout_height="62dp"
@@ -161,6 +170,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="10dp"
         android:background="@drawable/bg_white_circle" />
+
 
     <RelativeLayout
         android:layout_width="wrap_content"
@@ -172,7 +182,7 @@
             android:id="@+id/tab_three_image"
             android:layout_width="30dp"
             android:layout_height="25dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="8dp"
             android:background="@drawable/tab_three_image_select" />
 
         <TextView
@@ -188,10 +198,4 @@
 
     </RelativeLayout>
 
-
-    <com.pkqup.commonlibrary.view.MyViewPager
-        android:id="@+id/view_pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/rlBottom" />
 </RelativeLayout>
