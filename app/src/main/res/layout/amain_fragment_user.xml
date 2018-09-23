@@ -97,28 +97,42 @@
 
                     <TextView
                         android:id="@+id/tvChangeType"
-                        android:layout_width="110dp"
+                        android:layout_width="70dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:background="@drawable/bg_white_rectangle"
                         android:gravity="center"
                         android:paddingBottom="3dp"
                         android:paddingTop="2dp"
-                        android:text="切换到卖家中心"
+                        android:text="卖家中心"
                         android:textColor="@color/t_black"
                         android:textSize="@dimen/sp_small" />
 
                     <TextView
                         android:id="@+id/tvAuthRealName"
-                        android:layout_width="110dp"
+                        android:layout_width="70dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="20dp"
+                        android:layout_marginLeft="10dp"
                         android:layout_marginTop="10dp"
                         android:background="@drawable/bg_white_rectangle"
                         android:gravity="center"
                         android:paddingBottom="3dp"
                         android:paddingTop="2dp"
                         android:text="实名认证"
+                        android:textColor="@color/t_black"
+                        android:textSize="@dimen/sp_small" />
+
+                    <TextView
+                        android:id="@+id/tvAuthCompany"
+                        android:layout_width="70dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/bg_white_rectangle"
+                        android:gravity="center"
+                        android:paddingBottom="3dp"
+                        android:paddingTop="2dp"
+                        android:text="我是商家"
                         android:textColor="@color/t_black"
                         android:textSize="@dimen/sp_small" />
                 </LinearLayout>

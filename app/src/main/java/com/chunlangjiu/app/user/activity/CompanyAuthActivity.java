@@ -2,6 +2,7 @@ package com.chunlangjiu.app.user.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -11,7 +12,10 @@ import android.widget.TextView;
 
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
+import com.chunlangjiu.app.net.ApiUtils;
+import com.chunlangjiu.app.user.bean.AuthStatusBean;
 import com.chunlangjiu.app.user.bean.LocalAreaBean;
+import com.chunlangjiu.app.user.bean.UploadImageBean;
 import com.chunlangjiu.app.util.AreaUtils;
 import com.chunlangjiu.app.util.GlideImageLoader;
 import com.jzxiang.pickerview.TimePickerDialog;
@@ -23,8 +27,11 @@ import com.lzy.imagepicker.ui.ImageGridActivity;
 import com.lzy.imagepicker.view.CropImageView;
 import com.pkqup.commonlibrary.dialog.ChoicePhotoDialog;
 import com.pkqup.commonlibrary.glide.GlideUtils;
+import com.pkqup.commonlibrary.net.bean.ResultBean;
+import com.pkqup.commonlibrary.util.FileUtils;
 import com.pkqup.commonlibrary.util.SizeUtils;
 import com.pkqup.commonlibrary.util.TimeUtils;
+import com.pkqup.commonlibrary.util.ToastUtils;
 import com.pkqup.commonlibrary.view.choicearea.BottomDialog;
 import com.pkqup.commonlibrary.view.choicearea.DataProvider;
 import com.pkqup.commonlibrary.view.choicearea.ISelectAble;
@@ -40,7 +47,10 @@ import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
+import io.reactivex.functions.Function;
+import io.reactivex.functions.Function3;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -102,6 +112,8 @@ public class CompanyAuthActivity extends BaseActivity {
     private ChoicePhotoDialog photoDialog;
     private ArrayList<ImageItem> ZhiZhaoLists;
     private ArrayList<ImageItem> cardLists;
+    private String base64ZhiZhao;
+    private String base64IdCard;
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -121,6 +133,9 @@ public class CompanyAuthActivity extends BaseActivity {
                     break;
                 case R.id.rlTwo:
                     showPhotoDialog(REQUEST_CODE_SELECT_TWO);
+                    break;
+                case R.id.tvCommit:
+                    checkData();
                     break;
             }
         }
@@ -175,10 +190,55 @@ public class CompanyAuthActivity extends BaseActivity {
         rlTwo.setOnClickListener(onClickListener);
         rlCreateTime.setOnClickListener(onClickListener);
         rlSellArea.setOnClickListener(onClickListener);
+        tvCommit.setOnClickListener(onClickListener);
     }
 
 
     private void initData() {
+        getAreaData();
+        getAuthStatus();
+    }
+
+    private void getAuthStatus() {
+        disposable.add(ApiUtils.getInstance().getCompanyAuthStatus()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<AuthStatusBean>>() {
+                    @Override
+                    public void accept(ResultBean<AuthStatusBean> authStatusBeanResultBean) throws Exception {
+                        getStatusSuccess(authStatusBeanResultBean.getData());
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                }));
+    }
+
+    private void getStatusSuccess(AuthStatusBean data) {
+        if ("active".equals(data.getStatus())) {
+            //未认证
+            tvCommit.setText("提交审核");
+        } else if ("locked".equals(data.getStatus())) {
+            tvCommit.setText("审核中");
+            tvCommit.setClickable(false);
+            updateView(data);
+        } else if ("failing".equals(data.getStatus())) {
+            tvCommit.setText("审核未通过，请重新提交资料审核");
+            tvCommit.setClickable(true);
+            updateView(data);
+        } else if ("finish".equals(data.getStatus())) {
+            tvCommit.setText("认证成功");
+            tvCommit.setClickable(false);
+            updateView(data);
+        }
+    }
+
+    private void updateView(AuthStatusBean data) {
+
+    }
+
+    private void getAreaData() {
         disposable.add(Observable.create(new ObservableOnSubscribe<List<LocalAreaBean.ProvinceData>>() {
             @Override
             public void subscribe(ObservableEmitter<List<LocalAreaBean.ProvinceData>> e) throws Exception {
@@ -368,14 +428,12 @@ public class CompanyAuthActivity extends BaseActivity {
     }
 
     private void openCamera(int requestCode) {
-        ImagePicker.getInstance().setSelectLimit(1);
         Intent intent = new Intent(this, ImageGridActivity.class);
         intent.putExtra(ImageGridActivity.EXTRAS_TAKE_PICKERS, true); // 是否是直接打开相机
         startActivityForResult(intent, requestCode);
     }
 
     private void openAlbum(int requestCode) {
-        ImagePicker.getInstance().setSelectLimit(1);
         Intent intent1 = new Intent(this, ImageGridActivity.class);
         startActivityForResult(intent1, requestCode);
     }
@@ -388,12 +446,101 @@ public class CompanyAuthActivity extends BaseActivity {
             if (data != null) {
                 if (requestCode == REQUEST_CODE_SELECT_ONE) {
                     ZhiZhaoLists = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+                    ImageItem imageItem = ZhiZhaoLists.get(0);
+                    int index = imageItem.path.lastIndexOf("/");
+                    imageItem.name = imageItem.path.substring(index + 1, imageItem.path.length());
+                    base64ZhiZhao = FileUtils.imgToBase64(ZhiZhaoLists.get(0).path);
                     GlideUtils.loadImage(CompanyAuthActivity.this, ZhiZhaoLists.get(0).path, imgSellCard);
                 } else if (requestCode == REQUEST_CODE_SELECT_TWO) {
                     cardLists = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+                    ImageItem imageItem = cardLists.get(0);
+                    int index = imageItem.path.lastIndexOf("/");
+                    imageItem.name = imageItem.path.substring(index + 1, imageItem.path.length());
+                    base64IdCard = FileUtils.imgToBase64(cardLists.get(0).path);
                     GlideUtils.loadImage(CompanyAuthActivity.this, cardLists.get(0).path, imgIDCard);
                 }
             }
         }
+    }
+
+    private void checkData() {
+        if (TextUtils.isEmpty(etCompany.getText().toString().trim())) {
+            ToastUtils.showShort("请输入企业名称");
+        } else if (TextUtils.isEmpty(etPersonName.getText().toString().trim())) {
+            ToastUtils.showShort("请输入法人名称");
+        } else if (TextUtils.isEmpty(etCardNum.getText().toString().trim())) {
+            ToastUtils.showShort("请输入营业执照");
+        } else if (TextUtils.isEmpty(tvCreateTime.getText().toString())) {
+            ToastUtils.showShort("请选择成立时间");
+        } else if (TextUtils.isEmpty(tvSellArea.getText().toString())) {
+            ToastUtils.showShort("请选择经营区域");
+        } else if (TextUtils.isEmpty(etAddress.getText().toString())) {
+            ToastUtils.showShort("请输入详情地址");
+        } else if (TextUtils.isEmpty(etPhone.getText().toString())) {
+            ToastUtils.showShort("请输入固定电话");
+        } else if (base64ZhiZhao == null) {
+            ToastUtils.showShort("请上传营业执照图片");
+        } else if (base64IdCard == null) {
+            ToastUtils.showShort("请上传法人身份证图片");
+        } else {
+            uploadImage();
+        }
+    }
+
+    private void uploadImage() {
+        showLoadingDialog();
+        Observable<ResultBean<UploadImageBean>> front = ApiUtils.getInstance().userUploadImage(base64ZhiZhao, ZhiZhaoLists.get(0).name, "rate");
+        Observable<ResultBean<UploadImageBean>> behind = ApiUtils.getInstance().userUploadImage(base64IdCard, cardLists.get(0).name, "rate");
+        disposable.add(Observable.zip(front, behind, new BiFunction<ResultBean<UploadImageBean>, ResultBean<UploadImageBean>, List<String>>() {
+            @Override
+            public List<String> apply(ResultBean<UploadImageBean> uploadImageBeanResultBean, ResultBean<UploadImageBean> uploadImageBeanResultBean2) throws Exception {
+                List<String> imageLists = new ArrayList<>();
+                imageLists.add(uploadImageBeanResultBean.getData().getUrl());
+                imageLists.add(uploadImageBeanResultBean2.getData().getUrl());
+                return imageLists;
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<String>>() {
+                    @Override
+                    public void accept(List<String> strings) throws Exception {
+                        commitAuth(strings);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        hideLoadingDialog();
+                        ToastUtils.showShort("上传图片失败");
+                    }
+                }));
+    }
+
+    private void commitAuth(List<String> strings) {
+        disposable.add(ApiUtils.getInstance().companyAuth(etCompany.getText().toString().trim(), etPersonName.getText().toString().trim(),
+                etCardNum.getText().toString().trim(), tvCreateTime.getText().toString(), tvSellArea.getText().toString(),
+                etAddress.getText().toString(), etPhone.getText().toString(), strings.get(0), strings.get(1))
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean>() {
+                    @Override
+                    public void accept(ResultBean resultBean) throws Exception {
+                        hideLoadingDialog();
+                        ToastUtils.showShort("提交成功，请耐心等待审核");
+                        finish();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        hideLoadingDialog();
+                        ToastUtils.showShort("提交失败");
+                    }
+                }));
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        disposable.dispose();
     }
 }

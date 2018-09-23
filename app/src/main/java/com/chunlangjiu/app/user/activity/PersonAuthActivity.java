@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
 import com.chunlangjiu.app.net.ApiUtils;
+import com.chunlangjiu.app.user.bean.AuthStatusBean;
 import com.chunlangjiu.app.user.bean.UploadImageBean;
 import com.chunlangjiu.app.util.ConstantMsg;
 import com.chunlangjiu.app.util.GlideImageLoader;
@@ -130,6 +131,7 @@ public class PersonAuthActivity extends BaseActivity {
         setContentView(R.layout.user_activity_person_auth);
         initImagePicker();
         initView();
+        initData();
     }
 
     private void initImagePicker() {
@@ -176,6 +178,46 @@ public class PersonAuthActivity extends BaseActivity {
         rlPerson.setOnClickListener(onClickListener);
         tvCommit.setOnClickListener(onClickListener);
     }
+
+    private void initData() {
+        disposable.add(ApiUtils.getInstance().getPersonAuthStatus()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<AuthStatusBean>>() {
+                    @Override
+                    public void accept(ResultBean<AuthStatusBean> authStatusBeanResultBean) throws Exception {
+                        getStatusSuccess(authStatusBeanResultBean.getData());
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                }));
+    }
+
+    private void getStatusSuccess(AuthStatusBean data) {
+        if ("active".equals(data.getStatus())) {
+            //未认证
+            tvCommit.setText("提交审核");
+        } else if ("locked".equals(data.getStatus())) {
+            tvCommit.setText("审核中");
+            tvCommit.setClickable(false);
+            updateView(data);
+        } else if ("failing".equals(data.getStatus())) {
+            tvCommit.setText("审核未通过，请重新提交资料审核");
+            tvCommit.setClickable(true);
+            updateView(data);
+        } else if ("finish".equals(data.getStatus())) {
+            tvCommit.setText("认证成功");
+            tvCommit.setClickable(false);
+            updateView(data);
+        }
+    }
+
+    private void updateView(AuthStatusBean data) {
+
+    }
+
 
     private void showFrontDialog() {
         if (frontDialog == null) {
@@ -336,13 +378,13 @@ public class PersonAuthActivity extends BaseActivity {
                     @Override
                     public void accept(ResultBean resultBean) throws Exception {
                         hideLoadingDialog();
-                        ToastUtils.showShort("实名认证成功");
+                        ToastUtils.showShort("提交成功，请耐心等待审核");
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         hideLoadingDialog();
-                        ToastUtils.showShort("实名认证失败");
+                        ToastUtils.showShort("提交失败");
                     }
                 }));
     }

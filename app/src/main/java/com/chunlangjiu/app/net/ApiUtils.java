@@ -28,6 +28,7 @@ import com.chunlangjiu.app.store.bean.StoreDetailBean;
 import com.chunlangjiu.app.order.bean.OrderListBean;
 import com.chunlangjiu.app.store.bean.StoreListBean;
 import com.chunlangjiu.app.user.bean.AddressListBean;
+import com.chunlangjiu.app.user.bean.AuthStatusBean;
 import com.chunlangjiu.app.user.bean.BrandListBean;
 import com.chunlangjiu.app.user.bean.MyNumBean;
 import com.chunlangjiu.app.user.bean.ShopCatIdList;
@@ -98,6 +99,21 @@ public class ApiUtils {
     public Flowable<ResultBean> personAuth(String name, String idcard, String dentity, String dentity_front, String dentity_reverse) {
         return apiService.personAuth("member.autonym", "v1", name, idcard, dentity, dentity_front, dentity_reverse);
     }
+
+    public Flowable<ResultBean> companyAuth(String company_name, String representative, String license_num, String establish_date, String area,
+                                            String address, String company_phone, String license_img, String shopuser_identity_img_z) {
+        return apiService.companyAuth("member.enterprise", "v1", company_name, representative, license_num, establish_date, area,
+                address,company_phone,license_img,shopuser_identity_img_z);
+    }
+
+    public Flowable<ResultBean<AuthStatusBean>> getPersonAuthStatus() {
+        return apiService.getPersonAuthStatus("member.get.autonym", "v1");
+    }
+
+    public Flowable<ResultBean<AuthStatusBean>> getCompanyAuthStatus() {
+        return apiService.getCompanyAuthStatus("member.get.enterprise", "v1");
+    }
+
 
     public Flowable<ResultBean> valuationGoods(String title, String name, String imgs, String series) {
         return apiService.valuationGoods("member.evaluate", "v1", title, name, imgs, series);

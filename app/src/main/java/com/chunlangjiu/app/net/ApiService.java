@@ -28,6 +28,7 @@ import com.chunlangjiu.app.store.bean.StoreDetailBean;
 import com.chunlangjiu.app.order.bean.OrderListBean;
 import com.chunlangjiu.app.store.bean.StoreListBean;
 import com.chunlangjiu.app.user.bean.AddressListBean;
+import com.chunlangjiu.app.user.bean.AuthStatusBean;
 import com.chunlangjiu.app.user.bean.BrandListBean;
 import com.chunlangjiu.app.user.bean.MyNumBean;
 import com.chunlangjiu.app.user.bean.ShopCatIdList;
@@ -81,6 +82,22 @@ public interface ApiService {
                                     @Field("name") String name, @Field("idcard") String idcard,
                                     @Field("dentity") String dentity, @Field("dentity_front") String dentity_front,
                                     @Field("dentity_reverse") String dentity_reverse);
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean> companyAuth(@Field("method") String method, @Field("v") String v,
+                                    @Field("company_name") String company_name, @Field("representative") String representative,
+                                    @Field("license_num") String license_num, @Field("establish_date") String establish_date,
+                                    @Field("area") String area, @Field("address") String address,
+                                     @Field("company_phone") String company_phone, @Field("license_img") String license_img,
+                                     @Field("shopuser_identity_img_z") String shopuser_identity_img_z);
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<AuthStatusBean>> getPersonAuthStatus(@Field("method") String method, @Field("v") String v);
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<AuthStatusBean>> getCompanyAuthStatus(@Field("method") String method, @Field("v") String v);
 
     @POST("index.php/topapi")
     @FormUrlEncoded
