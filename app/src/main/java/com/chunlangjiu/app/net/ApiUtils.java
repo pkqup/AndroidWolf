@@ -83,6 +83,10 @@ public class ApiUtils {
         return apiService.login("user.oauthlogin", "v2", account, code);
     }
 
+    public Flowable<ResultBean> logout() {
+        return apiService.logout("user.logout", "v1");
+    }
+
     public Flowable<ResultBean<LoginBean>> shopLogin(String mobile, String password) {
         return apiService.shopLogin("user.login", "v1", mobile, password);
     }

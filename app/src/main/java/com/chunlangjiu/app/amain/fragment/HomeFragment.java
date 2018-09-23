@@ -44,6 +44,7 @@ import com.pkqup.commonlibrary.glide.BannerGlideLoader;
 import com.pkqup.commonlibrary.glide.GlideUtils;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.pkqup.commonlibrary.util.PermissionUtils;
+import com.pkqup.commonlibrary.util.SPUtils;
 import com.pkqup.commonlibrary.util.ToastUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -88,6 +89,7 @@ public class HomeFragment extends BaseFragment {
 
     private TextView tvCity;
     private RelativeLayout rlTitleSearch;
+    private ImageView imgMsg;
 
     private View headerView;
     private Banner banner;
@@ -143,6 +145,9 @@ public class HomeFragment extends BaseFragment {
                 case R.id.tvCity:
                     choiceCity();
                     break;
+                case R.id.imgMsg:
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_MESSAGE + BaseApplication.getToken(), "消息");
+                    break;
                 case R.id.rlTitleSearch:
                     startActivity(new Intent(getActivity(), SearchActivity.class));
                     break;
@@ -181,6 +186,8 @@ public class HomeFragment extends BaseFragment {
         disposable = new CompositeDisposable();
         tvCity = rootView.findViewById(R.id.tvCity);
         tvCity.setOnClickListener(onClickListener);
+        imgMsg = rootView.findViewById(R.id.imgMsg);
+        imgMsg.setOnClickListener(onClickListener);
         rlTitleSearch = rootView.findViewById(R.id.rlTitleSearch);
         rlTitleSearch.setOnClickListener(onClickListener);
 

@@ -1,6 +1,7 @@
 package com.chunlangjiu.app.amain.fragment;
 
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +28,7 @@ import com.chunlangjiu.app.user.bean.UploadImageBean;
 import com.chunlangjiu.app.user.bean.UserInfoBean;
 import com.chunlangjiu.app.util.ConstantMsg;
 import com.chunlangjiu.app.util.GlideImageLoader;
+import com.chunlangjiu.app.util.ShareUtils;
 import com.chunlangjiu.app.web.WebViewActivity;
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.bean.ImageItem;
@@ -38,7 +40,12 @@ import com.pkqup.commonlibrary.glide.GlideUtils;
 import com.pkqup.commonlibrary.net.HttpUtils;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.pkqup.commonlibrary.util.FileUtils;
+import com.pkqup.commonlibrary.util.SPUtils;
 import com.pkqup.commonlibrary.util.ToastUtils;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.media.UMWeb;
 
 import java.util.ArrayList;
 
@@ -188,6 +195,9 @@ public class UserFragment extends BaseFragment {
                 case R.id.tvAuthCompany:// 升级为企业(进入企业认证)
                     checkCompanyStatus();
                     break;
+                case R.id.llMessageNum:// 我的消息
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_MESSAGE + BaseApplication.getToken(), "消息");
+                    break;
                 case R.id.rlOrderManager:// 订单管理
                     if (llSellAuction.isShown()) {
                         toOrderMainActivity(3, 0);
@@ -246,32 +256,45 @@ public class UserFragment extends BaseFragment {
                     startActivity(new Intent(getActivity(), AddGoodsActivity.class));
                     break;
                 case R.id.rlSellGoods:// 在售商品
-                    toSellGoods();
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_SELL_GOODS + token, "在售商品");
                     break;
                 case R.id.rlAuctionGoods:// 竞拍商品
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_ACTION_GOODS + token, "竞拍商品");
                     break;
                 case R.id.rlWareHouseGoods:// 仓库商品
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_STORE_GOODS + token, "仓库商品");
                     break;
                 case R.id.rlCheckGoods:// 审核商品
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_AUTH_GOODS + token, "审核商品");
                     break;
                 case R.id.rlMoneyManager:// 资金管理
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_MONEY_MANAGER + token, "资金管理");
+                    break;
+                case R.id.rlShare:// 分享
+                    showShareDialog();
                     break;
                 case R.id.rlCollect:// 我的收藏
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_COLLECT + token, "我的收藏");
                     break;
                 case R.id.rlVip:// 会员资料
+                    if (userType == TYPE_BUYER) {
+                        WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_VIP_INFO + token, "会员资料");
+                    } else {
+                        WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_SHOP_INFO + token, "店铺资料");
+                    }
                     break;
                 case R.id.rlAddress:// 地址管理
                     startActivity(new Intent(getActivity(), AddressListActivity.class));
                     break;
                 case R.id.rlBankCard:// 银行卡管理
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_BANK_CARD + token, "银行卡管理");
+                    break;
+                case R.id.rlBankCardSecond:// 银行卡管理
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_BANK_CARD + token, "银行卡管理");
                     break;
             }
         }
     };
-
-    private void toSellGoods() {
-        WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_SELL_GOODS + token, "");
-    }
 
 
     @Override
@@ -425,11 +448,16 @@ public class UserFragment extends BaseFragment {
             //买家中心
             rlBackground.setBackgroundResource(R.mipmap.buy_bg);
             tvChangeType.setText("卖家中心");
-            tvAuthCompany.setVisibility(View.VISIBLE);
+            if (AuthStatusBean.AUTH_SUCCESS.equals(companyStatus)) {
+                tvAuthCompany.setVisibility(View.GONE);
+            } else {
+                tvAuthCompany.setVisibility(View.VISIBLE);
+            }
             llNotUseMoney.setVisibility(View.VISIBLE);
 
             llBuyOrder.setVisibility(View.VISIBLE);
             llSellOrder.setVisibility(View.GONE);
+            rlAuctionManager.setVisibility(View.VISIBLE);
             llBuyAuction.setVisibility(View.VISIBLE);
             llSellAuction.setVisibility(View.GONE);
 
@@ -449,8 +477,9 @@ public class UserFragment extends BaseFragment {
 
             llBuyOrder.setVisibility(View.GONE);
             llSellOrder.setVisibility(View.VISIBLE);
+            rlAuctionManager.setVisibility(View.GONE);
             llBuyAuction.setVisibility(View.GONE);
-            llSellAuction.setVisibility(View.VISIBLE);
+            llSellAuction.setVisibility(View.GONE);
 
             rlGoodsManager.setVisibility(View.VISIBLE);
             llGoodsContent.setVisibility(View.VISIBLE);
@@ -715,6 +744,30 @@ public class UserFragment extends BaseFragment {
                 }));
     }
 
+    private void showShareDialog() {
+        UMImage thumb = new UMImage(getActivity(), BitmapFactory.decodeResource(getActivity().getResources(), R.mipmap.logo));
+        UMWeb web = new UMWeb("");
+        web.setTitle("给您推荐高端酒综合服务平台-醇狼");//标题
+        web.setThumb(thumb);  //缩略图
+        web.setDescription("为行业用户提供高端酒发布、估价、竞拍、鉴定等综合性服务");//描述
+        ShareUtils.shareLink(getActivity(), web, new UMShareListener() {
+            @Override
+            public void onStart(SHARE_MEDIA share_media) {
+            }
+
+            @Override
+            public void onResult(SHARE_MEDIA share_media) {
+            }
+
+            @Override
+            public void onError(SHARE_MEDIA share_media, Throwable throwable) {
+            }
+
+            @Override
+            public void onCancel(SHARE_MEDIA share_media) {
+            }
+        });
+    }
 
     private void toAuthCompanyActivity() {
         startActivity(new Intent(getActivity(), CompanyAuthActivity.class));
@@ -725,15 +778,43 @@ public class UserFragment extends BaseFragment {
         @Override
         public void onNotify(Object object, String eventTag) {
             loginSuccess(eventTag);
+            logoutSuccess(eventTag);
+        }
+    };
+
+
+    //登录成功
+    private void loginSuccess(String eventTag) {
+        if (eventTag.equals(ConstantMsg.LOGIN_SUCCESS)) {
+            checkLogin();
             getUserInfo();
             getOrderNumIndex();
             getPersonAuthStatus();
         }
-    };
+    }
 
-    private void loginSuccess(String eventTag) {
-        if (eventTag.equals(ConstantMsg.LOGIN_SUCCESS)) {
+    //退出登录
+    private void logoutSuccess(String eventTag) {
+        if (eventTag.equals(ConstantMsg.LOGOUT_SUCCESS)) {
+            SPUtils.put("token", "");
+            BaseApplication.setToken("");
+            BaseApplication.initToken();
             checkLogin();
+            userType = TYPE_BUYER;
+            showUserTypeView();
+            disposable.add(ApiUtils.getInstance().logout()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<ResultBean>() {
+                        @Override
+                        public void accept(ResultBean loginBeanResultBean) throws Exception {
+
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                        }
+                    }));
         }
     }
 

@@ -3,93 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/bg_white">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:background="@color/bg_white"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/tv_all"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="综合"
-                android:textColor="@color/t_gray_select"
-                android:textSize="@dimen/sp_small" />
-
-            <TextView
-                android:id="@+id/tv_new"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="新品"
-                android:textColor="@color/t_gray_select"
-                android:textSize="@dimen/sp_small" />
-
-            <TextView
-                android:id="@+id/tv_price"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="价格"
-                android:textColor="@color/t_gray_select"
-                android:textSize="@dimen/sp_small" />
-
-            <TextView
-                android:id="@+id/tv_class"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="分类"
-                android:textColor="@color/t_gray_select"
-                android:textSize="@dimen/sp_small" />
-
-            <TextView
-                android:id="@+id/tv_filter"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="筛选"
-                android:textColor="@color/t_gray_select"
-                android:textSize="@dimen/sp_small" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/line" />
-
-        <com.scwang.smartrefresh.layout.SmartRefreshLayout
-            android:id="@+id/refreshLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/bg_gray"
-            app:srlEnableFooterFollowWhenLoadFinished="true"
-            app:srlEnableScrollContentWhenLoaded="true">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycle_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/bg_white"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp" />
-        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
-
-    </LinearLayout>
+    <include layout="@layout/goods_layout_filter_list" />
 
     <LinearLayout
         android:id="@+id/right_view"
@@ -99,14 +16,7 @@
         android:background="@color/bg_white"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="DrawerLayout"
-            android:textColor="@color/t_black"
-            android:textSize="@dimen/sp_mid" />
-
+        <include layout="@layout/goods_right_view_filter" />
 
     </LinearLayout>
 </android.support.v4.widget.DrawerLayout>

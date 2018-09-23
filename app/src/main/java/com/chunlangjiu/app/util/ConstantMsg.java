@@ -9,6 +9,7 @@ public class ConstantMsg {
     public static final String MSG_PAGE_CLASS = "msg_page_class";//首页切换到分类
     public static final String MSG_PAGE_AUCTION = "msg_page_auction";//首页切换到竞拍专区
     public static final String LOGIN_SUCCESS = "msg_login_success";//登录成功
+    public static final String LOGOUT_SUCCESS = "msg_logout_success";//登录成功
     public static final String ADD_ADDRESS_SUCCESS = "msg_add_address_success";//添加地址成功
     public static final String CHANGE_TO_EVALUATE = "msg_change_to_evaluate";//切换到评论tab
     public static final String WEIXIN_PAY_CALLBACK = "weixin_pay_success";//微信支付成功
