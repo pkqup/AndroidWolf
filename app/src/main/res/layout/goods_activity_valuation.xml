@@ -314,7 +314,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:scaleType="centerCrop"
-                            android:src="@mipmap/example_detail" />
+                            android:src="@mipmap/example_detail_two" />
 
                         <TextView
                             android:layout_width="match_parent"

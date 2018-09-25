@@ -44,7 +44,10 @@ import io.reactivex.schedulers.Schedulers;
 public class ValuationActivity extends BaseActivity {
 
     public static final int REQUEST_CODE_SELECT_MAIN_PIC = 1001;
-    public static final int REQUEST_CODE_SELECT_DETAIL_PIC = 1002;
+    public static final int REQUEST_CODE_SELECT_DETAIL_ONE_PIC = 10021;
+    public static final int REQUEST_CODE_SELECT_DETAIL_TWO_PIC = 10022;
+    public static final int REQUEST_CODE_SELECT_DETAIL_THREE_PIC = 10023;
+    public static final int REQUEST_CODE_SELECT_DETAIL_FOUR_PIC = 10024;
     public static final int REQUEST_CODE_SELECT_GOODS_PIC = 1003;
     private int codeType;
 
@@ -61,33 +64,53 @@ public class ValuationActivity extends BaseActivity {
 
     @BindView(R.id.llMainPic)
     LinearLayout llMainPic;
-    @BindView(R.id.llDescPic)
-    LinearLayout llDescPic;
+    @BindView(R.id.llDescOnePic)
+    LinearLayout llDescOnePic;
+    @BindView(R.id.llDescTwoPic)
+    LinearLayout llDescTwoPic;
+    @BindView(R.id.llDescThreePic)
+    LinearLayout llDescThreePic;
+    @BindView(R.id.llDescFourPic)
+    LinearLayout llDescFourPic;
     @BindView(R.id.llGoodsPic)
     LinearLayout llGoodsPic;
 
     @BindView(R.id.rlMainPic)
     RelativeLayout rlMainPic;
-    @BindView(R.id.rlDescPic)
-    RelativeLayout rlDescPic;
+    @BindView(R.id.rlDescOnePic)
+    RelativeLayout rlDescOnePic;
+    @BindView(R.id.rlDescTwoPic)
+    RelativeLayout rlDescTwoPic;
+    @BindView(R.id.rlDescThreePic)
+    RelativeLayout rlDescThreePic;
+    @BindView(R.id.rlDescFourPic)
+    RelativeLayout rlDescFourPic;
     @BindView(R.id.rlGoodsPic)
     RelativeLayout rlGoodsPic;
 
-    @BindView(R.id.imgMainEx)
-    ImageView imgMainEx;
     @BindView(R.id.imgMainPic)
     ImageView imgMainPic;
-    @BindView(R.id.imgDescEx)
-    ImageView imgDescEx;
-    @BindView(R.id.imgDescPic)
-    ImageView imgDescPic;
+    @BindView(R.id.imgDescOnePic)
+    ImageView imgDescOnePic;
+    @BindView(R.id.imgDescTwoPic)
+    ImageView imgDescTwoPic;
+    @BindView(R.id.imgDescThreePic)
+    ImageView imgDescThreePic;
+    @BindView(R.id.imgDescFourPic)
+    ImageView imgDescFourPic;
     @BindView(R.id.imgGoodsPic)
     ImageView imgGoodsPic;
 
     @BindView(R.id.imgDeleteMainPic)
     ImageView imgDeleteMainPic;
-    @BindView(R.id.imgDeleteDescPic)
-    ImageView imgDeleteDescPic;
+    @BindView(R.id.imgDeleteDescOnePic)
+    ImageView imgDeleteDescOnePic;
+    @BindView(R.id.imgDeleteDescTwoPic)
+    ImageView imgDeleteDescTwoPic;
+    @BindView(R.id.imgDeleteDescThreePic)
+    ImageView imgDeleteDescThreePic;
+    @BindView(R.id.imgDeleteDescFourPic)
+    ImageView imgDeleteDescFourPic;
     @BindView(R.id.imgDeleteGoodsPic)
     ImageView imgDeleteGoodsPic;
 
@@ -97,12 +120,17 @@ public class ValuationActivity extends BaseActivity {
     private CompositeDisposable disposable;
     private ChoicePhotoDialog photoDialog;
     private ArrayList<ImageItem> mainPicLists;
-    private ArrayList<ImageItem> detailPicLists;
+    private ArrayList<ImageItem> detailOnePicLists;
+    private ArrayList<ImageItem> detailTwoPicLists;
+    private ArrayList<ImageItem> detailThreePicLists;
+    private ArrayList<ImageItem> detailFourPicLists;
     private ArrayList<ImageItem> goodsPicLists;
     private String base64Main;
-    private String base64Detail;
+    private String base64DetailOne;
+    private String base64DetailTwo;
+    private String base64DetailThree;
+    private String base64DetailFour;
     private String base64Goods;
-
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -114,8 +142,17 @@ public class ValuationActivity extends BaseActivity {
                 case R.id.rlMainPic:
                     showPhotoDialog(REQUEST_CODE_SELECT_MAIN_PIC);
                     break;
-                case R.id.rlDescPic:
-                    showPhotoDialog(REQUEST_CODE_SELECT_DETAIL_PIC);
+                case R.id.rlDescOnePic:
+                    showPhotoDialog(REQUEST_CODE_SELECT_DETAIL_ONE_PIC);
+                    break;
+                case R.id.rlDescTwoPic:
+                    showPhotoDialog(REQUEST_CODE_SELECT_DETAIL_TWO_PIC);
+                    break;
+                case R.id.rlDescThreePic:
+                    showPhotoDialog(REQUEST_CODE_SELECT_DETAIL_THREE_PIC);
+                    break;
+                case R.id.rlDescFourPic:
+                    showPhotoDialog(REQUEST_CODE_SELECT_DETAIL_FOUR_PIC);
                     break;
                 case R.id.rlGoodsPic:
                     showPhotoDialog(REQUEST_CODE_SELECT_GOODS_PIC);
@@ -123,8 +160,17 @@ public class ValuationActivity extends BaseActivity {
                 case R.id.imgDeleteMainPic:
                     deleteMainPic();
                     break;
-                case R.id.imgDeleteDescPic:
-                    deleteDescPic();
+                case R.id.imgDeleteDescOnePic:
+                    deleteDescOnePic();
+                    break;
+                case R.id.imgDeleteDescTwoPic:
+                    deleteDescTwoPic();
+                    break;
+                case R.id.imgDeleteDescThreePic:
+                    deleteDescFourPic();
+                    break;
+                case R.id.imgDeleteDescFourPic:
+                    deleteDescFivePic();
                     break;
                 case R.id.imgDeleteGoodsPic:
                     deleteGoodsPic();
@@ -173,7 +219,10 @@ public class ValuationActivity extends BaseActivity {
         ViewGroup.LayoutParams layoutParams = llMainPic.getLayoutParams();
         layoutParams.height = picSize;
         llMainPic.setLayoutParams(layoutParams);
-        llDescPic.setLayoutParams(layoutParams);
+        llDescOnePic.setLayoutParams(layoutParams);
+        llDescTwoPic.setLayoutParams(layoutParams);
+        llDescThreePic.setLayoutParams(layoutParams);
+        llDescFourPic.setLayoutParams(layoutParams);
         llGoodsPic.setLayoutParams(layoutParams);
 
         RelativeLayout.LayoutParams imgDeleteGoodsPicLayoutParams = (RelativeLayout.LayoutParams) imgDeleteGoodsPic.getLayoutParams();
@@ -181,11 +230,17 @@ public class ValuationActivity extends BaseActivity {
         imgDeleteGoodsPic.setLayoutParams(imgDeleteGoodsPicLayoutParams);
 
         rlMainPic.setOnClickListener(onClickListener);
-        rlDescPic.setOnClickListener(onClickListener);
+        rlDescOnePic.setOnClickListener(onClickListener);
+        rlDescTwoPic.setOnClickListener(onClickListener);
+        rlDescThreePic.setOnClickListener(onClickListener);
+        rlDescFourPic.setOnClickListener(onClickListener);
         rlGoodsPic.setOnClickListener(onClickListener);
 
         imgDeleteMainPic.setOnClickListener(onClickListener);
-        imgDeleteDescPic.setOnClickListener(onClickListener);
+        imgDeleteDescOnePic.setOnClickListener(onClickListener);
+        imgDeleteDescTwoPic.setOnClickListener(onClickListener);
+        imgDeleteDescThreePic.setOnClickListener(onClickListener);
+        imgDeleteDescFourPic.setOnClickListener(onClickListener);
         imgDeleteGoodsPic.setOnClickListener(onClickListener);
 
         tvCommit.setOnClickListener(onClickListener);
@@ -238,15 +293,42 @@ public class ValuationActivity extends BaseActivity {
                         imgMainPic.setVisibility(View.VISIBLE);
                         imgDeleteMainPic.setVisibility(View.VISIBLE);
                         GlideUtils.loadImage(ValuationActivity.this, mainPicLists.get(0).path, imgMainPic);
-                    } else if (requestCode == REQUEST_CODE_SELECT_DETAIL_PIC) {
-                        detailPicLists = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
-                        ImageItem imageItem = detailPicLists.get(0);
+                    } else if (requestCode == REQUEST_CODE_SELECT_DETAIL_ONE_PIC) {
+                        detailOnePicLists = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+                        ImageItem imageItem = detailOnePicLists.get(0);
                         int index = imageItem.path.lastIndexOf("/");
                         imageItem.name = imageItem.path.substring(index + 1, imageItem.path.length());
-                        base64Detail = FileUtils.imgToBase64(detailPicLists.get(0).path);
-                        imgDescPic.setVisibility(View.VISIBLE);
-                        imgDeleteDescPic.setVisibility(View.VISIBLE);
-                        GlideUtils.loadImage(ValuationActivity.this, detailPicLists.get(0).path, imgDescPic);
+                        base64DetailTwo = FileUtils.imgToBase64(detailOnePicLists.get(0).path);
+                        imgDescOnePic.setVisibility(View.VISIBLE);
+                        imgDeleteDescOnePic.setVisibility(View.VISIBLE);
+                        GlideUtils.loadImage(ValuationActivity.this, detailOnePicLists.get(0).path, imgDescOnePic);
+                    }else if (requestCode == REQUEST_CODE_SELECT_DETAIL_TWO_PIC) {
+                        detailTwoPicLists = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+                        ImageItem imageItem = detailTwoPicLists.get(0);
+                        int index = imageItem.path.lastIndexOf("/");
+                        imageItem.name = imageItem.path.substring(index + 1, imageItem.path.length());
+                        base64DetailTwo = FileUtils.imgToBase64(detailTwoPicLists.get(0).path);
+                        imgDescTwoPic.setVisibility(View.VISIBLE);
+                        imgDeleteDescOnePic.setVisibility(View.VISIBLE);
+                        GlideUtils.loadImage(ValuationActivity.this, detailTwoPicLists.get(0).path, imgDescTwoPic);
+                    }else if (requestCode == REQUEST_CODE_SELECT_DETAIL_THREE_PIC) {
+                        detailThreePicLists = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+                        ImageItem imageItem = detailThreePicLists.get(0);
+                        int index = imageItem.path.lastIndexOf("/");
+                        imageItem.name = imageItem.path.substring(index + 1, imageItem.path.length());
+                        base64DetailThree = FileUtils.imgToBase64(detailThreePicLists.get(0).path);
+                        imgDescThreePic.setVisibility(View.VISIBLE);
+                        imgDeleteDescThreePic.setVisibility(View.VISIBLE);
+                        GlideUtils.loadImage(ValuationActivity.this, detailThreePicLists.get(0).path, imgDescThreePic);
+                    }else if (requestCode == REQUEST_CODE_SELECT_DETAIL_FOUR_PIC) {
+                        detailFourPicLists = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+                        ImageItem imageItem = detailFourPicLists.get(0);
+                        int index = imageItem.path.lastIndexOf("/");
+                        imageItem.name = imageItem.path.substring(index + 1, imageItem.path.length());
+                        base64DetailFour = FileUtils.imgToBase64(detailFourPicLists.get(0).path);
+                        imgDescFourPic.setVisibility(View.VISIBLE);
+                        imgDeleteDescFourPic.setVisibility(View.VISIBLE);
+                        GlideUtils.loadImage(ValuationActivity.this, detailFourPicLists.get(0).path, imgDescFourPic);
                     } else if (requestCode == REQUEST_CODE_SELECT_GOODS_PIC) {
                         goodsPicLists = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
                         ImageItem imageItem = goodsPicLists.get(0);
@@ -271,11 +353,33 @@ public class ValuationActivity extends BaseActivity {
         imgDeleteMainPic.setVisibility(View.GONE);
     }
 
-    private void deleteDescPic() {
-        detailPicLists = null;
-        base64Detail = null;
-        imgDescPic.setVisibility(View.GONE);
-        imgDeleteDescPic.setVisibility(View.GONE);
+    private void deleteDescOnePic() {
+        detailOnePicLists = null;
+        base64DetailOne = null;
+        imgDescOnePic.setVisibility(View.GONE);
+        imgDeleteDescOnePic.setVisibility(View.GONE);
+    }
+
+
+    private void deleteDescTwoPic() {
+        detailTwoPicLists = null;
+        base64DetailTwo = null;
+        imgDescTwoPic.setVisibility(View.GONE);
+        imgDeleteDescTwoPic.setVisibility(View.GONE);
+    }
+
+    private void deleteDescFourPic() {
+        detailThreePicLists = null;
+        base64DetailThree = null;
+        imgDescThreePic.setVisibility(View.GONE);
+        imgDeleteDescThreePic.setVisibility(View.GONE);
+    }
+
+    private void deleteDescFivePic() {
+        detailFourPicLists = null;
+        base64DetailFour = null;
+        imgDescFourPic.setVisibility(View.GONE);
+        imgDeleteDescFourPic.setVisibility(View.GONE);
     }
 
     private void deleteGoodsPic() {
@@ -306,9 +410,9 @@ public class ValuationActivity extends BaseActivity {
             base64Lists.add(base64Main);
             nameLists.add(mainPicLists.get(0).name);
         }
-        if (base64Detail != null) {
-            base64Lists.add(base64Detail);
-            nameLists.add(detailPicLists.get(0).name);
+        if (base64DetailOne != null) {
+            base64Lists.add(base64DetailOne);
+            nameLists.add(detailOnePicLists.get(0).name);
         }
         if (base64Goods != null) {
             base64Lists.add(base64Goods);
