@@ -114,6 +114,15 @@ public class ValuationActivity extends BaseActivity {
     @BindView(R.id.imgDeleteGoodsPic)
     ImageView imgDeleteGoodsPic;
 
+    @BindView(R.id.rlDescTwo)
+    RelativeLayout rlDescTwo;
+    @BindView(R.id.rlDescThree)
+    RelativeLayout rlDescThree;
+    @BindView(R.id.rlDescFour)
+    RelativeLayout rlDescFour;
+    @BindView(R.id.rlGoods)
+    RelativeLayout rlGoods;
+
     @BindView(R.id.tvCommit)
     TextView tvCommit;
 
@@ -298,20 +307,22 @@ public class ValuationActivity extends BaseActivity {
                         ImageItem imageItem = detailOnePicLists.get(0);
                         int index = imageItem.path.lastIndexOf("/");
                         imageItem.name = imageItem.path.substring(index + 1, imageItem.path.length());
-                        base64DetailTwo = FileUtils.imgToBase64(detailOnePicLists.get(0).path);
+                        base64DetailOne = FileUtils.imgToBase64(detailOnePicLists.get(0).path);
                         imgDescOnePic.setVisibility(View.VISIBLE);
                         imgDeleteDescOnePic.setVisibility(View.VISIBLE);
                         GlideUtils.loadImage(ValuationActivity.this, detailOnePicLists.get(0).path, imgDescOnePic);
-                    }else if (requestCode == REQUEST_CODE_SELECT_DETAIL_TWO_PIC) {
+                        rlDescTwo.setVisibility(View.VISIBLE);
+                    } else if (requestCode == REQUEST_CODE_SELECT_DETAIL_TWO_PIC) {
                         detailTwoPicLists = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
                         ImageItem imageItem = detailTwoPicLists.get(0);
                         int index = imageItem.path.lastIndexOf("/");
                         imageItem.name = imageItem.path.substring(index + 1, imageItem.path.length());
                         base64DetailTwo = FileUtils.imgToBase64(detailTwoPicLists.get(0).path);
                         imgDescTwoPic.setVisibility(View.VISIBLE);
-                        imgDeleteDescOnePic.setVisibility(View.VISIBLE);
+                        imgDeleteDescTwoPic.setVisibility(View.VISIBLE);
                         GlideUtils.loadImage(ValuationActivity.this, detailTwoPicLists.get(0).path, imgDescTwoPic);
-                    }else if (requestCode == REQUEST_CODE_SELECT_DETAIL_THREE_PIC) {
+                        rlDescThree.setVisibility(View.VISIBLE);
+                    } else if (requestCode == REQUEST_CODE_SELECT_DETAIL_THREE_PIC) {
                         detailThreePicLists = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
                         ImageItem imageItem = detailThreePicLists.get(0);
                         int index = imageItem.path.lastIndexOf("/");
@@ -320,7 +331,8 @@ public class ValuationActivity extends BaseActivity {
                         imgDescThreePic.setVisibility(View.VISIBLE);
                         imgDeleteDescThreePic.setVisibility(View.VISIBLE);
                         GlideUtils.loadImage(ValuationActivity.this, detailThreePicLists.get(0).path, imgDescThreePic);
-                    }else if (requestCode == REQUEST_CODE_SELECT_DETAIL_FOUR_PIC) {
+                        rlDescFour.setVisibility(View.VISIBLE);
+                    } else if (requestCode == REQUEST_CODE_SELECT_DETAIL_FOUR_PIC) {
                         detailFourPicLists = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
                         ImageItem imageItem = detailFourPicLists.get(0);
                         int index = imageItem.path.lastIndexOf("/");
@@ -329,6 +341,7 @@ public class ValuationActivity extends BaseActivity {
                         imgDescFourPic.setVisibility(View.VISIBLE);
                         imgDeleteDescFourPic.setVisibility(View.VISIBLE);
                         GlideUtils.loadImage(ValuationActivity.this, detailFourPicLists.get(0).path, imgDescFourPic);
+                        rlGoods.setVisibility(View.VISIBLE);
                     } else if (requestCode == REQUEST_CODE_SELECT_GOODS_PIC) {
                         goodsPicLists = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
                         ImageItem imageItem = goodsPicLists.get(0);
@@ -396,6 +409,8 @@ public class ValuationActivity extends BaseActivity {
             ToastUtils.showShort("请填写品牌产地");
         } else if (TextUtils.isEmpty(etSeries.getText().toString().trim())) {
             ToastUtils.showShort("请填写所属系列");
+        } else if (base64Main == null || base64DetailOne == null || base64DetailTwo == null || base64DetailThree == null || base64DetailFour == null) {
+            ToastUtils.showShort("请上传图片");
         } else {
             uploadImageNew();
         }
@@ -414,12 +429,24 @@ public class ValuationActivity extends BaseActivity {
             base64Lists.add(base64DetailOne);
             nameLists.add(detailOnePicLists.get(0).name);
         }
+        if (base64DetailTwo != null) {
+            base64Lists.add(base64DetailTwo);
+            nameLists.add(detailTwoPicLists.get(0).name);
+        }
+        if (base64DetailThree != null) {
+            base64Lists.add(base64DetailThree);
+            nameLists.add(detailThreePicLists.get(0).name);
+        }
+        if (base64DetailFour != null) {
+            base64Lists.add(base64DetailFour);
+            nameLists.add(detailFourPicLists.get(0).name);
+        }
         if (base64Goods != null) {
             base64Lists.add(base64Goods);
             nameLists.add(goodsPicLists.get(0).name);
         }
         for (int i = 0; i < base64Lists.size(); i++) {
-            disposable.add(ApiUtils.getInstance().userUploadImage(base64Lists.get(i), nameLists.get(i),"rate")
+            disposable.add(ApiUtils.getInstance().userUploadImage(base64Lists.get(i), nameLists.get(i), "rate")
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Consumer<ResultBean<UploadImageBean>>() {

@@ -87,7 +87,6 @@ public class AddGoodsActivity extends BaseActivity {
     EditText etCount;
 
 
-
     @BindView(R.id.llMainPic)
     LinearLayout llMainPic;
     @BindView(R.id.llDescOnePic)
@@ -140,8 +139,14 @@ public class AddGoodsActivity extends BaseActivity {
     @BindView(R.id.imgDeleteGoodsPic)
     ImageView imgDeleteGoodsPic;
 
-
-
+    @BindView(R.id.rlDescTwo)
+    RelativeLayout rlDescTwo;
+    @BindView(R.id.rlDescThree)
+    RelativeLayout rlDescThree;
+    @BindView(R.id.rlDescFour)
+    RelativeLayout rlDescFour;
+    @BindView(R.id.rlGoods)
+    RelativeLayout rlGoods;
 
     @BindView(R.id.etGoodsDesc)
     EditText etGoodsDesc;
@@ -252,7 +257,6 @@ public class AddGoodsActivity extends BaseActivity {
             }
         }
     };
-
 
 
     @Override
@@ -485,7 +489,7 @@ public class AddGoodsActivity extends BaseActivity {
             ToastUtils.showShort("请填写库存");
         } else if (TextUtils.isEmpty(etSize.getText().toString().trim())) {
             ToastUtils.showShort("请填写容量");
-        } else if (mainPicLists == null && detailOnePicLists == null ) {
+        } else if (mainPicLists == null && detailOnePicLists == null) {
             ToastUtils.showShort("请添加图片");
         } else {
             uploadImageNew();
@@ -651,16 +655,18 @@ public class AddGoodsActivity extends BaseActivity {
                         imgDescOnePic.setVisibility(View.VISIBLE);
                         imgDeleteDescOnePic.setVisibility(View.VISIBLE);
                         GlideUtils.loadImage(AddGoodsActivity.this, detailOnePicLists.get(0).path, imgDescOnePic);
-                    }else if (requestCode == REQUEST_CODE_SELECT_DETAIL_TWO_PIC) {
+                        rlDescTwo.setVisibility(View.VISIBLE);
+                    } else if (requestCode == REQUEST_CODE_SELECT_DETAIL_TWO_PIC) {
                         detailTwoPicLists = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
                         ImageItem imageItem = detailTwoPicLists.get(0);
                         int index = imageItem.path.lastIndexOf("/");
                         imageItem.name = imageItem.path.substring(index + 1, imageItem.path.length());
                         base64DetailTwo = FileUtils.imgToBase64(detailTwoPicLists.get(0).path);
                         imgDescTwoPic.setVisibility(View.VISIBLE);
-                        imgDeleteDescOnePic.setVisibility(View.VISIBLE);
+                        imgDeleteDescTwoPic.setVisibility(View.VISIBLE);
                         GlideUtils.loadImage(AddGoodsActivity.this, detailTwoPicLists.get(0).path, imgDescTwoPic);
-                    }else if (requestCode == REQUEST_CODE_SELECT_DETAIL_THREE_PIC) {
+                        rlDescThree.setVisibility(View.VISIBLE);
+                    } else if (requestCode == REQUEST_CODE_SELECT_DETAIL_THREE_PIC) {
                         detailThreePicLists = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
                         ImageItem imageItem = detailThreePicLists.get(0);
                         int index = imageItem.path.lastIndexOf("/");
@@ -669,7 +675,8 @@ public class AddGoodsActivity extends BaseActivity {
                         imgDescThreePic.setVisibility(View.VISIBLE);
                         imgDeleteDescThreePic.setVisibility(View.VISIBLE);
                         GlideUtils.loadImage(AddGoodsActivity.this, detailThreePicLists.get(0).path, imgDescThreePic);
-                    }else if (requestCode == REQUEST_CODE_SELECT_DETAIL_FOUR_PIC) {
+                        rlDescFour.setVisibility(View.VISIBLE);
+                    } else if (requestCode == REQUEST_CODE_SELECT_DETAIL_FOUR_PIC) {
                         detailFourPicLists = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
                         ImageItem imageItem = detailFourPicLists.get(0);
                         int index = imageItem.path.lastIndexOf("/");
@@ -678,6 +685,7 @@ public class AddGoodsActivity extends BaseActivity {
                         imgDescFourPic.setVisibility(View.VISIBLE);
                         imgDeleteDescFourPic.setVisibility(View.VISIBLE);
                         GlideUtils.loadImage(AddGoodsActivity.this, detailFourPicLists.get(0).path, imgDescFourPic);
+                        rlGoods.setVisibility(View.VISIBLE);
                     } else if (requestCode == REQUEST_CODE_SELECT_GOODS_PIC) {
                         goodsPicLists = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
                         ImageItem imageItem = goodsPicLists.get(0);
