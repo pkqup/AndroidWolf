@@ -1081,6 +1081,7 @@
                         android:layout_height="36dp">
 
                         <RelativeLayout
+                            android:visibility="gone"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="1">
@@ -1111,12 +1112,47 @@
                                 android:layout_alignParentBottom="true"
                                 android:layout_marginBottom="8dp"
                                 android:background="@color/line" />
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="36dp"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentStart="true"
+                                android:layout_alignParentTop="true"
+                                android:visibility="gone">
+
+                                <TextView
+                                    android:id="@+id/tvArea"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="产地："
+                                    android:textColor="@color/t_black"
+                                    android:textSize="@dimen/sp_small" />
+
+                                <EditText
+                                    android:id="@+id/etArea"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_toRightOf="@id/tvArea"
+                                    android:background="@null"
+                                    android:gravity="start"
+                                    android:hint=""
+                                    android:textColor="@color/t_black"
+                                    android:textSize="@dimen/sp_small" />
+
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="1px"
+                                    android:layout_alignParentBottom="true"
+                                    android:layout_marginBottom="8dp"
+                                    android:layout_marginRight="10dp"
+                                    android:background="@color/line" />
+                            </RelativeLayout>
                         </RelativeLayout>
 
                         <RelativeLayout
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_marginLeft="8dp"
                             android:layout_weight="1">
 
                             <TextView
@@ -1272,6 +1308,7 @@
 
                         <RelativeLayout
                             android:layout_width="0dp"
+                            android:visibility="gone"
                             android:layout_height="match_parent"
                             android:layout_marginLeft="8dp"
                             android:layout_weight="1">
@@ -1318,39 +1355,6 @@
                                 android:background="@color/line" />
                         </RelativeLayout>
                     </LinearLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="36dp"
-                        android:layout_marginBottom="15dp">
-
-                        <TextView
-                            android:id="@+id/tvArea"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="产地："
-                            android:textColor="@color/t_black"
-                            android:textSize="@dimen/sp_small" />
-
-                        <EditText
-                            android:id="@+id/etArea"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_toRightOf="@id/tvArea"
-                            android:background="@null"
-                            android:gravity="start"
-                            android:hint=""
-                            android:textColor="@color/t_black"
-                            android:textSize="@dimen/sp_small" />
-
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1px"
-                            android:layout_alignParentBottom="true"
-                            android:layout_marginBottom="8dp"
-                            android:layout_marginRight="10dp"
-                            android:background="@color/line" />
-                    </RelativeLayout>
 
                 </LinearLayout>
 

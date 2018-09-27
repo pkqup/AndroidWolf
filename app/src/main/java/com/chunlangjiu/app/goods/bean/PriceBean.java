@@ -6,6 +6,12 @@ package com.chunlangjiu.app.goods.bean;
  */
 public class PriceBean {
 
+    public PriceBean(String priceId,String minPrice,String maxPrice){
+        this.priceId = priceId;
+        this.minPrice = minPrice;
+        this.maxPrice = maxPrice;
+    }
+
     private String priceId;
     private String minPrice;
     private String maxPrice;

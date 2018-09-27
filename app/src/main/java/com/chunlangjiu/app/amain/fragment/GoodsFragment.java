@@ -28,13 +28,24 @@ import com.chunlangjiu.app.amain.bean.ThirdClassBean;
 import com.chunlangjiu.app.goods.activity.GoodsDetailsActivity;
 import com.chunlangjiu.app.goods.activity.GoodsListActivity;
 import com.chunlangjiu.app.goods.activity.SearchActivity;
+import com.chunlangjiu.app.goods.bean.AlcListBean;
+import com.chunlangjiu.app.goods.bean.AreaListBean;
+import com.chunlangjiu.app.goods.bean.BrandsListBean;
 import com.chunlangjiu.app.goods.bean.GoodsListBean;
 import com.chunlangjiu.app.goods.bean.GoodsListDetailBean;
+import com.chunlangjiu.app.goods.bean.OrdoListBean;
+import com.chunlangjiu.app.goods.bean.PriceBean;
 import com.chunlangjiu.app.net.ApiUtils;
+import com.chunlangjiu.app.user.dialog.ChoiceAlcPopWindow;
+import com.chunlangjiu.app.user.dialog.ChoiceAreaPopWindow;
+import com.chunlangjiu.app.user.dialog.ChoiceBrandPopWindow;
+import com.chunlangjiu.app.user.dialog.ChoiceOrdoPopWindow;
+import com.chunlangjiu.app.user.dialog.ChoicePricePopWindow;
 import com.pkqup.commonlibrary.glide.GlideUtils;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.pkqup.commonlibrary.util.KeyBoardUtils;
 import com.pkqup.commonlibrary.util.SizeUtils;
+import com.pkqup.commonlibrary.util.ToastUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -93,6 +104,28 @@ public class GoodsFragment extends BaseFragment {
 
     private CompositeDisposable disposable;
 
+    //品牌列表
+    private ChoiceBrandPopWindow choiceBrandPopWindow;
+    private List<BrandsListBean.BrandBean> brandLists = new ArrayList<>();
+
+    //产地列表
+    private ChoiceAreaPopWindow choiceAreaPopWindow;
+    private List<AreaListBean.AreaBean> areaLists = new ArrayList<>();
+
+    //香型列表
+    private ChoiceOrdoPopWindow choiceOrdoPopWindow;
+    private List<OrdoListBean.OrdoBean> ordoLists = new ArrayList<>();
+
+    //酒精度列表
+    private ChoiceAlcPopWindow choiceAlcPopWindow;
+    private List<AlcListBean.AlcBean> alcLists = new ArrayList<>();
+
+    //价格列表
+    private ChoicePricePopWindow choicePricePopWindow;
+    private List<PriceBean> priceLists;
+    private String priceId = "";
+
+
     public static GoodsFragment newInstance(String searchKey, boolean isActivity, String brandId, String brandName) {
         Bundle bundle = new Bundle();
         bundle.putString("searchKey", searchKey);
@@ -119,14 +152,19 @@ public class GoodsFragment extends BaseFragment {
                     changeListType();
                     break;
                 case R.id.rlBrand:
+                    showBrandPopWindow();
                     break;
                 case R.id.rlArea:
+                    showAreaPopWindow();
                     break;
                 case R.id.rlIncense:
+                    showIncensePopWindow();
                     break;
                 case R.id.rlAlc:
+                    showDegreePopWindow();
                     break;
                 case R.id.rlPrice:
+                    showPricePopWindow();
                     break;
             }
         }
@@ -267,8 +305,86 @@ public class GoodsFragment extends BaseFragment {
 
     @Override
     public void initData() {
+        initPriceLists();
         getClassData();
+        getBrandLists();
+        getAreaLists();
+        getInsenceLists();
+        getAlcLists();
         getGoodsList(pageNum, true);
+    }
+
+    private void initPriceLists() {
+        priceLists = new ArrayList<>();
+        priceLists.add(new PriceBean("1", "", "999"));
+        priceLists.add(new PriceBean("2", "1000", "2999"));
+        priceLists.add(new PriceBean("3", "3000", "4999"));
+        priceLists.add(new PriceBean("4", "5000", "99999"));
+        priceLists.add(new PriceBean("5", "10000", ""));
+    }
+
+    private void getBrandLists() {
+        disposable.add(ApiUtils.getInstance().getUserBrandList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<BrandsListBean>>() {
+                    @Override
+                    public void accept(ResultBean<BrandsListBean> brandsListBeanResultBean) throws Exception {
+                        brandLists = brandsListBeanResultBean.getData().getBrands();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                }));
+    }
+
+    private void getAreaLists() {
+        disposable.add(ApiUtils.getInstance().getUserAreaList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<AreaListBean>>() {
+                    @Override
+                    public void accept(ResultBean<AreaListBean> areaListBeanResultBean) throws Exception {
+                        areaLists = areaListBeanResultBean.getData().getList();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                }));
+    }
+
+    private void getInsenceLists() {
+        disposable.add(ApiUtils.getInstance().getUserOrdoList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<OrdoListBean>>() {
+                    @Override
+                    public void accept(ResultBean<OrdoListBean> ordoListBeanResultBean) throws Exception {
+                        ordoLists = ordoListBeanResultBean.getData().getList();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                }));
+    }
+
+    private void getAlcLists() {
+        disposable.add(ApiUtils.getInstance().getUserAlcList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<AlcListBean>>() {
+                    @Override
+                    public void accept(ResultBean<AlcListBean> alcListBeanResultBean) throws Exception {
+                        alcLists = alcListBeanResultBean.getData().getList();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                }));
     }
 
     private void getClassData() {
@@ -383,6 +499,95 @@ public class GoodsFragment extends BaseFragment {
             } else {
                 linearAdapter.setNewData(lists);
             }
+        }
+    }
+
+    private void showBrandPopWindow() {
+        if (brandLists == null || brandLists.size() == 0) {
+            ToastUtils.showShort("暂无品牌");
+        } else {
+            if (choiceBrandPopWindow == null) {
+                choiceBrandPopWindow = new ChoiceBrandPopWindow(getActivity(), brandLists, brandId);
+                choiceBrandPopWindow.setCallBack(new ChoiceBrandPopWindow.CallBack() {
+                    @Override
+                    public void choiceBrand(String brandName, String brandIdC) {
+                        brandId = brandIdC;
+                    }
+                });
+            }
+            choiceBrandPopWindow.showAsDropDown(rlBrand, 0, 1);
+        }
+    }
+
+
+    private void showAreaPopWindow() {
+        if (areaLists == null || areaLists.size() == 0) {
+            ToastUtils.showShort("暂无产地");
+        } else {
+            if (choiceAreaPopWindow == null) {
+                choiceAreaPopWindow = new ChoiceAreaPopWindow(getActivity(), areaLists, areaId);
+                choiceAreaPopWindow.setCallBack(new ChoiceAreaPopWindow.CallBack() {
+                    @Override
+                    public void choiceBrand(String brandName, String brandId) {
+                        areaId = brandId;
+                    }
+                });
+            }
+            choiceAreaPopWindow.showAsDropDown(rlBrand, 0, 1);
+        }
+    }
+
+    private void showIncensePopWindow() {
+        if (ordoLists == null || ordoLists.size() == 0) {
+            ToastUtils.showShort("暂无香型");
+        } else {
+            if (choiceOrdoPopWindow == null) {
+                choiceOrdoPopWindow = new ChoiceOrdoPopWindow(getActivity(), ordoLists, ordoId);
+                choiceOrdoPopWindow.setCallBack(new ChoiceOrdoPopWindow.CallBack() {
+                    @Override
+                    public void choiceBrand(String brandName, String brandId) {
+                        tvIncense.setText(brandName);
+                        ordoId = brandId;
+                    }
+                });
+            }
+            choiceOrdoPopWindow.showAsDropDown(rlBrand, 0, 1);
+        }
+    }
+
+    private void showDegreePopWindow() {
+        if (alcLists == null || alcLists.size() == 0) {
+            ToastUtils.showShort("暂无酒精度");
+        } else {
+            if (choiceAlcPopWindow == null) {
+                choiceAlcPopWindow = new ChoiceAlcPopWindow(getActivity(), alcLists, alcoholId);
+                choiceAlcPopWindow.setCallBack(new ChoiceAlcPopWindow.CallBack() {
+                    @Override
+                    public void choiceBrand(String brandName, String brandId) {
+                        alcoholId = brandId;
+                    }
+                });
+            }
+            choiceAlcPopWindow.showAsDropDown(rlBrand, 0, 1);
+        }
+    }
+
+    private void showPricePopWindow() {
+        if (priceLists == null || priceLists.size() == 0) {
+            ToastUtils.showShort("暂无价格区间");
+        } else {
+            if (choicePricePopWindow == null) {
+                choicePricePopWindow = new ChoicePricePopWindow(getActivity(), priceLists, priceId);
+                choicePricePopWindow.setCallBack(new ChoicePricePopWindow.CallBack() {
+                    @Override
+                    public void choicePrice(String minPriceC, String maxPriceC, String id) {
+                        minPrice = minPriceC;
+                        maxPrice = maxPriceC;
+                        priceId = id;
+                    }
+                });
+            }
+            choicePricePopWindow.showAsDropDown(rlBrand, 0, 1);
         }
     }
 

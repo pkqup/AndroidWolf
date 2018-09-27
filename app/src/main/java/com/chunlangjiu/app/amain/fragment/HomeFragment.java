@@ -589,8 +589,7 @@ public class HomeFragment extends BaseFragment {
 
     private void checkStatus() {
         if (BaseApplication.isLogin()) {
-            startActivity(new Intent(getActivity(), AddGoodsActivity.class));
-            /*showLoadingDialog();
+            showLoadingDialog();
             Observable<ResultBean<AuthStatusBean>> personAuthStatus = ApiUtils.getInstance().getPersonAuthStatus();
             Observable<ResultBean<AuthStatusBean>> companyAuthStatus = ApiUtils.getInstance().getCompanyAuthStatus();
             disposable.add(Observable.zip(personAuthStatus, companyAuthStatus, new BiFunction<ResultBean<AuthStatusBean>, ResultBean<AuthStatusBean>, List<AuthStatusBean>>() {
@@ -618,7 +617,7 @@ public class HomeFragment extends BaseFragment {
                         public void accept(Throwable throwable) throws Exception {
                             hideLoadingDialog();
                         }
-                    }));*/
+                    }));
         } else {
             startActivity(new Intent(getActivity(), LoginActivity.class));
         }

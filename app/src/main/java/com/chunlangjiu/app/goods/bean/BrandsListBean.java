@@ -8,14 +8,14 @@ import java.util.List;
  */
 public class BrandsListBean {
 
-    private List<BrandBean> list;
+    private List<BrandBean> brands;
 
-    public List<BrandBean> getList() {
-        return list;
+    public List<BrandBean> getBrands() {
+        return brands;
     }
 
-    public void setList(List<BrandBean> list) {
-        this.list = list;
+    public void setBrands(List<BrandBean> brands) {
+        this.brands = brands;
     }
 
     public class BrandBean{

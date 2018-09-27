@@ -14,15 +14,21 @@ import android.widget.TextView;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
 import com.chunlangjiu.app.amain.bean.FirstClassBean;
-import com.chunlangjiu.app.goods.dialog.ClassPopWindow;
+import com.chunlangjiu.app.amain.bean.SecondClassBean;
+import com.chunlangjiu.app.amain.bean.ThirdClassBean;
+import com.chunlangjiu.app.goods.bean.AlcListBean;
+import com.chunlangjiu.app.goods.bean.AreaListBean;
+import com.chunlangjiu.app.goods.bean.BrandsListBean;
+import com.chunlangjiu.app.goods.bean.OrdoListBean;
 import com.chunlangjiu.app.net.ApiUtils;
 import com.chunlangjiu.app.user.bean.AddGoodsValueBean;
-import com.chunlangjiu.app.user.bean.BrandListBean;
-import com.chunlangjiu.app.user.bean.ShopCatIdList;
 import com.chunlangjiu.app.user.bean.ShopClassList;
 import com.chunlangjiu.app.user.bean.SkuBean;
 import com.chunlangjiu.app.user.bean.UploadImageBean;
-import com.chunlangjiu.app.user.dialog.BrandPopWindow;
+import com.chunlangjiu.app.user.dialog.ChoiceAlcPopWindow;
+import com.chunlangjiu.app.user.dialog.ChoiceAreaPopWindow;
+import com.chunlangjiu.app.user.dialog.ChoiceBrandPopWindow;
+import com.chunlangjiu.app.user.dialog.ChoiceOrdoPopWindow;
 import com.chunlangjiu.app.user.dialog.ShopClassPopWindow;
 import com.chunlangjiu.app.util.GlideImageLoader;
 import com.google.gson.Gson;
@@ -66,6 +72,7 @@ public class AddGoodsActivity extends BaseActivity {
     RelativeLayout rlChoiceClass;
     @BindView(R.id.tvClass)
     TextView tvClass;
+
     @BindView(R.id.rlChoicePlateClass)
     RelativeLayout rlChoicePlateClass;
     @BindView(R.id.tvPlateClass)
@@ -74,6 +81,19 @@ public class AddGoodsActivity extends BaseActivity {
     RelativeLayout rlChoiceBrand;
     @BindView(R.id.tvBrand)
     TextView tvBrand;
+
+    @BindView(R.id.rlChoiceArea)
+    RelativeLayout rlChoiceArea;
+    @BindView(R.id.tvChoiceArea)
+    TextView tvChoiceArea;
+    @BindView(R.id.rlChoiceIncense)
+    RelativeLayout rlChoiceIncense;
+    @BindView(R.id.tvIncense)
+    TextView tvIncense;
+    @BindView(R.id.rlChoiceDegree)
+    RelativeLayout rlChoiceDegree;
+    @BindView(R.id.tvDegree)
+    TextView tvDegree;
 
     @BindView(R.id.etTitle)
     EditText etTitle;
@@ -169,20 +189,30 @@ public class AddGoodsActivity extends BaseActivity {
     @BindView(R.id.tvCommit)
     TextView tvCommit;
 
-    //店铺分类列表
-    private List<ShopCatIdList.Children> shopClassLists;
+    //分类列表
     private ShopClassPopWindow shopPopWindow;
-    private String shopClassId;
-
-    //平台三级分类列表
-    private List<FirstClassBean> categoryLists;
-    private ClassPopWindow classPopWindow;
+    private List<ThirdClassBean> classLists;
     private String classId;
 
     //品牌列表
-    private BrandPopWindow brandPopWindow;
-    private List<BrandListBean.Brand> brandLists;
+    private ChoiceBrandPopWindow choiceBrandPopWindow;
+    private List<BrandsListBean.BrandBean> brandLists = new ArrayList<>();
     private String brandId;
+
+    //产地列表
+    private ChoiceAreaPopWindow choiceAreaPopWindow;
+    private List<AreaListBean.AreaBean> areaLists = new ArrayList<>();
+    private String areaId = "";
+
+    //香型列表
+    private ChoiceOrdoPopWindow choiceOrdoPopWindow;
+    private List<OrdoListBean.OrdoBean> ordoLists = new ArrayList<>();
+    private String ordoId = "";
+
+    //酒精度列表
+    private ChoiceAlcPopWindow choiceAlcPopWindow;
+    private List<AlcListBean.AlcBean> alcLists = new ArrayList<>();
+    private String alcId = "";
 
     private CompositeDisposable disposable;
     private ChoicePhotoDialog photoDialog;
@@ -207,13 +237,22 @@ public class AddGoodsActivity extends BaseActivity {
                     finish();
                     break;
                 case R.id.rlChoiceClass:
-                    showShopClassPopWindow();
+//                    showShopClassPopWindow();
                     break;
                 case R.id.rlChoicePlateClass:
-                    showClassPopWindow();
+                    showShopClassPopWindow();
                     break;
                 case R.id.rlChoiceBrand:
                     showBrandPopWindow();
+                    break;
+                case R.id.rlChoiceArea:
+                    showAreaPopWindow();
+                    break;
+                case R.id.rlChoiceIncense:
+                    showIncensePopWindow();
+                    break;
+                case R.id.rlChoiceDegree:
+                    showDegreePopWindow();
                     break;
                 case R.id.rlMainPic:
                     showPhotoDialog(REQUEST_CODE_SELECT_MAIN_PIC);
@@ -293,6 +332,9 @@ public class AddGoodsActivity extends BaseActivity {
         rlChoiceClass.setOnClickListener(onClickListener);
         rlChoicePlateClass.setOnClickListener(onClickListener);
         rlChoiceBrand.setOnClickListener(onClickListener);
+        rlChoiceArea.setOnClickListener(onClickListener);
+        rlChoiceIncense.setOnClickListener(onClickListener);
+        rlChoiceDegree.setOnClickListener(onClickListener);
 
         rlMainPic.setOnClickListener(onClickListener);
         rlDescOnePic.setOnClickListener(onClickListener);
@@ -309,6 +351,8 @@ public class AddGoodsActivity extends BaseActivity {
         imgDeleteGoodsPic.setOnClickListener(onClickListener);
 
         tvCommit.setOnClickListener(onClickListener);
+
+        classLists = new ArrayList<>();
     }
 
     private void initImagePicker() {
@@ -328,28 +372,6 @@ public class AddGoodsActivity extends BaseActivity {
 
 
     private void initData() {
-        //获取店铺分类
-        disposable.add(ApiUtils.getInstance().getStoreClassList()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<ResultBean<ShopCatIdList>>() {
-                    @Override
-                    public void accept(ResultBean<ShopCatIdList> shopCatIdListResultBean) throws Exception {
-                        List<ShopCatIdList.Category> category = shopCatIdListResultBean.getData().getCategory();
-                        shopClassLists = new ArrayList<>();
-                        for (int i = 0; i < category.size(); i++) {
-                            List<ShopCatIdList.Children> children = category.get(i).getChildren();
-                            shopClassLists.addAll(children);
-                        }
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-
-                    }
-                }));
-
-
         //获取平台分类
         disposable.add(ApiUtils.getInstance().getShopClassList()
                 .subscribeOn(Schedulers.io())
@@ -357,7 +379,14 @@ public class AddGoodsActivity extends BaseActivity {
                 .subscribe(new Consumer<ResultBean<ShopClassList>>() {
                     @Override
                     public void accept(ResultBean<ShopClassList> mainClassBeanResultBean) throws Exception {
-                        categoryLists = mainClassBeanResultBean.getData().getCategory();
+                        List<FirstClassBean> categorys = mainClassBeanResultBean.getData().getCategory();
+                        for (int i = 0; i < categorys.size(); i++) {
+                            List<SecondClassBean> lv2 = categorys.get(i).getLv2();
+                            for (int j = 0; j < lv2.size(); j++) {
+                                List<ThirdClassBean> lv3 = lv2.get(j).getLv3();
+                                classLists.addAll(lv3);
+                            }
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -369,51 +398,84 @@ public class AddGoodsActivity extends BaseActivity {
 
 
     private void showShopClassPopWindow() {
-        if (shopClassLists == null || shopClassLists.size() == 0) {
+        if (classLists == null || classLists.size() == 0) {
             ToastUtils.showShort("暂无分类");
         } else {
             if (shopPopWindow == null) {
-                shopPopWindow = new ShopClassPopWindow(this, shopClassLists, shopClassId);
+                shopPopWindow = new ShopClassPopWindow(this, classLists, classId);
                 shopPopWindow.setCallBack(new ShopClassPopWindow.CallBack() {
                     @Override
-                    public void choiceBrand(String brandName, String brandId) {
-                        shopClassId = brandId;
-                        tvClass.setText(brandName);
-                    }
-                });
-            }
-            shopPopWindow.showAsDropDown(rlChoiceClass, 0, 1);
-        }
-    }
-
-
-    private void showClassPopWindow() {
-        if (categoryLists == null || categoryLists.size() == 0) {
-            ToastUtils.showShort("暂无平台分类");
-        } else {
-            if (classPopWindow == null) {
-                classPopWindow = new ClassPopWindow(this, categoryLists, classId);
-                classPopWindow.setCallBack(new ClassPopWindow.CallBack() {
-                    @Override
-                    public void choiceClass(String name, String id) {
-                        classId = id;
-                        tvPlateClass.setText(name);
+                    public void choiceClassId(String className, String classIdChoice) {
+                        classId = classIdChoice;
+                        tvPlateClass.setText(className);
                         getBrandLists();
+                        getAreaLists();
+                        getInsenceLists();
+                        getAlcLists();
                     }
                 });
             }
-            classPopWindow.showAsDropDown(rlChoiceClass, 0, 1);
+            shopPopWindow.showAsDropDown(rlChoicePlateClass, 0, 1);
         }
     }
+
 
     private void getBrandLists() {
-        disposable.add(ApiUtils.getInstance().getShopBrandList(classId)
+        disposable.add(ApiUtils.getInstance().getAddShopBrandList(classId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<ResultBean<BrandListBean>>() {
+                .subscribe(new Consumer<ResultBean<BrandsListBean>>() {
                     @Override
-                    public void accept(ResultBean<BrandListBean> brandListBeanResultBean) throws Exception {
-                        brandLists = brandListBeanResultBean.getData().getBrands();
+                    public void accept(ResultBean<BrandsListBean> brandsListBeanResultBean) throws Exception {
+                        brandLists = brandsListBeanResultBean.getData().getBrands();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                }));
+    }
+
+    private void getAreaLists() {
+        disposable.add(ApiUtils.getInstance().getShopAreaList(classId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<AreaListBean>>() {
+                    @Override
+                    public void accept(ResultBean<AreaListBean> areaListBeanResultBean) throws Exception {
+                        areaLists = areaListBeanResultBean.getData().getList();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                }));
+    }
+
+    private void getInsenceLists() {
+        disposable.add(ApiUtils.getInstance().getShopOrdoList(classId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<OrdoListBean>>() {
+                    @Override
+                    public void accept(ResultBean<OrdoListBean> ordoListBeanResultBean) throws Exception {
+                        ordoLists = ordoListBeanResultBean.getData().getList();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                }));
+    }
+
+    private void getAlcLists() {
+        disposable.add(ApiUtils.getInstance().getShopAlcList(classId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<AlcListBean>>() {
+                    @Override
+                    public void accept(ResultBean<AlcListBean> alcListBeanResultBean) throws Exception {
+                        alcLists = alcListBeanResultBean.getData().getList();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -429,18 +491,85 @@ public class AddGoodsActivity extends BaseActivity {
             if (brandLists == null || brandLists.size() == 0) {
                 ToastUtils.showShort("暂无品牌");
             } else {
-                if (brandPopWindow == null) {
-                    brandPopWindow = new BrandPopWindow(this, brandLists, brandId);
-                    brandPopWindow.setCallBack(new BrandPopWindow.CallBack() {
+                if (choiceBrandPopWindow == null) {
+                    choiceBrandPopWindow = new ChoiceBrandPopWindow(this, brandLists, brandId);
+                    choiceBrandPopWindow.setCallBack(new ChoiceBrandPopWindow.CallBack() {
                         @Override
-                        public void choiceBrand(String selectName, String selectId) {
-                            brandId = selectId;
-                            tvBrand.setText(selectName);
+                        public void choiceBrand(String brandName, String brandIdC) {
+                            tvBrand.setText(brandName);
+                            brandId = brandIdC;
                         }
                     });
                 }
-                brandPopWindow.setBrandList(brandLists);
-                brandPopWindow.showAsDropDown(rlChoiceBrand, 0, 1);
+                choiceBrandPopWindow.showAsDropDown(rlChoiceBrand, 0, 1);
+            }
+        }
+    }
+
+
+    private void showAreaPopWindow() {
+        if (TextUtils.isEmpty(classId)) {
+            ToastUtils.showShort("请先选择分类");
+        } else {
+            if (areaLists == null || areaLists.size() == 0) {
+                ToastUtils.showShort("暂无产地");
+            } else {
+                if (choiceAreaPopWindow == null) {
+                    choiceAreaPopWindow = new ChoiceAreaPopWindow(this, areaLists, areaId);
+                    choiceAreaPopWindow.setCallBack(new ChoiceAreaPopWindow.CallBack() {
+                        @Override
+                        public void choiceBrand(String brandName, String brandId) {
+                            tvChoiceArea.setText(brandName);
+                            areaId = brandId;
+                        }
+                    });
+                }
+                choiceAreaPopWindow.showAsDropDown(rlChoiceArea, 0, 1);
+            }
+        }
+    }
+
+    private void showIncensePopWindow() {
+        if (TextUtils.isEmpty(classId)) {
+            ToastUtils.showShort("请先选择分类");
+        } else {
+            if (ordoLists == null || ordoLists.size() == 0) {
+                ToastUtils.showShort("暂无香型");
+            } else {
+                if (choiceOrdoPopWindow == null) {
+                    choiceOrdoPopWindow = new ChoiceOrdoPopWindow(this, ordoLists, ordoId);
+                    choiceOrdoPopWindow.setCallBack(new ChoiceOrdoPopWindow.CallBack() {
+                        @Override
+                        public void choiceBrand(String brandName, String brandId) {
+                            tvIncense.setText(brandName);
+                            ordoId = brandId;
+                        }
+                    });
+                }
+                choiceOrdoPopWindow.showAsDropDown(rlChoiceDegree, 0, 1);
+            }
+        }
+
+    }
+
+    private void showDegreePopWindow() {
+        if (TextUtils.isEmpty(classId)) {
+            ToastUtils.showShort("请先选择分类");
+        } else {
+            if (alcLists == null || alcLists.size() == 0) {
+                ToastUtils.showShort("暂无酒精度");
+            } else {
+                if (choiceAlcPopWindow == null) {
+                    choiceAlcPopWindow = new ChoiceAlcPopWindow(this, alcLists, alcId);
+                    choiceAlcPopWindow.setCallBack(new ChoiceAlcPopWindow.CallBack() {
+                        @Override
+                        public void choiceBrand(String brandName, String brandId) {
+                            tvDegree.setText(brandName);
+                            alcId = brandId;
+                        }
+                    });
+                }
+                choiceAlcPopWindow.showAsDropDown(rlChoiceIncense, 0, 1);
             }
         }
     }
@@ -489,7 +618,7 @@ public class AddGoodsActivity extends BaseActivity {
             ToastUtils.showShort("请填写库存");
         } else if (TextUtils.isEmpty(etSize.getText().toString().trim())) {
             ToastUtils.showShort("请填写容量");
-        } else if (mainPicLists == null && detailOnePicLists == null) {
+        } else if (mainPicLists == null || detailOnePicLists == null || detailTwoPicLists == null || detailThreePicLists == null || detailFourPicLists == null) {
             ToastUtils.showShort("请添加图片");
         } else {
             uploadImageNew();
@@ -508,6 +637,18 @@ public class AddGoodsActivity extends BaseActivity {
         if (base64DetailOne != null) {
             base64Lists.add(base64DetailOne);
             nameLists.add(detailOnePicLists.get(0).name);
+        }
+        if (base64DetailTwo != null) {
+            base64Lists.add(base64DetailTwo);
+            nameLists.add(detailTwoPicLists.get(0).name);
+        }
+        if (base64DetailThree != null) {
+            base64Lists.add(base64DetailThree);
+            nameLists.add(detailThreePicLists.get(0).name);
+        }
+        if (base64DetailFour != null) {
+            base64Lists.add(base64DetailFour);
+            nameLists.add(detailFourPicLists.get(0).name);
         }
         if (base64Goods != null) {
             base64Lists.add(base64Goods);
@@ -542,51 +683,6 @@ public class AddGoodsActivity extends BaseActivity {
                         }
                     }));
         }
-
-    }
-
-    private void uploadImage() {
-        if (base64Main == null || base64DetailOne == null || base64Goods == null) {
-            ToastUtils.showShort("图片压缩失败，请重新选择图片");
-        } else {
-            showLoadingDialog();
-            Observable<ResultBean<UploadImageBean>> main = ApiUtils.getInstance().shopUploadImage(base64Main, mainPicLists.get(0).name);
-            Observable<ResultBean<UploadImageBean>> detail = ApiUtils.getInstance().shopUploadImage(base64DetailOne, detailOnePicLists.get(0).name);
-            Observable<ResultBean<UploadImageBean>> goods = ApiUtils.getInstance().shopUploadImage(base64Goods, goodsPicLists.get(0).name);
-            disposable.add(Observable.zip(main, detail, goods, new Function3<ResultBean<UploadImageBean>, ResultBean<UploadImageBean>,
-                    ResultBean<UploadImageBean>, List<String>>() {
-                @Override
-                public List<String> apply(ResultBean<UploadImageBean> uploadImageBeanResultBean, ResultBean<UploadImageBean> uploadImageBeanResultBean2,
-                                          ResultBean<UploadImageBean> uploadImageBeanResultBean3) throws Exception {
-                    List<String> imageLists = new ArrayList<>();
-                    imageLists.add(uploadImageBeanResultBean.getData().getUrl());
-                    imageLists.add(uploadImageBeanResultBean2.getData().getUrl());
-                    imageLists.add(uploadImageBeanResultBean3.getData().getUrl());
-                    return imageLists;
-                }
-            }).subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Consumer<List<String>>() {
-                        @Override
-                        public void accept(List<String> strings) throws Exception {
-                            StringBuffer stringBuffer = new StringBuffer();
-                            for (int i = 0; i < strings.size(); i++) {
-                                if (i == strings.size() - 1) {
-                                    stringBuffer.append(strings.get(i));
-                                } else {
-                                    stringBuffer.append(strings.get(i)).append(",");
-                                }
-                            }
-                            commitGoods(stringBuffer.toString());
-                        }
-                    }, new Consumer<Throwable>() {
-                        @Override
-                        public void accept(Throwable throwable) throws Exception {
-                            hideLoadingDialog();
-                            ToastUtils.showShort("上传图片失败");
-                        }
-                    }));
-        }
     }
 
     private void commitGoods(String images) {
@@ -607,10 +703,10 @@ public class AddGoodsActivity extends BaseActivity {
         valueBeanList.add(new AddGoodsValueBean("产地", etArea.getText().toString().trim()));
         String parameter = new Gson().toJson(valueBeanList);
 
-        disposable.add(ApiUtils.getInstance().addGoods(classId, brandId, shopClassId, etTitle.getText().toString().trim(),
+        disposable.add(ApiUtils.getInstance().addGoods(classId, brandId, "", etTitle.getText().toString().trim(),
                 etSecondName.getText().toString().trim(), etSize.getText().toString().trim(), images,
                 etPrice.getText().toString().trim(), "15", skuArray, etTag.getText().toString().trim(),
-                etGoodsDesc.getText().toString().trim(), parameter)
+                etGoodsDesc.getText().toString().trim(), parameter, areaId, ordoId, alcId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean>() {
@@ -651,7 +747,7 @@ public class AddGoodsActivity extends BaseActivity {
                         ImageItem imageItem = detailOnePicLists.get(0);
                         int index = imageItem.path.lastIndexOf("/");
                         imageItem.name = imageItem.path.substring(index + 1, imageItem.path.length());
-                        base64DetailTwo = FileUtils.imgToBase64(detailOnePicLists.get(0).path);
+                        base64DetailOne = FileUtils.imgToBase64(detailOnePicLists.get(0).path);
                         imgDescOnePic.setVisibility(View.VISIBLE);
                         imgDeleteDescOnePic.setVisibility(View.VISIBLE);
                         GlideUtils.loadImage(AddGoodsActivity.this, detailOnePicLists.get(0).path, imgDescOnePic);

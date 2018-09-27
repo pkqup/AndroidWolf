@@ -17,8 +17,7 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chunlangjiu.app.R;
-import com.chunlangjiu.app.user.bean.BrandListBean;
-import com.chunlangjiu.app.user.bean.ShopCatIdList;
+import com.chunlangjiu.app.amain.bean.ThirdClassBean;
 
 import java.util.List;
 
@@ -34,28 +33,28 @@ public class ShopClassPopWindow extends PopupWindow {
 
     private RecyclerView recyclerView;
     private BrandAdapter brandAdapter;
-    private List<ShopCatIdList.Children> brandLists;
+    private List<ThirdClassBean> brandLists;
 
     private CallBack callBack;
-    private String selectBrandId;
+    private String selectClassId;
 
     public void setCallBack(CallBack callBack) {
         this.callBack = callBack;
     }
 
     public interface CallBack {
-        void choiceBrand(String brandName, String brandId);
+        void choiceClassId(String className, String classId);
     }
 
     private void setSelectBrandId(String selectBrandId) {
-        this.selectBrandId = selectBrandId;
+        this.selectClassId = selectBrandId;
     }
 
-    public ShopClassPopWindow(Context context, List<ShopCatIdList.Children> brands, String selectBrandId) {
+    public ShopClassPopWindow(Context context, List<ThirdClassBean> brands, String selectBrandId) {
         super(context);
         this.context = context;
         this.brandLists = brands;
-        this.selectBrandId = selectBrandId;
+        this.selectClassId = selectBrandId;
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mContentView = inflater.inflate(R.layout.popwindow_brand, null);
         setContentView(mContentView);
@@ -91,16 +90,10 @@ public class ShopClassPopWindow extends PopupWindow {
         brandAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                for (int i = 0; i < brandLists.size(); i++) {
-                    if (i == position) {
-                        brandLists.get(position).setSelect(true);
-                    } else {
-                        brandLists.get(position).setSelect(false);
-                    }
-                }
+                selectClassId = brandLists.get(position).getCat_id();
                 brandAdapter.notifyDataSetChanged();
                 if (callBack != null) {
-                    callBack.choiceBrand(brandLists.get(position).getCat_name(), brandLists.get(position).getCat_id());
+                    callBack.choiceClassId(brandLists.get(position).getCat_name(), brandLists.get(position).getCat_id());
                 }
                 dismiss();
             }
@@ -109,25 +102,25 @@ public class ShopClassPopWindow extends PopupWindow {
         recyclerView.setAdapter(brandAdapter);
     }
 
-    public void setBrandList(List<ShopCatIdList.Children> brands) {
+    public void setBrandList(List<ThirdClassBean> brands) {
         this.brandLists = brands;
         brandAdapter.setNewData(brandLists);
     }
 
 
-    public class BrandAdapter extends BaseQuickAdapter<ShopCatIdList.Children, BaseViewHolder> {
+    public class BrandAdapter extends BaseQuickAdapter<ThirdClassBean, BaseViewHolder> {
 
-        public BrandAdapter(int layoutResId, List<ShopCatIdList.Children> data) {
+        public BrandAdapter(int layoutResId, List<ThirdClassBean> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, ShopCatIdList.Children item) {
+        protected void convert(BaseViewHolder helper, ThirdClassBean item) {
             TextView tvName = helper.getView(R.id.tvName);
             tvName.setText(item.getCat_name());
-            if (item.isSelect()) {
+            if(item.getCat_id().equals(selectClassId)){
                 tvName.setSelected(true);
-            } else {
+            }else{
                 tvName.setSelected(false);
             }
         }

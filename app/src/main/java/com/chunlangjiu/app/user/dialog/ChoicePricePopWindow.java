@@ -117,7 +117,15 @@ public class ChoicePricePopWindow extends PopupWindow {
         @Override
         protected void convert(BaseViewHolder helper, PriceBean item) {
             TextView tvName = helper.getView(R.id.tvName);
-            tvName.setText(item.getMinPrice() + "~" + item.getMaxPrice());
+            int adapterPosition = helper.getAdapterPosition();
+            if (adapterPosition == 0) {
+                tvName.setText(item.getMaxPrice() + "以下");
+            } else if (adapterPosition == 4) {
+                tvName.setText(item.getMinPrice() + "以上");
+            } else {
+                tvName.setText(item.getMinPrice() + "-" + item.getMaxPrice());
+            }
+
             if (item.getPriceId().equals(selectBrandId)) {
                 tvName.setSelected(true);
             } else {

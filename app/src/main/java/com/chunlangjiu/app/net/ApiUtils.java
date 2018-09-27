@@ -9,6 +9,7 @@ import com.chunlangjiu.app.amain.bean.LoginBean;
 import com.chunlangjiu.app.amain.bean.MainClassBean;
 import com.chunlangjiu.app.goods.bean.AlcListBean;
 import com.chunlangjiu.app.goods.bean.AreaListBean;
+import com.chunlangjiu.app.goods.bean.BrandsListBean;
 import com.chunlangjiu.app.goods.bean.ConfirmOrderBean;
 import com.chunlangjiu.app.goods.bean.CreateAuctionBean;
 import com.chunlangjiu.app.goods.bean.CreateOrderBean;
@@ -31,7 +32,6 @@ import com.chunlangjiu.app.order.bean.OrderListBean;
 import com.chunlangjiu.app.store.bean.StoreListBean;
 import com.chunlangjiu.app.user.bean.AddressListBean;
 import com.chunlangjiu.app.user.bean.AuthStatusBean;
-import com.chunlangjiu.app.user.bean.BrandListBean;
 import com.chunlangjiu.app.user.bean.MyNumBean;
 import com.chunlangjiu.app.user.bean.ShopCatIdList;
 import com.chunlangjiu.app.user.bean.ShopClassList;
@@ -292,14 +292,12 @@ public class ApiUtils {
         return apiService.getStoreClassList("category.shop.get", "v1");
     }
 
-    public Flowable<ResultBean<BrandListBean>> getShopBrandList(String class_id) {
-        return apiService.getShopBrandList("category.platform.brand.get", "v1", class_id);
-    }
 
     public Observable<ResultBean> addGoods(String cat_id, String brand_id, String shop_cat_id, String title, String sub_title, String weight, String list_image,
-                                           String price, String dlytmpl_id, String sku, String label, String explain, String parameter) {
+                                           String price, String dlytmpl_id, String sku, String label, String explain, String parameter,
+                                           String area_id, String odor_id, String alcohol_id) {
         return apiService.addGoods("item.create", "v1", cat_id, brand_id, shop_cat_id, title, sub_title, weight, list_image,
-                price, dlytmpl_id, sku, label, explain, parameter, "ML", "1");
+                price, dlytmpl_id, sku, label, explain, parameter, "ML", "1",area_id,odor_id,alcohol_id);
     }
 
     public Flowable<ResultBean<OrderListBean>> getOrderLists(String status, int pageNo) {
@@ -391,7 +389,7 @@ public class ApiUtils {
     }
 
 
-    public Flowable<ResultBean<BrandListBean>> getUserBrandList() {
+    public Flowable<ResultBean<BrandsListBean>> getUserBrandList() {
         return apiService.getUserBrandList("category.brand.get", "v1");
     }
 
@@ -407,7 +405,7 @@ public class ApiUtils {
         return apiService.getUserAlcList("category.alcohol.get", "v1");
     }
 
-    public Flowable<ResultBean<BrandListBean>> getAddShopBrandList(String cat_id) {
+    public Flowable<ResultBean<BrandsListBean>> getAddShopBrandList(String cat_id) {
         return apiService.getAddShopBrandList("category.platform.brand.get", "v1", cat_id);
     }
 

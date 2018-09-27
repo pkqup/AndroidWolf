@@ -9,6 +9,7 @@ import com.chunlangjiu.app.amain.bean.LoginBean;
 import com.chunlangjiu.app.amain.bean.MainClassBean;
 import com.chunlangjiu.app.goods.bean.AlcListBean;
 import com.chunlangjiu.app.goods.bean.AreaListBean;
+import com.chunlangjiu.app.goods.bean.BrandsListBean;
 import com.chunlangjiu.app.goods.bean.ConfirmOrderBean;
 import com.chunlangjiu.app.goods.bean.CreateAuctionBean;
 import com.chunlangjiu.app.goods.bean.CreateOrderBean;
@@ -31,7 +32,6 @@ import com.chunlangjiu.app.order.bean.OrderListBean;
 import com.chunlangjiu.app.store.bean.StoreListBean;
 import com.chunlangjiu.app.user.bean.AddressListBean;
 import com.chunlangjiu.app.user.bean.AuthStatusBean;
-import com.chunlangjiu.app.user.bean.BrandListBean;
 import com.chunlangjiu.app.user.bean.MyNumBean;
 import com.chunlangjiu.app.user.bean.ShopCatIdList;
 import com.chunlangjiu.app.user.bean.ShopClassList;
@@ -316,10 +316,6 @@ public interface ApiService {
     @FormUrlEncoded
     Flowable<ResultBean<ShopCatIdList>> getStoreClassList(@Field("method") String method, @Field("v") String v);
 
-    @POST("index.php/shop/topapi")
-    @FormUrlEncoded
-    Flowable<ResultBean<BrandListBean>> getShopBrandList(@Field("method") String method, @Field("v") String v, @Field("cat_id") String cat_id);
-
     //添加商品
     @POST("index.php/shop/topapi")
     @FormUrlEncoded
@@ -330,7 +326,8 @@ public interface ApiService {
                                     @Field("weight") String weight, @Field("list_image") String list_image, @Field("price") String price,
                                     @Field("dlytmpl_id") String dlytmpl_id, @Field("sku") String sku,
                                     @Field("label") String label, @Field("explain") String explain,
-                                    @Field("parameter") String parameter, @Field("unit") String unit, @Field("nospec") String nospec);
+                                    @Field("parameter") String parameter, @Field("unit") String unit, @Field("nospec") String nospec,
+                                    @Field("area_id") String area_id, @Field("odor_id") String odor_id, @Field("alcohol_id") String alcohol_id);
 
     @POST("index.php/topapi")
     @FormUrlEncoded
@@ -447,7 +444,7 @@ public interface ApiService {
 
     @POST("index.php/topapi")
     @FormUrlEncoded
-    Flowable<ResultBean<BrandListBean>> getUserBrandList(@Field("method") String method, @Field("v") String v);
+    Flowable<ResultBean<BrandsListBean>> getUserBrandList(@Field("method") String method, @Field("v") String v);
 
     @POST("index.php/topapi")
     @FormUrlEncoded
@@ -467,7 +464,7 @@ public interface ApiService {
 
     @POST("index.php/shop/topapi")
     @FormUrlEncoded
-    Flowable<ResultBean<BrandListBean>> getAddShopBrandList(@Field("method") String method, @Field("v") String v, @Field("cat_id") String cat_id);
+    Flowable<ResultBean<BrandsListBean>> getAddShopBrandList(@Field("method") String method, @Field("v") String v, @Field("cat_id") String cat_id);
 
     @POST("index.php/shop/topapi")
     @FormUrlEncoded

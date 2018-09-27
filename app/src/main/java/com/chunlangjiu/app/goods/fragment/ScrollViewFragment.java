@@ -141,10 +141,14 @@ public class ScrollViewFragment extends BaseFragment {
 
     @Override
     public void initData() {
-        initBannerData();
-        initCommonView();
-        initRecommendView();
-        getEvaluateData();
+        try {
+            initBannerData();
+            initCommonView();
+            initRecommendView();
+            getEvaluateData();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
