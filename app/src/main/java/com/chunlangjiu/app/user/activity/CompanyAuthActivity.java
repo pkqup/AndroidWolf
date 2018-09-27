@@ -532,7 +532,7 @@ public class CompanyAuthActivity extends BaseActivity {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         hideLoadingDialog();
-                        ToastUtils.showShort("提交失败");
+                        ToastUtils.showErrorMsg(throwable);
                     }
                 }));
     }

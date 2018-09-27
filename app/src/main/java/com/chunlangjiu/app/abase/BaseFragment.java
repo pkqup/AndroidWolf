@@ -44,6 +44,7 @@ public abstract class BaseFragment extends Fragment {
         imgTitleLeftF = rootView.findViewById(R.id.img_title_left_f);
         imgTitleRightOneF = rootView.findViewById(R.id.img_title_right_one_f);
         tvTitleF = rootView.findViewById(R.id.tv_title_f);
+        titleView.setVisibility(View.GONE);
 
         contentView = rootView.findViewById(R.id.content_view);
         loadingView = rootView.findViewById(R.id.loading_view);

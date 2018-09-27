@@ -383,12 +383,13 @@ public class PersonAuthActivity extends BaseActivity {
                     public void accept(ResultBean resultBean) throws Exception {
                         hideLoadingDialog();
                         ToastUtils.showShort("提交成功，请耐心等待审核");
+                        finish();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         hideLoadingDialog();
-                        ToastUtils.showShort("提交失败");
+                        ToastUtils.showErrorMsg(throwable);
                     }
                 }));
     }

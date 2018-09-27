@@ -512,8 +512,8 @@ public class UserFragment extends BaseFragment {
         imagePicker.setStyle(CropImageView.Style.CIRCLE);  //裁剪框的形状
         imagePicker.setFocusWidth(800);                       //裁剪框的宽度。单位像素（圆形自动取宽高最小值）
         imagePicker.setFocusHeight(800);                      //裁剪框的高度。单位像素（圆形自动取宽高最小值）
-        imagePicker.setOutPutX(500);                         //保存文件的宽度。单位像素
-        imagePicker.setOutPutY(500);                         //保存文件的高度。单位像素
+        imagePicker.setOutPutX(300);                         //保存文件的宽度。单位像素
+        imagePicker.setOutPutY(300);                         //保存文件的高度。单位像素
     }
 
     private void getUserInfo() {
@@ -642,11 +642,13 @@ public class UserFragment extends BaseFragment {
             photoDialog.setCallBackListener(new ChoicePhotoDialog.OnCallBackListener() {
                 @Override
                 public void takePhoto() {
+                    initImagePicker();
                     openCamera(REQUEST_CODE_CHOICE_HEAD);
                 }
 
                 @Override
                 public void toPhotoAlbum() {
+                    initImagePicker();
                     openAlbum(REQUEST_CODE_CHOICE_HEAD);
                 }
             });

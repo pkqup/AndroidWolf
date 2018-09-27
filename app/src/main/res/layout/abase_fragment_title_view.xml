@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="48dp"
     android:background="@color/bg_black"
-    android:visibility="gone">
+    android:visibility="visible">
 
     <ImageView
         android:id="@+id/img_title_left_f"
@@ -26,6 +26,13 @@
             android:layout_height="48dp"
             android:padding="13dp"
             android:src="@mipmap/white_search" />
+
+        <ImageView
+            android:id="@+id/img_title_right_two_f"
+            android:layout_width="48dp"
+            android:src="@mipmap/icon_grid"
+            android:layout_height="48dp"
+            android:padding="13dp" />
 
     </LinearLayout>
 
