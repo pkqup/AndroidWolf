@@ -64,7 +64,7 @@
                     android:id="@+id/tab_two_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="分类"
+                    android:text="全部"
                     android:textColor="@color/main_tab_color"
                     android:textSize="12sp" />
 

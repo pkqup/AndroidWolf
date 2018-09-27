@@ -27,6 +27,7 @@ import com.chunlangjiu.app.amain.bean.HomeListBean;
 import com.chunlangjiu.app.amain.bean.HomeModulesBean;
 import com.chunlangjiu.app.goods.activity.GoodsDetailsActivity;
 import com.chunlangjiu.app.goods.activity.GoodsListActivity;
+import com.chunlangjiu.app.goods.activity.GoodsListNewActivity;
 import com.chunlangjiu.app.goods.activity.SearchActivity;
 import com.chunlangjiu.app.goods.activity.ValuationActivity;
 import com.chunlangjiu.app.net.ApiUtils;
@@ -363,7 +364,7 @@ public class HomeFragment extends BaseFragment {
         brandAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                GoodsListActivity.startGoodsListActivity(getActivity(), brandLists.get(position).getCat_id(), brandLists.get(position).getCategoryname(), "");
+                GoodsListNewActivity.startGoodsListNewActivity(getActivity(), brandLists.get(position).getCat_id(), brandLists.get(position).getCategoryname(), "");
             }
         });
     }

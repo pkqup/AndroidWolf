@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -18,7 +19,10 @@ public abstract class BaseFragment extends Fragment {
     public RelativeLayout titleView;//
     public ImageView imgTitleLeftF;
     public ImageView imgTitleRightOneF;
+    public ImageView imgTitleRightTwoF;
     public TextView tvTitleF;
+    public RelativeLayout titleSearchView;
+    public EditText titleSearchEdit;
 
     public RelativeLayout contentView;//内容
     public RelativeLayout loadingView;//加载
@@ -41,9 +45,12 @@ public abstract class BaseFragment extends Fragment {
 
     private void findView() {
         titleView = rootView.findViewById(R.id.title_view);
+        tvTitleF = rootView.findViewById(R.id.tv_title_f);
         imgTitleLeftF = rootView.findViewById(R.id.img_title_left_f);
         imgTitleRightOneF = rootView.findViewById(R.id.img_title_right_one_f);
-        tvTitleF = rootView.findViewById(R.id.tv_title_f);
+        imgTitleRightTwoF = rootView.findViewById(R.id.img_title_right_two_f);
+        titleSearchView = rootView.findViewById(R.id.rl_title_search);
+        titleSearchEdit = rootView.findViewById(R.id.et_title_search);
         titleView.setVisibility(View.GONE);
 
         contentView = rootView.findViewById(R.id.content_view);

@@ -747,8 +747,8 @@ public class UserFragment extends BaseFragment {
     }
 
     private void showShareDialog() {
-        UMImage thumb = new UMImage(getActivity(), BitmapFactory.decodeResource(getActivity().getResources(), R.mipmap.logo));
-        UMWeb web = new UMWeb("");
+        UMImage thumb = new UMImage(getActivity(), BitmapFactory.decodeResource(getActivity().getResources(), R.mipmap.launcher));
+        UMWeb web = new UMWeb("http://mall.chunlangjiu.com/appdownload/index.html");
         web.setTitle("给您推荐高端酒综合服务平台-醇狼");//标题
         web.setThumb(thumb);  //缩略图
         web.setDescription("为行业用户提供高端酒发布、估价、竞拍、鉴定等综合性服务");//描述
