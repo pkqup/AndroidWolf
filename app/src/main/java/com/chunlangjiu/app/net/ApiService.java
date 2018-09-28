@@ -478,4 +478,17 @@ public interface ApiService {
     @POST("index.php/shop/topapi")
     @FormUrlEncoded
     Flowable<ResultBean<AlcListBean>> getShopAlcList(@Field("method") String method, @Field("v") String v, @Field("cat_id") String cat_id);
+
+
+
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean> favoriteAddGoods(@Field("method") String method, @Field("v") String v, @Field("item_id") String item_id);
+
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean> favoriteCancelGoods(@Field("method") String method, @Field("v") String v, @Field("item_id") String item_id);
+
 }

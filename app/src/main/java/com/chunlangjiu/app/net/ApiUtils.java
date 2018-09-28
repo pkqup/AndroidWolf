@@ -420,4 +420,12 @@ public class ApiUtils {
     public Flowable<ResultBean<AlcListBean>> getShopAlcList(String cat_id) {
         return apiService.getShopAlcList("category.platform.alcohol.get", "v1", cat_id);
     }
+
+    public Flowable<ResultBean> favoriteAddGoods(String item_id) {
+        return apiService.favoriteAddGoods("member.favorite.item.add", "v1",item_id);
+    }
+
+    public Flowable<ResultBean> favoriteCancelGoods(String item_id) {
+        return apiService.favoriteCancelGoods("member.favorite.item.remove", "v1",item_id);
+    }
 }

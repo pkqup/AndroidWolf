@@ -73,6 +73,8 @@ public class AuctionDetailActivity extends BaseActivity {
     RelativeLayout rlChat;
     @BindView(R.id.rlCollect)
     RelativeLayout rlCollect;
+    @BindView(R.id.imgCollect)
+    ImageView imgCollect;
 
     private BaseFragmentAdapter fragmentAdapter;
     private final String[] mTitles = {"商品", "详情", "评价"};
@@ -86,6 +88,7 @@ public class AuctionDetailActivity extends BaseActivity {
     private InputPriceDialog inputPriceDialog;
 
     private AuctionDetailFragment auctionDetailFragment;
+    private boolean isFavorite = false;//是否收藏
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -109,6 +112,7 @@ public class AuctionDetailActivity extends BaseActivity {
                     case R.id.rlChat://聊天
                         break;
                     case R.id.rlCollect://收藏
+                        changeCollectStatus();
                         break;
                     case R.id.tvBuy://立即购买
                         toConfirmOrder();
@@ -233,6 +237,50 @@ public class AuctionDetailActivity extends BaseActivity {
             public void onCancel(SHARE_MEDIA share_media) {
             }
         });
+    }
+
+    private void changeCollectStatus() {
+        if (isFavorite) {
+            showLoadingDialog();
+            disposable.add(ApiUtils.getInstance().favoriteCancelGoods(itemId)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<ResultBean>() {
+                        @Override
+                        public void accept(ResultBean resultBean) throws Exception {
+                            hideLoadingDialog();
+                            isFavorite = false;
+                            imgCollect.setBackgroundResource(R.mipmap.collect_false);
+                            ToastUtils.showShort("取消收藏成功");
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            hideLoadingDialog();
+                            ToastUtils.showShort("取消收藏失败");
+                        }
+                    }));
+        } else {
+            showLoadingDialog();
+            disposable.add(ApiUtils.getInstance().favoriteAddGoods(itemId)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<ResultBean>() {
+                        @Override
+                        public void accept(ResultBean resultBean) throws Exception {
+                            hideLoadingDialog();
+                            isFavorite = true;
+                            imgCollect.setBackgroundResource(R.mipmap.collect_true);
+                            ToastUtils.showShort("收藏成功");
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            hideLoadingDialog();
+                            ToastUtils.showShort("收藏失败");
+                        }
+                    }));
+        }
     }
 
 
