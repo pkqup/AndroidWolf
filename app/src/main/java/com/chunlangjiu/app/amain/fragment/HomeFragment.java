@@ -1,6 +1,5 @@
 package com.chunlangjiu.app.amain.fragment;
 
-import android.Manifest;
 import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
@@ -22,11 +21,12 @@ import com.chunlangjiu.app.abase.BaseFragment;
 import com.chunlangjiu.app.amain.activity.LoginActivity;
 import com.chunlangjiu.app.amain.adapter.BrandAdapter;
 import com.chunlangjiu.app.amain.adapter.HomeAdapter;
+import com.chunlangjiu.app.amain.bean.HomeAuctionBean;
 import com.chunlangjiu.app.amain.bean.HomeBean;
 import com.chunlangjiu.app.amain.bean.HomeListBean;
 import com.chunlangjiu.app.amain.bean.HomeModulesBean;
+import com.chunlangjiu.app.goods.activity.AuctionDetailActivity;
 import com.chunlangjiu.app.goods.activity.GoodsDetailsActivity;
-import com.chunlangjiu.app.goods.activity.GoodsListActivity;
 import com.chunlangjiu.app.goods.activity.GoodsListNewActivity;
 import com.chunlangjiu.app.goods.activity.SearchActivity;
 import com.chunlangjiu.app.goods.activity.ShopMainActivity;
@@ -36,7 +36,6 @@ import com.chunlangjiu.app.store.activity.StoreListActivity;
 import com.chunlangjiu.app.user.activity.AddGoodsActivity;
 import com.chunlangjiu.app.user.activity.PersonAuthActivity;
 import com.chunlangjiu.app.user.bean.AuthStatusBean;
-import com.chunlangjiu.app.user.bean.UploadImageBean;
 import com.chunlangjiu.app.util.AreaUtils;
 import com.chunlangjiu.app.util.ConstantMsg;
 import com.chunlangjiu.app.util.LocationUtils;
@@ -46,14 +45,11 @@ import com.pkqup.commonlibrary.glide.BannerGlideLoader;
 import com.pkqup.commonlibrary.glide.GlideUtils;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.pkqup.commonlibrary.util.PermissionUtils;
-import com.pkqup.commonlibrary.util.SPUtils;
 import com.pkqup.commonlibrary.util.ToastUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.socks.library.KLog;
-import com.yanzhenjie.permission.PermissionListener;
 import com.youth.banner.Banner;
 import com.youth.banner.BannerConfig;
 import com.youth.banner.listener.OnBannerListener;
@@ -69,7 +65,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import io.reactivex.Flowable;
 import io.reactivex.Observable;
 import io.reactivex.ObservableEmitter;
 import io.reactivex.ObservableOnSubscribe;
@@ -154,23 +149,19 @@ public class HomeFragment extends BaseFragment {
                     startActivity(new Intent(getActivity(), SearchActivity.class));
                     break;
                 case R.id.llAuction://竞拍专区
-                    EventManager.getInstance().notify(null, ConstantMsg.MSG_PAGE_AUCTION);
+                    iconFunctionClick(0);
                     break;
                 case R.id.llBuy://我要买酒
-                    EventManager.getInstance().notify(null, ConstantMsg.MSG_PAGE_CLASS);
+                    iconFunctionClick(1);
                     break;
                 case R.id.llSell://我要卖酒
-                    checkStatus();
+                    iconFunctionClick(2);
                     break;
                 case R.id.llSearch://名庄查询
-                    startActivity(new Intent(getActivity(), StoreListActivity.class));
+                    iconFunctionClick(3);
                     break;
                 case R.id.llEvaluate://名酒估价
-                    if (BaseApplication.isLogin()) {
-                        startActivity(new Intent(getActivity(), ValuationActivity.class));
-                    } else {
-                        startActivity(new Intent(getActivity(), LoginActivity.class));
-                    }
+                    iconFunctionClick(4);
                     break;
             }
         }
@@ -347,7 +338,8 @@ public class HomeFragment extends BaseFragment {
         banner.setOnBannerListener(new OnBannerListener() {
             @Override
             public void OnBannerClick(int position) {
-                WebViewActivity.startWebViewActivity(getActivity(), bannerPicLists.get(position).getWebview(), "");
+                HomeModulesBean.Pic fuction = bannerPicLists.get(position);
+                functionJump(fuction);
             }
         });
     }
@@ -401,8 +393,12 @@ public class HomeFragment extends BaseFragment {
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 HomeBean homeBean = lists.get(position);
                 if (homeBean.getItemType() == HomeBean.ITEM_GOODS) {
-                    GoodsDetailsActivity.startGoodsDetailsActivity(getActivity(), homeBean.getItem_id());
-                } else if (homeBean.getItemType() == HomeBean.ITEM_PIC) {
+                    if (homeBean.isAuction()) {
+                        AuctionDetailActivity.startAuctionDetailsActivity(getActivity(), lists.get(position).getItem_id());
+                    } else {
+                        GoodsDetailsActivity.startGoodsDetailsActivity(getActivity(), homeBean.getItem_id());
+                    }
+                } else if (homeBean.getItemType() == HomeBean.ITEM_TUIJIAN) {
 
                 }
             }
@@ -471,9 +467,9 @@ public class HomeFragment extends BaseFragment {
                 if (MODULE_SLIDER.equals(modules.get(i).getWidget())) {
                     updateBannerData(modules.get(i).getParams());
                 }
-//                if (MODULE_ICONS_NAV.equals(modules.get(i).getWidget())) {
-//                    updateIconData(modules.get(i).getParams());
-//                }
+                if (MODULE_ICONS_NAV.equals(modules.get(i).getWidget())) {
+                    updateIconData(modules.get(i).getParams());
+                }
                 if (MODULE_CATEGORY_NAV.equals(modules.get(i).getWidget())) {
                     updateBrandData(modules.get(i).getParams());
                 }
@@ -563,13 +559,42 @@ public class HomeFragment extends BaseFragment {
 
     private void getListSuccess(ResultBean<HomeListBean> homeListBeanResultBean, boolean isRefresh) {
         List<HomeBean> newLists = homeListBeanResultBean.getData().getList();
+        List<HomeAuctionBean> auction_list = homeListBeanResultBean.getData().getAuction_list();
         if (newLists == null) newLists = new ArrayList<>();
         for (HomeBean homeBean : newLists) {
             homeBean.setItemType(HomeBean.ITEM_GOODS);
+            homeBean.setAuction(false);
         }
         if (isRefresh) {
             pageNo = 1;
-            lists = newLists;
+            if (auction_list != null && auction_list.size() > 0) {
+                lists.clear();
+                HomeBean jingpaiFlag = new HomeBean();
+                jingpaiFlag.setItemType(HomeBean.ITEM_JINGPAI);
+                lists.add(jingpaiFlag);
+                for (int i = 0; i < auction_list.size(); i++) {
+                    HomeBean homeBean = new HomeBean();
+                    homeBean.setItemType(HomeBean.ITEM_GOODS);
+                    homeBean.setAuction(true);
+                    homeBean.setItem_id(auction_list.get(i).getItem_id());
+                    homeBean.setTitle(auction_list.get(i).getTitle());
+                    homeBean.setImage_default_id(auction_list.get(i).getImage_default_id());
+                    homeBean.setLabel(auction_list.get(i).getLabel());
+                    homeBean.setAuction_starting_price(auction_list.get(i).getAuction_starting_price());
+                    homeBean.setAuction_end_time(auction_list.get(i).getAuction_end_time());
+                    homeBean.setMax_price(auction_list.get(i).getMax_price());
+                    lists.add(homeBean);
+                }
+                HomeBean tuijian = new HomeBean();
+                tuijian.setItemType(HomeBean.ITEM_TUIJIAN);
+                lists.add(tuijian);
+                lists.addAll(newLists);
+            } else {
+                HomeBean tuijian = new HomeBean();
+                tuijian.setItemType(HomeBean.ITEM_TUIJIAN);
+                lists.add(tuijian);
+                lists.addAll(newLists);
+            }
         } else {
             pageNo++;
             lists.addAll(newLists);
@@ -577,7 +602,7 @@ public class HomeFragment extends BaseFragment {
         if (lists.size() == 0) {
             refreshLayout.setEnableLoadMore(false);//设置不能加载更多
         } else {
-            refreshLayout.setEnableLoadMore(true);//设置不能加载更多
+            refreshLayout.setEnableLoadMore(true);//设置能加载更多
         }
         if (lists.size() < 10) {
             refreshLayout.setFooterHeight(30);
@@ -643,5 +668,77 @@ public class HomeFragment extends BaseFragment {
         banner.stopAutoPlay();
     }
 
+
+    private void iconFunctionClick(int index) {
+        if (iconPicLists != null && iconPicLists.size() > 0) {
+            HomeModulesBean.Pic function = iconPicLists.get(index);
+            functionJump(function);
+        } else {
+            switch (index) {
+                case 0:
+                    EventManager.getInstance().notify(null, ConstantMsg.MSG_PAGE_AUCTION);
+                    break;
+                case 1:
+                    EventManager.getInstance().notify(null, ConstantMsg.MSG_PAGE_CLASS);
+                    break;
+                case 2:
+                    checkStatus();
+                    break;
+                case 3:
+                    startActivity(new Intent(getActivity(), StoreListActivity.class));
+                    break;
+                case 4:
+                    if (BaseApplication.isLogin()) {
+                        startActivity(new Intent(getActivity(), ValuationActivity.class));
+                    } else {
+                        startActivity(new Intent(getActivity(), LoginActivity.class));
+                    }
+                    break;
+            }
+        }
+    }
+
+
+    private void functionJump(HomeModulesBean.Pic function) {
+        switch (function.getLinktype()) {
+            case HomeModulesBean.ITEM_GOODS:
+                GoodsDetailsActivity.startGoodsDetailsActivity(getActivity(), function.getLinktarget());
+                break;
+            case HomeModulesBean.ITEM_SHOP:
+                ShopMainActivity.startShopMainActivity(getActivity(), function.getLinktarget());
+                break;
+            case HomeModulesBean.ITEM_CLASS:
+                EventManager.getInstance().notify(null, ConstantMsg.MSG_PAGE_CLASS);
+                break;
+            case HomeModulesBean.ITEM_BRAND:
+                GoodsListNewActivity.startGoodsListNewActivity(getActivity(), function.getLinktarget(), "", "");
+                break;
+            case HomeModulesBean.ITEM_ACTIVITY:
+                EventManager.getInstance().notify(null, ConstantMsg.MSG_PAGE_AUCTION);
+                break;
+            case HomeModulesBean.ITEM_WINERY:
+                startActivity(new Intent(getActivity(), StoreListActivity.class));
+                break;
+            case HomeModulesBean.ITEM_EVALUATION:
+                if (BaseApplication.isLogin()) {
+                    startActivity(new Intent(getActivity(), ValuationActivity.class));
+                } else {
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                }
+                break;
+            case HomeModulesBean.ITEM_MEMBER:
+                EventManager.getInstance().notify(null, ConstantMsg.MSG_PAGE_MY);
+                break;
+            case HomeModulesBean.ITEM_CART:
+                EventManager.getInstance().notify(null, ConstantMsg.MSG_PAGE_CART);
+                break;
+            case HomeModulesBean.ITEM_H5:
+                WebViewActivity.startWebViewActivity(getActivity(), function.getLinktarget(), function.getTag());
+                break;
+            case HomeModulesBean.ITEM_SELLWINE:
+                checkStatus();
+                break;
+        }
+    }
 
 }

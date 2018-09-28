@@ -37,13 +37,18 @@ public class AuctionListAdapter extends BaseQuickAdapter<AuctionListBean.Auction
         helper.setText(R.id.tv_name, item.getTitle());
         helper.setText(R.id.tvStartPrice, "¥" + item.getAuction_starting_price());
         tvStartPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);  // 设置中划线并加清晰
-        helper.setText(R.id.tvSellPrice, "¥" + item.getAuction_starting_price());
+        if (TextUtils.isEmpty(item.getMax_price())) {
+            helper.setText(R.id.tvSellPrice, "暂无出价");
+        } else {
+            helper.setText(R.id.tvSellPrice, "¥" + item.getAuction_starting_price());
+        }
 
         TextView tvLabel = helper.getView(R.id.tvLabel);
         if (TextUtils.isEmpty(item.getLabel())) {
             tvLabel.setVisibility(View.GONE);
         } else {
             tvLabel.setVisibility(View.VISIBLE);
+            tvLabel.setText(item.getLabel());
         }
 
         CountdownView countdownView = helper.getView(R.id.countdownView);
