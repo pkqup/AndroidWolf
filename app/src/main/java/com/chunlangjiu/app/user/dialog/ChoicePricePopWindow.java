@@ -119,11 +119,11 @@ public class ChoicePricePopWindow extends PopupWindow {
             TextView tvName = helper.getView(R.id.tvName);
             int adapterPosition = helper.getAdapterPosition();
             if (adapterPosition == 0) {
-                tvName.setText(item.getMaxPrice() + "以下");
+                tvName.setText(item.getMaxPrice() + "元以下");
             } else if (adapterPosition == 4) {
-                tvName.setText(item.getMinPrice() + "以上");
+                tvName.setText(item.getMinPrice() + "元以上");
             } else {
-                tvName.setText(item.getMinPrice() + "-" + item.getMaxPrice());
+                tvName.setText(item.getMinPrice() + "-" + item.getMaxPrice() + "元");
             }
 
             if (item.getPriceId().equals(selectBrandId)) {

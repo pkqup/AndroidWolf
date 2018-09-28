@@ -26,7 +26,6 @@ import com.chunlangjiu.app.amain.bean.MainClassBean;
 import com.chunlangjiu.app.amain.bean.SecondClassBean;
 import com.chunlangjiu.app.amain.bean.ThirdClassBean;
 import com.chunlangjiu.app.goods.activity.GoodsDetailsActivity;
-import com.chunlangjiu.app.goods.activity.GoodsListActivity;
 import com.chunlangjiu.app.goods.activity.SearchActivity;
 import com.chunlangjiu.app.goods.bean.AlcListBean;
 import com.chunlangjiu.app.goods.bean.AreaListBean;
@@ -50,7 +49,6 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.socks.library.KLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -330,7 +328,7 @@ public class GoodsFragment extends BaseFragment {
                 .subscribe(new Consumer<ResultBean<BrandsListBean>>() {
                     @Override
                     public void accept(ResultBean<BrandsListBean> brandsListBeanResultBean) throws Exception {
-                        brandLists = brandsListBeanResultBean.getData().getBrands();
+                        brandLists = brandsListBeanResultBean.getData().getList();
                     }
                 }, new Consumer<Throwable>() {
                     @Override

@@ -9,6 +9,15 @@ import java.util.List;
 public class BrandsListBean {
 
     private List<BrandBean> brands;
+    private List<BrandBean> list;
+
+    public List<BrandBean> getList() {
+        return list;
+    }
+
+    public void setList(List<BrandBean> list) {
+        this.list = list;
+    }
 
     public List<BrandBean> getBrands() {
         return brands;
