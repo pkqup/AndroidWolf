@@ -62,12 +62,11 @@ public class HomeAdapter extends BaseQuickAdapter<HomeBean, BaseViewHolder> {
                     tvLabel.setVisibility(View.VISIBLE);
                     tvLabel.setText(item.getLabel());
                 }
-
+                LinearLayout llTime = viewHolder.getView(R.id.llTime);
+                TextView tvSellPriceStr = viewHolder.getView(R.id.tvSellPriceStr);
                 if (item.isAuction()) {
                     tvStartPrice.setText("¥" + item.getAuction_starting_price());
-                    LinearLayout llTime = viewHolder.getView(R.id.llTime);
                     llTime.setVisibility(View.VISIBLE);
-                    TextView tvSellPriceStr = viewHolder.getView(R.id.tvSellPriceStr);
                     tvSellPriceStr.setVisibility(View.VISIBLE);
                     if (TextUtils.isEmpty(item.getMax_price())) {
                         viewHolder.setText(R.id.tvSellPrice, "暂无出价");
@@ -85,6 +84,8 @@ public class HomeAdapter extends BaseQuickAdapter<HomeBean, BaseViewHolder> {
                             dealWithLifeCycle(viewHolder, viewHolder.getAdapterPosition(), item);
                         }
                 } else {
+                    llTime.setVisibility(View.GONE);
+                    tvSellPriceStr.setVisibility(View.GONE);
                     viewHolder.setText(R.id.tvStartPriceStr, "原价：");
                     tvStartPrice.setText("¥" + item.getMkt_price());
                     viewHolder.setText(R.id.tvSellPriceStr, "");
