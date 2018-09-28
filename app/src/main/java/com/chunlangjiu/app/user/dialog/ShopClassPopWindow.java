@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -18,6 +19,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.amain.bean.ThirdClassBean;
+import com.pkqup.commonlibrary.util.SizeUtils;
 
 import java.util.List;
 
@@ -86,6 +88,12 @@ public class ShopClassPopWindow extends PopupWindow {
             }
         });
         recyclerView = mContentView.findViewById(R.id.recyclerView);
+        if (brandLists.size() > 15) {
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) recyclerView.getLayoutParams();
+            layoutParams.height = SizeUtils.dp2px(300);
+            recyclerView.setLayoutParams(layoutParams);
+        }
+
         brandAdapter = new BrandAdapter(R.layout.goods_item_pop_class, brandLists);
         brandAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
@@ -118,9 +126,9 @@ public class ShopClassPopWindow extends PopupWindow {
         protected void convert(BaseViewHolder helper, ThirdClassBean item) {
             TextView tvName = helper.getView(R.id.tvName);
             tvName.setText(item.getCat_name());
-            if(item.getCat_id().equals(selectClassId)){
+            if (item.getCat_id().equals(selectClassId)) {
                 tvName.setSelected(true);
-            }else{
+            } else {
                 tvName.setSelected(false);
             }
         }
@@ -128,11 +136,12 @@ public class ShopClassPopWindow extends PopupWindow {
 
     /**
      * 适配7.0系统Popwindow显示全屏的问题
+     *
      * @param anchor
      */
     @Override
     public void showAsDropDown(View anchor) {
-        if(Build.VERSION.SDK_INT >= 24) {
+        if (Build.VERSION.SDK_INT >= 24) {
             Rect rect = new Rect();
             anchor.getGlobalVisibleRect(rect);
             int h = anchor.getResources().getDisplayMetrics().heightPixels - rect.bottom;
@@ -143,11 +152,12 @@ public class ShopClassPopWindow extends PopupWindow {
 
     /**
      * 适配7.0系统Popwindow显示全屏的问题
+     *
      * @param anchor
      */
     @Override
     public void showAsDropDown(View anchor, int xoff, int yoff) {
-        if(Build.VERSION.SDK_INT >= 24) {
+        if (Build.VERSION.SDK_INT >= 24) {
             Rect rect = new Rect();
             anchor.getGlobalVisibleRect(rect);
             int h = anchor.getResources().getDisplayMetrics().heightPixels - rect.bottom;
