@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chunlangjiu.app.R;
+import com.chunlangjiu.app.store.bean.StoreDetailBean;
 import com.pkqup.commonlibrary.glide.GlideUtils;
 import com.pkqup.commonlibrary.util.SizeUtils;
 
@@ -46,6 +47,15 @@ public class PhotoFragment extends HeaderViewPagerFragment {
                     "http://img.my.csdn.net/uploads/201407/26/1406383264_8243.jpg",
                     "http://img.my.csdn.net/uploads/201407/26/1406383248_3693.jpg",};
 
+    public static PhotoFragment newInstance(StoreDetailBean.StoreBean storeBean) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("storeBean", storeBean);
+        PhotoFragment goodsFragment = new PhotoFragment();
+        goodsFragment.setArguments(bundle);
+        return goodsFragment;
+    }
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (rootView == null) {
@@ -75,10 +85,15 @@ public class PhotoFragment extends HeaderViewPagerFragment {
     }
 
     private void initData() {
-        for (int i = 0; i < images.length; i++) {
+     /*   for (int i = 0; i < images.length; i++) {
             lists.add(images[i]);
         }
-        photoAdapter.setNewData(lists);
+        photoAdapter.setNewData(lists);*/
+
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            StoreDetailBean.StoreBean storeBean = (StoreDetailBean.StoreBean) bundle.getSerializable("storeBean");
+        }
     }
 
     public class PhotoAdapter extends BaseQuickAdapter<String, BaseViewHolder> {

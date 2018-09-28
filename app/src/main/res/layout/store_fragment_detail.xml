@@ -2,6 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:scrollbars="none">
 
     <LinearLayout
@@ -17,7 +18,7 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="20dp"
             android:lineSpacingExtra="2dp"
-            android:text="        拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧"
+            tools:text="        拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧"
             android:textColor="@color/t_black"
             android:textSize="@dimen/sp_small" />
     </LinearLayout>

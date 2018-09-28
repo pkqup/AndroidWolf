@@ -113,11 +113,44 @@ public class StoreDetailsActivity extends BaseActivity {
     private void initView() {
         disposable = new CompositeDisposable();
         chateau_id = getIntent().getStringExtra("chateau_id");
+    }
+
+    private void initData() {
+        showLoadingDialog();
+        disposable.add(ApiUtils.getInstance().getStoreDetail(chateau_id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<StoreDetailBean>>() {
+                    @Override
+                    public void accept(ResultBean<StoreDetailBean> storeDetailBeanResultBean) throws Exception {
+                        hideLoadingDialog();
+                        getDetailSuccess(storeDetailBeanResultBean.getData().getDetail());
+                        initViewPagerData(storeDetailBeanResultBean.getData().getDetail().get(0));
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        hideLoadingDialog();
+                    }
+                }));
+    }
+
+
+    private void getDetailSuccess(List<StoreDetailBean.StoreBean> detail) {
+        StoreDetailBean.StoreBean storeBean = detail.get(0);
+        tvFirstName.setText(storeBean.getName());
+        GlideUtils.loadImage(this, storeBean.getImg(), imgMainPic);
+        tvSecondName.setText(storeBean.getName());
+        tvDesc.setText(storeBean.getContent());
+    }
+
+
+    private void initViewPagerData(StoreDetailBean.StoreBean storeBean) {
         mFragments = new ArrayList<>();
-        mFragments.add(new SimpleDescFragment());
-        mFragments.add(new DetailDescFragment());
-        mFragments.add(new GradeFragment());
-        mFragments.add(new PhotoFragment());
+        mFragments.add(SimpleDescFragment.newInstance(storeBean));
+        mFragments.add(DetailDescFragment.newInstance(storeBean));
+        mFragments.add(GradeFragment.newInstance(storeBean));
+        mFragments.add(PhotoFragment.newInstance(storeBean));
         fragmentAdapter = new FragmentAdapter(getSupportFragmentManager());
         fragmentAdapter.setLists(mFragments);
         viewPager.setAdapter(fragmentAdapter);
@@ -131,31 +164,6 @@ public class StoreDetailsActivity extends BaseActivity {
                 headerViewPager.setCurrentScrollableContainer(mFragments.get(position));
             }
         });
-    }
-
-    private void initData() {
-        disposable.add(ApiUtils.getInstance().getStoreDetail(chateau_id)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<ResultBean<StoreDetailBean>>() {
-                    @Override
-                    public void accept(ResultBean<StoreDetailBean> storeDetailBeanResultBean) throws Exception {
-                        getDetailSuccess(storeDetailBeanResultBean.getData().getDetail());
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        KLog.e(throwable.toString());
-                    }
-                }));
-    }
-
-    private void getDetailSuccess(List<StoreDetailBean.StoreBean> detail) {
-        StoreDetailBean.StoreBean storeBean = detail.get(0);
-        tvFirstName.setText(storeBean.getName());
-        GlideUtils.loadImage(this,storeBean.getImg(),imgMainPic);
-        tvSecondName.setText(storeBean.getName());
-        tvDesc.setText(storeBean.getContent());
     }
 
 

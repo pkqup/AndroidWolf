@@ -1,12 +1,13 @@
 package com.chunlangjiu.app.store.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * @CreatedbBy: liucun on 2018/8/29
  * @Describe:
  */
-public class StoreDetailBean {
+public class StoreDetailBean implements Serializable{
 
     private List<StoreBean>  detail;
 
@@ -18,7 +19,7 @@ public class StoreDetailBean {
         this.detail = detail;
     }
 
-    public class StoreBean{
+    public class StoreBean implements Serializable{
         private String chateau_id;
         private String name;
         private String img;

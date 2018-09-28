@@ -43,7 +43,7 @@ public class ChoicePricePopWindow extends PopupWindow {
     }
 
     public interface CallBack {
-        void choicePrice(String minPrice, String maxPrice, String id);
+        void choicePrice(String minPrice, String maxPrice, String id, String content);
     }
 
     private void setSelectBrandId(String selectBrandId) {
@@ -93,7 +93,18 @@ public class ChoicePricePopWindow extends PopupWindow {
                 selectBrandId = brandLists.get(position).getPriceId();
                 brandAdapter.notifyDataSetChanged();
                 if (callBack != null) {
-                    callBack.choicePrice(brandLists.get(position).getMinPrice(), brandLists.get(position).getMaxPrice(), brandLists.get(position).getPriceId());
+                    String content;
+                    if (position == 0) {
+                        content = "全部";
+                    } else if (position == 1) {
+                        content = brandLists.get(position).getMaxPrice() + "元以下";
+                    } else if (position == 5) {
+                        content = brandLists.get(position).getMinPrice() + "元以上";
+                    } else {
+                        content = brandLists.get(position).getMinPrice() + "-" + brandLists.get(position).getMaxPrice() + "元";
+                    }
+                    callBack.choicePrice(brandLists.get(position).getMinPrice(), brandLists.get(position).getMaxPrice(),
+                            brandLists.get(position).getPriceId(), content);
                 }
                 dismiss();
             }
@@ -119,8 +130,10 @@ public class ChoicePricePopWindow extends PopupWindow {
             TextView tvName = helper.getView(R.id.tvName);
             int adapterPosition = helper.getAdapterPosition();
             if (adapterPosition == 0) {
+                tvName.setText("全部");
+            } else if (adapterPosition ==1) {
                 tvName.setText(item.getMaxPrice() + "元以下");
-            } else if (adapterPosition == 4) {
+            } else if (adapterPosition == 5) {
                 tvName.setText(item.getMinPrice() + "元以上");
             } else {
                 tvName.setText(item.getMinPrice() + "-" + item.getMaxPrice() + "元");

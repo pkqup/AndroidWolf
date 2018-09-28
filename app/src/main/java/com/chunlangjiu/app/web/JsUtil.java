@@ -2,6 +2,8 @@ package com.chunlangjiu.app.web;
 
 import android.webkit.JavascriptInterface;
 
+import com.chunlangjiu.app.util.ConstantMsg;
+import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.util.ToastUtils;
 
 /**
@@ -22,7 +24,7 @@ public class JsUtil {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-
+                EventManager.getInstance().notify(null, ConstantMsg.LOGOUT_SUCCESS);
             }
         });
     }

@@ -6,6 +6,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseApplication;
 import com.chunlangjiu.app.abase.BaseFragment;
@@ -24,15 +26,27 @@ import com.chunlangjiu.app.amain.adapter.AuctionListAdapter;
 import com.chunlangjiu.app.amain.bean.AuctionListBean;
 import com.chunlangjiu.app.amain.bean.FirstClassBean;
 import com.chunlangjiu.app.amain.bean.MainClassBean;
+import com.chunlangjiu.app.amain.bean.SecondClassBean;
+import com.chunlangjiu.app.amain.bean.ThirdClassBean;
 import com.chunlangjiu.app.goods.activity.AuctionDetailActivity;
 import com.chunlangjiu.app.goods.activity.SearchActivity;
 import com.chunlangjiu.app.goods.adapter.FilterBrandAdapter;
 import com.chunlangjiu.app.goods.adapter.FilterStoreAdapter;
+import com.chunlangjiu.app.goods.bean.AlcListBean;
+import com.chunlangjiu.app.goods.bean.AreaListBean;
+import com.chunlangjiu.app.goods.bean.BrandsListBean;
 import com.chunlangjiu.app.goods.bean.FilterBrandBean;
 import com.chunlangjiu.app.goods.bean.FilterListBean;
 import com.chunlangjiu.app.goods.bean.FilterStoreBean;
+import com.chunlangjiu.app.goods.bean.OrdoListBean;
+import com.chunlangjiu.app.goods.bean.PriceBean;
 import com.chunlangjiu.app.goods.dialog.ClassPopWindow;
 import com.chunlangjiu.app.net.ApiUtils;
+import com.chunlangjiu.app.user.dialog.ChoiceAlcPopWindow;
+import com.chunlangjiu.app.user.dialog.ChoiceAreaPopWindow;
+import com.chunlangjiu.app.user.dialog.ChoiceBrandPopWindow;
+import com.chunlangjiu.app.user.dialog.ChoiceOrdoPopWindow;
+import com.chunlangjiu.app.user.dialog.ChoicePricePopWindow;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.pkqup.commonlibrary.util.SizeUtils;
 import com.pkqup.commonlibrary.util.ToastUtils;
@@ -55,45 +69,24 @@ import io.reactivex.schedulers.Schedulers;
  */
 public class AuctionFragment extends BaseFragment {
 
-    private static final String ORDER_ALL = "modified_time";//综合
-    private static final String ORDER_NEW = "list_time";//新品
-    private static final String ORDER_PRICE_UP = "price_asc";//价格升序
-    private static final String ORDER_PRICE_DOWN = "price_desc";//价格降序
-    private String orderBy = ORDER_ALL;
-
-    private DrawerLayout drawerLayout;
-    private LinearLayout rightView;
-    private RecyclerView recyclerViewBrand;//品牌列表
-    private RecyclerView recyclerViewStore;//名庄列表
-    private EditText etLowPrice;
-    private EditText etHighPrice;
-    private EditText etStartTime;
-    private EditText etEndTime;
-    private TextView tvReset;
-    private TextView tvConfirm;
-
-    private TextView tvAll;
-    private TextView tvNew;
-    private RelativeLayout sortPrice;
+    private RelativeLayout rlBrand;
+    private TextView tvBrand;
+    private RelativeLayout rlArea;
+    private TextView tvArea;
+    private RelativeLayout rlIncense;
+    private TextView tvIncense;
+    private RelativeLayout rlAlc;
+    private TextView tvAlc;
+    private RelativeLayout rlPrice;
     private TextView tvPrice;
-    private TextView tvClass;
-    private RelativeLayout sortFilter;
-    private TextView tvFilter;
 
-    //三级分类列表
-    private List<FirstClassBean> categoryLists;
-    private ClassPopWindow classPopWindow;
+    //分类列表
+    private RecyclerView recyclerViewClass;
+    private ClassAdapter classAdapter;
+    private List<ThirdClassBean> classLists;
+    private String selectClassId = "";
 
-    //品牌列表
-    private List<FilterBrandBean> brandLists;
-    private FilterBrandAdapter filterBrandAdapter;
-    //酒庄列表
-    private List<FilterStoreBean> storeLists;
-    private FilterStoreAdapter filterStoreAdapter;
-
-    private String classId;
-    private String className;
-
+    //商品列表
     private SmartRefreshLayout refreshLayout;
     private RecyclerView recyclerView;
     private List<AuctionListBean.AuctionBean> lists;
@@ -101,25 +94,34 @@ public class AuctionFragment extends BaseFragment {
 
     private CompositeDisposable disposable;
 
-    private DrawerLayout.DrawerListener drawerListener = new DrawerLayout.DrawerListener() {
-        @Override
-        public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
-        }
+    private String brandId = "";
+    private String areaId = "";
+    private String ordoId = "";
+    private String alcoholId = "";
+    private String minPrice = "";
+    private String maxPrice = "";
 
-        @Override
-        public void onDrawerOpened(@NonNull View drawerView) {
-        }
+    //品牌列表
+    private ChoiceBrandPopWindow choiceBrandPopWindow;
+    private List<BrandsListBean.BrandBean> brandLists = new ArrayList<>();
 
-        @Override
-        public void onDrawerClosed(@NonNull View drawerView) {
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.END);
-        }
+    //产地列表
+    private ChoiceAreaPopWindow choiceAreaPopWindow;
+    private List<AreaListBean.AreaBean> areaLists = new ArrayList<>();
 
-        @Override
-        public void onDrawerStateChanged(int newState) {
+    //香型列表
+    private ChoiceOrdoPopWindow choiceOrdoPopWindow;
+    private List<OrdoListBean.OrdoBean> ordoLists = new ArrayList<>();
 
-        }
-    };
+    //酒精度列表
+    private ChoiceAlcPopWindow choiceAlcPopWindow;
+    private List<AlcListBean.AlcBean> alcLists = new ArrayList<>();
+
+    //价格列表
+    private ChoicePricePopWindow choicePricePopWindow;
+    private List<PriceBean> priceLists;
+    private String priceId = "";
+
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -128,24 +130,20 @@ public class AuctionFragment extends BaseFragment {
                 case R.id.img_title_right_one_f:
                     startActivity(new Intent(getActivity(), SearchActivity.class));
                     break;
-                case R.id.tv_all:
-                    changeSortAll();
+                case R.id.rlBrand:
+                    showBrandPopWindow();
                     break;
-                case R.id.tv_new:
-                    changeSortNew();
+                case R.id.rlArea:
+                    showAreaPopWindow();
                     break;
-                case R.id.sortPrice:
-                    changeSortPrice();
+                case R.id.rlIncense:
+                    showIncensePopWindow();
                     break;
-                case R.id.tv_class:
-                    showClassPopWindow();
+                case R.id.rlAlc:
+                    showDegreePopWindow();
                     break;
-                case R.id.sortFilter:
-                    showDrawerLayout();
-                    break;
-                case R.id.tvReset://重置筛选条件
-                    break;
-                case R.id.tvConfirm://确认筛选条件
+                case R.id.rlPrice:
+                    showPricePopWindow();
                     break;
             }
         }
@@ -162,23 +160,8 @@ public class AuctionFragment extends BaseFragment {
         disposable = new CompositeDisposable();
         titleView.setVisibility(View.VISIBLE);
         tvTitleF.setText("竞拍专区");
+        imgTitleRightOneF.setVisibility(View.VISIBLE);
         imgTitleRightOneF.setOnClickListener(onClickListener);
-
-        initDrawerLayout();
-
-        tvAll = rootView.findViewById(R.id.tv_all);
-        tvNew = rootView.findViewById(R.id.tv_new);
-        tvPrice = rootView.findViewById(R.id.tv_price);
-        tvClass = rootView.findViewById(R.id.tv_class);
-        tvFilter = rootView.findViewById(R.id.tv_filter);
-        sortPrice = rootView.findViewById(R.id.sortPrice);
-        sortFilter = rootView.findViewById(R.id.sortFilter);
-        tvAll.setOnClickListener(onClickListener);
-        tvNew.setOnClickListener(onClickListener);
-        sortPrice.setOnClickListener(onClickListener);
-        tvClass.setOnClickListener(onClickListener);
-        sortFilter.setOnClickListener(onClickListener);
-        tvAll.setSelected(true);
 
         refreshLayout = rootView.findViewById(R.id.refreshLayout);
         refreshLayout.setEnableRefresh(true);//设置可以下拉刷新
@@ -204,81 +187,172 @@ public class AuctionFragment extends BaseFragment {
                 getListData();
             }
         });
-    }
 
-    private void initDrawerLayout() {
-        drawerLayout = rootView.findViewById(R.id.drawerLayout);
-        rightView = rootView.findViewById(R.id.right_view);
+        rlBrand = rootView.findViewById(R.id.rlBrand);
+        tvBrand = rootView.findViewById(R.id.tvBrand);
+        rlArea = rootView.findViewById(R.id.rlArea);
+        tvArea = rootView.findViewById(R.id.tvArea);
+        rlIncense = rootView.findViewById(R.id.rlIncense);
+        tvIncense = rootView.findViewById(R.id.tvIncense);
+        rlAlc = rootView.findViewById(R.id.rlAlc);
+        tvAlc = rootView.findViewById(R.id.tvAlc);
+        rlPrice = rootView.findViewById(R.id.rlPrice);
+        tvPrice = rootView.findViewById(R.id.tvPrice);
+        rlBrand.setOnClickListener(onClickListener);
+        rlArea.setOnClickListener(onClickListener);
+        rlIncense.setOnClickListener(onClickListener);
+        rlAlc.setOnClickListener(onClickListener);
+        rlPrice.setOnClickListener(onClickListener);
 
-        recyclerViewBrand = rootView.findViewById(R.id.recyclerViewBrand);
-        recyclerViewStore = rootView.findViewById(R.id.recyclerViewStore);
-        etLowPrice = rootView.findViewById(R.id.etLowPrice);
-        etHighPrice = rootView.findViewById(R.id.etHighPrice);
-        etStartTime = rootView.findViewById(R.id.etStartTime);
-        etEndTime = rootView.findViewById(R.id.etEndTime);
-        tvReset = rootView.findViewById(R.id.tvReset);
-        tvConfirm = rootView.findViewById(R.id.tvConfirm);
-        tvReset.setOnClickListener(onClickListener);
-        tvConfirm.setOnClickListener(onClickListener);
-
-        drawerLayout.closeDrawer(Gravity.END);
-        drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.END);
-        drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-            }
-
-            @Override
-            public void onDrawerOpened(View drawerView) {
-            }
-
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.END);
-            }
-
-            @Override
-            public void onDrawerStateChanged(int newState) {
-            }
-        });
-        ViewGroup.LayoutParams layoutParams = rightView.getLayoutParams();
-        layoutParams.width = SizeUtils.getScreenWidth() - SizeUtils.dp2px(100);
-        rightView.setLayoutParams(layoutParams);
-
-        brandLists = new ArrayList<>();
-        filterBrandAdapter = new FilterBrandAdapter(R.layout.goods_item_pop_class, brandLists);
-        filterBrandAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+        recyclerViewClass = rootView.findViewById(R.id.recyclerViewClass);
+        classLists = new ArrayList<>();
+        ThirdClassBean thirdClassBean = new ThirdClassBean();
+        thirdClassBean.setCat_id("");
+        thirdClassBean.setCat_name("全部");
+        classLists.add(thirdClassBean);
+        classAdapter = new ClassAdapter(R.layout.amain_item_class, classLists);
+        recyclerViewClass.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        recyclerViewClass.setAdapter(classAdapter);
+        classAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                brandLists.get(position).setSelect(true);
-                filterBrandAdapter.notifyDataSetChanged();
+                selectClassId = classLists.get(position).getCat_id();
+                classAdapter.notifyDataSetChanged();
+                getListData();
             }
         });
-        recyclerViewBrand.setHasFixedSize(true);
-        recyclerViewBrand.setNestedScrollingEnabled(false);
-        recyclerViewBrand.setLayoutManager(new GridLayoutManager(getActivity(), 3));
-        recyclerViewBrand.setAdapter(filterBrandAdapter);
-
-        storeLists = new ArrayList<>();
-        filterStoreAdapter = new FilterStoreAdapter(R.layout.goods_item_pop_class, storeLists);
-        filterStoreAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                storeLists.get(position).setSelect(true);
-                filterStoreAdapter.notifyDataSetChanged();
-            }
-        });
-        recyclerViewStore.setHasFixedSize(true);
-        recyclerViewStore.setNestedScrollingEnabled(false);
-        recyclerViewStore.setLayoutManager(new GridLayoutManager(getActivity(), 3));
-        recyclerViewStore.setAdapter(filterStoreAdapter);
     }
+
 
     @Override
     public void initData() {
-        getListData();
+        initPriceLists();
         getClassData();
-        getFilterData();
+        getBrandLists();
+        getAreaLists();
+        getInsenceLists();
+        getAlcLists();
+        getListData();
+    }
+
+    private void initPriceLists() {
+        priceLists = new ArrayList<>();
+        priceLists.add(new PriceBean("", "", ""));
+        priceLists.add(new PriceBean("1", "", "999"));
+        priceLists.add(new PriceBean("2", "1000", "2999"));
+        priceLists.add(new PriceBean("3", "3000", "4999"));
+        priceLists.add(new PriceBean("4", "5000", "99999"));
+        priceLists.add(new PriceBean("5", "10000", ""));
+    }
+
+    private void getBrandLists() {
+        disposable.add(ApiUtils.getInstance().getUserBrandList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<BrandsListBean>>() {
+                    @Override
+                    public void accept(ResultBean<BrandsListBean> brandsListBeanResultBean) throws Exception {
+                        brandLists = brandsListBeanResultBean.getData().getList();
+                        BrandsListBean.BrandBean brandBean = new BrandsListBean().new BrandBean();
+                        brandBean.setBrand_id("");
+                        brandBean.setBrand_name("全部");
+                        brandLists.add(0, brandBean);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                }));
+    }
+
+    private void getAreaLists() {
+        disposable.add(ApiUtils.getInstance().getUserAreaList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<AreaListBean>>() {
+                    @Override
+                    public void accept(ResultBean<AreaListBean> areaListBeanResultBean) throws Exception {
+                        areaLists = areaListBeanResultBean.getData().getList();
+                        AreaListBean.AreaBean areaBean = new AreaListBean().new AreaBean();
+                        areaBean.setArea_id("");
+                        areaBean.setArea_name("全部");
+                        areaLists.add(0, areaBean);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                }));
+    }
+
+    private void getInsenceLists() {
+        disposable.add(ApiUtils.getInstance().getUserOrdoList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<OrdoListBean>>() {
+                    @Override
+                    public void accept(ResultBean<OrdoListBean> ordoListBeanResultBean) throws Exception {
+                        ordoLists = ordoListBeanResultBean.getData().getList();
+                        OrdoListBean.OrdoBean ordoBean = new OrdoListBean().new OrdoBean();
+                        ordoBean.setOdor_id("");
+                        ordoBean.setOdor_name("全部");
+                        ordoLists.add(0, ordoBean);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                }));
+    }
+
+    private void getAlcLists() {
+        disposable.add(ApiUtils.getInstance().getUserAlcList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<AlcListBean>>() {
+                    @Override
+                    public void accept(ResultBean<AlcListBean> alcListBeanResultBean) throws Exception {
+                        alcLists = alcListBeanResultBean.getData().getList();
+                        AlcListBean.AlcBean alcBean = new AlcListBean().new AlcBean();
+                        alcBean.setAlcohol_id("");
+                        alcBean.setAlcohol_name("全部");
+                        alcLists.add(0, alcBean);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                }));
+    }
+
+    private void getClassData() {
+        disposable.add(ApiUtils.getInstance().getMainClass()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<MainClassBean>>() {
+                    @Override
+                    public void accept(ResultBean<MainClassBean> mainClassBean) throws Exception {
+                        classLists.clear();
+                        ThirdClassBean thirdClassBean = new ThirdClassBean();
+                        thirdClassBean.setCat_id("");
+                        thirdClassBean.setCat_name("全部");
+                        classLists.add(thirdClassBean);
+                        List<FirstClassBean> categorys = mainClassBean.getData().getCategorys();
+                        for (int i = 0; i < categorys.size(); i++) {
+                            List<SecondClassBean> lv2 = categorys.get(i).getLv2();
+                            for (int j = 0; j < lv2.size(); j++) {
+                                List<ThirdClassBean> lv3 = lv2.get(j).getLv3();
+                                classLists.addAll(lv3);
+                            }
+                        }
+                        classAdapter.setNewData(classLists);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+
+                    }
+                }));
     }
 
     private void getListData() {
@@ -307,114 +381,113 @@ public class AuctionFragment extends BaseFragment {
         }
     }
 
-    private void getClassData() {
-        disposable.add(ApiUtils.getInstance().getMainClass()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<ResultBean<MainClassBean>>() {
-                    @Override
-                    public void accept(ResultBean<MainClassBean> mainClassBean) throws Exception {
-                        categoryLists = mainClassBean.getData().getCategorys();
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-
-                    public void accept(Throwable throwable) throws Exception {
-                    }
-                }));
-    }
-
-
-    private void getFilterData() {
-        disposable.add(ApiUtils.getInstance().getFilterData(classId)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<ResultBean<FilterListBean>>() {
-                    @Override
-                    public void accept(ResultBean<FilterListBean> filterListBeanResultBean) throws Exception {
-                        List<FilterBrandBean> brands = filterListBeanResultBean.getData().getBrand();
-                        List<FilterStoreBean> cats = filterListBeanResultBean.getData().getCat();
-                        if (brands != null) {
-                            brandLists = brands;
-                            filterBrandAdapter.setNewData(brandLists);
-                        }
-
-                        if (cats != null) {
-                            storeLists = cats;
-                            filterStoreAdapter.setNewData(storeLists);
-                        }
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                    }
-                }));
-    }
-
-    private void showClassPopWindow() {
-        if (categoryLists == null || categoryLists.size() == 0) {
-            ToastUtils.showShort("暂无分类");
+    private void showBrandPopWindow() {
+        if (brandLists == null || brandLists.size() == 0) {
+            ToastUtils.showShort("暂无品牌");
         } else {
-            if (classPopWindow == null) {
-                classPopWindow = new ClassPopWindow(getActivity(), categoryLists, classId);
-                classPopWindow.setCallBack(new ClassPopWindow.CallBack() {
+            if (choiceBrandPopWindow == null) {
+                choiceBrandPopWindow = new ChoiceBrandPopWindow(getActivity(), brandLists, brandId);
+                choiceBrandPopWindow.setCallBack(new ChoiceBrandPopWindow.CallBack() {
                     @Override
-                    public void choiceClass(String name, String id) {
-                        classId = id;
-                        className = name;
-                        getFilterData();
+                    public void choiceBrand(String brandName, String brandIdC) {
+                        brandId = brandIdC;
+                        tvBrand.setText(TextUtils.isEmpty(brandId) ? "品牌" : brandName);
                     }
                 });
             }
-            classPopWindow.showAsDropDown(tvClass, 0, 1);
+            choiceBrandPopWindow.showAsDropDown(rlBrand, 0, 1);
         }
     }
 
 
-    private void showDrawerLayout() {
-        if (drawerLayout.isDrawerOpen(Gravity.END)) {
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED, Gravity.END);
-            drawerLayout.closeDrawer(Gravity.END);
+    private void showAreaPopWindow() {
+        if (areaLists == null || areaLists.size() == 0) {
+            ToastUtils.showShort("暂无产地");
         } else {
-            drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED, Gravity.END);
-            drawerLayout.openDrawer(Gravity.END);
-        }
-    }
-
-    private void changeSortAll() {
-        if (!orderBy.equals(ORDER_ALL)) {
-            orderBy = ORDER_ALL;
-            tvAll.setSelected(true);
-            tvNew.setSelected(false);
-            tvPrice.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.goods_price_sort), null);
-        }
-    }
-
-    private void changeSortNew() {
-        if (!orderBy.equals(ORDER_NEW)) {
-            orderBy = ORDER_NEW;
-            tvAll.setSelected(false);
-            tvNew.setSelected(true);
-            tvPrice.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.goods_price_sort), null);
-        }
-    }
-
-    private void changeSortPrice() {
-        if (!orderBy.equals(ORDER_PRICE_UP) && !orderBy.equals(ORDER_PRICE_DOWN)) {
-            orderBy = ORDER_PRICE_UP;
-            tvPrice.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.goods_price_sort_up), null);
-        } else {
-            if (orderBy.equals(ORDER_PRICE_UP)) {
-                orderBy = ORDER_PRICE_DOWN;
-                tvPrice.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.goods_price_sort_down), null);
-            } else {
-                orderBy = ORDER_PRICE_UP;
-                tvPrice.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.mipmap.goods_price_sort_up), null);
+            if (choiceAreaPopWindow == null) {
+                choiceAreaPopWindow = new ChoiceAreaPopWindow(getActivity(), areaLists, areaId);
+                choiceAreaPopWindow.setCallBack(new ChoiceAreaPopWindow.CallBack() {
+                    @Override
+                    public void choiceBrand(String brandName, String brandId) {
+                        areaId = brandId;
+                        tvArea.setText(TextUtils.isEmpty(areaId) ? "产地" : brandName);
+                    }
+                });
             }
+            choiceAreaPopWindow.showAsDropDown(rlBrand, 0, 1);
         }
-        tvAll.setSelected(false);
-        tvNew.setSelected(false);
     }
+
+    private void showIncensePopWindow() {
+        if (ordoLists == null || ordoLists.size() == 0) {
+            ToastUtils.showShort("暂无香型");
+        } else {
+            if (choiceOrdoPopWindow == null) {
+                choiceOrdoPopWindow = new ChoiceOrdoPopWindow(getActivity(), ordoLists, ordoId);
+                choiceOrdoPopWindow.setCallBack(new ChoiceOrdoPopWindow.CallBack() {
+                    @Override
+                    public void choiceBrand(String brandName, String brandId) {
+                        ordoId = brandId;
+                        tvIncense.setText(TextUtils.isEmpty(ordoId) ? "香型" : brandName);
+                    }
+                });
+            }
+            choiceOrdoPopWindow.showAsDropDown(rlBrand, 0, 1);
+        }
+    }
+
+    private void showDegreePopWindow() {
+        if (alcLists == null || alcLists.size() == 0) {
+            ToastUtils.showShort("暂无酒精度");
+        } else {
+            if (choiceAlcPopWindow == null) {
+                choiceAlcPopWindow = new ChoiceAlcPopWindow(getActivity(), alcLists, alcoholId);
+                choiceAlcPopWindow.setCallBack(new ChoiceAlcPopWindow.CallBack() {
+                    @Override
+                    public void choiceBrand(String brandName, String brandId) {
+                        alcoholId = brandId;
+                        tvAlc.setText(TextUtils.isEmpty(alcoholId) ? "酒精度" : brandName);
+                    }
+                });
+            }
+            choiceAlcPopWindow.showAsDropDown(rlBrand, 0, 1);
+        }
+    }
+
+    private void showPricePopWindow() {
+        if (priceLists == null || priceLists.size() == 0) {
+            ToastUtils.showShort("暂无价格区间");
+        } else {
+            if (choicePricePopWindow == null) {
+                choicePricePopWindow = new ChoicePricePopWindow(getActivity(), priceLists, priceId);
+                choicePricePopWindow.setCallBack(new ChoicePricePopWindow.CallBack() {
+                    @Override
+                    public void choicePrice(String minPriceC, String maxPriceC, String id, String content) {
+                        minPrice = minPriceC;
+                        maxPrice = maxPriceC;
+                        priceId = id;
+                        tvPrice.setText(content);
+                        tvPrice.setText(TextUtils.isEmpty(priceId) ? "价格区间" : content);
+                    }
+                });
+            }
+            choicePricePopWindow.showAsDropDown(rlBrand, 0, 1);
+        }
+    }
+
+    public class ClassAdapter extends BaseQuickAdapter<ThirdClassBean, BaseViewHolder> {
+        public ClassAdapter(int layoutResId, List<ThirdClassBean> data) {
+            super(layoutResId, data);
+        }
+
+        @Override
+        protected void convert(BaseViewHolder helper, ThirdClassBean item) {
+            TextView tvClass = helper.getView(R.id.tvClass);
+            tvClass.setText(item.getCat_name());
+            tvClass.setSelected(item.getCat_id().equals(selectClassId));
+        }
+    }
+
 
     @Override
     public void onDestroy() {

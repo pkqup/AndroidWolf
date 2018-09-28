@@ -452,7 +452,6 @@ public class ValuationActivity extends BaseActivity {
                     .subscribe(new Consumer<ResultBean<UploadImageBean>>() {
                         @Override
                         public void accept(ResultBean<UploadImageBean> uploadImageBeanResultBean) throws Exception {
-                            hideLoadingDialog();
                             imageLists.add(uploadImageBeanResultBean.getData().getUrl());
                             if (imageLists.size() == base64Lists.size()) {
                                 StringBuffer stringBuffer = new StringBuffer();
@@ -491,7 +490,7 @@ public class ValuationActivity extends BaseActivity {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        ToastUtils.showShort("估价失败");
+                        ToastUtils.showShort("提交失败");
                         hideLoadingDialog();
                     }
                 }));

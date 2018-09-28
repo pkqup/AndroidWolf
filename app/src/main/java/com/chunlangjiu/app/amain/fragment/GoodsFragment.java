@@ -314,6 +314,7 @@ public class GoodsFragment extends BaseFragment {
 
     private void initPriceLists() {
         priceLists = new ArrayList<>();
+        priceLists.add(new PriceBean("", "", ""));
         priceLists.add(new PriceBean("1", "", "999"));
         priceLists.add(new PriceBean("2", "1000", "2999"));
         priceLists.add(new PriceBean("3", "3000", "4999"));
@@ -329,6 +330,10 @@ public class GoodsFragment extends BaseFragment {
                     @Override
                     public void accept(ResultBean<BrandsListBean> brandsListBeanResultBean) throws Exception {
                         brandLists = brandsListBeanResultBean.getData().getList();
+                        BrandsListBean.BrandBean brandBean = new BrandsListBean().new BrandBean();
+                        brandBean.setBrand_id("");
+                        brandBean.setBrand_name("全部");
+                        brandLists.add(0, brandBean);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -345,6 +350,10 @@ public class GoodsFragment extends BaseFragment {
                     @Override
                     public void accept(ResultBean<AreaListBean> areaListBeanResultBean) throws Exception {
                         areaLists = areaListBeanResultBean.getData().getList();
+                        AreaListBean.AreaBean areaBean = new AreaListBean().new AreaBean();
+                        areaBean.setArea_id("");
+                        areaBean.setArea_name("全部");
+                        areaLists.add(0, areaBean);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -361,6 +370,10 @@ public class GoodsFragment extends BaseFragment {
                     @Override
                     public void accept(ResultBean<OrdoListBean> ordoListBeanResultBean) throws Exception {
                         ordoLists = ordoListBeanResultBean.getData().getList();
+                        OrdoListBean.OrdoBean ordoBean = new OrdoListBean().new OrdoBean();
+                        ordoBean.setOdor_id("");
+                        ordoBean.setOdor_name("全部");
+                        ordoLists.add(0, ordoBean);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -377,6 +390,10 @@ public class GoodsFragment extends BaseFragment {
                     @Override
                     public void accept(ResultBean<AlcListBean> alcListBeanResultBean) throws Exception {
                         alcLists = alcListBeanResultBean.getData().getList();
+                        AlcListBean.AlcBean alcBean = new AlcListBean().new AlcBean();
+                        alcBean.setAlcohol_id("");
+                        alcBean.setAlcohol_name("全部");
+                        alcLists.add(0, alcBean);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -510,6 +527,8 @@ public class GoodsFragment extends BaseFragment {
                     @Override
                     public void choiceBrand(String brandName, String brandIdC) {
                         brandId = brandIdC;
+                        tvBrand.setText(TextUtils.isEmpty(brandId) ? "品牌" : brandName);
+                        getGoodsList(1, true);
                     }
                 });
             }
@@ -528,6 +547,8 @@ public class GoodsFragment extends BaseFragment {
                     @Override
                     public void choiceBrand(String brandName, String brandId) {
                         areaId = brandId;
+                        tvArea.setText(TextUtils.isEmpty(areaId) ? "产地" : brandName);
+                        getGoodsList(1, true);
                     }
                 });
             }
@@ -544,8 +565,9 @@ public class GoodsFragment extends BaseFragment {
                 choiceOrdoPopWindow.setCallBack(new ChoiceOrdoPopWindow.CallBack() {
                     @Override
                     public void choiceBrand(String brandName, String brandId) {
-                        tvIncense.setText(brandName);
                         ordoId = brandId;
+                        tvIncense.setText(TextUtils.isEmpty(ordoId) ? "香型" : brandName);
+                        getGoodsList(1, true);
                     }
                 });
             }
@@ -563,6 +585,8 @@ public class GoodsFragment extends BaseFragment {
                     @Override
                     public void choiceBrand(String brandName, String brandId) {
                         alcoholId = brandId;
+                        tvAlc.setText(TextUtils.isEmpty(alcoholId) ? "酒精度" : brandName);
+                        getGoodsList(1, true);
                     }
                 });
             }
@@ -578,10 +602,13 @@ public class GoodsFragment extends BaseFragment {
                 choicePricePopWindow = new ChoicePricePopWindow(getActivity(), priceLists, priceId);
                 choicePricePopWindow.setCallBack(new ChoicePricePopWindow.CallBack() {
                     @Override
-                    public void choicePrice(String minPriceC, String maxPriceC, String id) {
+                    public void choicePrice(String minPriceC, String maxPriceC, String id, String content) {
                         minPrice = minPriceC;
                         maxPrice = maxPriceC;
                         priceId = id;
+                        tvPrice.setText(content);
+                        tvPrice.setText(TextUtils.isEmpty(priceId) ? "价格区间" : content);
+                        getGoodsList(1, true);
                     }
                 });
             }

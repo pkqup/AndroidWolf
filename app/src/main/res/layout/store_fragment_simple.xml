@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scrollbars="none">
@@ -17,9 +18,9 @@
             android:layout_marginRight="10dp"
             android:layout_marginTop="20dp"
             android:lineSpacingExtra="2dp"
-            android:text="        拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧"
             android:textColor="@color/t_black"
-            android:textSize="@dimen/sp_small" />
+            android:textSize="@dimen/sp_small"
+            tools:text="        拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧拉菲庄园位于庄明海大道东侧" />
 
         <View
             android:layout_width="match_parent"
@@ -51,7 +52,7 @@
                 android:layout_marginLeft="5dp"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:text="法国波尔多左岸梅多克"
+                tools:text="法国波尔多左岸梅多克"
                 android:textColor="@color/t_black"
                 android:textSize="@dimen/sp_small" />
         </LinearLayout>
@@ -78,7 +79,7 @@
                 android:layout_marginLeft="5dp"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:text="107公顷"
+                tools:text="107公顷"
                 android:textColor="@color/t_black"
                 android:textSize="@dimen/sp_small" />
         </LinearLayout>
@@ -105,7 +106,7 @@
                 android:layout_marginLeft="5dp"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:text="35年"
+                tools:text="35年"
                 android:textColor="@color/t_black"
                 android:textSize="@dimen/sp_small" />
         </LinearLayout>
@@ -202,7 +203,7 @@
                 android:layout_marginLeft="15dp"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:text="0755-1235553"
+                tools:text="0755-1235553"
                 android:textColor="@color/t_black"
                 android:textSize="@dimen/sp_small" />
         </LinearLayout>
@@ -229,7 +230,7 @@
                 android:layout_marginLeft="15dp"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:text="www.123.com"
+                tools:text="www.123.com"
                 android:textColor="@color/t_black"
                 android:textSize="@dimen/sp_small" />
         </LinearLayout>
@@ -256,7 +257,7 @@
                 android:layout_marginLeft="15dp"
                 android:ellipsize="end"
                 android:singleLine="true"
-                android:text="Chateau Lafite"
+                tools:text="Chateau Lafite"
                 android:textColor="@color/t_black"
                 android:textSize="@dimen/sp_small" />
         </LinearLayout>

@@ -29,6 +29,7 @@ import com.chunlangjiu.app.goods.activity.GoodsDetailsActivity;
 import com.chunlangjiu.app.goods.activity.GoodsListActivity;
 import com.chunlangjiu.app.goods.activity.GoodsListNewActivity;
 import com.chunlangjiu.app.goods.activity.SearchActivity;
+import com.chunlangjiu.app.goods.activity.ShopMainActivity;
 import com.chunlangjiu.app.goods.activity.ValuationActivity;
 import com.chunlangjiu.app.net.ApiUtils;
 import com.chunlangjiu.app.store.activity.StoreListActivity;
