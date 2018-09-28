@@ -327,7 +327,8 @@ public interface ApiService {
                                     @Field("dlytmpl_id") String dlytmpl_id, @Field("sku") String sku,
                                     @Field("label") String label, @Field("explain") String explain,
                                     @Field("parameter") String parameter, @Field("unit") String unit, @Field("nospec") String nospec,
-                                    @Field("area_id") String area_id, @Field("odor_id") String odor_id, @Field("alcohol_id") String alcohol_id);
+                                    @Field("area_id") String area_id, @Field("odor_id") String odor_id, @Field("alcohol_id") String alcohol_id,
+                                    @Field("store") String store);
 
     @POST("index.php/topapi")
     @FormUrlEncoded

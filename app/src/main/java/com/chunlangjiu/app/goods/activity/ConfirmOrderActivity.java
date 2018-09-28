@@ -346,6 +346,7 @@ public class ConfirmOrderActivity extends BaseActivity {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
                             hideLoadingDialog();
+                            ToastUtils.showErrorMsg(throwable);
                         }
                     }));
         } else {
@@ -367,6 +368,7 @@ public class ConfirmOrderActivity extends BaseActivity {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         hideLoadingDialog();
+                        ToastUtils.showErrorMsg(throwable);
                     }
                 }));
     }

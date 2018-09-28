@@ -307,6 +307,7 @@ public class CartFragment extends BaseFragment {
                         goodsBean.setGoodsPic(goodsItem.getImage_default_id());
                         goodsBean.setGoodsPrice(goodsItem.getPrice().getPrice());
                         goodsBean.setGoodsNum(goodsItem.getQuantity());
+                        goodsBean.setStore(goodsItem.getStore());
                         goodsBean.setGoodsCheck(!goodsItem.getIs_checked().equals("0"));
                         goodsLists.add(goodsBean);
                     }
@@ -518,34 +519,42 @@ public class CartFragment extends BaseFragment {
     }
 
     private void addGoodsNum(int position) {
-        final CartGoodsBean cartGoodsBean = lists.get(position);
-        showLoadingDialog();
-        UpdateCartGoodsBean updateCartGoodsBean = new UpdateCartGoodsBean();
-        updateCartGoodsBean.setCart_id(cartGoodsBean.getCart_id());
-        updateCartGoodsBean.setIs_checked(cartGoodsBean.isStoreCheck() ? "1" : "0");
-        updateCartGoodsBean.setSelected_promotion("0");
-        updateCartGoodsBean.setTotalQuantity(Integer.parseInt(cartGoodsBean.getGoodsNum()) + 1 + "");
-        List<UpdateCartGoodsBean> list = new ArrayList<>();
-        list.add(updateCartGoodsBean);
-        String jsonStr = new Gson().toJson(list);
-        disposable.add(ApiUtils.getInstance().updateCartData(jsonStr)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<ResultBean>() {
-                    @Override
-                    public void accept(ResultBean resultBean) throws Exception {
-                        hideLoadingDialog();
-                        cartGoodsBean.setGoodsNum(Integer.parseInt(cartGoodsBean.getGoodsNum()) + 1 + "");
-                        updateRecycleViewList();
-                        updateCheckAll();
-                        updateTotalPrice();
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        hideLoadingDialog();
-                    }
-                }));
+        try {
+            final CartGoodsBean cartGoodsBean = lists.get(position);
+            if (Integer.parseInt(cartGoodsBean.getGoodsNum()) >= Integer.parseInt(cartGoodsBean.getStore())) {
+                ToastUtils.showShort("库存不足");
+            } else {
+                showLoadingDialog();
+                UpdateCartGoodsBean updateCartGoodsBean = new UpdateCartGoodsBean();
+                updateCartGoodsBean.setCart_id(cartGoodsBean.getCart_id());
+                updateCartGoodsBean.setIs_checked(cartGoodsBean.isStoreCheck() ? "1" : "0");
+                updateCartGoodsBean.setSelected_promotion("0");
+                updateCartGoodsBean.setTotalQuantity(Integer.parseInt(cartGoodsBean.getGoodsNum()) + 1 + "");
+                List<UpdateCartGoodsBean> list = new ArrayList<>();
+                list.add(updateCartGoodsBean);
+                String jsonStr = new Gson().toJson(list);
+                disposable.add(ApiUtils.getInstance().updateCartData(jsonStr)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Consumer<ResultBean>() {
+                            @Override
+                            public void accept(ResultBean resultBean) throws Exception {
+                                hideLoadingDialog();
+                                cartGoodsBean.setGoodsNum(Integer.parseInt(cartGoodsBean.getGoodsNum()) + 1 + "");
+                                updateRecycleViewList();
+                                updateCheckAll();
+                                updateTotalPrice();
+                            }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(Throwable throwable) throws Exception {
+                                hideLoadingDialog();
+                            }
+                        }));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -571,7 +580,7 @@ public class CartFragment extends BaseFragment {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        KLog.e("updateFail");
+                        ToastUtils.showErrorMsg(throwable);
                     }
                 }));
     }
@@ -719,6 +728,7 @@ public class CartFragment extends BaseFragment {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
                             hideLoadingDialog();
+                            ToastUtils.showErrorMsg(throwable);
                         }
                     }));
         } else {

@@ -7,6 +7,8 @@ package com.chunlangjiu.app.user.bean;
 public class AuthStatusBean {
 
     public static final String AUTH_SUCCESS = "finish";
+    public static final String AUTH_LOCKED = "locked";
+    public static final String AUTH_FAILING = "failing";
 
     //'active'=>'未审核',
     //'locked'=>'审核中',

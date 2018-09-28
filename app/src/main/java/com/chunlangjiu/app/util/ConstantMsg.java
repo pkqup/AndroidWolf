@@ -10,6 +10,7 @@ public class ConstantMsg {
     public static final String MSG_PAGE_AUCTION = "msg_page_auction";//首页切换到竞拍专区
     public static final String LOGIN_SUCCESS = "msg_login_success";//登录成功
     public static final String LOGOUT_SUCCESS = "msg_logout_success";//登录成功
+    public static final String PERSON_COMPANY_AUTH_SUCCESS = "person_company_auth_success";//个人或者企业认证成功
     public static final String ADD_ADDRESS_SUCCESS = "msg_add_address_success";//添加地址成功
     public static final String CHANGE_TO_EVALUATE = "msg_change_to_evaluate";//切换到评论tab
     public static final String WEIXIN_PAY_CALLBACK = "weixin_pay_success";//微信支付成功
@@ -23,6 +24,7 @@ public class ConstantMsg {
     public static final String WEB_URL_SETTING = "http://mall.chunlangjiu.com/index.php/wap/app-setting.html?apitoken=";//设置
     public static final String WEB_URL_LICENSE = "http://mall.chunlangjiu.com/index.php/wap/app-license.html";//协议
 
+    public static final String WEB_URL_GOODS_MANAGER = "http://mall.chunlangjiu.com/index.php/wap/onsale.html?apitoken=";//在售商品
     public static final String WEB_URL_SELL_GOODS = "http://mall.chunlangjiu.com/index.php/wap/onsale.html?apitoken=";//在售商品
     public static final String WEB_URL_ACTION_GOODS = "http://mall.chunlangjiu.com/index.php/wap/auctionList.html?apitoken=";//竞拍商品
     public static final String WEB_URL_STORE_GOODS = "http://mall.chunlangjiu.com/index.php/wap/instock.html?apitoken=";//仓库商品

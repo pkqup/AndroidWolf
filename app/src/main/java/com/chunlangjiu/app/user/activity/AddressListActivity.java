@@ -202,15 +202,19 @@ public class AddressListActivity extends BaseActivity {
 
     private void checkBack() {
         if (isSelect) {
-            AddressListDetailBean addressListDetailBean = new AddressListDetailBean();
-            for (int i = 0; i < lists.size(); i++) {
-                if (lists.get(i).getAddr_id().equals(selectAddressId)) {
-                    addressListDetailBean = lists.get(i);
+            if (lists != null && lists.size() > 0) {
+                AddressListDetailBean addressListDetailBean = new AddressListDetailBean();
+                for (int i = 0; i < lists.size(); i++) {
+                    if (lists.get(i).getAddr_id().equals(selectAddressId)) {
+                        addressListDetailBean = lists.get(i);
+                    }
                 }
+                Intent intent = new Intent();
+                intent.putExtra("addressListDetailBean", addressListDetailBean);
+                setResult(RESULT_OK, intent);
+            } else {
+                finish();
             }
-            Intent intent = new Intent();
-            intent.putExtra("addressListDetailBean", addressListDetailBean);
-            setResult(RESULT_OK, intent);
         }
         finish();
     }

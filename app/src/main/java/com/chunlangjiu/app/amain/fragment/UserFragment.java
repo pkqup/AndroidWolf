@@ -19,6 +19,7 @@ import com.chunlangjiu.app.net.ApiUtils;
 import com.chunlangjiu.app.order.activity.OrderMainActivity;
 import com.chunlangjiu.app.order.params.OrderParams;
 import com.chunlangjiu.app.user.activity.AddGoodsActivity;
+import com.chunlangjiu.app.user.activity.AddGoodsSuccessActivity;
 import com.chunlangjiu.app.user.activity.AddressListActivity;
 import com.chunlangjiu.app.user.activity.CompanyAuthActivity;
 import com.chunlangjiu.app.user.activity.PersonAuthActivity;
@@ -48,10 +49,13 @@ import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
@@ -250,45 +254,48 @@ public class UserFragment extends BaseFragment {
                     break;
                 case R.id.rlSellAuctionFour:// 卖家竞拍订单-全部订单
                     break;
+                case R.id.rlGoodsManager:// 商品管理
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_GOODS_MANAGER + BaseApplication.getToken(), "商品管理");
+                    break;
                 case R.id.rlAddGoods:// 添加商品
                     startActivity(new Intent(getActivity(), AddGoodsActivity.class));
                     break;
                 case R.id.rlSellGoods:// 在售商品
-                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_SELL_GOODS +  BaseApplication.getToken(), "在售商品");
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_SELL_GOODS + BaseApplication.getToken(), "在售商品");
                     break;
                 case R.id.rlAuctionGoods:// 竞拍商品
-                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_ACTION_GOODS +  BaseApplication.getToken(), "竞拍商品");
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_ACTION_GOODS + BaseApplication.getToken(), "竞拍商品");
                     break;
                 case R.id.rlWareHouseGoods:// 仓库商品
-                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_STORE_GOODS +  BaseApplication.getToken(), "仓库商品");
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_STORE_GOODS + BaseApplication.getToken(), "仓库商品");
                     break;
                 case R.id.rlCheckGoods:// 审核商品
-                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_AUTH_GOODS +  BaseApplication.getToken(), "审核商品");
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_AUTH_GOODS + BaseApplication.getToken(), "审核商品");
                     break;
                 case R.id.rlMoneyManager:// 资金管理
-                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_MONEY_MANAGER +  BaseApplication.getToken(), "资金管理");
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_MONEY_MANAGER + BaseApplication.getToken(), "资金管理");
                     break;
                 case R.id.rlShare:// 分享
                     showShareDialog();
                     break;
                 case R.id.rlCollect:// 我的收藏
-                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_COLLECT +  BaseApplication.getToken(), "我的收藏");
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_COLLECT + BaseApplication.getToken(), "我的收藏");
                     break;
                 case R.id.rlVip:// 会员资料
                     if (userType == TYPE_BUYER) {
-                        WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_VIP_INFO +  BaseApplication.getToken(), "会员资料");
+                        WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_VIP_INFO + BaseApplication.getToken(), "会员资料");
                     } else {
-                        WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_SHOP_INFO +  BaseApplication.getToken(), "店铺资料");
+                        WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_SHOP_INFO + BaseApplication.getToken(), "店铺资料");
                     }
                     break;
                 case R.id.rlAddress:// 地址管理
                     startActivity(new Intent(getActivity(), AddressListActivity.class));
                     break;
                 case R.id.rlBankCard:// 银行卡管理
-                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_BANK_CARD +  BaseApplication.getToken(), "银行卡管理");
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_BANK_CARD + BaseApplication.getToken(), "银行卡管理");
                     break;
                 case R.id.rlBankCardSecond:// 银行卡管理
-                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_BANK_CARD +  BaseApplication.getToken(), "银行卡管理");
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_BANK_CARD + BaseApplication.getToken(), "银行卡管理");
                     break;
             }
         }
@@ -403,6 +410,7 @@ public class UserFragment extends BaseFragment {
         rlAuctionGoods = rootView.findViewById(R.id.rlAuctionGoods);
         rlWareHouseGoods = rootView.findViewById(R.id.rlWareHouseGoods);
         rlCheckGoods = rootView.findViewById(R.id.rlCheckGoods);
+        rlGoodsManager.setOnClickListener(onClickListener);
         rlAddGoods.setOnClickListener(onClickListener);
         rlSellGoods.setOnClickListener(onClickListener);
         rlAuctionGoods.setOnClickListener(onClickListener);
@@ -521,7 +529,7 @@ public class UserFragment extends BaseFragment {
                 .subscribe(new Consumer<ResultBean<UserInfoBean>>() {
                     @Override
                     public void accept(ResultBean<UserInfoBean> userInfoBeanResultBean) throws Exception {
-                        GlideUtils.loadImage(getActivity(), userInfoBeanResultBean.getData().getHead_portrait(), imgHead);
+                        GlideUtils.loadImageHead(getActivity(), userInfoBeanResultBean.getData().getHead_portrait(), imgHead);
                         tvName.setText(userInfoBeanResultBean.getData().getLogin_account());
                     }
                 }, new Consumer<Throwable>() {
@@ -666,11 +674,50 @@ public class UserFragment extends BaseFragment {
     }
 
     private void checkStatus() {
-        if (AuthStatusBean.AUTH_SUCCESS.equals(personStatus) || AuthStatusBean.AUTH_SUCCESS.equals(companyStatus)) {
-            changeUserType();
+        if (userType == TYPE_BUYER) {
+            if (AuthStatusBean.AUTH_SUCCESS.equals(personStatus) || AuthStatusBean.AUTH_SUCCESS.equals(companyStatus)) {
+                changeUserType();
+            } else {
+                showLoadingDialog();
+                Observable<ResultBean<AuthStatusBean>> personAuthStatus = ApiUtils.getInstance().getPersonAuthStatus();
+                Observable<ResultBean<AuthStatusBean>> companyAuthStatus = ApiUtils.getInstance().getCompanyAuthStatus();
+                disposable.add(Observable.zip(personAuthStatus, companyAuthStatus, new BiFunction<ResultBean<AuthStatusBean>, ResultBean<AuthStatusBean>, List<AuthStatusBean>>() {
+                    @Override
+                    public List<AuthStatusBean> apply(ResultBean<AuthStatusBean> uploadImageBeanResultBean, ResultBean<AuthStatusBean> uploadImageBeanResultBean2) throws Exception {
+                        List<AuthStatusBean> imageLists = new ArrayList<>();
+                        imageLists.add(uploadImageBeanResultBean.getData());
+                        imageLists.add(uploadImageBeanResultBean2.getData());
+                        return imageLists;
+                    }
+                }).subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Consumer<List<AuthStatusBean>>() {
+                            @Override
+                            public void accept(List<AuthStatusBean> authStatusBeans) throws Exception {
+                                hideLoadingDialog();
+                                personStatus = authStatusBeans.get(0).getStatus();
+                                companyStatus = authStatusBeans.get(1).getStatus();
+                                if (AuthStatusBean.AUTH_SUCCESS.equals(authStatusBeans.get(0).getStatus()) || AuthStatusBean.AUTH_SUCCESS.equals(authStatusBeans.get(1).getStatus())) {
+                                    changeUserType();
+                                } else if (AuthStatusBean.AUTH_LOCKED.equals(authStatusBeans.get(0).getStatus()) || AuthStatusBean.AUTH_LOCKED.equals(authStatusBeans.get(1).getStatus())) {
+                                    ToastUtils.showShort("您的认证正在审核中，我们会尽快处理");
+                                } else if (AuthStatusBean.AUTH_FAILING.equals(authStatusBeans.get(0).getStatus()) || AuthStatusBean.AUTH_FAILING.equals(authStatusBeans.get(1).getStatus())) {
+                                    ToastUtils.showShort("您的认证被驳回，请重新提交资料审核");
+                                    startActivity(new Intent(getActivity(), PersonAuthActivity.class));
+                                } else {
+                                    ToastUtils.showShort("您还没有进行实名认证，请先认证");
+                                    startActivity(new Intent(getActivity(), PersonAuthActivity.class));
+                                }
+                            }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(Throwable throwable) throws Exception {
+                                hideLoadingDialog();
+                            }
+                        }));
+            }
         } else {
-            ToastUtils.showShort("您还没有进行实名认证，请先认证");
-            toAuthActivity();
+            changeUserType();
         }
     }
 
@@ -695,6 +742,7 @@ public class UserFragment extends BaseFragment {
                         } else if ("locked".equals(authStatusBeanResultBean.getData().getStatus())) {
                             ToastUtils.showShort("您的认证正在审核中，我们会尽快处理");
                         } else if ("failing".equals(authStatusBeanResultBean.getData().getStatus())) {
+                            ToastUtils.showShort("您的认证被驳回，请重新提交资料审核");
                             toAuthActivity();
                         } else if (AuthStatusBean.AUTH_SUCCESS.equals(authStatusBeanResultBean.getData().getStatus())) {
                             tvAuthRealName.setText("已认证");
@@ -729,6 +777,7 @@ public class UserFragment extends BaseFragment {
                         } else if ("locked".equals(authStatusBeanResultBean.getData().getStatus())) {
                             ToastUtils.showShort("您的认证正在审核中，我们会尽快处理");
                         } else if ("failing".equals(authStatusBeanResultBean.getData().getStatus())) {
+                            ToastUtils.showShort("您的认证被驳回，请重新提交资料审核");
                             toAuthCompanyActivity();
                         } else if (AuthStatusBean.AUTH_SUCCESS.equals(authStatusBeanResultBean.getData().getStatus())) {
                             tvAuthRealName.setText("已认证");
@@ -779,8 +828,37 @@ public class UserFragment extends BaseFragment {
         public void onNotify(Object object, String eventTag) {
             loginSuccess(eventTag);
             logoutSuccess(eventTag);
+//            authSuccess(eventTag);
         }
     };
+
+    private void authSuccess(String eventTag) {
+        if (eventTag.equals(ConstantMsg.PERSON_COMPANY_AUTH_SUCCESS)) {
+            Observable<ResultBean<AuthStatusBean>> personAuthStatus = ApiUtils.getInstance().getPersonAuthStatus();
+            Observable<ResultBean<AuthStatusBean>> companyAuthStatus = ApiUtils.getInstance().getCompanyAuthStatus();
+            disposable.add(Observable.zip(personAuthStatus, companyAuthStatus, new BiFunction<ResultBean<AuthStatusBean>, ResultBean<AuthStatusBean>, List<AuthStatusBean>>() {
+                @Override
+                public List<AuthStatusBean> apply(ResultBean<AuthStatusBean> uploadImageBeanResultBean, ResultBean<AuthStatusBean> uploadImageBeanResultBean2) throws Exception {
+                    List<AuthStatusBean> imageLists = new ArrayList<>();
+                    imageLists.add(uploadImageBeanResultBean.getData());
+                    imageLists.add(uploadImageBeanResultBean2.getData());
+                    return imageLists;
+                }
+            }).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<List<AuthStatusBean>>() {
+                        @Override
+                        public void accept(List<AuthStatusBean> authStatusBeans) throws Exception {
+                            personStatus = authStatusBeans.get(0).getStatus();
+                            companyStatus = authStatusBeans.get(1).getStatus();
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                        }
+                    }));
+        }
+    }
 
 
     //登录成功
@@ -874,7 +952,7 @@ public class UserFragment extends BaseFragment {
                     @Override
                     public void accept(ResultBean loginBeanResultBean) throws Exception {
                         hideLoadingDialog();
-                        GlideUtils.loadImage(getActivity(), url, imgHead);
+                        GlideUtils.loadImageHead(getActivity(), url, imgHead);
                     }
                 }, new Consumer<Throwable>() {
                     @Override

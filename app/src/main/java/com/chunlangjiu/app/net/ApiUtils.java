@@ -295,9 +295,9 @@ public class ApiUtils {
 
     public Observable<ResultBean> addGoods(String cat_id, String brand_id, String shop_cat_id, String title, String sub_title, String weight, String list_image,
                                            String price, String dlytmpl_id, String sku, String label, String explain, String parameter,
-                                           String area_id, String odor_id, String alcohol_id) {
+                                           String area_id, String odor_id, String alcohol_id, String store) {
         return apiService.addGoods("item.create", "v1", cat_id, brand_id, shop_cat_id, title, sub_title, weight, list_image,
-                price, dlytmpl_id, sku, label, explain, parameter, "ML", "1",area_id,odor_id,alcohol_id);
+                price, dlytmpl_id, sku, label, explain, parameter, "ML", "1",area_id,odor_id,alcohol_id,store);
     }
 
     public Flowable<ResultBean<OrderListBean>> getOrderLists(String status, int pageNo) {

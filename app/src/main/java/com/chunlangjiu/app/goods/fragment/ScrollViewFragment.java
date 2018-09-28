@@ -54,6 +54,7 @@ public class ScrollViewFragment extends BaseFragment {
 
 
     private VerticalScrollView scrollView;
+    private RelativeLayout rlBanner;
     private Banner banner;
     private LinearLayout indicator;
     private TextView tvPrice;
@@ -114,8 +115,14 @@ public class ScrollViewFragment extends BaseFragment {
     @Override
     public void initView() {
         scrollView = rootView.findViewById(R.id.scrollView);
+        rlBanner = rootView.findViewById(R.id.rlBanner);
         banner = rootView.findViewById(R.id.banner);
         indicator = rootView.findViewById(R.id.indicator);
+
+        int screenWidth = SizeUtils.getScreenWidth();
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) rlBanner.getLayoutParams();
+        layoutParams.height = screenWidth;
+        rlBanner.setLayoutParams(layoutParams);
 
         tvPrice = rootView.findViewById(R.id.tvPrice);
         tvGoodsName = rootView.findViewById(R.id.tvGoodsName);

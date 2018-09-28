@@ -24,7 +24,16 @@ public class CartGoodsBean {
     private String goodsName;
     private String goodsPrice;
     private String goodsNum;
+    private String store;//库存
     private boolean goodsCheck;
+
+    public String getStore() {
+        return store;
+    }
+
+    public void setStore(String store) {
+        this.store = store;
+    }
 
     public static int getItemStore() {
         return ITEM_STORE;

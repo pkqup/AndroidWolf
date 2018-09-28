@@ -609,7 +609,13 @@ public class HomeFragment extends BaseFragment {
                             hideLoadingDialog();
                             if (AuthStatusBean.AUTH_SUCCESS.equals(authStatusBeans.get(0).getStatus()) || AuthStatusBean.AUTH_SUCCESS.equals(authStatusBeans.get(1).getStatus())) {
                                 startActivity(new Intent(getActivity(), AddGoodsActivity.class));
+                            } else if (AuthStatusBean.AUTH_LOCKED.equals(authStatusBeans.get(0).getStatus()) || AuthStatusBean.AUTH_LOCKED.equals(authStatusBeans.get(1).getStatus())) {
+                                ToastUtils.showShort("您的认证正在审核中，我们会尽快处理");
+                            } else if (AuthStatusBean.AUTH_FAILING.equals(authStatusBeans.get(0).getStatus()) || AuthStatusBean.AUTH_FAILING.equals(authStatusBeans.get(1).getStatus())) {
+                                ToastUtils.showShort("您的认证被驳回，请重新提交资料审核");
+                                startActivity(new Intent(getActivity(), PersonAuthActivity.class));
                             } else {
+                                ToastUtils.showShort("您还没有进行实名认证，请先认证");
                                 startActivity(new Intent(getActivity(), PersonAuthActivity.class));
                             }
                         }

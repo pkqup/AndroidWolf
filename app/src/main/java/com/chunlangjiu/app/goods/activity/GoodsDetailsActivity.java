@@ -385,6 +385,7 @@ public class GoodsDetailsActivity extends BaseActivity {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         hideLoadingDialog();
+                        ToastUtils.showErrorMsg(throwable);
                     }
                 }));
     }
@@ -424,6 +425,7 @@ public class GoodsDetailsActivity extends BaseActivity {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         hideLoadingDialog();
+                        ToastUtils.showErrorMsg(throwable);
                     }
                 }));
     }

@@ -5,14 +5,15 @@ import android.view.View;
 
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
+import com.chunlangjiu.app.abase.BaseApplication;
+import com.chunlangjiu.app.util.ConstantMsg;
+import com.chunlangjiu.app.web.WebViewActivity;
 
 /**
  * @CreatedbBy: liucun on 2018/9/17
  * @Describe:
  */
 public class AddGoodsSuccessActivity extends BaseActivity {
-
-
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -22,10 +23,10 @@ public class AddGoodsSuccessActivity extends BaseActivity {
                     finish();
                     break;
                 case R.id.tvGoodsManager:
-                    finish();
+                    WebViewActivity.startWebViewActivity(AddGoodsSuccessActivity.this, ConstantMsg.WEB_URL_GOODS_MANAGER + BaseApplication.getToken(), "商品管理");
                     break;
                 case R.id.tvCheckGoodsManager:
-                    finish();
+                    WebViewActivity.startWebViewActivity(AddGoodsSuccessActivity.this, ConstantMsg.WEB_URL_AUTH_GOODS + BaseApplication.getToken(), "审核商品");
                     break;
             }
         }

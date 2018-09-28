@@ -471,6 +471,9 @@ public class ShopMainActivity extends BaseActivity {
     }
 
     private void getGoodsList(int pageNum, final boolean isRefresh) {
+        if (isRefresh) {
+            refreshLayout.autoRefresh();
+        }
         disposable.add(ApiUtils.getInstance().getGoodsList(selectClassId, pageNum, "", shopId, brandId, areaId, ordoId, alcoholId, minPrice, maxPrice)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -521,7 +524,8 @@ public class ShopMainActivity extends BaseActivity {
                     gridAdapter.setNewData(lists);
                 }
             }
-        }else{
+        } else {
+            lists.clear();
             if (listType) {
                 linearAdapter.setEmptyView(getLayoutInflater().inflate(R.layout.common_empty_view, (ViewGroup) recycleView.getParent(), false));
             } else {

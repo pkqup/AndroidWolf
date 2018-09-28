@@ -661,7 +661,6 @@ public class AddGoodsActivity extends BaseActivity {
                     .subscribe(new Consumer<ResultBean<UploadImageBean>>() {
                         @Override
                         public void accept(ResultBean<UploadImageBean> uploadImageBeanResultBean) throws Exception {
-                            hideLoadingDialog();
                             imageLists.add(uploadImageBeanResultBean.getData().getUrl());
                             if (imageLists.size() == base64Lists.size()) {
                                 StringBuffer stringBuffer = new StringBuffer();
@@ -706,7 +705,7 @@ public class AddGoodsActivity extends BaseActivity {
         disposable.add(ApiUtils.getInstance().addGoods(classId, brandId, "", etTitle.getText().toString().trim(),
                 etSecondName.getText().toString().trim(), etSize.getText().toString().trim(), images,
                 etPrice.getText().toString().trim(), "15", skuArray, etTag.getText().toString().trim(),
-                etGoodsDesc.getText().toString().trim(), parameter, areaId, ordoId, alcId)
+                etGoodsDesc.getText().toString().trim(), parameter, areaId, ordoId, alcId,etCount.getText().toString().trim())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean>() {

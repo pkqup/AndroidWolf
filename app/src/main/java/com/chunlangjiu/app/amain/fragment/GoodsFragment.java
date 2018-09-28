@@ -433,6 +433,9 @@ public class GoodsFragment extends BaseFragment {
     }
 
     private void getGoodsList(int pageNum, final boolean isRefresh) {
+        if (isRefresh) {
+            refreshLayout.autoRefresh();
+        }
         disposable.add(ApiUtils.getInstance().getGoodsList(selectClassId, pageNum, searchKey, "", brandId, areaId, ordoId, alcoholId, minPrice, maxPrice)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -483,6 +486,7 @@ public class GoodsFragment extends BaseFragment {
                 }
             }
         } else {
+            lists.clear();
             if (listType) {
                 linearAdapter.setEmptyView(getLayoutInflater().inflate(R.layout.common_empty_view, (ViewGroup) recyclerView.getParent(), false));
             } else {
