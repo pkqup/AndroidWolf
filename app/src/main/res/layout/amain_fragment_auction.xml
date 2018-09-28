@@ -1,112 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/bg_white"
+    android:orientation="vertical">
+    <include layout="@layout/goods_view_choice_data"/>
 
-    <LinearLayout
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:background="@color/bg_gray"
+        app:srlEnableFooterFollowWhenLoadFinished="true"
+        app:srlEnableScrollContentWhenLoaded="true">
 
-        <LinearLayout
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycle_view"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="match_parent"
             android:background="@color/bg_white"
-            android:orientation="horizontal">
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp" />
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
-            <TextView
-                android:id="@+id/tv_all"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="综合"
-                android:textColor="@color/t_gray_select"
-                android:textSize="@dimen/sp_small" />
-
-            <TextView
-                android:id="@+id/tv_new"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="新品"
-                android:textColor="@color/t_gray_select"
-                android:textSize="@dimen/sp_small" />
-
-            <TextView
-                android:id="@+id/tv_price"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="价格"
-                android:textColor="@color/t_gray_select"
-                android:textSize="@dimen/sp_small" />
-
-            <TextView
-                android:id="@+id/tv_class"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="分类"
-                android:textColor="@color/t_gray_select"
-                android:textSize="@dimen/sp_small" />
-
-            <TextView
-                android:id="@+id/tv_filter"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="筛选"
-                android:textColor="@color/t_gray_select"
-                android:textSize="@dimen/sp_small" />
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/line" />
-
-        <com.scwang.smartrefresh.layout.SmartRefreshLayout
-            android:id="@+id/refreshLayout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/bg_gray"
-            app:srlEnableFooterFollowWhenLoadFinished="true"
-            app:srlEnableScrollContentWhenLoaded="true">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycle_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/bg_white"
-                android:paddingLeft="15dp"
-                android:paddingRight="15dp" />
-        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/right_view"
-        android:layout_width="290dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="end"
-        android:background="@color/bg_white"
-        android:orientation="vertical">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="DrawerLayout"
-            android:textColor="@color/t_black"
-            android:textSize="@dimen/sp_mid" />
-
-
-    </LinearLayout>
-</android.support.v4.widget.DrawerLayout>
+</LinearLayout>

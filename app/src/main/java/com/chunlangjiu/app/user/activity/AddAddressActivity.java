@@ -308,7 +308,7 @@ public class AddAddressActivity extends BaseActivity {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
                             hideLoadingDialog();
-                            ToastUtils.showNetErrorMsg(throwable);
+                            ToastUtils.showErrorMsg(throwable);
                         }
                     }));
         } else {
@@ -328,7 +328,7 @@ public class AddAddressActivity extends BaseActivity {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
                             hideLoadingDialog();
-                            ToastUtils.showNetErrorMsg(throwable);
+                            ToastUtils.showErrorMsg(throwable);
                         }
                     }));
         }

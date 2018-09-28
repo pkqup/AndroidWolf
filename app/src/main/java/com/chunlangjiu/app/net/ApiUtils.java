@@ -7,6 +7,9 @@ import com.chunlangjiu.app.amain.bean.HomeListBean;
 import com.chunlangjiu.app.amain.bean.HomeModulesBean;
 import com.chunlangjiu.app.amain.bean.LoginBean;
 import com.chunlangjiu.app.amain.bean.MainClassBean;
+import com.chunlangjiu.app.goods.bean.AlcListBean;
+import com.chunlangjiu.app.goods.bean.AreaListBean;
+import com.chunlangjiu.app.goods.bean.BrandsListBean;
 import com.chunlangjiu.app.goods.bean.ConfirmOrderBean;
 import com.chunlangjiu.app.goods.bean.CreateAuctionBean;
 import com.chunlangjiu.app.goods.bean.CreateOrderBean;
@@ -15,6 +18,7 @@ import com.chunlangjiu.app.goods.bean.FilterListBean;
 import com.chunlangjiu.app.goods.bean.GivePriceBean;
 import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
 import com.chunlangjiu.app.goods.bean.GoodsListBean;
+import com.chunlangjiu.app.goods.bean.OrdoListBean;
 import com.chunlangjiu.app.goods.bean.PaymentBean;
 import com.chunlangjiu.app.goods.bean.ShopInfoBean;
 import com.chunlangjiu.app.order.bean.AuctionOrderListBean;
@@ -23,13 +27,12 @@ import com.chunlangjiu.app.order.bean.CancelReasonBean;
 import com.chunlangjiu.app.order.bean.LogisticsBean;
 import com.chunlangjiu.app.order.bean.OrderAfterSaleReasonBean;
 import com.chunlangjiu.app.order.bean.OrderDetailBean;
+import com.chunlangjiu.app.order.bean.OrderListBean;
 import com.chunlangjiu.app.store.bean.StoreClassListBean;
 import com.chunlangjiu.app.store.bean.StoreDetailBean;
-import com.chunlangjiu.app.order.bean.OrderListBean;
 import com.chunlangjiu.app.store.bean.StoreListBean;
 import com.chunlangjiu.app.user.bean.AddressListBean;
 import com.chunlangjiu.app.user.bean.AuthStatusBean;
-import com.chunlangjiu.app.user.bean.BrandListBean;
 import com.chunlangjiu.app.user.bean.MyNumBean;
 import com.chunlangjiu.app.user.bean.ShopCatIdList;
 import com.chunlangjiu.app.user.bean.ShopClassList;
@@ -84,6 +87,10 @@ public class ApiUtils {
         return apiService.login("user.oauthlogin", "v2", account, code);
     }
 
+    public Flowable<ResultBean> logout() {
+        return apiService.logout("user.logout", "v1");
+    }
+
     public Flowable<ResultBean<LoginBean>> shopLogin(String mobile, String password) {
         return apiService.shopLogin("user.login", "v1", mobile, password);
     }
@@ -103,14 +110,14 @@ public class ApiUtils {
     public Flowable<ResultBean> companyAuth(String company_name, String representative, String license_num, String establish_date, String area,
                                             String address, String company_phone, String license_img, String shopuser_identity_img_z) {
         return apiService.companyAuth("member.enterprise", "v1", company_name, representative, license_num, establish_date, area,
-                address,company_phone,license_img,shopuser_identity_img_z);
+                address, company_phone, license_img, shopuser_identity_img_z);
     }
 
-    public Flowable<ResultBean<AuthStatusBean>> getPersonAuthStatus() {
+    public Observable<ResultBean<AuthStatusBean>> getPersonAuthStatus() {
         return apiService.getPersonAuthStatus("member.get.autonym", "v1");
     }
 
-    public Flowable<ResultBean<AuthStatusBean>> getCompanyAuthStatus() {
+    public Observable<ResultBean<AuthStatusBean>> getCompanyAuthStatus() {
         return apiService.getCompanyAuthStatus("member.get.enterprise", "v1");
     }
 
@@ -131,16 +138,18 @@ public class ApiUtils {
         return apiService.getGoodsClass("category.itemCategory", "v1");
     }
 
-    public Flowable<ResultBean<GoodsListBean>> getGoodsList(String cat_id, int page_no, String orderBy, String search_keywords, String shop_id) {
-        return apiService.getGoodsList("item.search", "v1", cat_id, page_no, 20, orderBy, search_keywords, shop_id);
+    public Flowable<ResultBean<GoodsListBean>> getGoodsList(String cat_id, int page_no, String search_keywords, String shop_id,
+                                                            String brand_id, String area_id, String odor_id, String alcohol_id, String min_price, String max_price) {
+        return apiService.getGoodsList("item.search", "v1", cat_id, page_no, 20, search_keywords, shop_id,
+                brand_id, area_id, odor_id, alcohol_id, min_price, max_price);
     }
 
     public Flowable<ResultBean<GoodsDetailBean>> getGoodsDetail(String item_id) {
         return apiService.getGoodsDetail("item.detail", "v1", item_id);
     }
 
-    public Flowable<ResultBean<GoodsDetailBean>> getGoodsDetailWithToken(String item_id,String token) {
-        return apiService.getGoodsDetailWithToken("item.detail", "v1",token, item_id);
+    public Flowable<ResultBean<GoodsDetailBean>> getGoodsDetailWithToken(String item_id, String token) {
+        return apiService.getGoodsDetailWithToken("item.detail", "v1", token, item_id);
     }
 
     public Flowable<ResultBean<GoodsDetailBean>> getAuctionGoodsDetail(String auctionitem_id) {
@@ -251,10 +260,10 @@ public class ApiUtils {
     }
 
     public Flowable<ResultBean<CreateAuctionBean>> createAuctionOrder(String auctionitem_id, String addr_id, String price) {
-        return apiService.createAuctionOrder("payment.pay.auctionCreate", "v1", auctionitem_id, addr_id,price);
+        return apiService.createAuctionOrder("payment.pay.auctionCreate", "v1", auctionitem_id, addr_id, price);
     }
 
-    public Flowable<ResultBean> auctionAddPrice(String auctionitem_id,  String price) {
+    public Flowable<ResultBean> auctionAddPrice(String auctionitem_id, String price) {
         return apiService.auctionAddPrice("item.auction.userAdd", "v1", auctionitem_id, price);
     }
 
@@ -284,14 +293,12 @@ public class ApiUtils {
         return apiService.getStoreClassList("category.shop.get", "v1");
     }
 
-    public Flowable<ResultBean<BrandListBean>> getShopBrandList(String class_id) {
-        return apiService.getShopBrandList("category.platform.brand.get", "v1", class_id);
-    }
 
     public Observable<ResultBean> addGoods(String cat_id, String brand_id, String shop_cat_id, String title, String sub_title, String weight, String list_image,
-                                           String price, String dlytmpl_id, String sku, String label, String explain, String parameter) {
+                                           String price, String dlytmpl_id, String sku, String label, String explain, String parameter,
+                                           String area_id, String odor_id, String alcohol_id, String store) {
         return apiService.addGoods("item.create", "v1", cat_id, brand_id, shop_cat_id, title, sub_title, weight, list_image,
-                price, dlytmpl_id, sku, label, explain, parameter, "ML", "1");
+                price, dlytmpl_id, sku, label, explain, parameter, "ML", "1",area_id,odor_id,alcohol_id,store);
     }
 
     public Flowable<ResultBean<OrderListBean>> getOrderLists(String status, int pageNo) {
@@ -388,5 +395,46 @@ public class ApiUtils {
 
     public Flowable<ResultBean> applySellerAfterSale(String aftersales_bn, String check_result, String total_price, String refunds_reason) {
         return apiService.applySellerAfterSale("trade.cancel.shop.check", "v1", aftersales_bn, check_result, total_price, refunds_reason);
+    }
+
+
+    public Flowable<ResultBean<BrandsListBean>> getUserBrandList() {
+        return apiService.getUserBrandList("category.brand.get", "v1");
+    }
+
+    public Flowable<ResultBean<AreaListBean>> getUserAreaList() {
+        return apiService.getUserAreaList("category.area.get", "v1");
+    }
+
+    public Flowable<ResultBean<OrdoListBean>> getUserOrdoList() {
+        return apiService.getUserOrdoList("category.odor.get", "v1");
+    }
+
+    public Flowable<ResultBean<AlcListBean>> getUserAlcList() {
+        return apiService.getUserAlcList("category.alcohol.get", "v1");
+    }
+
+    public Flowable<ResultBean<BrandsListBean>> getAddShopBrandList(String cat_id) {
+        return apiService.getAddShopBrandList("category.platform.brand.get", "v1", cat_id);
+    }
+
+    public Flowable<ResultBean<AreaListBean>> getShopAreaList(String cat_id) {
+        return apiService.getShopAreaList("category.platform.area.get", "v1", cat_id);
+    }
+
+    public Flowable<ResultBean<OrdoListBean>> getShopOrdoList(String cat_id) {
+        return apiService.getShopOrdoList("category.platform.odor.get", "v1", cat_id);
+    }
+
+    public Flowable<ResultBean<AlcListBean>> getShopAlcList(String cat_id) {
+        return apiService.getShopAlcList("category.platform.alcohol.get", "v1", cat_id);
+    }
+
+    public Flowable<ResultBean> favoriteAddGoods(String item_id) {
+        return apiService.favoriteAddGoods("member.favorite.item.add", "v1",item_id);
+    }
+
+    public Flowable<ResultBean> favoriteCancelGoods(String item_id) {
+        return apiService.favoriteCancelGoods("member.favorite.item.remove", "v1",item_id);
     }
 }

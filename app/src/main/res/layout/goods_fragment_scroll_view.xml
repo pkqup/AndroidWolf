@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.pkqup.commonlibrary.view.verticalview.VerticalScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/scrollView"
     android:background="@color/bg_white"
     android:orientation="vertical">
 
@@ -14,21 +14,27 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="220dp">
+            android:layout_height="wrap_content">
 
-            <com.youth.banner.Banner
-                android:id="@+id/banner"
+            <RelativeLayout
+                android:id="@+id/rlBanner"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="220dp">
 
-            <LinearLayout
-                android:id="@+id/indicator"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:padding="10dp" />
+                <com.youth.banner.Banner
+                    android:id="@+id/banner"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <LinearLayout
+                    android:id="@+id/indicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="10dp" />
+            </RelativeLayout>
         </RelativeLayout>
 
         <View
@@ -42,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="15dp"
-            android:text="￥5000.00"
+            tools:text="￥5000.00"
             android:textColor="@color/t_red"
             android:textSize="@dimen/sp_big" />
 
@@ -54,7 +60,7 @@
             android:layout_marginRight="15dp"
             android:layout_marginTop="8dp"
             android:maxLines="2"
-            android:text="法国红酒法国红酒法国红酒法国红酒法国红酒法国红酒"
+            tools:text="法国红酒法国红酒法国红酒法国红酒法国红酒法国红酒"
             android:textColor="@color/t_black"
             android:textSize="@dimen/sp_mid" />
 
@@ -151,7 +157,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="14dp"
                 android:layout_toRightOf="@id/imgStore"
-                android:text="店铺名"
+                tools:text="店铺名"
                 android:textColor="@color/t_black"
                 android:textSize="@dimen/sp_small" />
 
@@ -163,7 +169,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="2dp"
                 android:layout_toRightOf="@id/imgStore"
-                android:text="简介"
+                tools:text="简介"
                 android:textColor="@color/t_black"
                 android:textSize="12sp" />
 

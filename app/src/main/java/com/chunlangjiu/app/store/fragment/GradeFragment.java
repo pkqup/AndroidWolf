@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.chunlangjiu.app.R;
+import com.chunlangjiu.app.store.bean.StoreDetailBean;
 
 /**
  * @CreatedbBy: liucun on 2018/7/30
@@ -19,6 +20,14 @@ public class GradeFragment extends HeaderViewPagerFragment {
 
     private View scrollView;
     private LinearLayout llGrand;
+
+    public static GradeFragment newInstance(StoreDetailBean.StoreBean storeBean) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("storeBean", storeBean);
+        GradeFragment goodsFragment = new GradeFragment();
+        goodsFragment.setArguments(bundle);
+        return goodsFragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -41,7 +50,7 @@ public class GradeFragment extends HeaderViewPagerFragment {
     }
 
     private void initData() {
-        for (int i = 0; i < 10; i++) {
+       /* for (int i = 0; i < 10; i++) {
             View grandItem = View.inflate(getActivity(), R.layout.store_item_grand, null);
             TextView tvYear = grandItem.findViewById(R.id.tvYear);
             ImageView imgGrand = grandItem.findViewById(R.id.imgGrand);
@@ -54,6 +63,11 @@ public class GradeFragment extends HeaderViewPagerFragment {
             tvWs.setText(String.valueOf(90 - i));
             tvJr.setText(String.valueOf(80 - i));
             llGrand.addView(grandItem);
+        }*/
+
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            StoreDetailBean.StoreBean storeBean = (StoreDetailBean.StoreBean) bundle.getSerializable("storeBean");
         }
     }
 

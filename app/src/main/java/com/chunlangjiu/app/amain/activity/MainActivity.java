@@ -20,6 +20,7 @@ import com.chunlangjiu.app.abase.BaseFragmentAdapter;
 import com.chunlangjiu.app.amain.fragment.AuctionFragment;
 import com.chunlangjiu.app.amain.fragment.CartFragment;
 import com.chunlangjiu.app.amain.fragment.ClassFragment;
+import com.chunlangjiu.app.amain.fragment.GoodsFragment;
 import com.chunlangjiu.app.amain.fragment.HomeFragment;
 import com.chunlangjiu.app.amain.fragment.UserFragment;
 import com.chunlangjiu.app.util.ConstantMsg;
@@ -176,7 +177,7 @@ public class MainActivity extends BaseActivity {
     private void initData() {
         fragments = new ArrayList<>();
         fragments.add(new HomeFragment());
-        fragments.add(new ClassFragment());
+        fragments.add(GoodsFragment.newInstance("", false, "", ""));
         fragments.add(new AuctionFragment());
         fragments.add(new CartFragment());
         fragments.add(new UserFragment());

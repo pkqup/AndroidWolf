@@ -16,7 +16,7 @@
             android:id="@+id/rlBackground"
             android:layout_width="match_parent"
             android:layout_height="214dp"
-            android:background="@color/bg_red">
+            android:background="@mipmap/buy_bg">
 
             <ImageView
                 android:id="@+id/imgSetting"
@@ -100,7 +100,7 @@
                         android:layout_width="70dp"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:background="@drawable/bg_white_rectangle"
+                        android:background="@drawable/bg_white_solid"
                         android:gravity="center"
                         android:paddingBottom="3dp"
                         android:paddingTop="2dp"
@@ -114,7 +114,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="10dp"
-                        android:background="@drawable/bg_white_rectangle"
+                        android:background="@drawable/bg_white_solid"
                         android:gravity="center"
                         android:paddingBottom="3dp"
                         android:paddingTop="2dp"
@@ -128,7 +128,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="10dp"
-                        android:background="@drawable/bg_white_rectangle"
+                        android:background="@drawable/bg_white_solid"
                         android:gravity="center"
                         android:paddingBottom="3dp"
                         android:paddingTop="2dp"

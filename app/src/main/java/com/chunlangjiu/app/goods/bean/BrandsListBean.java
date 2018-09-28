@@ -1,35 +1,36 @@
-package com.chunlangjiu.app.user.bean;
+package com.chunlangjiu.app.goods.bean;
 
 import java.util.List;
 
 /**
- * @CreatedbBy: liucun on 2018/9/2.
+ * @CreatedbBy: liucun on 2018/9/27
  * @Describe:
  */
-public class BrandListBean {
+public class BrandsListBean {
 
-    private List<Brand> brands;
+    private List<BrandBean> brands;
+    private List<BrandBean> list;
 
-    public List<Brand> getBrands() {
+    public List<BrandBean> getList() {
+        return list;
+    }
+
+    public void setList(List<BrandBean> list) {
+        this.list = list;
+    }
+
+    public List<BrandBean> getBrands() {
         return brands;
     }
 
-    public void setBrands(List<Brand> brands) {
+    public void setBrands(List<BrandBean> brands) {
         this.brands = brands;
     }
 
-    public class Brand{
+    public class BrandBean{
+
         private String brand_id;
         private String brand_name;
-        private boolean isSelect;
-
-        public boolean isSelect() {
-            return isSelect;
-        }
-
-        public void setSelect(boolean select) {
-            isSelect = select;
-        }
 
         public String getBrand_id() {
             return brand_id;
@@ -47,5 +48,4 @@ public class BrandListBean {
             this.brand_name = brand_name;
         }
     }
-
 }

@@ -7,6 +7,9 @@ import com.chunlangjiu.app.amain.bean.HomeListBean;
 import com.chunlangjiu.app.amain.bean.HomeModulesBean;
 import com.chunlangjiu.app.amain.bean.LoginBean;
 import com.chunlangjiu.app.amain.bean.MainClassBean;
+import com.chunlangjiu.app.goods.bean.AlcListBean;
+import com.chunlangjiu.app.goods.bean.AreaListBean;
+import com.chunlangjiu.app.goods.bean.BrandsListBean;
 import com.chunlangjiu.app.goods.bean.ConfirmOrderBean;
 import com.chunlangjiu.app.goods.bean.CreateAuctionBean;
 import com.chunlangjiu.app.goods.bean.CreateOrderBean;
@@ -15,6 +18,7 @@ import com.chunlangjiu.app.goods.bean.FilterListBean;
 import com.chunlangjiu.app.goods.bean.GivePriceBean;
 import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
 import com.chunlangjiu.app.goods.bean.GoodsListBean;
+import com.chunlangjiu.app.goods.bean.OrdoListBean;
 import com.chunlangjiu.app.goods.bean.PaymentBean;
 import com.chunlangjiu.app.goods.bean.ShopInfoBean;
 import com.chunlangjiu.app.order.bean.AuctionOrderListBean;
@@ -23,13 +27,12 @@ import com.chunlangjiu.app.order.bean.CancelReasonBean;
 import com.chunlangjiu.app.order.bean.LogisticsBean;
 import com.chunlangjiu.app.order.bean.OrderAfterSaleReasonBean;
 import com.chunlangjiu.app.order.bean.OrderDetailBean;
+import com.chunlangjiu.app.order.bean.OrderListBean;
 import com.chunlangjiu.app.store.bean.StoreClassListBean;
 import com.chunlangjiu.app.store.bean.StoreDetailBean;
-import com.chunlangjiu.app.order.bean.OrderListBean;
 import com.chunlangjiu.app.store.bean.StoreListBean;
 import com.chunlangjiu.app.user.bean.AddressListBean;
 import com.chunlangjiu.app.user.bean.AuthStatusBean;
-import com.chunlangjiu.app.user.bean.BrandListBean;
 import com.chunlangjiu.app.user.bean.MyNumBean;
 import com.chunlangjiu.app.user.bean.ShopCatIdList;
 import com.chunlangjiu.app.user.bean.ShopClassList;
@@ -64,6 +67,10 @@ public interface ApiService {
 
     @POST("index.php/topapi")
     @FormUrlEncoded
+    Flowable<ResultBean> logout(@Field("method") String method, @Field("v") String v);
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
     Flowable<ResultBean<LoginBean>> shopLogin(@Field("method") String method, @Field("v") String v,
                                               @Field("account") String account, @Field("password") String password);
 
@@ -93,11 +100,11 @@ public interface ApiService {
                                      @Field("shopuser_identity_img_z") String shopuser_identity_img_z);
     @POST("index.php/topapi")
     @FormUrlEncoded
-    Flowable<ResultBean<AuthStatusBean>> getPersonAuthStatus(@Field("method") String method, @Field("v") String v);
+    Observable<ResultBean<AuthStatusBean>> getPersonAuthStatus(@Field("method") String method, @Field("v") String v);
 
     @POST("index.php/topapi")
     @FormUrlEncoded
-    Flowable<ResultBean<AuthStatusBean>> getCompanyAuthStatus(@Field("method") String method, @Field("v") String v);
+    Observable<ResultBean<AuthStatusBean>> getCompanyAuthStatus(@Field("method") String method, @Field("v") String v);
 
     @POST("index.php/topapi")
     @FormUrlEncoded
@@ -121,9 +128,10 @@ public interface ApiService {
     @POST("index.php/topapi")
     @FormUrlEncoded
     Flowable<ResultBean<GoodsListBean>> getGoodsList(@Field("method") String method, @Field("v") String v, @Field("cat_id") String cat_id,
-                                                     @Field("page_no") int page_no, @Field("page_size") int page_size,
-                                                     @Field("orderBy") String orderBy, @Field("search_keywords") String search_keywords,
-                                                     @Field("shop_id") String shop_id);
+                                                     @Field("page_no") int page_no, @Field("page_size") int page_size, @Field("search_keywords") String search_keywords,
+                                                     @Field("shop_id") String shop_id, @Field("brand_id") String brand_id, @Field("area_id") String area_id,
+                                                     @Field("odor_id") String odor_id, @Field("alcohol_id") String alcohol_id, @Field("min_price") String min_price,
+                                                     @Field("max_price") String max_price);
 
     @POST("index.php/topapi")
     @FormUrlEncoded
@@ -309,10 +317,6 @@ public interface ApiService {
     @FormUrlEncoded
     Flowable<ResultBean<ShopCatIdList>> getStoreClassList(@Field("method") String method, @Field("v") String v);
 
-    @POST("index.php/shop/topapi")
-    @FormUrlEncoded
-    Flowable<ResultBean<BrandListBean>> getShopBrandList(@Field("method") String method, @Field("v") String v, @Field("cat_id") String cat_id);
-
     //添加商品
     @POST("index.php/shop/topapi")
     @FormUrlEncoded
@@ -323,7 +327,9 @@ public interface ApiService {
                                     @Field("weight") String weight, @Field("list_image") String list_image, @Field("price") String price,
                                     @Field("dlytmpl_id") String dlytmpl_id, @Field("sku") String sku,
                                     @Field("label") String label, @Field("explain") String explain,
-                                    @Field("parameter") String parameter, @Field("unit") String unit, @Field("nospec") String nospec);
+                                    @Field("parameter") String parameter, @Field("unit") String unit, @Field("nospec") String nospec,
+                                    @Field("area_id") String area_id, @Field("odor_id") String odor_id, @Field("alcohol_id") String alcohol_id,
+                                    @Field("store") String store);
 
     @POST("index.php/topapi")
     @FormUrlEncoded
@@ -448,5 +454,54 @@ public interface ApiService {
     Flowable<ResultBean> applySellerAfterSale(@Field("method") String method, @Field("v") String v,
                                               @Field("aftersales_bn") String aftersales_bn, @Field("check_result") String check_result,
                                               @Field("total_price") String total_price, @Field("refunds_reason") String refunds_reason);
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<BrandsListBean>> getUserBrandList(@Field("method") String method, @Field("v") String v);
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<AreaListBean>> getUserAreaList(@Field("method") String method, @Field("v") String v);
+
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<OrdoListBean>> getUserOrdoList(@Field("method") String method, @Field("v") String v);
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<AlcListBean>> getUserAlcList(@Field("method") String method, @Field("v") String v);
+
+
+
+
+    @POST("index.php/shop/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<BrandsListBean>> getAddShopBrandList(@Field("method") String method, @Field("v") String v, @Field("cat_id") String cat_id);
+
+    @POST("index.php/shop/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<AreaListBean>> getShopAreaList(@Field("method") String method, @Field("v") String v, @Field("cat_id") String cat_id);
+
+
+    @POST("index.php/shop/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<OrdoListBean>> getShopOrdoList(@Field("method") String method, @Field("v") String v, @Field("cat_id") String cat_id);
+
+    @POST("index.php/shop/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<AlcListBean>> getShopAlcList(@Field("method") String method, @Field("v") String v, @Field("cat_id") String cat_id);
+
+
+
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean> favoriteAddGoods(@Field("method") String method, @Field("v") String v, @Field("item_id") String item_id);
+
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean> favoriteCancelGoods(@Field("method") String method, @Field("v") String v, @Field("item_id") String item_id);
 
 }

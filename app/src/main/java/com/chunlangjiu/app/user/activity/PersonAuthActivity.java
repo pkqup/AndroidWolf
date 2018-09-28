@@ -180,6 +180,10 @@ public class PersonAuthActivity extends BaseActivity {
     }
 
     private void initData() {
+//        getStatus();
+    }
+
+    private void getStatus() {
         disposable.add(ApiUtils.getInstance().getPersonAuthStatus()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -379,12 +383,14 @@ public class PersonAuthActivity extends BaseActivity {
                     public void accept(ResultBean resultBean) throws Exception {
                         hideLoadingDialog();
                         ToastUtils.showShort("提交成功，请耐心等待审核");
+                        EventManager.getInstance().notify(null,ConstantMsg.PERSON_COMPANY_AUTH_SUCCESS);
+                        finish();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         hideLoadingDialog();
-                        ToastUtils.showShort("提交失败");
+                        ToastUtils.showErrorMsg(throwable);
                     }
                 }));
     }

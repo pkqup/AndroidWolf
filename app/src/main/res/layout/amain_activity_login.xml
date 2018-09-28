@@ -10,7 +10,7 @@
         android:layout_width="78dp"
         android:layout_height="78dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="60dp"
         android:src="@mipmap/logo" />
 
     <RelativeLayout
@@ -18,7 +18,7 @@
         android:layout_height="45dp"
         android:layout_marginLeft="45dp"
         android:layout_marginRight="45dp"
-        android:layout_marginTop="70dp"
+        android:layout_marginTop="40dp"
         android:background="@drawable/login_gray_stroke">
 
         <ImageView
@@ -99,5 +99,15 @@
         android:text="登录"
         android:textColor="@color/t_white"
         android:textSize="@dimen/sp_big" />
+
+    <TextView
+        android:id="@+id/tvLicence"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="15dp"
+        android:text="醇狼APP隐私政策"
+        android:textColor="@color/t_red"
+        android:textSize="@dimen/sp_small" />
 
 </LinearLayout>

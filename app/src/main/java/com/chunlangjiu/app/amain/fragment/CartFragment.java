@@ -1,5 +1,6 @@
 package com.chunlangjiu.app.amain.fragment;
 
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -12,7 +13,9 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chunlangjiu.app.R;
+import com.chunlangjiu.app.abase.BaseApplication;
 import com.chunlangjiu.app.abase.BaseFragment;
+import com.chunlangjiu.app.amain.activity.LoginActivity;
 import com.chunlangjiu.app.amain.adapter.CartGoodsListAdapter;
 import com.chunlangjiu.app.amain.bean.CartGoodsBean;
 import com.chunlangjiu.app.amain.bean.CartListBean;
@@ -54,6 +57,11 @@ import io.reactivex.schedulers.Schedulers;
  * @Describe:
  */
 public class CartFragment extends BaseFragment {
+
+
+    private RelativeLayout rlContent;
+    private RelativeLayout rlLogin;
+    private TextView tvLogin;
 
     private RefreshLayout refreshLayout;
     private SwipeMenuRecyclerView recycleView;
@@ -101,6 +109,9 @@ public class CartFragment extends BaseFragment {
                 case R.id.tv_delete:
                     deleteMulGoods();
                     break;
+                case R.id.tvLogin:
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                    break;
             }
         }
     };
@@ -132,6 +143,11 @@ public class CartFragment extends BaseFragment {
     public void initView() {
         EventManager.getInstance().registerListener(onNotifyListener);
         disposable = new CompositeDisposable();
+
+        rlContent = rootView.findViewById(R.id.rlContent);
+        rlLogin = rootView.findViewById(R.id.rlLogin);
+        tvLogin = rootView.findViewById(R.id.tvLogin);
+        tvLogin.setOnClickListener(onClickListener);
 
         img_back = rootView.findViewById(R.id.img_back);
         tvEditFinish = rootView.findViewById(R.id.tvEditFinish);
@@ -234,7 +250,14 @@ public class CartFragment extends BaseFragment {
 
     @Override
     public void initData() {
-        getCartList();
+        if (BaseApplication.isLogin()) {
+            getCartList();
+        } else {
+            imgEdit.setVisibility(View.GONE);
+            rlContent.setVisibility(View.GONE);
+            rl_bottom.setVisibility(View.GONE);
+            rlLogin.setVisibility(View.VISIBLE);
+        }
     }
 
     private void getCartList() {
@@ -284,17 +307,27 @@ public class CartFragment extends BaseFragment {
                         goodsBean.setGoodsPic(goodsItem.getImage_default_id());
                         goodsBean.setGoodsPrice(goodsItem.getPrice().getPrice());
                         goodsBean.setGoodsNum(goodsItem.getQuantity());
+                        goodsBean.setStore(goodsItem.getStore());
                         goodsBean.setGoodsCheck(!goodsItem.getIs_checked().equals("0"));
                         goodsLists.add(goodsBean);
                     }
                 }
                 goodsMaps.put(shopBean, goodsLists);
             }
+            if (isEdit) {
+                imgEdit.setVisibility(View.GONE);
+                tvEditFinish.setVisibility(View.VISIBLE);
+            } else {
+                imgEdit.setVisibility(View.VISIBLE);
+                tvEditFinish.setVisibility(View.GONE);
+            }
             updateRecycleViewList();
             updateCheckAll();
             updateTotalPrice();
         } else {
             //无数据
+            imgEdit.setVisibility(View.GONE);
+            tvEditFinish.setVisibility(View.GONE);
             rl_bottom.setVisibility(View.GONE);
             recycleView.setVisibility(View.GONE);
             rlEmptyView.setVisibility(View.VISIBLE);
@@ -486,34 +519,42 @@ public class CartFragment extends BaseFragment {
     }
 
     private void addGoodsNum(int position) {
-        final CartGoodsBean cartGoodsBean = lists.get(position);
-        showLoadingDialog();
-        UpdateCartGoodsBean updateCartGoodsBean = new UpdateCartGoodsBean();
-        updateCartGoodsBean.setCart_id(cartGoodsBean.getCart_id());
-        updateCartGoodsBean.setIs_checked(cartGoodsBean.isStoreCheck() ? "1" : "0");
-        updateCartGoodsBean.setSelected_promotion("0");
-        updateCartGoodsBean.setTotalQuantity(Integer.parseInt(cartGoodsBean.getGoodsNum()) + 1 + "");
-        List<UpdateCartGoodsBean> list = new ArrayList<>();
-        list.add(updateCartGoodsBean);
-        String jsonStr = new Gson().toJson(list);
-        disposable.add(ApiUtils.getInstance().updateCartData(jsonStr)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<ResultBean>() {
-                    @Override
-                    public void accept(ResultBean resultBean) throws Exception {
-                        hideLoadingDialog();
-                        cartGoodsBean.setGoodsNum(Integer.parseInt(cartGoodsBean.getGoodsNum()) + 1 + "");
-                        updateRecycleViewList();
-                        updateCheckAll();
-                        updateTotalPrice();
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                        hideLoadingDialog();
-                    }
-                }));
+        try {
+            final CartGoodsBean cartGoodsBean = lists.get(position);
+            if (Integer.parseInt(cartGoodsBean.getGoodsNum()) >= Integer.parseInt(cartGoodsBean.getStore())) {
+                ToastUtils.showShort("库存不足");
+            } else {
+                showLoadingDialog();
+                UpdateCartGoodsBean updateCartGoodsBean = new UpdateCartGoodsBean();
+                updateCartGoodsBean.setCart_id(cartGoodsBean.getCart_id());
+                updateCartGoodsBean.setIs_checked(cartGoodsBean.isStoreCheck() ? "1" : "0");
+                updateCartGoodsBean.setSelected_promotion("0");
+                updateCartGoodsBean.setTotalQuantity(Integer.parseInt(cartGoodsBean.getGoodsNum()) + 1 + "");
+                List<UpdateCartGoodsBean> list = new ArrayList<>();
+                list.add(updateCartGoodsBean);
+                String jsonStr = new Gson().toJson(list);
+                disposable.add(ApiUtils.getInstance().updateCartData(jsonStr)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Consumer<ResultBean>() {
+                            @Override
+                            public void accept(ResultBean resultBean) throws Exception {
+                                hideLoadingDialog();
+                                cartGoodsBean.setGoodsNum(Integer.parseInt(cartGoodsBean.getGoodsNum()) + 1 + "");
+                                updateRecycleViewList();
+                                updateCheckAll();
+                                updateTotalPrice();
+                            }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(Throwable throwable) throws Exception {
+                                hideLoadingDialog();
+                            }
+                        }));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -539,7 +580,7 @@ public class CartFragment extends BaseFragment {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        KLog.e("updateFail");
+                        ToastUtils.showErrorMsg(throwable);
                     }
                 }));
     }
@@ -687,6 +728,7 @@ public class CartFragment extends BaseFragment {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
                             hideLoadingDialog();
+                            ToastUtils.showErrorMsg(throwable);
                         }
                     }));
         } else {
@@ -698,6 +740,7 @@ public class CartFragment extends BaseFragment {
         @Override
         public void onNotify(Object object, String eventTag) {
             updateCartList(eventTag);
+            loginSuccess(eventTag);
         }
     };
 
@@ -706,4 +749,18 @@ public class CartFragment extends BaseFragment {
             getCartList();
         }
     }
+
+    private void loginSuccess(String eventTag) {
+        if (eventTag.equals(ConstantMsg.LOGIN_SUCCESS)) {
+            requestData();
+        }
+    }
+
+    private void requestData() {
+        rlContent.setVisibility(View.VISIBLE);
+        rl_bottom.setVisibility(View.VISIBLE);
+        rlLogin.setVisibility(View.GONE);
+        getCartList();
+    }
+
 }

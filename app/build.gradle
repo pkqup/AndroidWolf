@@ -49,8 +49,8 @@ android {
                     outputFileName = "chunlang_${variant.productFlavors[0].name}_${defaultConfig.versionCode}_${new Date().format("yyyyMMddHHmm")}.apk"
                 }
             }
-            aaptOptions.cruncherEnabled = false
-            aaptOptions.useNewCruncher = false
+//            aaptOptions.cruncherEnabled = false
+//            aaptOptions.useNewCruncher = false
         }
         debug {
             minifyEnabled false

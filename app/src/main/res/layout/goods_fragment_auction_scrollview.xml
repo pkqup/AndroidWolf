@@ -15,22 +15,29 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="220dp">
+            android:layout_height="wrap_content">
 
-            <com.youth.banner.Banner
-                android:id="@+id/banner"
+            <RelativeLayout
+                android:id="@+id/rlBanner"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="220dp">
 
-            <LinearLayout
-                android:id="@+id/indicator"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:padding="10dp" />
+                <com.youth.banner.Banner
+                    android:id="@+id/banner"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <LinearLayout
+                    android:id="@+id/indicator"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:padding="10dp" />
+            </RelativeLayout>
         </RelativeLayout>
+
 
         <View
             android:layout_width="match_parent"

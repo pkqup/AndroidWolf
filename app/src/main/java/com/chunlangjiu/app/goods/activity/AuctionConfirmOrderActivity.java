@@ -281,6 +281,7 @@ public class AuctionConfirmOrderActivity extends BaseActivity {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         hideLoadingDialog();
+                        ToastUtils.showErrorMsg(throwable);
                     }
                 }));
     }
@@ -299,6 +300,7 @@ public class AuctionConfirmOrderActivity extends BaseActivity {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         hideLoadingDialog();
+                        ToastUtils.showErrorMsg(throwable);
                     }
                 }));
     }

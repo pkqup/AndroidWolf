@@ -54,6 +54,7 @@ public class ScrollViewFragment extends BaseFragment {
 
 
     private VerticalScrollView scrollView;
+    private RelativeLayout rlBanner;
     private Banner banner;
     private LinearLayout indicator;
     private TextView tvPrice;
@@ -114,8 +115,14 @@ public class ScrollViewFragment extends BaseFragment {
     @Override
     public void initView() {
         scrollView = rootView.findViewById(R.id.scrollView);
+        rlBanner = rootView.findViewById(R.id.rlBanner);
         banner = rootView.findViewById(R.id.banner);
         indicator = rootView.findViewById(R.id.indicator);
+
+        int screenWidth = SizeUtils.getScreenWidth();
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) rlBanner.getLayoutParams();
+        layoutParams.height = screenWidth;
+        rlBanner.setLayoutParams(layoutParams);
 
         tvPrice = rootView.findViewById(R.id.tvPrice);
         tvGoodsName = rootView.findViewById(R.id.tvGoodsName);
@@ -149,61 +156,65 @@ public class ScrollViewFragment extends BaseFragment {
 
 
     private void initBannerData() {
-        imageViews = new ArrayList<>();
-        bannerUrls = goodsDetailBean.getItem().getImages();
+        try {
+            imageViews = new ArrayList<>();
+            bannerUrls = goodsDetailBean.getItem().getImages();
 
-        banner.setImages(bannerUrls)
-                .setImageLoader(new BannerGlideLoader())
-                .setBannerStyle(BannerConfig.NOT_INDICATOR)//去掉自带的indicator
-                .setBannerAnimation(AccordionTransformer.class)
-                .isAutoPlay(true)
-                .setDelayTime(4000)
-                .start();
+            banner.setImages(bannerUrls)
+                    .setImageLoader(new BannerGlideLoader())
+                    .setBannerStyle(BannerConfig.NOT_INDICATOR)//去掉自带的indicator
+                    .setBannerAnimation(AccordionTransformer.class)
+                    .isAutoPlay(true)
+                    .setDelayTime(4000)
+                    .start();
 
-        imageViews.clear();
-        indicator.removeAllViews();
-        for (int i = 0; i < bannerUrls.size(); i++) {
-            ImageView imageView = new ImageView(getActivity());
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.leftMargin = 8;
-            params.rightMargin = 8;
-            if (i == 0) {
-                imageView.setImageResource(R.drawable.banner_select);
-            } else {
-                imageView.setImageResource(R.drawable.banner_unselect);
+            imageViews.clear();
+            indicator.removeAllViews();
+            for (int i = 0; i < bannerUrls.size(); i++) {
+                ImageView imageView = new ImageView(getActivity());
+                imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.leftMargin = 8;
+                params.rightMargin = 8;
+                if (i == 0) {
+                    imageView.setImageResource(R.drawable.banner_select);
+                } else {
+                    imageView.setImageResource(R.drawable.banner_unselect);
+                }
+                imageViews.add(imageView);
+                indicator.addView(imageView, params);
             }
-            imageViews.add(imageView);
-            indicator.addView(imageView, params);
-        }
-        banner.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-            }
+            banner.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                }
 
-            @Override
-            public void onPageSelected(int position) {
-                for (int i = 0; i < imageViews.size(); i++) {
-                    if (position == i) {
-                        imageViews.get(i).setImageResource(R.drawable.banner_select);
-                    } else {
-                        imageViews.get(i).setImageResource(R.drawable.banner_unselect);
+                @Override
+                public void onPageSelected(int position) {
+                    for (int i = 0; i < imageViews.size(); i++) {
+                        if (position == i) {
+                            imageViews.get(i).setImageResource(R.drawable.banner_select);
+                        } else {
+                            imageViews.get(i).setImageResource(R.drawable.banner_unselect);
+                        }
                     }
                 }
-            }
 
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
+                @Override
+                public void onPageScrollStateChanged(int state) {
+                }
+            });
 
-        //设置banner点击事件
-        banner.setOnBannerListener(new OnBannerListener() {
-            @Override
-            public void OnBannerClick(int position) {
-            }
-        });
+            //设置banner点击事件
+            banner.setOnBannerListener(new OnBannerListener() {
+                @Override
+                public void OnBannerClick(int position) {
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void initCommonView() {
@@ -258,7 +269,7 @@ public class ScrollViewFragment extends BaseFragment {
     }
 
     private void initRecommendView() {
-        recommendLists = new ArrayList<>();
+       /* recommendLists = new ArrayList<>();
         recommendLists.add(bannerUrls.get(0));
         recommendLists.add(bannerUrls.get(0));
         recommendLists.add(bannerUrls.get(0));
@@ -266,7 +277,7 @@ public class ScrollViewFragment extends BaseFragment {
         recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
         recyclerView.setAdapter(recommendAdapter);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setNestedScrollingEnabled(false);
+        recyclerView.setNestedScrollingEnabled(false);*/
     }
 
 
@@ -296,7 +307,7 @@ public class ScrollViewFragment extends BaseFragment {
     }
 
 
-    public void goTop(){
+    public void goTop() {
         scrollView.goTop();
     }
 }

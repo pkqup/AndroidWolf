@@ -17,6 +17,7 @@ import com.chunlangjiu.app.user.bean.AuthStatusBean;
 import com.chunlangjiu.app.user.bean.LocalAreaBean;
 import com.chunlangjiu.app.user.bean.UploadImageBean;
 import com.chunlangjiu.app.util.AreaUtils;
+import com.chunlangjiu.app.util.ConstantMsg;
 import com.chunlangjiu.app.util.GlideImageLoader;
 import com.jzxiang.pickerview.TimePickerDialog;
 import com.jzxiang.pickerview.data.Type;
@@ -26,6 +27,7 @@ import com.lzy.imagepicker.bean.ImageItem;
 import com.lzy.imagepicker.ui.ImageGridActivity;
 import com.lzy.imagepicker.view.CropImageView;
 import com.pkqup.commonlibrary.dialog.ChoicePhotoDialog;
+import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.glide.GlideUtils;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.pkqup.commonlibrary.util.FileUtils;
@@ -196,7 +198,7 @@ public class CompanyAuthActivity extends BaseActivity {
 
     private void initData() {
         getAreaData();
-        getAuthStatus();
+//        getAuthStatus();
     }
 
     private void getAuthStatus() {
@@ -526,13 +528,14 @@ public class CompanyAuthActivity extends BaseActivity {
                     public void accept(ResultBean resultBean) throws Exception {
                         hideLoadingDialog();
                         ToastUtils.showShort("提交成功，请耐心等待审核");
+                        EventManager.getInstance().notify(null, ConstantMsg.PERSON_COMPANY_AUTH_SUCCESS);
                         finish();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         hideLoadingDialog();
-                        ToastUtils.showShort("提交失败");
+                        ToastUtils.showErrorMsg(throwable);
                     }
                 }));
     }

@@ -17,15 +17,15 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chunlangjiu.app.R;
-import com.chunlangjiu.app.user.bean.BrandListBean;
+import com.chunlangjiu.app.goods.bean.BrandsListBean;
 
 import java.util.List;
 
 /**
- * @CreatedbBy: liucun on 2018/9/2.
+ * @CreatedbBy: liucun on 2018/9/27
  * @Describe:
  */
-public class BrandPopWindow extends PopupWindow {
+public class ChoiceBrandPopWindow extends PopupWindow {
 
     private Context context;
     private LayoutInflater inflater;
@@ -33,7 +33,7 @@ public class BrandPopWindow extends PopupWindow {
 
     private RecyclerView recyclerView;
     private BrandAdapter brandAdapter;
-    private List<BrandListBean.Brand> brandLists;
+    private List<BrandsListBean.BrandBean> brandLists;
 
     private CallBack callBack;
     private String selectBrandId;
@@ -50,7 +50,7 @@ public class BrandPopWindow extends PopupWindow {
         this.selectBrandId = selectBrandId;
     }
 
-    public BrandPopWindow(Context context, List<BrandListBean.Brand> brands, String selectBrandId) {
+    public ChoiceBrandPopWindow(Context context, List<BrandsListBean.BrandBean> brands, String selectBrandId) {
         super(context);
         this.context = context;
         this.brandLists = brands;
@@ -90,13 +90,7 @@ public class BrandPopWindow extends PopupWindow {
         brandAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                for (int i = 0; i < brandLists.size(); i++) {
-                    if (i == position) {
-                        brandLists.get(position).setSelect(true);
-                    } else {
-                        brandLists.get(position).setSelect(false);
-                    }
-                }
+                selectBrandId = brandLists.get(position).getBrand_id();
                 brandAdapter.notifyDataSetChanged();
                 if (callBack != null) {
                     callBack.choiceBrand(brandLists.get(position).getBrand_name(), brandLists.get(position).getBrand_id());
@@ -108,23 +102,23 @@ public class BrandPopWindow extends PopupWindow {
         recyclerView.setAdapter(brandAdapter);
     }
 
-    public void setBrandList(List<BrandListBean.Brand> brands) {
+    public void setBrandList(List<BrandsListBean.BrandBean> brands) {
         this.brandLists = brands;
         brandAdapter.setNewData(brandLists);
     }
 
 
-    public class BrandAdapter extends BaseQuickAdapter<BrandListBean.Brand, BaseViewHolder> {
+    public class BrandAdapter extends BaseQuickAdapter<BrandsListBean.BrandBean, BaseViewHolder> {
 
-        public BrandAdapter(int layoutResId, List<BrandListBean.Brand> data) {
+        public BrandAdapter(int layoutResId, List<BrandsListBean.BrandBean> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, BrandListBean.Brand item) {
+        protected void convert(BaseViewHolder helper, BrandsListBean.BrandBean item) {
             TextView tvName = helper.getView(R.id.tvName);
             tvName.setText(item.getBrand_name());
-            if (item.isSelect()) {
+            if (item.getBrand_id().equals(selectBrandId)) {
                 tvName.setSelected(true);
             } else {
                 tvName.setSelected(false);
@@ -134,11 +128,12 @@ public class BrandPopWindow extends PopupWindow {
 
     /**
      * 适配7.0系统Popwindow显示全屏的问题
+     *
      * @param anchor
      */
     @Override
     public void showAsDropDown(View anchor) {
-        if(Build.VERSION.SDK_INT >= 24) {
+        if (Build.VERSION.SDK_INT >= 24) {
             Rect rect = new Rect();
             anchor.getGlobalVisibleRect(rect);
             int h = anchor.getResources().getDisplayMetrics().heightPixels - rect.bottom;
@@ -149,11 +144,12 @@ public class BrandPopWindow extends PopupWindow {
 
     /**
      * 适配7.0系统Popwindow显示全屏的问题
+     *
      * @param anchor
      */
     @Override
     public void showAsDropDown(View anchor, int xoff, int yoff) {
-        if(Build.VERSION.SDK_INT >= 24) {
+        if (Build.VERSION.SDK_INT >= 24) {
             Rect rect = new Rect();
             anchor.getGlobalVisibleRect(rect);
             int h = anchor.getResources().getDisplayMetrics().heightPixels - rect.bottom;

@@ -107,6 +107,15 @@ public class CartListBean {
         private String quantity;
         private String is_checked;
         private Price price;
+        private String store;
+
+        public String getStore() {
+            return store;
+        }
+
+        public void setStore(String store) {
+            this.store = store;
+        }
 
         public String getQuantity() {
             return quantity;

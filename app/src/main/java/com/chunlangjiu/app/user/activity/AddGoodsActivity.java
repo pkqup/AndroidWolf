@@ -14,19 +14,24 @@ import android.widget.TextView;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
 import com.chunlangjiu.app.amain.bean.FirstClassBean;
-import com.chunlangjiu.app.goods.dialog.ClassPopWindow;
+import com.chunlangjiu.app.amain.bean.SecondClassBean;
+import com.chunlangjiu.app.amain.bean.ThirdClassBean;
+import com.chunlangjiu.app.goods.bean.AlcListBean;
+import com.chunlangjiu.app.goods.bean.AreaListBean;
+import com.chunlangjiu.app.goods.bean.BrandsListBean;
+import com.chunlangjiu.app.goods.bean.OrdoListBean;
 import com.chunlangjiu.app.net.ApiUtils;
 import com.chunlangjiu.app.user.bean.AddGoodsValueBean;
-import com.chunlangjiu.app.user.bean.BrandListBean;
-import com.chunlangjiu.app.user.bean.ShopCatIdList;
 import com.chunlangjiu.app.user.bean.ShopClassList;
 import com.chunlangjiu.app.user.bean.SkuBean;
 import com.chunlangjiu.app.user.bean.UploadImageBean;
-import com.chunlangjiu.app.user.dialog.BrandPopWindow;
+import com.chunlangjiu.app.user.dialog.ChoiceAlcPopWindow;
+import com.chunlangjiu.app.user.dialog.ChoiceAreaPopWindow;
+import com.chunlangjiu.app.user.dialog.ChoiceBrandPopWindow;
+import com.chunlangjiu.app.user.dialog.ChoiceOrdoPopWindow;
 import com.chunlangjiu.app.user.dialog.ShopClassPopWindow;
 import com.chunlangjiu.app.util.GlideImageLoader;
 import com.google.gson.Gson;
-import com.loc.a;
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.lzy.imagepicker.ui.ImageGridActivity;
@@ -37,7 +42,6 @@ import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.pkqup.commonlibrary.util.FileUtils;
 import com.pkqup.commonlibrary.util.SizeUtils;
 import com.pkqup.commonlibrary.util.ToastUtils;
-import com.socks.library.KLog;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,7 +61,10 @@ import io.reactivex.schedulers.Schedulers;
 public class AddGoodsActivity extends BaseActivity {
 
     public static final int REQUEST_CODE_SELECT_MAIN_PIC = 1001;
-    public static final int REQUEST_CODE_SELECT_DETAIL_PIC = 1002;
+    public static final int REQUEST_CODE_SELECT_DETAIL_ONE_PIC = 10021;
+    public static final int REQUEST_CODE_SELECT_DETAIL_TWO_PIC = 10022;
+    public static final int REQUEST_CODE_SELECT_DETAIL_THREE_PIC = 10023;
+    public static final int REQUEST_CODE_SELECT_DETAIL_FOUR_PIC = 10024;
     public static final int REQUEST_CODE_SELECT_GOODS_PIC = 1003;
     private int codeType;
 
@@ -65,6 +72,7 @@ public class AddGoodsActivity extends BaseActivity {
     RelativeLayout rlChoiceClass;
     @BindView(R.id.tvClass)
     TextView tvClass;
+
     @BindView(R.id.rlChoicePlateClass)
     RelativeLayout rlChoicePlateClass;
     @BindView(R.id.tvPlateClass)
@@ -73,6 +81,19 @@ public class AddGoodsActivity extends BaseActivity {
     RelativeLayout rlChoiceBrand;
     @BindView(R.id.tvBrand)
     TextView tvBrand;
+
+    @BindView(R.id.rlChoiceArea)
+    RelativeLayout rlChoiceArea;
+    @BindView(R.id.tvChoiceArea)
+    TextView tvChoiceArea;
+    @BindView(R.id.rlChoiceIncense)
+    RelativeLayout rlChoiceIncense;
+    @BindView(R.id.tvIncense)
+    TextView tvIncense;
+    @BindView(R.id.rlChoiceDegree)
+    RelativeLayout rlChoiceDegree;
+    @BindView(R.id.tvDegree)
+    TextView tvDegree;
 
     @BindView(R.id.etTitle)
     EditText etTitle;
@@ -85,37 +106,67 @@ public class AddGoodsActivity extends BaseActivity {
     @BindView(R.id.etCount)
     EditText etCount;
 
+
     @BindView(R.id.llMainPic)
     LinearLayout llMainPic;
-    @BindView(R.id.llDescPic)
-    LinearLayout llDescPic;
+    @BindView(R.id.llDescOnePic)
+    LinearLayout llDescOnePic;
+    @BindView(R.id.llDescTwoPic)
+    LinearLayout llDescTwoPic;
+    @BindView(R.id.llDescThreePic)
+    LinearLayout llDescThreePic;
+    @BindView(R.id.llDescFourPic)
+    LinearLayout llDescFourPic;
     @BindView(R.id.llGoodsPic)
     LinearLayout llGoodsPic;
+
     @BindView(R.id.rlMainPic)
     RelativeLayout rlMainPic;
-    @BindView(R.id.rlDescPic)
-    RelativeLayout rlDescPic;
+    @BindView(R.id.rlDescOnePic)
+    RelativeLayout rlDescOnePic;
+    @BindView(R.id.rlDescTwoPic)
+    RelativeLayout rlDescTwoPic;
+    @BindView(R.id.rlDescThreePic)
+    RelativeLayout rlDescThreePic;
+    @BindView(R.id.rlDescFourPic)
+    RelativeLayout rlDescFourPic;
     @BindView(R.id.rlGoodsPic)
     RelativeLayout rlGoodsPic;
 
-    @BindView(R.id.imgMainEx)
-    ImageView imgMainEx;
     @BindView(R.id.imgMainPic)
     ImageView imgMainPic;
-    @BindView(R.id.imgDescEx)
-    ImageView imgDescEx;
-    @BindView(R.id.imgDescPic)
-    ImageView imgDescPic;
+    @BindView(R.id.imgDescOnePic)
+    ImageView imgDescOnePic;
+    @BindView(R.id.imgDescTwoPic)
+    ImageView imgDescTwoPic;
+    @BindView(R.id.imgDescThreePic)
+    ImageView imgDescThreePic;
+    @BindView(R.id.imgDescFourPic)
+    ImageView imgDescFourPic;
     @BindView(R.id.imgGoodsPic)
     ImageView imgGoodsPic;
 
     @BindView(R.id.imgDeleteMainPic)
     ImageView imgDeleteMainPic;
-    @BindView(R.id.imgDeleteDescPic)
-    ImageView imgDeleteDescPic;
+    @BindView(R.id.imgDeleteDescOnePic)
+    ImageView imgDeleteDescOnePic;
+    @BindView(R.id.imgDeleteDescTwoPic)
+    ImageView imgDeleteDescTwoPic;
+    @BindView(R.id.imgDeleteDescThreePic)
+    ImageView imgDeleteDescThreePic;
+    @BindView(R.id.imgDeleteDescFourPic)
+    ImageView imgDeleteDescFourPic;
     @BindView(R.id.imgDeleteGoodsPic)
     ImageView imgDeleteGoodsPic;
 
+    @BindView(R.id.rlDescTwo)
+    RelativeLayout rlDescTwo;
+    @BindView(R.id.rlDescThree)
+    RelativeLayout rlDescThree;
+    @BindView(R.id.rlDescFour)
+    RelativeLayout rlDescFour;
+    @BindView(R.id.rlGoods)
+    RelativeLayout rlGoods;
 
     @BindView(R.id.etGoodsDesc)
     EditText etGoodsDesc;
@@ -138,28 +189,44 @@ public class AddGoodsActivity extends BaseActivity {
     @BindView(R.id.tvCommit)
     TextView tvCommit;
 
-    //店铺分类列表
-    private List<ShopCatIdList.Children> shopClassLists;
+    //分类列表
     private ShopClassPopWindow shopPopWindow;
-    private String shopClassId;
-
-    //平台三级分类列表
-    private List<FirstClassBean> categoryLists;
-    private ClassPopWindow classPopWindow;
+    private List<ThirdClassBean> classLists;
     private String classId;
 
     //品牌列表
-    private BrandPopWindow brandPopWindow;
-    private List<BrandListBean.Brand> brandLists;
+    private ChoiceBrandPopWindow choiceBrandPopWindow;
+    private List<BrandsListBean.BrandBean> brandLists = new ArrayList<>();
     private String brandId;
+
+    //产地列表
+    private ChoiceAreaPopWindow choiceAreaPopWindow;
+    private List<AreaListBean.AreaBean> areaLists = new ArrayList<>();
+    private String areaId = "";
+
+    //香型列表
+    private ChoiceOrdoPopWindow choiceOrdoPopWindow;
+    private List<OrdoListBean.OrdoBean> ordoLists = new ArrayList<>();
+    private String ordoId = "";
+
+    //酒精度列表
+    private ChoiceAlcPopWindow choiceAlcPopWindow;
+    private List<AlcListBean.AlcBean> alcLists = new ArrayList<>();
+    private String alcId = "";
 
     private CompositeDisposable disposable;
     private ChoicePhotoDialog photoDialog;
     private ArrayList<ImageItem> mainPicLists;
-    private ArrayList<ImageItem> detailPicLists;
+    private ArrayList<ImageItem> detailOnePicLists;
+    private ArrayList<ImageItem> detailTwoPicLists;
+    private ArrayList<ImageItem> detailThreePicLists;
+    private ArrayList<ImageItem> detailFourPicLists;
     private ArrayList<ImageItem> goodsPicLists;
     private String base64Main;
-    private String base64Detail;
+    private String base64DetailOne;
+    private String base64DetailTwo;
+    private String base64DetailThree;
+    private String base64DetailFour;
     private String base64Goods;
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -170,19 +237,37 @@ public class AddGoodsActivity extends BaseActivity {
                     finish();
                     break;
                 case R.id.rlChoiceClass:
-                    showShopClassPopWindow();
+//                    showShopClassPopWindow();
                     break;
                 case R.id.rlChoicePlateClass:
-                    showClassPopWindow();
+                    showShopClassPopWindow();
                     break;
                 case R.id.rlChoiceBrand:
                     showBrandPopWindow();
                     break;
+                case R.id.rlChoiceArea:
+                    showAreaPopWindow();
+                    break;
+                case R.id.rlChoiceIncense:
+                    showIncensePopWindow();
+                    break;
+                case R.id.rlChoiceDegree:
+                    showDegreePopWindow();
+                    break;
                 case R.id.rlMainPic:
                     showPhotoDialog(REQUEST_CODE_SELECT_MAIN_PIC);
                     break;
-                case R.id.rlDescPic:
-                    showPhotoDialog(REQUEST_CODE_SELECT_DETAIL_PIC);
+                case R.id.rlDescOnePic:
+                    showPhotoDialog(REQUEST_CODE_SELECT_DETAIL_ONE_PIC);
+                    break;
+                case R.id.rlDescTwoPic:
+                    showPhotoDialog(REQUEST_CODE_SELECT_DETAIL_TWO_PIC);
+                    break;
+                case R.id.rlDescThreePic:
+                    showPhotoDialog(REQUEST_CODE_SELECT_DETAIL_THREE_PIC);
+                    break;
+                case R.id.rlDescFourPic:
+                    showPhotoDialog(REQUEST_CODE_SELECT_DETAIL_FOUR_PIC);
                     break;
                 case R.id.rlGoodsPic:
                     showPhotoDialog(REQUEST_CODE_SELECT_GOODS_PIC);
@@ -190,8 +275,17 @@ public class AddGoodsActivity extends BaseActivity {
                 case R.id.imgDeleteMainPic:
                     deleteMainPic();
                     break;
-                case R.id.imgDeleteDescPic:
-                    deleteDescPic();
+                case R.id.imgDeleteDescOnePic:
+                    deleteDescOnePic();
+                    break;
+                case R.id.imgDeleteDescTwoPic:
+                    deleteDescTwoPic();
+                    break;
+                case R.id.imgDeleteDescThreePic:
+                    deleteDescFourPic();
+                    break;
+                case R.id.imgDeleteDescFourPic:
+                    deleteDescFivePic();
                     break;
                 case R.id.imgDeleteGoodsPic:
                     deleteGoodsPic();
@@ -225,7 +319,10 @@ public class AddGoodsActivity extends BaseActivity {
         ViewGroup.LayoutParams layoutParams = llMainPic.getLayoutParams();
         layoutParams.height = picSize;
         llMainPic.setLayoutParams(layoutParams);
-        llDescPic.setLayoutParams(layoutParams);
+        llDescOnePic.setLayoutParams(layoutParams);
+        llDescTwoPic.setLayoutParams(layoutParams);
+        llDescThreePic.setLayoutParams(layoutParams);
+        llDescFourPic.setLayoutParams(layoutParams);
         llGoodsPic.setLayoutParams(layoutParams);
 
         RelativeLayout.LayoutParams imgDeleteGoodsPicLayoutParams = (RelativeLayout.LayoutParams) imgDeleteGoodsPic.getLayoutParams();
@@ -235,16 +332,27 @@ public class AddGoodsActivity extends BaseActivity {
         rlChoiceClass.setOnClickListener(onClickListener);
         rlChoicePlateClass.setOnClickListener(onClickListener);
         rlChoiceBrand.setOnClickListener(onClickListener);
+        rlChoiceArea.setOnClickListener(onClickListener);
+        rlChoiceIncense.setOnClickListener(onClickListener);
+        rlChoiceDegree.setOnClickListener(onClickListener);
 
         rlMainPic.setOnClickListener(onClickListener);
-        rlDescPic.setOnClickListener(onClickListener);
+        rlDescOnePic.setOnClickListener(onClickListener);
+        rlDescTwoPic.setOnClickListener(onClickListener);
+        rlDescThreePic.setOnClickListener(onClickListener);
+        rlDescFourPic.setOnClickListener(onClickListener);
         rlGoodsPic.setOnClickListener(onClickListener);
 
         imgDeleteMainPic.setOnClickListener(onClickListener);
-        imgDeleteDescPic.setOnClickListener(onClickListener);
+        imgDeleteDescOnePic.setOnClickListener(onClickListener);
+        imgDeleteDescTwoPic.setOnClickListener(onClickListener);
+        imgDeleteDescThreePic.setOnClickListener(onClickListener);
+        imgDeleteDescFourPic.setOnClickListener(onClickListener);
         imgDeleteGoodsPic.setOnClickListener(onClickListener);
 
         tvCommit.setOnClickListener(onClickListener);
+
+        classLists = new ArrayList<>();
     }
 
     private void initImagePicker() {
@@ -264,28 +372,6 @@ public class AddGoodsActivity extends BaseActivity {
 
 
     private void initData() {
-        //获取店铺分类
-        disposable.add(ApiUtils.getInstance().getStoreClassList()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<ResultBean<ShopCatIdList>>() {
-                    @Override
-                    public void accept(ResultBean<ShopCatIdList> shopCatIdListResultBean) throws Exception {
-                        List<ShopCatIdList.Category> category = shopCatIdListResultBean.getData().getCategory();
-                        shopClassLists = new ArrayList<>();
-                        for (int i = 0; i < category.size(); i++) {
-                            List<ShopCatIdList.Children> children = category.get(i).getChildren();
-                            shopClassLists.addAll(children);
-                        }
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-
-                    }
-                }));
-
-
         //获取平台分类
         disposable.add(ApiUtils.getInstance().getShopClassList()
                 .subscribeOn(Schedulers.io())
@@ -293,7 +379,14 @@ public class AddGoodsActivity extends BaseActivity {
                 .subscribe(new Consumer<ResultBean<ShopClassList>>() {
                     @Override
                     public void accept(ResultBean<ShopClassList> mainClassBeanResultBean) throws Exception {
-                        categoryLists = mainClassBeanResultBean.getData().getCategory();
+                        List<FirstClassBean> categorys = mainClassBeanResultBean.getData().getCategory();
+                        for (int i = 0; i < categorys.size(); i++) {
+                            List<SecondClassBean> lv2 = categorys.get(i).getLv2();
+                            for (int j = 0; j < lv2.size(); j++) {
+                                List<ThirdClassBean> lv3 = lv2.get(j).getLv3();
+                                classLists.addAll(lv3);
+                            }
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -305,51 +398,84 @@ public class AddGoodsActivity extends BaseActivity {
 
 
     private void showShopClassPopWindow() {
-        if (shopClassLists == null || shopClassLists.size() == 0) {
+        if (classLists == null || classLists.size() == 0) {
             ToastUtils.showShort("暂无分类");
         } else {
             if (shopPopWindow == null) {
-                shopPopWindow = new ShopClassPopWindow(this, shopClassLists, shopClassId);
+                shopPopWindow = new ShopClassPopWindow(this, classLists, classId);
                 shopPopWindow.setCallBack(new ShopClassPopWindow.CallBack() {
                     @Override
-                    public void choiceBrand(String brandName, String brandId) {
-                        shopClassId = brandId;
-                        tvClass.setText(brandName);
-                    }
-                });
-            }
-            shopPopWindow.showAsDropDown(rlChoiceClass, 0, 1);
-        }
-    }
-
-
-    private void showClassPopWindow() {
-        if (categoryLists == null || categoryLists.size() == 0) {
-            ToastUtils.showShort("暂无平台分类");
-        } else {
-            if (classPopWindow == null) {
-                classPopWindow = new ClassPopWindow(this, categoryLists, classId);
-                classPopWindow.setCallBack(new ClassPopWindow.CallBack() {
-                    @Override
-                    public void choiceClass(String name, String id) {
-                        classId = id;
-                        tvPlateClass.setText(name);
+                    public void choiceClassId(String className, String classIdChoice) {
+                        classId = classIdChoice;
+                        tvPlateClass.setText(className);
                         getBrandLists();
+                        getAreaLists();
+                        getInsenceLists();
+                        getAlcLists();
                     }
                 });
             }
-            classPopWindow.showAsDropDown(rlChoiceClass, 0, 1);
+            shopPopWindow.showAsDropDown(rlChoicePlateClass, 0, 1);
         }
     }
+
 
     private void getBrandLists() {
-        disposable.add(ApiUtils.getInstance().getShopBrandList(classId)
+        disposable.add(ApiUtils.getInstance().getAddShopBrandList(classId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<ResultBean<BrandListBean>>() {
+                .subscribe(new Consumer<ResultBean<BrandsListBean>>() {
                     @Override
-                    public void accept(ResultBean<BrandListBean> brandListBeanResultBean) throws Exception {
-                        brandLists = brandListBeanResultBean.getData().getBrands();
+                    public void accept(ResultBean<BrandsListBean> brandsListBeanResultBean) throws Exception {
+                        brandLists = brandsListBeanResultBean.getData().getBrands();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                }));
+    }
+
+    private void getAreaLists() {
+        disposable.add(ApiUtils.getInstance().getShopAreaList(classId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<AreaListBean>>() {
+                    @Override
+                    public void accept(ResultBean<AreaListBean> areaListBeanResultBean) throws Exception {
+                        areaLists = areaListBeanResultBean.getData().getList();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                }));
+    }
+
+    private void getInsenceLists() {
+        disposable.add(ApiUtils.getInstance().getShopOrdoList(classId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<OrdoListBean>>() {
+                    @Override
+                    public void accept(ResultBean<OrdoListBean> ordoListBeanResultBean) throws Exception {
+                        ordoLists = ordoListBeanResultBean.getData().getList();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                }));
+    }
+
+    private void getAlcLists() {
+        disposable.add(ApiUtils.getInstance().getShopAlcList(classId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<AlcListBean>>() {
+                    @Override
+                    public void accept(ResultBean<AlcListBean> alcListBeanResultBean) throws Exception {
+                        alcLists = alcListBeanResultBean.getData().getList();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -365,18 +491,85 @@ public class AddGoodsActivity extends BaseActivity {
             if (brandLists == null || brandLists.size() == 0) {
                 ToastUtils.showShort("暂无品牌");
             } else {
-                if (brandPopWindow == null) {
-                    brandPopWindow = new BrandPopWindow(this, brandLists, brandId);
-                    brandPopWindow.setCallBack(new BrandPopWindow.CallBack() {
+                if (choiceBrandPopWindow == null) {
+                    choiceBrandPopWindow = new ChoiceBrandPopWindow(this, brandLists, brandId);
+                    choiceBrandPopWindow.setCallBack(new ChoiceBrandPopWindow.CallBack() {
                         @Override
-                        public void choiceBrand(String selectName, String selectId) {
-                            brandId = selectId;
-                            tvBrand.setText(selectName);
+                        public void choiceBrand(String brandName, String brandIdC) {
+                            tvBrand.setText(brandName);
+                            brandId = brandIdC;
                         }
                     });
                 }
-                brandPopWindow.setBrandList(brandLists);
-                brandPopWindow.showAsDropDown(rlChoiceBrand, 0, 1);
+                choiceBrandPopWindow.showAsDropDown(rlChoiceBrand, 0, 1);
+            }
+        }
+    }
+
+
+    private void showAreaPopWindow() {
+        if (TextUtils.isEmpty(classId)) {
+            ToastUtils.showShort("请先选择分类");
+        } else {
+            if (areaLists == null || areaLists.size() == 0) {
+                ToastUtils.showShort("暂无产地");
+            } else {
+                if (choiceAreaPopWindow == null) {
+                    choiceAreaPopWindow = new ChoiceAreaPopWindow(this, areaLists, areaId);
+                    choiceAreaPopWindow.setCallBack(new ChoiceAreaPopWindow.CallBack() {
+                        @Override
+                        public void choiceBrand(String brandName, String brandId) {
+                            tvChoiceArea.setText(brandName);
+                            areaId = brandId;
+                        }
+                    });
+                }
+                choiceAreaPopWindow.showAsDropDown(rlChoiceArea, 0, 1);
+            }
+        }
+    }
+
+    private void showIncensePopWindow() {
+        if (TextUtils.isEmpty(classId)) {
+            ToastUtils.showShort("请先选择分类");
+        } else {
+            if (ordoLists == null || ordoLists.size() == 0) {
+                ToastUtils.showShort("暂无香型");
+            } else {
+                if (choiceOrdoPopWindow == null) {
+                    choiceOrdoPopWindow = new ChoiceOrdoPopWindow(this, ordoLists, ordoId);
+                    choiceOrdoPopWindow.setCallBack(new ChoiceOrdoPopWindow.CallBack() {
+                        @Override
+                        public void choiceBrand(String brandName, String brandId) {
+                            tvIncense.setText(brandName);
+                            ordoId = brandId;
+                        }
+                    });
+                }
+                choiceOrdoPopWindow.showAsDropDown(rlChoiceDegree, 0, 1);
+            }
+        }
+
+    }
+
+    private void showDegreePopWindow() {
+        if (TextUtils.isEmpty(classId)) {
+            ToastUtils.showShort("请先选择分类");
+        } else {
+            if (alcLists == null || alcLists.size() == 0) {
+                ToastUtils.showShort("暂无酒精度");
+            } else {
+                if (choiceAlcPopWindow == null) {
+                    choiceAlcPopWindow = new ChoiceAlcPopWindow(this, alcLists, alcId);
+                    choiceAlcPopWindow.setCallBack(new ChoiceAlcPopWindow.CallBack() {
+                        @Override
+                        public void choiceBrand(String brandName, String brandId) {
+                            tvDegree.setText(brandName);
+                            alcId = brandId;
+                        }
+                    });
+                }
+                choiceAlcPopWindow.showAsDropDown(rlChoiceIncense, 0, 1);
             }
         }
     }
@@ -413,9 +606,7 @@ public class AddGoodsActivity extends BaseActivity {
 
 
     private void checkData() {
-        if (TextUtils.isEmpty(shopClassId)) {
-            ToastUtils.showShort("请选择分类");
-        } else if (TextUtils.isEmpty(classId)) {
+        if (TextUtils.isEmpty(classId)) {
             ToastUtils.showShort("请选择平台分类");
         } else if (TextUtils.isEmpty(brandId)) {
             ToastUtils.showShort("请选择品牌");
@@ -427,7 +618,7 @@ public class AddGoodsActivity extends BaseActivity {
             ToastUtils.showShort("请填写库存");
         } else if (TextUtils.isEmpty(etSize.getText().toString().trim())) {
             ToastUtils.showShort("请填写容量");
-        } else if (mainPicLists == null && detailPicLists == null && goodsPicLists == null) {
+        } else if (mainPicLists == null || detailOnePicLists == null || detailTwoPicLists == null || detailThreePicLists == null || detailFourPicLists == null) {
             ToastUtils.showShort("请添加图片");
         } else {
             uploadImageNew();
@@ -443,9 +634,21 @@ public class AddGoodsActivity extends BaseActivity {
             base64Lists.add(base64Main);
             nameLists.add(mainPicLists.get(0).name);
         }
-        if (base64Detail != null) {
-            base64Lists.add(base64Detail);
-            nameLists.add(detailPicLists.get(0).name);
+        if (base64DetailOne != null) {
+            base64Lists.add(base64DetailOne);
+            nameLists.add(detailOnePicLists.get(0).name);
+        }
+        if (base64DetailTwo != null) {
+            base64Lists.add(base64DetailTwo);
+            nameLists.add(detailTwoPicLists.get(0).name);
+        }
+        if (base64DetailThree != null) {
+            base64Lists.add(base64DetailThree);
+            nameLists.add(detailThreePicLists.get(0).name);
+        }
+        if (base64DetailFour != null) {
+            base64Lists.add(base64DetailFour);
+            nameLists.add(detailFourPicLists.get(0).name);
         }
         if (base64Goods != null) {
             base64Lists.add(base64Goods);
@@ -458,7 +661,6 @@ public class AddGoodsActivity extends BaseActivity {
                     .subscribe(new Consumer<ResultBean<UploadImageBean>>() {
                         @Override
                         public void accept(ResultBean<UploadImageBean> uploadImageBeanResultBean) throws Exception {
-                            hideLoadingDialog();
                             imageLists.add(uploadImageBeanResultBean.getData().getUrl());
                             if (imageLists.size() == base64Lists.size()) {
                                 StringBuffer stringBuffer = new StringBuffer();
@@ -471,51 +673,6 @@ public class AddGoodsActivity extends BaseActivity {
                                 }
                                 commitGoods(stringBuffer.toString());
                             }
-                        }
-                    }, new Consumer<Throwable>() {
-                        @Override
-                        public void accept(Throwable throwable) throws Exception {
-                            hideLoadingDialog();
-                            ToastUtils.showShort("上传图片失败");
-                        }
-                    }));
-        }
-
-    }
-
-    private void uploadImage() {
-        if (base64Main == null || base64Detail == null || base64Goods == null) {
-            ToastUtils.showShort("图片压缩失败，请重新选择图片");
-        } else {
-            showLoadingDialog();
-            Observable<ResultBean<UploadImageBean>> main = ApiUtils.getInstance().shopUploadImage(base64Main, mainPicLists.get(0).name);
-            Observable<ResultBean<UploadImageBean>> detail = ApiUtils.getInstance().shopUploadImage(base64Detail, detailPicLists.get(0).name);
-            Observable<ResultBean<UploadImageBean>> goods = ApiUtils.getInstance().shopUploadImage(base64Goods, goodsPicLists.get(0).name);
-            disposable.add(Observable.zip(main, detail, goods, new Function3<ResultBean<UploadImageBean>, ResultBean<UploadImageBean>,
-                    ResultBean<UploadImageBean>, List<String>>() {
-                @Override
-                public List<String> apply(ResultBean<UploadImageBean> uploadImageBeanResultBean, ResultBean<UploadImageBean> uploadImageBeanResultBean2,
-                                          ResultBean<UploadImageBean> uploadImageBeanResultBean3) throws Exception {
-                    List<String> imageLists = new ArrayList<>();
-                    imageLists.add(uploadImageBeanResultBean.getData().getUrl());
-                    imageLists.add(uploadImageBeanResultBean2.getData().getUrl());
-                    imageLists.add(uploadImageBeanResultBean3.getData().getUrl());
-                    return imageLists;
-                }
-            }).subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new Consumer<List<String>>() {
-                        @Override
-                        public void accept(List<String> strings) throws Exception {
-                            StringBuffer stringBuffer = new StringBuffer();
-                            for (int i = 0; i < strings.size(); i++) {
-                                if (i == strings.size() - 1) {
-                                    stringBuffer.append(strings.get(i));
-                                } else {
-                                    stringBuffer.append(strings.get(i)).append(",");
-                                }
-                            }
-                            commitGoods(stringBuffer.toString());
                         }
                     }, new Consumer<Throwable>() {
                         @Override
@@ -545,17 +702,17 @@ public class AddGoodsActivity extends BaseActivity {
         valueBeanList.add(new AddGoodsValueBean("产地", etArea.getText().toString().trim()));
         String parameter = new Gson().toJson(valueBeanList);
 
-        disposable.add(ApiUtils.getInstance().addGoods(classId, brandId, shopClassId, etTitle.getText().toString().trim(),
+        disposable.add(ApiUtils.getInstance().addGoods(classId, brandId, "", etTitle.getText().toString().trim(),
                 etSecondName.getText().toString().trim(), etSize.getText().toString().trim(), images,
                 etPrice.getText().toString().trim(), "15", skuArray, etTag.getText().toString().trim(),
-                etGoodsDesc.getText().toString().trim(), parameter)
+                etGoodsDesc.getText().toString().trim(), parameter, areaId, ordoId, alcId,etCount.getText().toString().trim())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean>() {
                     @Override
                     public void accept(ResultBean resultBean) throws Exception {
                         hideLoadingDialog();
-                        startActivity(new Intent(AddGoodsActivity.this,AddGoodsSuccessActivity.class));
+                        startActivity(new Intent(AddGoodsActivity.this, AddGoodsSuccessActivity.class));
                         finish();
                     }
                 }, new Consumer<Throwable>() {
@@ -584,15 +741,46 @@ public class AddGoodsActivity extends BaseActivity {
                         imgMainPic.setVisibility(View.VISIBLE);
                         imgDeleteMainPic.setVisibility(View.VISIBLE);
                         GlideUtils.loadImage(AddGoodsActivity.this, mainPicLists.get(0).path, imgMainPic);
-                    } else if (requestCode == REQUEST_CODE_SELECT_DETAIL_PIC) {
-                        detailPicLists = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
-                        ImageItem imageItem = detailPicLists.get(0);
+                    } else if (requestCode == REQUEST_CODE_SELECT_DETAIL_ONE_PIC) {
+                        detailOnePicLists = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+                        ImageItem imageItem = detailOnePicLists.get(0);
                         int index = imageItem.path.lastIndexOf("/");
                         imageItem.name = imageItem.path.substring(index + 1, imageItem.path.length());
-                        base64Detail = FileUtils.imgToBase64(detailPicLists.get(0).path);
-                        imgDescPic.setVisibility(View.VISIBLE);
-                        imgDeleteDescPic.setVisibility(View.VISIBLE);
-                        GlideUtils.loadImage(AddGoodsActivity.this, detailPicLists.get(0).path, imgDescPic);
+                        base64DetailOne = FileUtils.imgToBase64(detailOnePicLists.get(0).path);
+                        imgDescOnePic.setVisibility(View.VISIBLE);
+                        imgDeleteDescOnePic.setVisibility(View.VISIBLE);
+                        GlideUtils.loadImage(AddGoodsActivity.this, detailOnePicLists.get(0).path, imgDescOnePic);
+                        rlDescTwo.setVisibility(View.VISIBLE);
+                    } else if (requestCode == REQUEST_CODE_SELECT_DETAIL_TWO_PIC) {
+                        detailTwoPicLists = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+                        ImageItem imageItem = detailTwoPicLists.get(0);
+                        int index = imageItem.path.lastIndexOf("/");
+                        imageItem.name = imageItem.path.substring(index + 1, imageItem.path.length());
+                        base64DetailTwo = FileUtils.imgToBase64(detailTwoPicLists.get(0).path);
+                        imgDescTwoPic.setVisibility(View.VISIBLE);
+                        imgDeleteDescTwoPic.setVisibility(View.VISIBLE);
+                        GlideUtils.loadImage(AddGoodsActivity.this, detailTwoPicLists.get(0).path, imgDescTwoPic);
+                        rlDescThree.setVisibility(View.VISIBLE);
+                    } else if (requestCode == REQUEST_CODE_SELECT_DETAIL_THREE_PIC) {
+                        detailThreePicLists = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+                        ImageItem imageItem = detailThreePicLists.get(0);
+                        int index = imageItem.path.lastIndexOf("/");
+                        imageItem.name = imageItem.path.substring(index + 1, imageItem.path.length());
+                        base64DetailThree = FileUtils.imgToBase64(detailThreePicLists.get(0).path);
+                        imgDescThreePic.setVisibility(View.VISIBLE);
+                        imgDeleteDescThreePic.setVisibility(View.VISIBLE);
+                        GlideUtils.loadImage(AddGoodsActivity.this, detailThreePicLists.get(0).path, imgDescThreePic);
+                        rlDescFour.setVisibility(View.VISIBLE);
+                    } else if (requestCode == REQUEST_CODE_SELECT_DETAIL_FOUR_PIC) {
+                        detailFourPicLists = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+                        ImageItem imageItem = detailFourPicLists.get(0);
+                        int index = imageItem.path.lastIndexOf("/");
+                        imageItem.name = imageItem.path.substring(index + 1, imageItem.path.length());
+                        base64DetailFour = FileUtils.imgToBase64(detailFourPicLists.get(0).path);
+                        imgDescFourPic.setVisibility(View.VISIBLE);
+                        imgDeleteDescFourPic.setVisibility(View.VISIBLE);
+                        GlideUtils.loadImage(AddGoodsActivity.this, detailFourPicLists.get(0).path, imgDescFourPic);
+                        rlGoods.setVisibility(View.VISIBLE);
                     } else if (requestCode == REQUEST_CODE_SELECT_GOODS_PIC) {
                         goodsPicLists = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
                         ImageItem imageItem = goodsPicLists.get(0);
@@ -617,11 +805,33 @@ public class AddGoodsActivity extends BaseActivity {
         imgDeleteMainPic.setVisibility(View.GONE);
     }
 
-    private void deleteDescPic() {
-        detailPicLists = null;
-        base64Detail = null;
-        imgDescPic.setVisibility(View.GONE);
-        imgDeleteDescPic.setVisibility(View.GONE);
+    private void deleteDescOnePic() {
+        detailOnePicLists = null;
+        base64DetailOne = null;
+        imgDescOnePic.setVisibility(View.GONE);
+        imgDeleteDescOnePic.setVisibility(View.GONE);
+    }
+
+
+    private void deleteDescTwoPic() {
+        detailTwoPicLists = null;
+        base64DetailTwo = null;
+        imgDescTwoPic.setVisibility(View.GONE);
+        imgDeleteDescTwoPic.setVisibility(View.GONE);
+    }
+
+    private void deleteDescFourPic() {
+        detailThreePicLists = null;
+        base64DetailThree = null;
+        imgDescThreePic.setVisibility(View.GONE);
+        imgDeleteDescThreePic.setVisibility(View.GONE);
+    }
+
+    private void deleteDescFivePic() {
+        detailFourPicLists = null;
+        base64DetailFour = null;
+        imgDescFourPic.setVisibility(View.GONE);
+        imgDeleteDescFourPic.setVisibility(View.GONE);
     }
 
     private void deleteGoodsPic() {
