@@ -2,12 +2,9 @@ package com.chunlangjiu.app.web;
 
 import android.webkit.JavascriptInterface;
 
-import com.chunlangjiu.app.abase.BaseApplication;
 import com.chunlangjiu.app.goods.activity.GoodsDetailsActivity;
-import com.chunlangjiu.app.user.activity.AddGoodsSuccessActivity;
 import com.chunlangjiu.app.util.ConstantMsg;
 import com.pkqup.commonlibrary.eventmsg.EventManager;
-import com.pkqup.commonlibrary.util.ToastUtils;
 
 /**
  * @CreatedbBy: liucun on 2018/9/23.
@@ -52,6 +49,7 @@ public class JsUtil {
             @Override
             public void run() {
                 activity.finish();
+                EventManager.getInstance().notify(null, ConstantMsg.UPDATE_WEBVIEW);
             }
         });
     }
