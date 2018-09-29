@@ -554,6 +554,9 @@ public class UserFragment extends BaseFragment {
                             tvOrderTwoNum.setVisibility(TextUtils.isEmpty(data.getWait_send_goods_num()) ? View.GONE : View.VISIBLE);
                             tvOrderThreeNum.setText(data.getWait_confirm_goods_num());
                             tvOrderThreeNum.setVisibility(TextUtils.isEmpty(data.getWait_confirm_goods_num()) ? View.GONE : View.VISIBLE);
+                            tvCanUseMoney.setText(TextUtils.isEmpty(data.getMoney())?"0":data.getMoney());
+                            tvNotUseMoney.setText(TextUtils.isEmpty(data.getMoney_frozen())?"0":data.getMoney_frozen());
+                            tvMessageNum.setText(TextUtils.isEmpty(data.getInformation())?"0":data.getInformation());
                         }
                     }
                 }, new Consumer<Throwable>() {
@@ -879,6 +882,9 @@ public class UserFragment extends BaseFragment {
             BaseApplication.initToken();
             checkLogin();
             userType = TYPE_BUYER;
+            tvOrderOneNum.setVisibility(View.GONE);
+            tvOrderTwoNum.setVisibility(View.GONE);
+            tvOrderThreeNum.setVisibility(View.GONE);
             showUserTypeView();
             disposable.add(ApiUtils.getInstance().logout()
                     .subscribeOn(Schedulers.io())
