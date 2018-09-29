@@ -15,6 +15,7 @@ import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.awen.photo.photopick.controller.PhotoPagerConfig;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chunlangjiu.app.R;
@@ -225,12 +226,23 @@ public class AuctionScrollViewFragment extends BaseFragment {
             banner.setOnBannerListener(new OnBannerListener() {
                 @Override
                 public void OnBannerClick(int position) {
+                    toLargeImage(position);
                 }
             });
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+    private void toLargeImage(int position) {
+        new PhotoPagerConfig.Builder(getActivity())
+                .setBigImageUrls((ArrayList<String>) bannerUrls)
+                .setSavaImage(false)
+                .setPosition(position)
+//                        .setSaveImageLocalPath("这里是你想保存的图片地址")
+                .build();
+    }
+
 
     private void initCommonView() {
         tvPrice.setText("¥" + goodsDetailBean.getItem().getPrice());

@@ -453,7 +453,7 @@ public class UserFragment extends BaseFragment {
             HttpUtils.USER_TOKEN = true;
             //买家中心
             rlBackground.setBackgroundResource(R.mipmap.buy_bg);
-            tvChangeType.setText("卖家中心");
+            tvChangeType.setText("切换卖家");
             if (AuthStatusBean.AUTH_SUCCESS.equals(companyStatus)) {
                 tvAuthCompany.setVisibility(View.GONE);
             } else {
@@ -477,7 +477,7 @@ public class UserFragment extends BaseFragment {
             HttpUtils.USER_TOKEN = false;
             //卖家中心
             rlBackground.setBackgroundResource(R.mipmap.sell_bg);
-            tvChangeType.setText("买家中心");
+            tvChangeType.setText("切换买家");
             tvAuthCompany.setVisibility(View.GONE);
             llNotUseMoney.setVisibility(View.VISIBLE);
 

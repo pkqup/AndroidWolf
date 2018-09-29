@@ -3,4 +3,5 @@ include ':app',
         ':common:imagepicker',
         ':common:citypick',
         ':common:umengshare',
-        ':common:TimePickerDialog'
+        ':common:TimePickerDialog',
+        ':common:photoLibrary'
