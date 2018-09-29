@@ -557,7 +557,7 @@ public class AddGoodsActivity extends BaseActivity {
                     });
                 }
                 choiceOrdoPopWindow.setBrandList(ordoLists,ordoId);
-                choiceOrdoPopWindow.showAsDropDown(rlChoiceDegree, 0, 1);
+                choiceOrdoPopWindow.showAsDropDown(rlChoiceIncense, 0, 1);
             }
         }
 
@@ -581,7 +581,7 @@ public class AddGoodsActivity extends BaseActivity {
                     });
                 }
                 choiceAlcPopWindow.setBrandList(alcLists,alcId);
-                choiceAlcPopWindow.showAsDropDown(rlChoiceIncense, 0, 1);
+                choiceAlcPopWindow.showAsDropDown(rlChoiceDegree, 0, 1);
             }
         }
     }
