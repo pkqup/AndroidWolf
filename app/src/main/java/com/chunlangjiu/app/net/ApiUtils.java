@@ -297,7 +297,7 @@ public class ApiUtils {
                                            String price, String dlytmpl_id, String sku, String label, String explain, String parameter,
                                            String area_id, String odor_id, String alcohol_id, String store) {
         return apiService.addGoods("item.create", "v1", cat_id, brand_id, shop_cat_id, title, sub_title, weight, list_image,
-                price, dlytmpl_id, sku, label, explain, parameter, "ML", "1",area_id,odor_id,alcohol_id,store);
+                price, dlytmpl_id, sku, label, explain, parameter, "瓶", "1",area_id,odor_id,alcohol_id,store);
     }
 
     public Flowable<ResultBean<OrderListBean>> getOrderLists(String status, int pageNo) {
