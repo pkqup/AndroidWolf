@@ -52,6 +52,8 @@ public class WebViewActivity extends FragmentActivity {
         }
 
     };
+    private String url;
+    private String title;
 
     public static void startWebViewActivity(Activity activity, String url, String title) {
         Intent intent = new Intent(activity, WebViewActivity.class);
@@ -104,10 +106,9 @@ public class WebViewActivity extends FragmentActivity {
     }
 
     private void initData() {
-        String title = getIntent().getStringExtra("title");
+        title = getIntent().getStringExtra("title");
         tv_title.setText(title);
-
-        String url = getIntent().getStringExtra("url");
+        url = getIntent().getStringExtra("url");
         webView.loadUrl(url);
     }
 

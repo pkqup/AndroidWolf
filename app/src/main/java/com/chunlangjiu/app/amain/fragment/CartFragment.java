@@ -741,8 +741,10 @@ public class CartFragment extends BaseFragment {
         public void onNotify(Object object, String eventTag) {
             updateCartList(eventTag);
             loginSuccess(eventTag);
+            logoutSuccess(eventTag);
         }
     };
+
 
     private void updateCartList(String eventTag) {
         if (eventTag.equals(ConstantMsg.UPDATE_CART_LIST)) {
@@ -750,6 +752,7 @@ public class CartFragment extends BaseFragment {
         }
     }
 
+    //登录成功
     private void loginSuccess(String eventTag) {
         if (eventTag.equals(ConstantMsg.LOGIN_SUCCESS)) {
             requestData();
@@ -761,6 +764,17 @@ public class CartFragment extends BaseFragment {
         rl_bottom.setVisibility(View.VISIBLE);
         rlLogin.setVisibility(View.GONE);
         getCartList();
+    }
+
+
+    //退出登录
+    private void logoutSuccess(String eventTag) {
+        if (eventTag.equals(ConstantMsg.LOGOUT_SUCCESS)) {
+            imgEdit.setVisibility(View.GONE);
+            rlContent.setVisibility(View.GONE);
+            rl_bottom.setVisibility(View.GONE);
+            rlLogin.setVisibility(View.VISIBLE);
+        }
     }
 
 }
