@@ -33,7 +33,7 @@ public class ConstantMsg {
     public static final String WEB_URL_AUTH_GOODS = "http://mall.chunlangjiu.com/index.php/wap/app-pending.html?apitoken=";//审核商品
 
     public static final String WEB_URL_MONEY_MANAGER = "http://mall.chunlangjiu.com/index.php/wap/app-capital.html?apitoken=";//资金管理
-    public static final String WEB_URL_COLLECT = "http://mall.chunlangjiu.com/index.php/wap/app-capital.html?apitoken=";//我的收藏
+    public static final String WEB_URL_COLLECT = "http://mall.chunlangjiu.com/index.php/wap/app-collect.html?apitoken=";//我的收藏
     public static final String WEB_URL_VIP_INFO = "http://mall.chunlangjiu.com/index.php/wap/app-storeinfo.html?apitoken=";//个人会员资料
     public static final String WEB_URL_SHOP_INFO = "http://mall.chunlangjiu.com/index.php/wap/app-shopinfo.html?apitoken=";//商家会员资料
     public static final String WEB_URL_BANK_CARD = "http://mall.chunlangjiu.com/index.php/wap/app-bank.html?apitoken=";//银行卡管理

@@ -73,6 +73,24 @@ public class GoodsDetailBean implements Serializable{
         private String shop_descript;
         private String shop_logo;
         private String shop_type;
+        private String shopname;
+        private String mobile;
+
+        public String getShopname() {
+            return shopname;
+        }
+
+        public void setShopname(String shopname) {
+            this.shopname = shopname;
+        }
+
+        public String getMobile() {
+            return mobile;
+        }
+
+        public void setMobile(String mobile) {
+            this.mobile = mobile;
+        }
 
         public String getShop_id() {
             return shop_id;

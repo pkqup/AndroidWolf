@@ -2,6 +2,7 @@ package com.chunlangjiu.app.goods.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -21,6 +22,7 @@ import com.chunlangjiu.app.cart.CartActivity;
 import com.chunlangjiu.app.cart.ChoiceNumDialog;
 import com.chunlangjiu.app.goods.bean.ConfirmOrderBean;
 import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
+import com.chunlangjiu.app.goods.dialog.CallDialog;
 import com.chunlangjiu.app.goods.fragment.GoodsCommentFragment;
 import com.chunlangjiu.app.goods.fragment.GoodsDetailsFragment;
 import com.chunlangjiu.app.goods.fragment.GoodsWebFragment;
@@ -97,6 +99,7 @@ public class GoodsDetailsActivity extends BaseActivity {
 
     private ChoiceNumDialog buyNowDialog;
     private ChoiceNumDialog addCartDialog;
+    private CallDialog callDialog;
 
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -125,6 +128,7 @@ public class GoodsDetailsActivity extends BaseActivity {
                         showBuyNowDialog();
                         break;
                     case R.id.rlChat://聊天
+                        showCallDialog();
                         break;
                     case R.id.rlCollect://收藏
                         changeCollectStatus();
@@ -138,6 +142,7 @@ public class GoodsDetailsActivity extends BaseActivity {
             }
         }
     };
+
 
 
     public static void startGoodsDetailsActivity(Activity activity, String goodsId) {
@@ -388,6 +393,25 @@ public class GoodsDetailsActivity extends BaseActivity {
                         ToastUtils.showErrorMsg(throwable);
                     }
                 }));
+    }
+
+
+    private void showCallDialog() {
+        if (callDialog == null) {
+            callDialog = new CallDialog(this, goodsDetailBean.getShop().getMobile());
+            callDialog.setCallBack(new CallDialog.CallBack() {
+                @Override
+                public void onConfirm() {
+                    Intent dialIntent =  new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + goodsDetailBean.getShop().getMobile()));//跳转到拨号界面，同时传递电话号码
+                    startActivity(dialIntent);
+                }
+
+                @Override
+                public void onCancel() {
+                }
+            });
+        }
+        callDialog.show();
     }
 
     private void showBuyNowDialog() {

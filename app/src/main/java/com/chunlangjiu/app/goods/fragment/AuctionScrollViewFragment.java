@@ -274,7 +274,7 @@ public class AuctionScrollViewFragment extends BaseFragment {
 
 
         GlideUtils.loadImage(getActivity(), goodsDetailBean.getShop().getShop_logo(), imgStore);
-        tvStoreName.setText(goodsDetailBean.getShop().getShop_name());
+        tvStoreName.setText(goodsDetailBean.getShop().getShopname());
         tvStoreDesc.setText(goodsDetailBean.getShop().getShop_descript());
 
 
