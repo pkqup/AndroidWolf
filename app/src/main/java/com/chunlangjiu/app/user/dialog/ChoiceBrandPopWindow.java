@@ -18,6 +18,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.goods.bean.BrandsListBean;
+import com.pkqup.commonlibrary.util.SizeUtils;
 
 import java.util.List;
 
@@ -86,6 +87,12 @@ public class ChoiceBrandPopWindow extends PopupWindow {
             }
         });
         recyclerView = mContentView.findViewById(R.id.recyclerView);
+
+        if (brandLists.size() > 15) {
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) recyclerView.getLayoutParams();
+            layoutParams.height = SizeUtils.dp2px(300);
+            recyclerView.setLayoutParams(layoutParams);
+        }
         brandAdapter = new BrandAdapter(R.layout.goods_item_pop_class, brandLists);
         brandAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
@@ -102,8 +109,9 @@ public class ChoiceBrandPopWindow extends PopupWindow {
         recyclerView.setAdapter(brandAdapter);
     }
 
-    public void setBrandList(List<BrandsListBean.BrandBean> brands) {
+    public void setBrandList(List<BrandsListBean.BrandBean> brands,String selectBrandId) {
         this.brandLists = brands;
+        this.selectBrandId = selectBrandId;
         brandAdapter.setNewData(brandLists);
     }
 

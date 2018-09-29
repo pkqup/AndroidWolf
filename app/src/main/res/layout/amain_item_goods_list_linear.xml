@@ -49,12 +49,12 @@
                 app:isShowSecond="true"
                 app:suffixGravity="center"
                 app:suffixTextColor="@color/t_black"
-                app:suffixTextSize="16sp"
+                app:suffixTextSize="14sp"
                 app:timeBgColor="@color/bg_red"
                 app:timeBgRadius="3dp"
-                app:timeBgSize="20dp"
+                app:timeBgSize="18dp"
                 app:timeTextColor="@color/t_white"
-                app:timeTextSize="16sp" />
+                app:timeTextSize="14sp" />
 
             <TextView
                 android:layout_width="wrap_content"

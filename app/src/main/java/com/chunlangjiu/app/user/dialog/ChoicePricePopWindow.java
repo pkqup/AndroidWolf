@@ -18,6 +18,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.goods.bean.PriceBean;
+import com.pkqup.commonlibrary.util.SizeUtils;
 
 import java.util.List;
 
@@ -86,6 +87,11 @@ public class ChoicePricePopWindow extends PopupWindow {
             }
         });
         recyclerView = mContentView.findViewById(R.id.recyclerView);
+        if (brandLists.size() > 15) {
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) recyclerView.getLayoutParams();
+            layoutParams.height = SizeUtils.dp2px(300);
+            recyclerView.setLayoutParams(layoutParams);
+        }
         brandAdapter = new BrandAdapter(R.layout.goods_item_pop_class, brandLists);
         brandAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
