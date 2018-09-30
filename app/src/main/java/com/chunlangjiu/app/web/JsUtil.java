@@ -1,9 +1,12 @@
 package com.chunlangjiu.app.web;
 
+import android.content.Intent;
 import android.webkit.JavascriptInterface;
 
 import com.chunlangjiu.app.amain.activity.LoginActivity;
 import com.chunlangjiu.app.goods.activity.GoodsDetailsActivity;
+import com.chunlangjiu.app.user.activity.AddGoodsActivity;
+import com.chunlangjiu.app.user.activity.EditGoodsActivity;
 import com.chunlangjiu.app.util.ConstantMsg;
 import com.pkqup.commonlibrary.eventmsg.EventManager;
 
@@ -66,13 +69,35 @@ public class JsUtil {
         });
     }
 
-    //跳转到商品详情
+    //登录
     @JavascriptInterface
     public void login() {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 LoginActivity.startLoginActivity(activity);
+            }
+        });
+    }
+
+    //编辑商品
+    @JavascriptInterface
+    public void editGoodsDetail(final String item_id) {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                EditGoodsActivity.startEditGoodsDetailsActivity(activity, item_id);
+            }
+        });
+    }
+
+    //登录
+    @JavascriptInterface
+    public void addGoods() {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+              activity.startActivity(new Intent(activity, AddGoodsActivity.class));
             }
         });
     }

@@ -19,7 +19,6 @@ import com.chunlangjiu.app.net.ApiUtils;
 import com.chunlangjiu.app.order.activity.OrderMainActivity;
 import com.chunlangjiu.app.order.params.OrderParams;
 import com.chunlangjiu.app.user.activity.AddGoodsActivity;
-import com.chunlangjiu.app.user.activity.AddGoodsSuccessActivity;
 import com.chunlangjiu.app.user.activity.AddressListActivity;
 import com.chunlangjiu.app.user.activity.CompanyAuthActivity;
 import com.chunlangjiu.app.user.activity.PersonAuthActivity;

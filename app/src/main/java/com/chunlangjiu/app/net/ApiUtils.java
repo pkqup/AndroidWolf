@@ -34,6 +34,7 @@ import com.chunlangjiu.app.store.bean.StoreDetailBean;
 import com.chunlangjiu.app.store.bean.StoreListBean;
 import com.chunlangjiu.app.user.bean.AddressListBean;
 import com.chunlangjiu.app.user.bean.AuthStatusBean;
+import com.chunlangjiu.app.user.bean.EditGoodsDetailBean;
 import com.chunlangjiu.app.user.bean.MyNumBean;
 import com.chunlangjiu.app.user.bean.ShopCatIdList;
 import com.chunlangjiu.app.user.bean.ShopClassList;
@@ -437,5 +438,16 @@ public class ApiUtils {
 
     public Flowable<ResultBean> favoriteCancelGoods(String item_id) {
         return apiService.favoriteCancelGoods("member.favorite.item.remove", "v1",item_id);
+    }
+
+    public Flowable<ResultBean<EditGoodsDetailBean>> editGoodsDetail(String item_id) {
+        return apiService.editGoodsDetail("item.detail", "v1",item_id);
+    }
+
+    public Observable<ResultBean> commitEditGoodsDetail(String cat_id, String brand_id, String shop_cat_id, String title, String sub_title, String weight, String list_image,
+                                           String price, String dlytmpl_id, String sku, String label, String explain, String parameter,
+                                           String area_id, String odor_id, String alcohol_id, String store,String itemId) {
+        return apiService.commitEditGoodsDetail("item.save", "v1", cat_id, brand_id, shop_cat_id, title, sub_title, weight, list_image,
+                price, dlytmpl_id, sku, label, explain, parameter, "瓶", "1",area_id,odor_id,alcohol_id,store,itemId);
     }
 }
