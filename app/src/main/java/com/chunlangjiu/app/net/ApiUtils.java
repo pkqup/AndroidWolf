@@ -21,12 +21,14 @@ import com.chunlangjiu.app.goods.bean.GoodsListBean;
 import com.chunlangjiu.app.goods.bean.OrdoListBean;
 import com.chunlangjiu.app.goods.bean.PaymentBean;
 import com.chunlangjiu.app.goods.bean.ShopInfoBean;
+import com.chunlangjiu.app.order.bean.AuctionOrderListBean;
 import com.chunlangjiu.app.order.bean.CancelOrderResultBean;
 import com.chunlangjiu.app.order.bean.CancelReasonBean;
 import com.chunlangjiu.app.order.bean.LogisticsBean;
 import com.chunlangjiu.app.order.bean.OrderAfterSaleReasonBean;
 import com.chunlangjiu.app.order.bean.OrderDetailBean;
 import com.chunlangjiu.app.order.bean.OrderListBean;
+import com.chunlangjiu.app.order.bean.SellerOrderDetailBean;
 import com.chunlangjiu.app.store.bean.StoreClassListBean;
 import com.chunlangjiu.app.store.bean.StoreDetailBean;
 import com.chunlangjiu.app.store.bean.StoreListBean;
@@ -304,6 +306,14 @@ public class ApiUtils {
         return apiService.getOrderLists("trade.list", "v1", status, pageNo, 10);
     }
 
+    public Flowable<ResultBean<List<AuctionOrderListBean>>> getAuctionOrderLists(String status, int pageNo) {
+        return apiService.getAuctionOrderLists("trade.auction.list", "v1", status, pageNo, 10, "*");
+    }
+
+    public Flowable<ResultBean<OrderDetailBean>> getAuctionOrderDetail(String auctionitem_id) {
+        return apiService.getAuctionOrderDetail("item.auction.detail", "v1", auctionitem_id);
+    }
+
     public Flowable<ResultBean<OrderListBean>> getAfterSaleOrderList(String status, String progress, int pageNo) {
         return apiService.getAfterSaleOrderList("member.aftersales.list", "v1", status, progress, pageNo, 10);
     }
@@ -360,7 +370,7 @@ public class ApiUtils {
         return apiService.getSellerOrderLists("trade.list", "v1", status, pageNo, 10, "*");
     }
 
-    public Flowable<ResultBean<OrderDetailBean>> getSellerOrderDetail(String tid) {
+    public Flowable<ResultBean<SellerOrderDetailBean>> getSellerOrderDetail(String tid) {
         return apiService.getSellerOrderDetail("trade.info", "v1", tid, "*");
     }
 

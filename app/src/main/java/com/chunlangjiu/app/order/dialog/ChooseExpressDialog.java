@@ -14,6 +14,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.chunlangjiu.app.R;
+import com.chunlangjiu.app.abase.BaseActivity;
 import com.chunlangjiu.app.net.ApiUtils;
 import com.chunlangjiu.app.order.bean.LogisticsBean;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
@@ -30,9 +31,8 @@ import io.reactivex.schedulers.Schedulers;
 
 public class ChooseExpressDialog extends Dialog {
     private Window window;
-    private Context context;// 上下文
+    private BaseActivity baseActivity;// 上下文
     private List<LogisticsBean.ListBean> data;
-    private LayoutInflater inflater;
 
     private TextView tvConfirm;
     private TextView tvCancel;
@@ -52,10 +52,9 @@ public class ChooseExpressDialog extends Dialog {
      */
     public ChooseExpressDialog(Context context, List<LogisticsBean.ListBean> data, String aftersales_bn) {
         super(context, R.style.dialog_choose_express);
-        this.context = context;
+        this.baseActivity = (BaseActivity) context;
         this.data = data;
         this.aftersales_bn = aftersales_bn;
-        inflater = LayoutInflater.from(context);
         initView();
         initData();
     }
@@ -91,11 +90,7 @@ public class ChooseExpressDialog extends Dialog {
             WindowManager.LayoutParams lp = window.getAttributes();
             int[] deviceWh = SystemUtils.getDeviceWh(getContext());
             lp.width = (int) (deviceWh[0] / 1.5); // 设置宽度充满屏幕
-            if (10 < data.size()) {
-                lp.height = (int) (deviceWh[1] / 1.55);
-            } else {
-                lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-            }
+            lp.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             window.setAttributes(lp);
         }
 
@@ -145,23 +140,37 @@ public class ChooseExpressDialog extends Dialog {
         if (TextUtils.isEmpty(expressCode)) {
             ToastUtils.showShort("请输入快递单号后重试");
         } else {
+            baseActivity.showLoadingDialog();
             disposable.add(ApiUtils.getInstance().sendLogistics(aftersales_bn, listBean.getCorp_code(), listBean.getCorp_name(), expressCode)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(new Consumer<ResultBean>() {
                         @Override
                         public void accept(ResultBean orderListBeanResultBean) throws Exception {
+                            baseActivity.hideLoadingDialog();
                             if (0 == orderListBeanResultBean.getErrorcode()) {
                                 ToastUtils.showShort("退货发货成功");
                                 if (null != callBack) {
                                     callBack.sendExpressSuccess();
                                 }
+                                dismiss();
+                            } else {
+                                if (TextUtils.isEmpty(orderListBeanResultBean.getMsg())) {
+                                    ToastUtils.showShort("退货发货失败");
+                                } else {
+                                    ToastUtils.showShort(orderListBeanResultBean.getMsg());
+                                }
                             }
-                            dismiss();
                         }
                     }, new Consumer<Throwable>() {
                         @Override
                         public void accept(Throwable throwable) throws Exception {
+                            baseActivity.hideLoadingDialog();
+                            if (TextUtils.isEmpty(throwable.getMessage())) {
+                                ToastUtils.showShort("退货发货失败");
+                            } else {
+                                ToastUtils.showShort(throwable.getMessage());
+                            }
                         }
                     }));
         }

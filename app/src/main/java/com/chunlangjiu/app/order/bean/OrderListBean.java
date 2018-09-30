@@ -119,6 +119,7 @@ public class OrderListBean {
         private int buyer_rate;
         private boolean is_buyer_rate;
         private int totalItem;
+        private int itemnum;
         private String status_desc;
         private String shop_logo;
         private String shopname;
@@ -126,6 +127,9 @@ public class OrderListBean {
         private OrderBean sku;
         private int num;
         private long aftersales_bn;
+        private String paymentId;
+        private int auctionitem_id;
+        private AuctionOrderListBean.AuctionBean auction;
 
         public long getTid() {
             return tid;
@@ -223,6 +227,14 @@ public class OrderListBean {
             this.totalItem = totalItem;
         }
 
+        public int getItemnum() {
+            return itemnum;
+        }
+
+        public void setItemnum(int itemnum) {
+            this.itemnum = itemnum;
+        }
+
         public String getStatus_desc() {
             return status_desc;
         }
@@ -277,6 +289,30 @@ public class OrderListBean {
 
         public void setAftersales_bn(long aftersales_bn) {
             this.aftersales_bn = aftersales_bn;
+        }
+
+        public String getPaymentId() {
+            return paymentId;
+        }
+
+        public void setPaymentId(String paymentId) {
+            this.paymentId = paymentId;
+        }
+
+        public int getAuctionitem_id() {
+            return auctionitem_id;
+        }
+
+        public void setAuctionitem_id(int auctionitem_id) {
+            this.auctionitem_id = auctionitem_id;
+        }
+
+        public AuctionOrderListBean.AuctionBean getAuction() {
+            return auction;
+        }
+
+        public void setAuction(AuctionOrderListBean.AuctionBean auction) {
+            this.auction = auction;
         }
 
         public static class OrderBean implements Serializable {

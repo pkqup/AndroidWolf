@@ -21,12 +21,14 @@ import com.chunlangjiu.app.goods.bean.GoodsListBean;
 import com.chunlangjiu.app.goods.bean.OrdoListBean;
 import com.chunlangjiu.app.goods.bean.PaymentBean;
 import com.chunlangjiu.app.goods.bean.ShopInfoBean;
+import com.chunlangjiu.app.order.bean.AuctionOrderListBean;
 import com.chunlangjiu.app.order.bean.CancelOrderResultBean;
 import com.chunlangjiu.app.order.bean.CancelReasonBean;
 import com.chunlangjiu.app.order.bean.LogisticsBean;
 import com.chunlangjiu.app.order.bean.OrderAfterSaleReasonBean;
 import com.chunlangjiu.app.order.bean.OrderDetailBean;
 import com.chunlangjiu.app.order.bean.OrderListBean;
+import com.chunlangjiu.app.order.bean.SellerOrderDetailBean;
 import com.chunlangjiu.app.store.bean.StoreClassListBean;
 import com.chunlangjiu.app.store.bean.StoreDetailBean;
 import com.chunlangjiu.app.store.bean.StoreListBean;
@@ -338,6 +340,17 @@ public interface ApiService {
 
     @POST("index.php/topapi")
     @FormUrlEncoded
+    Flowable<ResultBean<List<AuctionOrderListBean>>> getAuctionOrderLists(@Field("method") String method, @Field("v") String v,
+                                                                          @Field("status") String status, @Field("page_no") int page_no,
+                                                                          @Field("page_size") int pagesize, @Field("fields") String fields);
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<OrderDetailBean>> getAuctionOrderDetail(@Field("method") String method, @Field("v") String v,
+                                                                @Field("auctionitem_id") String auctionitem_id);
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
     Flowable<ResultBean<OrderListBean>> getAfterSaleOrderList(@Field("method") String method, @Field("v") String v, @Field("status") String status, @Field("progress") String progress,
                                                               @Field("page_no") int page_no, @Field("pagesize") int pagesize);
 
@@ -409,8 +422,8 @@ public interface ApiService {
 
     @POST("index.php/shop/topapi")
     @FormUrlEncoded
-    Flowable<ResultBean<OrderDetailBean>> getSellerOrderDetail(@Field("method") String method, @Field("v") String v,
-                                                               @Field("tid") String tid, @Field("fields") String fields);
+    Flowable<ResultBean<SellerOrderDetailBean>> getSellerOrderDetail(@Field("method") String method, @Field("v") String v,
+                                                                     @Field("tid") String tid, @Field("fields") String fields);
 
     @POST("index.php/shop/topapi")
     @FormUrlEncoded

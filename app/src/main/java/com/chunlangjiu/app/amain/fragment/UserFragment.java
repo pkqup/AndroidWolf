@@ -201,7 +201,7 @@ public class UserFragment extends BaseFragment {
                     WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_MESSAGE + BaseApplication.getToken(), "消息");
                     break;
                 case R.id.rlOrderManager:// 订单管理
-                    if (llSellAuction.isShown()) {
+                    if (llSellOrder.isShown()) {
                         toOrderMainActivity(3, 0);
                     } else {
                         toOrderMainActivity(0, 0);
@@ -235,16 +235,22 @@ public class UserFragment extends BaseFragment {
                     toOrderMainActivity(3, 0);
                     break;
                 case R.id.rlAuctionManager:// 竞拍订单管理
+                    toOrderMainActivity(1, 0);
                     break;
                 case R.id.rlAuctionOne:// 买家竞拍订单-待付定金
+                    toOrderMainActivity(1, 1);
                     break;
                 case R.id.rlAuctionTwo:// 买家竞拍订单-竞拍中
+                    toOrderMainActivity(1, 2);
                     break;
                 case R.id.rlAuctionThree:// 买家竞拍订单-已中标
+                    toOrderMainActivity(1, 3);
                     break;
                 case R.id.rlAuctionFour:// 买家竞拍订单-落标
+                    toOrderMainActivity(1, 4);
                     break;
                 case R.id.rlAuctionFive:// 买家竞拍订单-全部订单
+                    toOrderMainActivity(1, 0);
                     break;
                 case R.id.rlSellAuctionOne:// 卖家竞拍订单-待付款
                     break;

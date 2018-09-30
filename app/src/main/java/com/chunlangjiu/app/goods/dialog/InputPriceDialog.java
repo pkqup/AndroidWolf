@@ -34,6 +34,9 @@ public class InputPriceDialog extends Dialog {
     private CallBack callBack;
     private EditText etPrice;
 
+    private TextView tvMax;
+    private TextView tvMyPrice;
+
     public void setCallBack(CallBack callBack) {
         this.callBack = callBack;
     }
@@ -53,6 +56,12 @@ public class InputPriceDialog extends Dialog {
         initView();
     }
 
+    public void updatePrice(String maxPrice, String myPrice){
+        this.maxPrice = maxPrice;
+        this.myPrice = myPrice;
+        tvMax.setText(maxPrice);
+        tvMyPrice.setText(myPrice);
+    }
 
     private void initView() {
         View view = LayoutInflater.from(context).inflate(R.layout.goods_dialog_input_price, null);
@@ -65,8 +74,8 @@ public class InputPriceDialog extends Dialog {
         setContentView(view);// 设置布局
 
 
-        TextView tvMax = findViewById(R.id.tvMaxPrice);
-        TextView tvMyPrice = findViewById(R.id.tvMyPrice);
+        tvMax = findViewById(R.id.tvMaxPrice);
+        tvMyPrice = findViewById(R.id.tvMyPrice);
         etPrice = findViewById(R.id.etPrice);
         TextView tvCancel = findViewById(R.id.tvCancel);
         TextView tvConfirm = findViewById(R.id.tvConfirm);

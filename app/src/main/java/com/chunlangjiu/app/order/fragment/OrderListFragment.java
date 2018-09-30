@@ -18,16 +18,17 @@ import android.widget.Toast;
 import com.alipay.sdk.app.PayTask;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseFragment;
-import com.chunlangjiu.app.goods.activity.ConfirmOrderActivity;
 import com.chunlangjiu.app.goods.activity.ShopMainActivity;
 import com.chunlangjiu.app.goods.bean.CreateOrderBean;
 import com.chunlangjiu.app.goods.bean.PaymentBean;
+import com.chunlangjiu.app.goods.dialog.InputPriceDialog;
 import com.chunlangjiu.app.goods.dialog.PayDialog;
 import com.chunlangjiu.app.net.ApiUtils;
 import com.chunlangjiu.app.order.activity.OrderDetailActivity;
 import com.chunlangjiu.app.order.activity.OrderEvaluationDetailActivity;
 import com.chunlangjiu.app.order.activity.OrderMainActivity;
 import com.chunlangjiu.app.order.adapter.OrderListAdapter;
+import com.chunlangjiu.app.order.bean.AuctionOrderListBean;
 import com.chunlangjiu.app.order.bean.CancelReasonBean;
 import com.chunlangjiu.app.order.bean.LogisticsBean;
 import com.chunlangjiu.app.order.bean.OrderListBean;
@@ -65,6 +66,7 @@ public class OrderListFragment extends BaseFragment {
     private SmartRefreshLayout refreshLayout;
     private RecyclerView listView;
     private View rlLoading;
+    private View rlEmptyView;
 
     private boolean isVisible;
     private boolean isLoaded;
@@ -96,6 +98,11 @@ public class OrderListFragment extends BaseFragment {
     private IWXAPI wxapi;
     private static final int SDK_PAY_FLAG = 1;
     private ResultBean<CreateOrderBean> createOrderBeanResultBean;
+    private String paymentId;
+
+    private InputPriceDialog inputPriceDialog;
+
+    private int position;
 
     @Override
     public void onAttach(Context context) {
@@ -131,6 +138,7 @@ public class OrderListFragment extends BaseFragment {
         listView = rootView.findViewById(R.id.listView);
         listView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         rlLoading = rootView.findViewById(R.id.rlLoading);
+        rlEmptyView = rootView.findViewById(R.id.rlEmptyView);
 
         initViewFinished = true;
         EventManager.getInstance().registerListener(onNotifyListener);
@@ -190,6 +198,24 @@ public class OrderListFragment extends BaseFragment {
                 getNormalOrderList();
                 break;
             case 1:
+                switch (target) {
+                    case 0:
+                        status = "";
+                        break;
+                    case 1:
+                        status = "0";
+                        break;
+                    case 2:
+                        status = "1";
+                        break;
+                    case 3:
+                        status = "2";
+                        break;
+                    case 4:
+                        status = "3";
+                        break;
+                }
+                getAuctionOrderLists();
                 break;
             case 2:
                 switch (target) {
@@ -228,10 +254,10 @@ public class OrderListFragment extends BaseFragment {
                         status = OrderParams.WAIT_SELLER_SEND_GOODS;
                         break;
                     case 3:
-                        status = OrderParams.WAIT_BUYER_CONFIRM_GOODS;
+                        status = OrderParams.TRADE_FINISHED;
                         break;
                     case 4:
-                        status = OrderParams.TRADE_FINISHED;
+                        status = OrderParams.TRADE_CLOSED_BY_SYSTEM;
                         break;
                 }
                 getSellerNormalOrderList();
@@ -272,8 +298,6 @@ public class OrderListFragment extends BaseFragment {
                 .subscribe(new Consumer<ResultBean<OrderListBean>>() {
                     @Override
                     public void accept(ResultBean<OrderListBean> orderListBeanResultBean) throws Exception {
-                        rlLoading.setVisibility(View.GONE);
-                        refreshLayout.setVisibility(View.VISIBLE);
                         if (null == orderListBeanResultBean.getData().getPagers() || pageNo == orderListBeanResultBean.getData().getPagers().getTotal() / 10 + 1) {
                             refreshLayout.setEnableLoadMore(false);
                         } else {
@@ -294,12 +318,105 @@ public class OrderListFragment extends BaseFragment {
                         }
                         refreshLayout.finishLoadMore();
                         refreshLayout.finishRefresh();
+                        rlLoading.setVisibility(View.GONE);
+                        if (listBeans.isEmpty()) {
+                            rlEmptyView.setVisibility(View.VISIBLE);
+                            listView.setVisibility(View.GONE);
+                        } else {
+                            listView.setVisibility(View.VISIBLE);
+                            rlEmptyView.setVisibility(View.GONE);
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         rlLoading.setVisibility(View.GONE);
-                        refreshLayout.setVisibility(View.VISIBLE);
+                        if (listBeans.isEmpty()) {
+                            rlEmptyView.setVisibility(View.VISIBLE);
+                            listView.setVisibility(View.GONE);
+                        } else {
+                            listView.setVisibility(View.VISIBLE);
+                            rlEmptyView.setVisibility(View.GONE);
+                        }
+                        refreshLayout.finishLoadMore();
+                        refreshLayout.finishRefresh();
+                        if (1 < pageNo) {
+                            pageNo--;
+                        }
+                    }
+                }));
+    }
+
+    private void getAuctionOrderLists() {
+        disposable.add(ApiUtils.getInstance().getAuctionOrderLists(status, pageNo)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<List<AuctionOrderListBean>>>() {
+                    @Override
+                    public void accept(ResultBean<List<AuctionOrderListBean>> orderListBeanResultBean) throws Exception {
+//                        if (null == orderListBeanResultBean.getData().getPagers() || pageNo == orderListBeanResultBean.getData().getPagers().getTotal() / 10 + 1) {
+//                            refreshLayout.setEnableLoadMore(false);
+//                        } else {
+//                            refreshLayout.setEnableLoadMore(true);
+//                        }
+                        if (0 == orderListBeanResultBean.getErrorcode()) {
+                            if (1 == pageNo) {
+                                listBeans.clear();
+                            }
+                            List<AuctionOrderListBean> data = orderListBeanResultBean.getData();
+                            if (null != data && !data.isEmpty()) {
+                                for (AuctionOrderListBean bean : data) {
+                                    OrderListBean.ListBean listBean = new OrderListBean.ListBean();
+                                    listBean.setShopname(bean.getItem().getShopname());
+                                    listBean.setShop_logo(bean.getItem().getShoplogo());
+                                    listBean.setShop_id(bean.getItem().getShop_id());
+                                    listBean.setTotalItem(1);
+                                    listBean.setPayment(bean.getCur_money());
+                                    listBean.setStatus(bean.getStatus());
+                                    listBean.setPaymentId(bean.getPayment_id());
+                                    listBean.setAuctionitem_id(bean.getAuctionitem_id());
+                                    listBean.setAuction(bean.getAuction());
+
+                                    List<OrderListBean.ListBean.OrderBean> order = new ArrayList<>();
+                                    OrderListBean.ListBean.OrderBean orderBean = new OrderListBean.ListBean.OrderBean();
+                                    orderBean.setNum(1);
+                                    orderBean.setTitle(bean.getItem().getTitle());
+                                    orderBean.setPrice(bean.getAuction().getStarting_price());
+                                    orderBean.setPic_path(bean.getItem().getImage_default_id());
+                                    order.add(orderBean);
+                                    listBean.setOrder(order);
+
+                                    listBeans.add(listBean);
+                                }
+                            }
+                            orderListAdapter.notifyDataSetChanged();
+                        } else if (0 != orderListBeanResultBean.getErrorcode()) {
+                            if (1 < pageNo) {
+                                pageNo--;
+                            }
+                        }
+                        refreshLayout.finishLoadMore();
+                        refreshLayout.finishRefresh();
+                        rlLoading.setVisibility(View.GONE);
+                        if (listBeans.isEmpty()) {
+                            rlEmptyView.setVisibility(View.VISIBLE);
+                            listView.setVisibility(View.GONE);
+                        } else {
+                            listView.setVisibility(View.VISIBLE);
+                            rlEmptyView.setVisibility(View.GONE);
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        rlLoading.setVisibility(View.GONE);
+                        if (listBeans.isEmpty()) {
+                            rlEmptyView.setVisibility(View.VISIBLE);
+                            listView.setVisibility(View.GONE);
+                        } else {
+                            listView.setVisibility(View.VISIBLE);
+                            rlEmptyView.setVisibility(View.GONE);
+                        }
                         refreshLayout.finishLoadMore();
                         refreshLayout.finishRefresh();
                         if (1 < pageNo) {
@@ -316,8 +433,6 @@ public class OrderListFragment extends BaseFragment {
                 .subscribe(new Consumer<ResultBean<OrderListBean>>() {
                     @Override
                     public void accept(ResultBean<OrderListBean> orderListBeanResultBean) throws Exception {
-                        rlLoading.setVisibility(View.GONE);
-                        refreshLayout.setVisibility(View.VISIBLE);
                         if (null == orderListBeanResultBean.getData().getPagers() || pageNo == orderListBeanResultBean.getData().getPagers().getTotal() / 10 + 1) {
                             refreshLayout.setEnableLoadMore(false);
                         } else {
@@ -338,12 +453,26 @@ public class OrderListFragment extends BaseFragment {
                         }
                         refreshLayout.finishLoadMore();
                         refreshLayout.finishRefresh();
+                        rlLoading.setVisibility(View.GONE);
+                        if (listBeans.isEmpty()) {
+                            rlEmptyView.setVisibility(View.VISIBLE);
+                            listView.setVisibility(View.GONE);
+                        } else {
+                            listView.setVisibility(View.VISIBLE);
+                            rlEmptyView.setVisibility(View.GONE);
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         rlLoading.setVisibility(View.GONE);
-                        refreshLayout.setVisibility(View.VISIBLE);
+                        if (listBeans.isEmpty()) {
+                            rlEmptyView.setVisibility(View.VISIBLE);
+                            listView.setVisibility(View.GONE);
+                        } else {
+                            listView.setVisibility(View.VISIBLE);
+                            rlEmptyView.setVisibility(View.GONE);
+                        }
                         refreshLayout.finishLoadMore();
                         refreshLayout.finishRefresh();
                         if (1 < pageNo) {
@@ -360,8 +489,6 @@ public class OrderListFragment extends BaseFragment {
                 .subscribe(new Consumer<ResultBean<OrderListBean>>() {
                     @Override
                     public void accept(ResultBean<OrderListBean> orderListBeanResultBean) throws Exception {
-                        rlLoading.setVisibility(View.GONE);
-                        refreshLayout.setVisibility(View.VISIBLE);
                         switch (type) {
                             case 3:
                                 if (pageNo == orderListBeanResultBean.getData().getCount() / 10 + 1) {
@@ -386,12 +513,26 @@ public class OrderListFragment extends BaseFragment {
                         }
                         refreshLayout.finishLoadMore();
                         refreshLayout.finishRefresh();
+                        rlLoading.setVisibility(View.GONE);
+                        if (listBeans.isEmpty()) {
+                            rlEmptyView.setVisibility(View.VISIBLE);
+                            listView.setVisibility(View.GONE);
+                        } else {
+                            listView.setVisibility(View.VISIBLE);
+                            rlEmptyView.setVisibility(View.GONE);
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         rlLoading.setVisibility(View.GONE);
-                        refreshLayout.setVisibility(View.VISIBLE);
+                        if (listBeans.isEmpty()) {
+                            rlEmptyView.setVisibility(View.VISIBLE);
+                            listView.setVisibility(View.GONE);
+                        } else {
+                            listView.setVisibility(View.VISIBLE);
+                            rlEmptyView.setVisibility(View.GONE);
+                        }
                         refreshLayout.finishLoadMore();
                         refreshLayout.finishRefresh();
                         if (1 < pageNo) {
@@ -408,8 +549,6 @@ public class OrderListFragment extends BaseFragment {
                 .subscribe(new Consumer<ResultBean<OrderListBean>>() {
                     @Override
                     public void accept(ResultBean<OrderListBean> orderListBeanResultBean) throws Exception {
-                        rlLoading.setVisibility(View.GONE);
-                        refreshLayout.setVisibility(View.VISIBLE);
                         if (null == orderListBeanResultBean.getData().getPagers() || pageNo == orderListBeanResultBean.getData().getPagers().getTotal() / 10 + 1) {
                             refreshLayout.setEnableLoadMore(false);
                         } else {
@@ -430,12 +569,26 @@ public class OrderListFragment extends BaseFragment {
                         }
                         refreshLayout.finishLoadMore();
                         refreshLayout.finishRefresh();
+                        rlLoading.setVisibility(View.GONE);
+                        if (listBeans.isEmpty()) {
+                            rlEmptyView.setVisibility(View.VISIBLE);
+                            listView.setVisibility(View.GONE);
+                        } else {
+                            listView.setVisibility(View.VISIBLE);
+                            rlEmptyView.setVisibility(View.GONE);
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         rlLoading.setVisibility(View.GONE);
-                        refreshLayout.setVisibility(View.VISIBLE);
+                        if (listBeans.isEmpty()) {
+                            rlEmptyView.setVisibility(View.VISIBLE);
+                            listView.setVisibility(View.GONE);
+                        } else {
+                            listView.setVisibility(View.VISIBLE);
+                            rlEmptyView.setVisibility(View.GONE);
+                        }
                         refreshLayout.finishLoadMore();
                         refreshLayout.finishRefresh();
                         if (1 < pageNo) {
@@ -479,21 +632,34 @@ public class OrderListFragment extends BaseFragment {
                                         refundAfterSaleOrderDialog.setCallBack(new RefundAfterSaleOrderDialog.CallBack() {
                                             @Override
                                             public void confirm(String reason) {
+                                                activity.showLoadingDialog();
                                                 disposable.add(ApiUtils.getInstance().applySellerAfterSale(aftersales_bn, "true", "", reason)
                                                         .subscribeOn(Schedulers.io())
                                                         .observeOn(AndroidSchedulers.mainThread())
                                                         .subscribe(new Consumer<ResultBean>() {
                                                             @Override
                                                             public void accept(ResultBean resultBean) throws Exception {
+                                                                activity.hideLoadingDialog();
                                                                 if (0 == resultBean.getErrorcode()) {
                                                                     ToastUtils.showShort("拒绝申请成功");
                                                                     refreshLayout.autoRefresh();
+                                                                } else {
+                                                                    if (TextUtils.isEmpty(resultBean.getMsg())) {
+                                                                        ToastUtils.showShort("拒绝申请失败");
+                                                                    } else {
+                                                                        ToastUtils.showShort(resultBean.getMsg());
+                                                                    }
                                                                 }
                                                             }
                                                         }, new Consumer<Throwable>() {
                                                             @Override
                                                             public void accept(Throwable throwable) throws Exception {
-
+                                                                activity.hideLoadingDialog();
+                                                                if (TextUtils.isEmpty(throwable.getMessage())) {
+                                                                    ToastUtils.showShort("拒绝申请失败");
+                                                                } else {
+                                                                    ToastUtils.showShort(throwable.getMessage());
+                                                                }
                                                             }
                                                         }));
                                             }
@@ -534,6 +700,22 @@ public class OrderListFragment extends BaseFragment {
                                     break;
                             }
                             break;
+                        case 1:
+                            switch (listBeans.get(Integer.parseInt(view.getTag().toString())).getStatus()) {
+                                case "0":
+                                    paymentId = listBeans.get(Integer.parseInt(view.getTag().toString())).getPaymentId();
+                                    getPayment();
+                                    break;
+                                case "1":
+                                    position = Integer.parseInt(view.getTag().toString());
+                                    changeMyPrice();
+                                    break;
+                                case "2":
+                                    paymentId = listBeans.get(Integer.parseInt(view.getTag().toString())).getPaymentId();
+                                    getPayment();
+                                    break;
+                            }
+                            break;
                         case 2:
                             switch (listBeans.get(Integer.parseInt(view.getTag().toString())).getStatus()) {
                                 case "1":
@@ -549,6 +731,7 @@ public class OrderListFragment extends BaseFragment {
                         case 4:
                             switch (listBeans.get(Integer.parseInt(view.getTag().toString())).getStatus()) {
                                 case "0":
+                                    activity.showLoadingDialog();
                                     aftersales_bn = String.valueOf(listBeans.get(Integer.parseInt(view.getTag().toString())).getAftersales_bn());
                                     disposable.add(ApiUtils.getInstance().applySellerAfterSale(aftersales_bn, "true", "", "")
                                             .subscribeOn(Schedulers.io())
@@ -556,20 +739,33 @@ public class OrderListFragment extends BaseFragment {
                                             .subscribe(new Consumer<ResultBean>() {
                                                 @Override
                                                 public void accept(ResultBean resultBean) throws Exception {
+                                                    activity.hideLoadingDialog();
                                                     if (0 == resultBean.getErrorcode()) {
                                                         ToastUtils.showShort("同意申请成功");
                                                         refreshLayout.autoRefresh();
+                                                    } else {
+                                                        if (TextUtils.isEmpty(resultBean.getMsg())) {
+                                                            ToastUtils.showShort("同意申请失败");
+                                                        } else {
+                                                            ToastUtils.showShort(resultBean.getMsg());
+                                                        }
                                                     }
                                                 }
                                             }, new Consumer<Throwable>() {
                                                 @Override
                                                 public void accept(Throwable throwable) throws Exception {
-
+                                                    activity.hideLoadingDialog();
+                                                    if (TextUtils.isEmpty(throwable.getMessage())) {
+                                                        ToastUtils.showShort("同意申请失败");
+                                                    } else {
+                                                        ToastUtils.showShort(throwable.getMessage());
+                                                    }
                                                 }
                                             }));
                                     break;
                                 case "1":
                                     if ("2".equals(listBeans.get(Integer.parseInt(view.getTag().toString())).getProgress())) {
+                                        activity.showLoadingDialog();
                                         aftersales_bn = String.valueOf(listBeans.get(Integer.parseInt(view.getTag().toString())).getAftersales_bn());
                                         disposable.add(ApiUtils.getInstance().applySellerAfterSale(aftersales_bn, "true",
                                                 new BigDecimal(listBeans.get(Integer.parseInt(view.getTag().toString())).getSku().getPayment()).setScale(2, BigDecimal.ROUND_HALF_UP).toString(), "")
@@ -578,15 +774,27 @@ public class OrderListFragment extends BaseFragment {
                                                 .subscribe(new Consumer<ResultBean>() {
                                                     @Override
                                                     public void accept(ResultBean resultBean) throws Exception {
+                                                        activity.hideLoadingDialog();
                                                         if (0 == resultBean.getErrorcode()) {
                                                             ToastUtils.showShort("确认收货并同意退款成功");
                                                             refreshLayout.autoRefresh();
+                                                        } else {
+                                                            if (TextUtils.isEmpty(resultBean.getMsg())) {
+                                                                ToastUtils.showShort("确认收货并同意退款失败");
+                                                            } else {
+                                                                ToastUtils.showShort(resultBean.getMsg());
+                                                            }
                                                         }
                                                     }
                                                 }, new Consumer<Throwable>() {
                                                     @Override
                                                     public void accept(Throwable throwable) throws Exception {
-
+                                                        activity.hideLoadingDialog();
+                                                        if (TextUtils.isEmpty(throwable.getMessage())) {
+                                                            ToastUtils.showShort("确认收货并同意退款失败");
+                                                        } else {
+                                                            ToastUtils.showShort(throwable.getMessage());
+                                                        }
                                                     }
                                                 }));
                                     }
@@ -599,51 +807,130 @@ public class OrderListFragment extends BaseFragment {
         }
     };
 
+    private void changeMyPrice() {
+        String max_price = listBeans.get(position).getAuction().getMax_price();
+        String original_bid = listBeans.get(position).getAuction().getOriginal_bid();
+        if (inputPriceDialog == null) {
+            inputPriceDialog = new InputPriceDialog(activity, max_price, original_bid);
+            inputPriceDialog.setCallBack(new InputPriceDialog.CallBack() {
+                @Override
+                public void editPrice(String price) {
+                    editGivePrice(price);
+                }
+            });
+        } else {
+            inputPriceDialog.updatePrice(max_price, original_bid);
+        }
+        inputPriceDialog.show();
+    }
+
+    private void editGivePrice(String price) {
+        showLoadingDialog();
+        disposable.add(ApiUtils.getInstance().auctionAddPrice(String.valueOf(listBeans.get(position).getAuction().getAuctionitem_id()), price)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean>() {
+                    @Override
+                    public void accept(ResultBean resultBean) throws Exception {
+                        hideLoadingDialog();
+                        if (0 == resultBean.getErrorcode()) {
+                            ToastUtils.showShort("修改出价成功");
+                            refreshLayout.autoRefresh();
+                        } else {
+                            if (TextUtils.isEmpty(resultBean.getMsg())) {
+                                ToastUtils.showShort("修改出价失败");
+                            } else {
+                                ToastUtils.showShort(resultBean.getMsg());
+                            }
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        hideLoadingDialog();
+                        if (TextUtils.isEmpty(throwable.getMessage())) {
+                            ToastUtils.showShort("修改出价失败");
+                        } else {
+                            ToastUtils.showShort(throwable.getMessage());
+                        }
+                    }
+                }));
+    }
+
     private void repay() {
+        activity.showLoadingDialog();
         disposable.add(ApiUtils.getInstance().repay(tid, "true")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean<CreateOrderBean>>() {
                     @Override
                     public void accept(final ResultBean<CreateOrderBean> resultBean) throws Exception {
+                        activity.hideLoadingDialog();
                         if (0 == resultBean.getErrorcode()) {
                             createOrderBeanResultBean = resultBean;
+                            paymentId = createOrderBeanResultBean.getData().getPayment_id();
                             getPayment();
+                        } else {
+                            if (TextUtils.isEmpty(resultBean.getMsg())) {
+                                ToastUtils.showShort("支付失败");
+                            } else {
+                                ToastUtils.showShort(resultBean.getMsg());
+                            }
                         }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        activity.hideLoadingDialog();
+                        if (TextUtils.isEmpty(throwable.getMessage())) {
+                            ToastUtils.showShort("支付失败");
+                        } else {
+                            ToastUtils.showShort(throwable.getMessage());
+                        }
                     }
                 }));
     }
 
     private void getPayment() {
+        activity.showLoadingDialog();
         disposable.add(ApiUtils.getInstance().getPayment()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean<PaymentBean>>() {
                     @Override
                     public void accept(ResultBean<PaymentBean> paymentBeanResultBean) throws Exception {
-                        hideLoadingDialog();
-                        payList = paymentBeanResultBean.getData().getList();
-                        if (payList == null || payList.size() == 0) {
-                            ToastUtils.showShort("获取支付方式失败");
+                        activity.hideLoadingDialog();
+                        if (0 == paymentBeanResultBean.getErrorcode()) {
+                            payList = paymentBeanResultBean.getData().getList();
+                            if (payList == null || payList.size() == 0) {
+                                ToastUtils.showShort("获取支付方式失败");
+                            } else {
+                                payDialog = new PayDialog(activity, payList);
+                                payDialog.setCallBack(new PayDialog.CallBack() {
+                                    @Override
+                                    public void choicePayMethod(int payMethod, String payMethodId) {
+                                        payDo(payMethod, payMethodId);
+                                    }
+                                });
+                                payDialog.show();
+                            }
                         } else {
-                            payDialog = new PayDialog(activity, payList);
-                            payDialog.setCallBack(new PayDialog.CallBack() {
-                                @Override
-                                public void choicePayMethod(int payMethod, String payMethodId) {
-                                    payDo(payMethod, payMethodId);
-                                }
-                            });
-                            payDialog.show();
+                            if (TextUtils.isEmpty(paymentBeanResultBean.getMsg())) {
+                                ToastUtils.showShort("获取支付方式失败");
+                            } else {
+                                ToastUtils.showShort(paymentBeanResultBean.getMsg());
+                            }
                         }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        hideLoadingDialog();
+                        activity.hideLoadingDialog();
+                        if (TextUtils.isEmpty(throwable.getMessage())) {
+                            ToastUtils.showShort("获取支付方式失败");
+                        } else {
+                            ToastUtils.showShort(throwable.getMessage());
+                        }
                     }
                 }));
     }
@@ -651,19 +938,32 @@ public class OrderListFragment extends BaseFragment {
     private void payDo(int payMethod, String payMethodId) {
         this.payMehtod = payMethod;
         this.payMehtodId = payMethodId;
-        disposable.add(ApiUtils.getInstance().payDo(createOrderBeanResultBean.getData().getPayment_id(), payMehtodId)
+        disposable.add(ApiUtils.getInstance().payDo(paymentId, payMehtodId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean>() {
                     @Override
                     public void accept(ResultBean resultBean) throws Exception {
                         hideLoadingDialog();
-                        invokePay(resultBean);
+                        if (0 == resultBean.getErrorcode()) {
+                            invokePay(resultBean);
+                        } else {
+                            if (TextUtils.isEmpty(resultBean.getMsg())) {
+                                ToastUtils.showShort("支付失败");
+                            } else {
+                                ToastUtils.showShort(resultBean.getMsg());
+                            }
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         hideLoadingDialog();
+                        if (TextUtils.isEmpty(throwable.getMessage())) {
+                            ToastUtils.showShort("支付失败");
+                        } else {
+                            ToastUtils.showShort(throwable.getMessage());
+                        }
                     }
                 }));
     }
@@ -713,6 +1013,7 @@ public class OrderListFragment extends BaseFragment {
                     // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
                     Toast.makeText(activity, "支付成功", Toast.LENGTH_SHORT).show();
                     refreshLayout.autoRefresh();
+                    EventManager.getInstance().notify(null, ConstantMsg.UPDATE_CART_LIST);
                 } else {
                     // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
                     Toast.makeText(activity, "支付失败", Toast.LENGTH_SHORT).show();
@@ -748,68 +1049,121 @@ public class OrderListFragment extends BaseFragment {
     }
 
     private void getCancelReason() {
+        activity.showLoadingDialog();
         disposable.add(ApiUtils.getInstance().getCancelReason()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean<CancelReasonBean>>() {
                     @Override
                     public void accept(ResultBean<CancelReasonBean> cancelReasonBeanResultBean) throws Exception {
-                        List<String> list = cancelReasonBeanResultBean.getData().getList();
-                        if (null == cancelOrderDialog) {
-                            cancelOrderDialog = new CancelOrderDialog(activity, list, tid);
-                            cancelOrderDialog.setCancelCallBack(new CancelOrderDialog.CancelCallBack() {
-                                @Override
-                                public void cancelSuccess() {
-                                    refreshLayout.autoRefresh();
-                                }
-                            });
+                        activity.hideLoadingDialog();
+                        if (0 == cancelReasonBeanResultBean.getErrorcode()) {
+                            List<String> list = cancelReasonBeanResultBean.getData().getList();
+                            if (null == cancelOrderDialog) {
+                                cancelOrderDialog = new CancelOrderDialog(activity, list, tid);
+                                cancelOrderDialog.setCancelCallBack(new CancelOrderDialog.CancelCallBack() {
+                                    @Override
+                                    public void cancelSuccess() {
+                                        ToastUtils.showShort("取消订单成功");
+                                        refreshLayout.autoRefresh();
+                                    }
+
+                                    @Override
+                                    public void cancelFail(String msg) {
+                                        if (TextUtils.isEmpty(msg)) {
+                                            ToastUtils.showShort("取消订单失败");
+                                        } else {
+                                            ToastUtils.showShort(msg);
+                                        }
+                                    }
+                                });
+                            } else {
+                                cancelOrderDialog.setData(list, tid);
+                            }
+                            cancelOrderDialog.show();
                         } else {
-                            cancelOrderDialog.setData(list, tid);
+                            if (TextUtils.isEmpty(cancelReasonBeanResultBean.getMsg())) {
+                                ToastUtils.showShort("获取取消原因列表失败");
+                            } else {
+                                ToastUtils.showShort(cancelReasonBeanResultBean.getMsg());
+                            }
                         }
-                        cancelOrderDialog.show();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-
+                        activity.hideLoadingDialog();
+                        if (TextUtils.isEmpty(throwable.getMessage())) {
+                            ToastUtils.showShort("获取取消原因列表失败");
+                        } else {
+                            ToastUtils.showShort(throwable.getMessage());
+                        }
                     }
                 }));
     }
 
     private void confirmReceipt() {
+        activity.showLoadingDialog();
         disposable.add(ApiUtils.getInstance().confirmReceipt(tid)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean>() {
                     @Override
                     public void accept(ResultBean resultBean) throws Exception {
+                        activity.hideLoadingDialog();
                         if (0 == resultBean.getErrorcode()) {
                             ToastUtils.showShort("确认收货成功");
                             refreshLayout.autoRefresh();
+                        } else {
+                            if (TextUtils.isEmpty(resultBean.getMsg())) {
+                                ToastUtils.showShort("确认收货失败");
+                            } else {
+                                ToastUtils.showShort(resultBean.getMsg());
+                            }
                         }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        activity.hideLoadingDialog();
+                        if (TextUtils.isEmpty(throwable.getMessage())) {
+                            ToastUtils.showShort("确认收货失败");
+                        } else {
+                            ToastUtils.showShort(throwable.getMessage());
+                        }
                     }
                 }));
     }
 
     private void delete() {
+        activity.showLoadingDialog();
         disposable.add(ApiUtils.getInstance().delete(tid)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean>() {
                     @Override
                     public void accept(ResultBean resultBean) throws Exception {
+                        activity.hideLoadingDialog();
                         if (0 == resultBean.getErrorcode()) {
                             ToastUtils.showShort("删除订单成功");
                             refreshLayout.autoRefresh();
+                        } else {
+                            if (TextUtils.isEmpty(resultBean.getMsg())) {
+                                ToastUtils.showShort("删除订单失败");
+                            } else {
+                                ToastUtils.showShort(resultBean.getMsg());
+                            }
                         }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        activity.hideLoadingDialog();
+                        if (TextUtils.isEmpty(throwable.getMessage())) {
+                            ToastUtils.showShort("删除订单失败");
+                        } else {
+                            ToastUtils.showShort(throwable.getMessage());
+                        }
                     }
                 }));
     }
@@ -822,6 +1176,7 @@ public class OrderListFragment extends BaseFragment {
             intent.putExtra(OrderParams.OID, listBeans.get(position).getSku().getOid());
             intent.putExtra(OrderParams.AFTERSALESBN, listBeans.get(position).getAftersales_bn());
         }
+        intent.putExtra(OrderParams.AUCTIONITEMID, listBeans.get(position).getAuctionitem_id());
         OrderListBean.ListBean listBean = listBeans.get(Integer.parseInt(view.getTag().toString()));
         intent.putExtra(OrderParams.PRODUCTS, listBean);
         intent.putExtra(OrderParams.TYPE, type);
@@ -829,12 +1184,14 @@ public class OrderListFragment extends BaseFragment {
     }
 
     private void getLogisticsList() {
+        activity.showLoadingDialog();
         disposable.add(ApiUtils.getInstance().getLogisticsList()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean<LogisticsBean>>() {
                     @Override
                     public void accept(ResultBean<LogisticsBean> logisticsBeanResultBean) throws Exception {
+                        activity.hideLoadingDialog();
                         if (0 == logisticsBeanResultBean.getErrorcode()) {
                             LogisticsBean data = logisticsBeanResultBean.getData();
                             if (null == chooseExpressDialog) {
@@ -849,16 +1206,29 @@ public class OrderListFragment extends BaseFragment {
                                 chooseExpressDialog.setData(data.getList(), aftersales_bn);
                             }
                             chooseExpressDialog.show();
+                        } else {
+                            if (TextUtils.isEmpty(logisticsBeanResultBean.getMsg())) {
+                                ToastUtils.showShort("获取快递公司列表失败");
+                            } else {
+                                ToastUtils.showShort(logisticsBeanResultBean.getMsg());
+                            }
                         }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        activity.hideLoadingDialog();
+                        if (TextUtils.isEmpty(throwable.getMessage())) {
+                            ToastUtils.showShort("获取快递公司列表失败");
+                        } else {
+                            ToastUtils.showShort(throwable.getMessage());
+                        }
                     }
                 }));
     }
 
     private void getSellerLogisticsList() {
+        activity.showLoadingDialog();
         HttpUtils.USER_TOKEN = true;
         disposable.add(ApiUtils.getInstance().getLogisticsList()
                 .subscribeOn(Schedulers.io())
@@ -866,6 +1236,7 @@ public class OrderListFragment extends BaseFragment {
                 .subscribe(new Consumer<ResultBean<LogisticsBean>>() {
                     @Override
                     public void accept(ResultBean<LogisticsBean> logisticsBeanResultBean) throws Exception {
+                        activity.hideLoadingDialog();
                         HttpUtils.USER_TOKEN = false;
                         if (0 == logisticsBeanResultBean.getErrorcode()) {
                             LogisticsBean data = logisticsBeanResultBean.getData();
@@ -878,43 +1249,70 @@ public class OrderListFragment extends BaseFragment {
                                     }
                                 });
                             } else {
-                                chooseExpressSellerDialog.setData(data.getList(), aftersales_bn);
+                                chooseExpressSellerDialog.setData(data.getList(), tid);
                             }
                             chooseExpressSellerDialog.show();
+                        } else {
+                            if (TextUtils.isEmpty(logisticsBeanResultBean.getMsg())) {
+                                ToastUtils.showShort("获取快递公司列表失败");
+                            } else {
+                                ToastUtils.showShort(logisticsBeanResultBean.getMsg());
+                            }
                         }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        activity.hideLoadingDialog();
+                        if (TextUtils.isEmpty(throwable.getMessage())) {
+                            ToastUtils.showShort("获取快递公司列表失败");
+                        } else {
+                            ToastUtils.showShort(throwable.getMessage());
+                        }
                     }
                 }));
     }
 
     private void getSellerCancelReason() {
+        activity.showLoadingDialog();
         disposable.add(ApiUtils.getInstance().getSellerCancelReason()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean<CancelReasonBean>>() {
                     @Override
                     public void accept(ResultBean<CancelReasonBean> cancelReasonBeanResultBean) throws Exception {
-                        List<String> list = cancelReasonBeanResultBean.getData().getList();
-                        if (null == sellerCancelOrderDialog) {
-                            sellerCancelOrderDialog = new SellerCancelOrderDialog(activity, list, tid);
-                            sellerCancelOrderDialog.setCancelCallBack(new SellerCancelOrderDialog.CancelCallBack() {
-                                @Override
-                                public void cancelSuccess() {
-                                    refreshLayout.autoRefresh();
-                                }
-                            });
+                        activity.hideLoadingDialog();
+                        if (0 == cancelReasonBeanResultBean.getErrorcode()) {
+                            List<String> list = cancelReasonBeanResultBean.getData().getList();
+                            if (null == sellerCancelOrderDialog) {
+                                sellerCancelOrderDialog = new SellerCancelOrderDialog(activity, list, tid);
+                                sellerCancelOrderDialog.setCancelCallBack(new SellerCancelOrderDialog.CancelCallBack() {
+                                    @Override
+                                    public void cancelSuccess() {
+                                        refreshLayout.autoRefresh();
+                                    }
+                                });
+                            } else {
+                                sellerCancelOrderDialog.setData(list, tid);
+                            }
+                            sellerCancelOrderDialog.show();
                         } else {
-                            sellerCancelOrderDialog.setData(list, tid);
+                            if (TextUtils.isEmpty(cancelReasonBeanResultBean.getMsg())) {
+                                ToastUtils.showShort("获取取消原因列表失败");
+                            } else {
+                                ToastUtils.showShort(cancelReasonBeanResultBean.getMsg());
+                            }
                         }
-                        sellerCancelOrderDialog.show();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-
+                        activity.hideLoadingDialog();
+                        if (TextUtils.isEmpty(throwable.getMessage())) {
+                            ToastUtils.showShort("获取取消原因列表失败");
+                        } else {
+                            ToastUtils.showShort(throwable.getMessage());
+                        }
                     }
                 }));
     }
