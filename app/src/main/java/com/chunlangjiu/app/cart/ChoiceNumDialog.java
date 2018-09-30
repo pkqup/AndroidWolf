@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.chunlangjiu.app.R;
+import com.pkqup.commonlibrary.util.ToastUtils;
 
 /**
  * @CreatedbBy: liucun on 2018/8/25.
@@ -74,6 +75,8 @@ public class ChoiceNumDialog extends Dialog {
                 if (num < stock) {
                     num++;
                     tvNum.setText(num + "");
+                } else {
+                    ToastUtils.showShort("库存不足");
                 }
             }
         });

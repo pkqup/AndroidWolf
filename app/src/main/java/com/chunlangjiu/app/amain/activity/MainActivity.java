@@ -1,6 +1,8 @@
 package com.chunlangjiu.app.amain.activity;
 
 import android.Manifest;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
@@ -18,6 +20,7 @@ import com.chunlangjiu.app.abase.BaseFragmentAdapter;
 import com.chunlangjiu.app.amain.fragment.AuctionFragment;
 import com.chunlangjiu.app.amain.fragment.CartFragment;
 import com.chunlangjiu.app.amain.fragment.ClassFragment;
+import com.chunlangjiu.app.amain.fragment.GoodsFragment;
 import com.chunlangjiu.app.amain.fragment.HomeFragment;
 import com.chunlangjiu.app.amain.fragment.UserFragment;
 import com.chunlangjiu.app.util.ConstantMsg;
@@ -26,6 +29,7 @@ import com.chunlangjiu.app.util.GeTuiPushService;
 import com.chunlangjiu.app.util.LocationUtils;
 import com.github.promeg.pinyinhelper.Pinyin;
 import com.igexin.sdk.PushManager;
+import com.pkqup.commonlibrary.dialog.CommonConfirmDialog;
 import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.util.PermissionUtils;
 import com.pkqup.commonlibrary.view.MyViewPager;
@@ -82,7 +86,7 @@ public class MainActivity extends BaseActivity {
 
     private BaseFragmentAdapter myFragmentAdapter;
     private List<Fragment> fragments;
-    private List<LinearLayout> linearLayouts;
+    private List<ImageView> imageViews;
     private List<TextView> textViews;
 
     private long exitTime;
@@ -112,9 +116,33 @@ public class MainActivity extends BaseActivity {
 
             @Override
             public void onFailed(int requestCode, List<String> deniedPermissions) {
-                for (String grantPermission : deniedPermissions) {
-                    KLog.e(grantPermission);
-                }
+                showPermissionDialog();
+            }
+        });
+    }
+
+    private void showPermissionDialog() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                final CommonConfirmDialog commonConfirmDialog = new CommonConfirmDialog(MainActivity.this, "信任是美好的开始，请授权相关权限，让我们更好的为你服务");
+                commonConfirmDialog.setDialogStr("取消", "去授权");
+                commonConfirmDialog.setCallBack(new CommonConfirmDialog.CallBack() {
+                    @Override
+                    public void onConfirm() {
+                        commonConfirmDialog.dismiss();
+                        Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_WRITE_SETTINGS);
+                        intent.setData(Uri.parse("package:" + MainActivity.this.getPackageName()));
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        MainActivity.this.startActivity(intent);
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        commonConfirmDialog.dismiss();
+                    }
+                });
+                commonConfirmDialog.show();
             }
         });
     }
@@ -131,17 +159,17 @@ public class MainActivity extends BaseActivity {
         tabFour.setOnClickListener(onClickListener);
         tabFive.setOnClickListener(onClickListener);
 
-        linearLayouts = new ArrayList<>();
-        linearLayouts.add(tabOne);
-        linearLayouts.add(tabTwo);
-        linearLayouts.add(new LinearLayout(this));
-        linearLayouts.add(tabFour);
-        linearLayouts.add(tabFive);
+        imageViews = new ArrayList<>();
+        imageViews.add(tabOneImage);
+        imageViews.add(tabTwoImage);
+        imageViews.add(tabThreeImage);
+        imageViews.add(tabFourImage);
+        imageViews.add(tabFiveImage);
 
         textViews = new ArrayList<>();
         textViews.add(tabOneText);
         textViews.add(tabTwoText);
-        textViews.add(new TextView(this));
+        textViews.add(tabThreeText);
         textViews.add(tabFourText);
         textViews.add(tabFiveText);
     }
@@ -149,7 +177,7 @@ public class MainActivity extends BaseActivity {
     private void initData() {
         fragments = new ArrayList<>();
         fragments.add(new HomeFragment());
-        fragments.add(new ClassFragment());
+        fragments.add(GoodsFragment.newInstance("", false, "", ""));
         fragments.add(new AuctionFragment());
         fragments.add(new CartFragment());
         fragments.add(new UserFragment());
@@ -184,29 +212,21 @@ public class MainActivity extends BaseActivity {
 
     private void setPageFragment(int position) {
         viewPager.setCurrentItem(position, false);
-        if (position != 2) {
-            for (int i = 0; i < linearLayouts.size(); i++) {
-                if (position == i) {
-                    linearLayouts.get(i).setSelected(true);
-                } else {
-                    linearLayouts.get(i).setSelected(false);
-                }
+        for (int i = 0; i < imageViews.size(); i++) {
+            if (position == i) {
+                imageViews.get(i).setSelected(true);
+            } else {
+                imageViews.get(i).setSelected(false);
             }
-            for (int i = 0; i < textViews.size(); i++) {
-                if (position == i) {
-                    textViews.get(i).setSelected(true);
-                } else {
-                    textViews.get(i).setSelected(false);
-                }
-            }
-        } else {
-            for (int i = 0; i < linearLayouts.size(); i++) {
-                linearLayouts.get(i).setSelected(false);
-            }
-            for (int i = 0; i < textViews.size(); i++) {
+        }
+        for (int i = 0; i < textViews.size(); i++) {
+            if (position == i) {
+                textViews.get(i).setSelected(true);
+            } else {
                 textViews.get(i).setSelected(false);
             }
         }
+
     }
 
     private EventManager.OnNotifyListener onNotifyListener = new EventManager.OnNotifyListener() {
@@ -214,6 +234,8 @@ public class MainActivity extends BaseActivity {
         public void onNotify(Object object, String eventTag) {
             msgToPageClass(eventTag);//我要买酒
             msgToPageAuction(eventTag);//竞拍专区
+            msgToPageCart(eventTag);//购物车
+            msgToPageMy(eventTag);//我的
         }
     };
 
@@ -226,6 +248,18 @@ public class MainActivity extends BaseActivity {
     private void msgToPageAuction(String eventTag) {
         if (eventTag.equals(ConstantMsg.MSG_PAGE_AUCTION)) {
             setPageFragment(2);
+        }
+    }
+
+    private void msgToPageCart(String eventTag) {
+        if (eventTag.equals(ConstantMsg.MSG_PAGE_CART)) {
+            setPageFragment(3);
+        }
+    }
+
+    private void msgToPageMy(String eventTag) {
+        if (eventTag.equals(ConstantMsg.MSG_PAGE_MY)) {
+            setPageFragment(4);
         }
     }
 

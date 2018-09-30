@@ -12,6 +12,15 @@ public class GoodsDetailBean implements Serializable{
     private ShareBean share;
     private ShopBean shop;
     private ItemBean item;
+    private String desc;
+
+    public String getDesc() {
+        return desc;
+    }
+
+    public void setDesc(String desc) {
+        this.desc = desc;
+    }
 
     public ShareBean getShare() {
         return share;
@@ -64,6 +73,24 @@ public class GoodsDetailBean implements Serializable{
         private String shop_descript;
         private String shop_logo;
         private String shop_type;
+        private String shopname;
+        private String mobile;
+
+        public String getShopname() {
+            return shopname;
+        }
+
+        public void setShopname(String shopname) {
+            this.shopname = shopname;
+        }
+
+        public String getMobile() {
+            return mobile;
+        }
+
+        public void setMobile(String mobile) {
+            this.mobile = mobile;
+        }
 
         public String getShop_id() {
             return shop_id;
@@ -112,6 +139,7 @@ public class GoodsDetailBean implements Serializable{
         private String cat_id;
         private String brand_id;
         private String shop_cat_id;
+        private String is_collect;
 
         private List<String> images;
         private String title;
@@ -147,6 +175,42 @@ public class GoodsDetailBean implements Serializable{
         private String freez;
         private String store;
         private String default_sku_id;
+
+        private String label;//标签
+        private String explain;//商品说明
+        private Auction auction;
+
+        public String getIs_collect() {
+            return is_collect;
+        }
+
+        public void setIs_collect(String is_collect) {
+            this.is_collect = is_collect;
+        }
+
+        public Auction getAuction() {
+            return auction;
+        }
+
+        public void setAuction(Auction auction) {
+            this.auction = auction;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public void setLabel(String label) {
+            this.label = label;
+        }
+
+        public String getExplain() {
+            return explain;
+        }
+
+        public void setExplain(String explain) {
+            this.explain = explain;
+        }
 
         public String getDefault_sku_id() {
             return default_sku_id;
@@ -434,6 +498,144 @@ public class GoodsDetailBean implements Serializable{
 
         public void setStore(String store) {
             this.store = store;
+        }
+    }
+
+    public class Auction implements Serializable{
+        private String data;
+        private String auctionitem_id;
+        private String item_id;
+        private String starting_price;
+        private String auction_status;
+        private String store;
+        private String number;
+        private String begin_time;
+        private String end_time;
+        private String status;
+        private String max_price;//最高出价
+        private String check;//是否已经出过价
+        private String pledge;//定金
+        private String original_bid;//自己当前的出价
+        private String is_pay;//是否支付过定金
+
+        public String getOriginal_bid() {
+            return original_bid;
+        }
+
+        public void setOriginal_bid(String original_bid) {
+            this.original_bid = original_bid;
+        }
+
+        public String getIs_pay() {
+            return is_pay;
+        }
+
+        public void setIs_pay(String is_pay) {
+            this.is_pay = is_pay;
+        }
+
+        public String getPledge() {
+            return pledge;
+        }
+
+        public void setPledge(String pledge) {
+            this.pledge = pledge;
+        }
+
+        public String getMax_price() {
+            return max_price;
+        }
+
+        public void setMax_price(String max_price) {
+            this.max_price = max_price;
+        }
+
+        public String getCheck() {
+            return check;
+        }
+
+        public void setCheck(String check) {
+            this.check = check;
+        }
+
+        public String getData() {
+            return data;
+        }
+
+        public void setData(String data) {
+            this.data = data;
+        }
+
+        public String getAuctionitem_id() {
+            return auctionitem_id;
+        }
+
+        public void setAuctionitem_id(String auctionitem_id) {
+            this.auctionitem_id = auctionitem_id;
+        }
+
+        public String getItem_id() {
+            return item_id;
+        }
+
+        public void setItem_id(String item_id) {
+            this.item_id = item_id;
+        }
+
+        public String getStarting_price() {
+            return starting_price;
+        }
+
+        public void setStarting_price(String starting_price) {
+            this.starting_price = starting_price;
+        }
+
+        public String getAuction_status() {
+            return auction_status;
+        }
+
+        public void setAuction_status(String auction_status) {
+            this.auction_status = auction_status;
+        }
+
+        public String getStore() {
+            return store;
+        }
+
+        public void setStore(String store) {
+            this.store = store;
+        }
+
+        public String getNumber() {
+            return number;
+        }
+
+        public void setNumber(String number) {
+            this.number = number;
+        }
+
+        public String getBegin_time() {
+            return begin_time;
+        }
+
+        public void setBegin_time(String begin_time) {
+            this.begin_time = begin_time;
+        }
+
+        public String getEnd_time() {
+            return end_time;
+        }
+
+        public void setEnd_time(String end_time) {
+            this.end_time = end_time;
+        }
+
+        public String getStatus() {
+            return status;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
         }
     }
 

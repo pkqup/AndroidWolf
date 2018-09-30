@@ -49,6 +49,8 @@ android {
                     outputFileName = "chunlang_${variant.productFlavors[0].name}_${defaultConfig.versionCode}_${new Date().format("yyyyMMddHHmm")}.apk"
                 }
             }
+//            aaptOptions.cruncherEnabled = false
+//            aaptOptions.useNewCruncher = false
         }
         debug {
             minifyEnabled false
@@ -96,6 +98,7 @@ dependencies {
     implementation project(':common:citypick')
     implementation project(':common:umengshare')
     implementation project(':common:TimePickerDialog')
+    implementation project(':common:photoLibrary')
 
     //依赖注入
     implementation 'com.jakewharton:butterknife:8.8.1'
@@ -105,6 +108,7 @@ dependencies {
     implementation 'com.amap.api:location:4.0.1'
     //个推
     implementation 'com.getui:sdk:2.12.4.0'
+    //微信支付
     implementation 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:5.1.6'
 
 }

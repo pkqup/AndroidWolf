@@ -11,41 +11,47 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:background="@color/bg_white"
-            android:gravity="center_vertical"
-            android:paddingLeft="15dp"
-            android:text="热搜"
-            android:textColor="@color/t_black"
-            android:textSize="@dimen/sp_big" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/line" />
-
-
-        <RelativeLayout
-            android:id="@+id/rl_hot"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/bg_white"
-            android:paddingBottom="10dp">
+            android:orientation="vertical"
+            android:visibility="gone">
 
-
-            <com.pkqup.commonlibrary.view.tagview.FlowTagLayout
-                android:id="@+id/tag_hot"
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="44dp"
+                android:background="@color/bg_white"
+                android:gravity="center_vertical"
+                android:paddingLeft="15dp"
+                android:text="热搜"
+                android:textColor="@color/t_black"
+                android:textSize="@dimen/sp_big" />
 
-        </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/line" />
+
+
+            <RelativeLayout
+                android:id="@+id/rl_hot"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/bg_white"
+                android:paddingBottom="10dp">
+
+
+                <com.pkqup.commonlibrary.view.tagview.FlowTagLayout
+                    android:id="@+id/tag_hot"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </RelativeLayout>
+        </LinearLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="44dp"
-            android:layout_marginTop="10dp"
             android:background="@color/bg_white">
 
             <TextView
@@ -57,14 +63,14 @@
                 android:textColor="@color/t_black"
                 android:textSize="@dimen/sp_big" />
 
-        <ImageView
-            android:id="@+id/imgDelete"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:src="@mipmap/gray_delete"
-            android:padding="10dp"
-            android:layout_width="40dp"
-            android:layout_height="40dp" />
+            <ImageView
+                android:id="@+id/imgDelete"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:padding="10dp"
+                android:src="@mipmap/gray_delete" />
         </RelativeLayout>
 
         <View

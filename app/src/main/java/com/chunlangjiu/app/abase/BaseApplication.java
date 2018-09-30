@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 
+import com.awen.photo.FrescoImageLoader;
 import com.chunlangjiu.app.net.ApiUtils;
 import com.github.promeg.pinyinhelper.Pinyin;
 import com.github.promeg.pinyinhelper.PinyinMapDict;
@@ -43,13 +44,16 @@ public class BaseApplication extends MultiDexApplication {
         initRealm();
         initUM();
         initPinyinCity();
-//        CrashHandler.getInstance().init(this);
+        FrescoImageLoader.init(this);
+        //CrashHandler.getInstance().init(this);
         KLog.init(AppUtils.isDebug());
     }
 
 
     public static void initToken() {
-        //44fd86649bd5d33eb2038f01349e397ab9c56d1b4985285b889a92ffdf2e81ca
+        //个人:  e99a73de0d110f00fb7f9924e689315218c7f4532875d76012ac3e8e4238abcf
+        //商家： e99a73de0d110f00fb7f9924e689315218c7f4532875d76012ac3e8e4238abcf
+//        SPUtils.put("token", "e69bea4e7fe4592a134b4058668f71b6b9c56d1b4985285b889a92ffdf2e81ca");
         token = (String) SPUtils.get("token", "");
         KLog.e("-----token-----", token);
     }

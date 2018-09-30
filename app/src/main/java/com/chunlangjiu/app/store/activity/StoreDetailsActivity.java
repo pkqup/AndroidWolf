@@ -1,5 +1,7 @@
 package com.chunlangjiu.app.store.activity;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,9 +14,13 @@ import android.widget.TextView;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
 import com.chunlangjiu.app.abase.BaseFragmentAdapter;
+import com.chunlangjiu.app.goods.activity.GoodsDetailsActivity;
 import com.chunlangjiu.app.goods.fragment.GoodsCommentFragment;
 import com.chunlangjiu.app.goods.fragment.GoodsDetailsFragment;
 import com.chunlangjiu.app.goods.fragment.GoodsWebFragment;
+import com.chunlangjiu.app.net.ApiUtils;
+import com.chunlangjiu.app.store.bean.StoreClassListBean;
+import com.chunlangjiu.app.store.bean.StoreDetailBean;
 import com.chunlangjiu.app.store.fragment.DetailDescFragment;
 import com.chunlangjiu.app.store.fragment.GradeFragment;
 import com.chunlangjiu.app.store.fragment.HeaderViewPagerFragment;
@@ -22,11 +28,18 @@ import com.chunlangjiu.app.store.fragment.PhotoFragment;
 import com.chunlangjiu.app.store.fragment.SimpleDescFragment;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.lzy.widget.HeaderViewPager;
+import com.pkqup.commonlibrary.glide.GlideUtils;
+import com.pkqup.commonlibrary.net.bean.ResultBean;
+import com.socks.library.KLog;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 /**
  * @CreatedbBy: liucun on 2018/7/14.
@@ -54,11 +67,19 @@ public class StoreDetailsActivity extends BaseActivity {
     @BindView(R.id.viewPager)
     ViewPager viewPager;
 
+    private CompositeDisposable disposable;
+    private String chateau_id;
 
     private final String[] mTitles = {"名庄简介", "详细介绍", "历年评分", "酒庄图片"};
     private FragmentAdapter fragmentAdapter;
     private List<HeaderViewPagerFragment> mFragments;
 
+
+    public static void startStoreDetailActivity(Activity activity, String chateau_id) {
+        Intent intent = new Intent(activity, StoreDetailsActivity.class);
+        intent.putExtra("chateau_id", chateau_id);
+        activity.startActivity(intent);
+    }
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -86,14 +107,50 @@ public class StoreDetailsActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.store_activity_details);
         initView();
+        initData();
     }
 
     private void initView() {
+        disposable = new CompositeDisposable();
+        chateau_id = getIntent().getStringExtra("chateau_id");
+    }
+
+    private void initData() {
+        showLoadingDialog();
+        disposable.add(ApiUtils.getInstance().getStoreDetail(chateau_id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<StoreDetailBean>>() {
+                    @Override
+                    public void accept(ResultBean<StoreDetailBean> storeDetailBeanResultBean) throws Exception {
+                        hideLoadingDialog();
+                        getDetailSuccess(storeDetailBeanResultBean.getData().getDetail());
+                        initViewPagerData(storeDetailBeanResultBean.getData().getDetail().get(0));
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        hideLoadingDialog();
+                    }
+                }));
+    }
+
+
+    private void getDetailSuccess(List<StoreDetailBean.StoreBean> detail) {
+        StoreDetailBean.StoreBean storeBean = detail.get(0);
+        tvFirstName.setText(storeBean.getName());
+        GlideUtils.loadImage(this, storeBean.getImg(), imgMainPic);
+        tvSecondName.setText(storeBean.getName());
+        tvDesc.setText(storeBean.getContent());
+    }
+
+
+    private void initViewPagerData(StoreDetailBean.StoreBean storeBean) {
         mFragments = new ArrayList<>();
-        mFragments.add(new SimpleDescFragment());
-        mFragments.add(new DetailDescFragment());
-        mFragments.add(new GradeFragment());
-        mFragments.add(new PhotoFragment());
+        mFragments.add(SimpleDescFragment.newInstance(storeBean));
+        mFragments.add(DetailDescFragment.newInstance(storeBean));
+        mFragments.add(GradeFragment.newInstance(storeBean));
+        mFragments.add(PhotoFragment.newInstance(storeBean));
         fragmentAdapter = new FragmentAdapter(getSupportFragmentManager());
         fragmentAdapter.setLists(mFragments);
         viewPager.setAdapter(fragmentAdapter);
@@ -108,6 +165,7 @@ public class StoreDetailsActivity extends BaseActivity {
             }
         });
     }
+
 
     public class FragmentAdapter extends FragmentPagerAdapter {
 

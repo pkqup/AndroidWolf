@@ -1,7 +1,8 @@
 package com.chunlangjiu.app.amain.fragment;
 
 import android.content.Intent;
-import android.support.v4.content.ContextCompat;
+import android.graphics.BitmapFactory;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,15 +15,49 @@ import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseApplication;
 import com.chunlangjiu.app.abase.BaseFragment;
 import com.chunlangjiu.app.amain.activity.LoginActivity;
+import com.chunlangjiu.app.net.ApiUtils;
+import com.chunlangjiu.app.order.activity.OrderMainActivity;
+import com.chunlangjiu.app.order.params.OrderParams;
 import com.chunlangjiu.app.user.activity.AddGoodsActivity;
+import com.chunlangjiu.app.user.activity.AddGoodsSuccessActivity;
 import com.chunlangjiu.app.user.activity.AddressListActivity;
 import com.chunlangjiu.app.user.activity.CompanyAuthActivity;
 import com.chunlangjiu.app.user.activity.PersonAuthActivity;
+import com.chunlangjiu.app.user.bean.AuthStatusBean;
+import com.chunlangjiu.app.user.bean.MyNumBean;
+import com.chunlangjiu.app.user.bean.UploadImageBean;
+import com.chunlangjiu.app.user.bean.UserInfoBean;
 import com.chunlangjiu.app.util.ConstantMsg;
+import com.chunlangjiu.app.util.GlideImageLoader;
+import com.chunlangjiu.app.util.ShareUtils;
 import com.chunlangjiu.app.web.WebViewActivity;
+import com.lzy.imagepicker.ImagePicker;
+import com.lzy.imagepicker.bean.ImageItem;
+import com.lzy.imagepicker.ui.ImageGridActivity;
+import com.lzy.imagepicker.view.CropImageView;
+import com.pkqup.commonlibrary.dialog.ChoicePhotoDialog;
 import com.pkqup.commonlibrary.eventmsg.EventManager;
+import com.pkqup.commonlibrary.glide.GlideUtils;
+import com.pkqup.commonlibrary.net.HttpUtils;
+import com.pkqup.commonlibrary.net.bean.ResultBean;
+import com.pkqup.commonlibrary.util.FileUtils;
+import com.pkqup.commonlibrary.util.SPUtils;
+import com.pkqup.commonlibrary.util.ToastUtils;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.media.UMWeb;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.BiFunction;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 
 /**
@@ -42,6 +77,7 @@ public class UserFragment extends BaseFragment {
     private TextView tvAccountType;
     private TextView tvChangeType;
     private TextView tvAuthRealName;
+    private TextView tvAuthCompany;
 
     private LinearLayout llCanUseMoney;
     private TextView tvCanUseMoney;
@@ -128,6 +164,13 @@ public class UserFragment extends BaseFragment {
     private static final int TYPE_BUYER = 0;//买家中心
     private static final int TYPE_SELLER = 1;//卖家中心
     private int userType = TYPE_BUYER;
+    private String companyStatus;
+    private String personStatus;
+
+    private ChoicePhotoDialog photoDialog;
+    public static final int REQUEST_CODE_CHOICE_HEAD = 1001;
+
+    private CompositeDisposable disposable;
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -140,46 +183,74 @@ public class UserFragment extends BaseFragment {
                 case R.id.tvToLogin:
                     break;
                 case R.id.imgSetting:
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_SETTING + BaseApplication.getToken(), "设置");
+                    break;
+                case R.id.imgHead:
+                    setHeadIcon();
                     break;
                 case R.id.tvChangeType:// 切换买/卖家中心
-                    changeUserType();
+                    checkStatus();
                     break;
-                case R.id.tvAuthRealName:// 企业/个人认证
-                    startActivity(new Intent(getActivity(), PersonAuthActivity.class));
-                    startActivity(new Intent(getActivity(), CompanyAuthActivity.class));
+                case R.id.tvAuthRealName:// 个人认证
+                    checkPersonStatus();
+                    break;
+                case R.id.tvAuthCompany:// 升级为企业(进入企业认证)
+                    checkCompanyStatus();
+                    break;
+                case R.id.llMessageNum:// 我的消息
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_MESSAGE + BaseApplication.getToken(), "消息");
                     break;
                 case R.id.rlOrderManager:// 订单管理
-                    toOrderWeb();
+                    if (llSellOrder.isShown()) {
+                        toOrderMainActivity(3, 0);
+                    } else {
+                        toOrderMainActivity(0, 0);
+                    }
                     break;
                 case R.id.rlOrderOne:// 买家待付款
+                    toOrderMainActivity(0, 1);
                     break;
                 case R.id.rlOrderTwo:// 买家待收货
+                    toOrderMainActivity(0, 3);
                     break;
-                case R.id.rlOrderThree:// 买家待评价
+                case R.id.rlOrderThree:// 买家待发货
+                    toOrderMainActivity(0, 2);
                     break;
                 case R.id.rlOrderFour:// 买家售后订单
+                    toOrderMainActivity(2, 0);
                     break;
                 case R.id.rlOrderFive:// 买家全部订单
+                    toOrderMainActivity(0, 0);
                     break;
                 case R.id.rlSellOrderOne:// 卖家待付款
+                    toOrderMainActivity(3, 1);
                     break;
                 case R.id.rlSellOrderTwo:// 卖家待发货
+                    toOrderMainActivity(3, 2);
                     break;
                 case R.id.rlSellOrderThree:// 卖家售后订单
+                    toOrderMainActivity(4, 0);
                     break;
                 case R.id.rlSellOrderFour:// 卖家全部订单
+                    toOrderMainActivity(3, 0);
                     break;
                 case R.id.rlAuctionManager:// 竞拍订单管理
+                    toOrderMainActivity(1, 0);
                     break;
                 case R.id.rlAuctionOne:// 买家竞拍订单-待付定金
+                    toOrderMainActivity(1, 1);
                     break;
                 case R.id.rlAuctionTwo:// 买家竞拍订单-竞拍中
+                    toOrderMainActivity(1, 2);
                     break;
                 case R.id.rlAuctionThree:// 买家竞拍订单-已中标
+                    toOrderMainActivity(1, 3);
                     break;
                 case R.id.rlAuctionFour:// 买家竞拍订单-落标
+                    toOrderMainActivity(1, 4);
                     break;
                 case R.id.rlAuctionFive:// 买家竞拍订单-全部订单
+                    toOrderMainActivity(1, 0);
                     break;
                 case R.id.rlSellAuctionOne:// 卖家竞拍订单-待付款
                     break;
@@ -189,27 +260,48 @@ public class UserFragment extends BaseFragment {
                     break;
                 case R.id.rlSellAuctionFour:// 卖家竞拍订单-全部订单
                     break;
+                case R.id.rlGoodsManager:// 商品管理
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_GOODS_MANAGER + BaseApplication.getToken(), "商品管理");
+                    break;
                 case R.id.rlAddGoods:// 添加商品
                     startActivity(new Intent(getActivity(), AddGoodsActivity.class));
                     break;
                 case R.id.rlSellGoods:// 在售商品
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_SELL_GOODS + BaseApplication.getToken(), "在售商品");
                     break;
                 case R.id.rlAuctionGoods:// 竞拍商品
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_ACTION_GOODS + BaseApplication.getToken(), "竞拍商品");
                     break;
                 case R.id.rlWareHouseGoods:// 仓库商品
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_STORE_GOODS + BaseApplication.getToken(), "仓库商品");
                     break;
                 case R.id.rlCheckGoods:// 审核商品
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_AUTH_GOODS + BaseApplication.getToken(), "审核商品");
                     break;
                 case R.id.rlMoneyManager:// 资金管理
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_MONEY_MANAGER + BaseApplication.getToken(), "资金管理");
+                    break;
+                case R.id.rlShare:// 分享
+                    showShareDialog();
                     break;
                 case R.id.rlCollect:// 我的收藏
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_COLLECT + BaseApplication.getToken(), "我的收藏");
                     break;
                 case R.id.rlVip:// 会员资料
+                    if (userType == TYPE_BUYER) {
+                        WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_VIP_INFO + BaseApplication.getToken(), "会员资料");
+                    } else {
+                        WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_SHOP_INFO + BaseApplication.getToken(), "店铺资料");
+                    }
                     break;
                 case R.id.rlAddress:// 地址管理
                     startActivity(new Intent(getActivity(), AddressListActivity.class));
                     break;
                 case R.id.rlBankCard:// 银行卡管理
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_BANK_CARD + BaseApplication.getToken(), "银行卡管理");
+                    break;
+                case R.id.rlBankCardSecond:// 银行卡管理
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_BANK_CARD + BaseApplication.getToken(), "银行卡管理");
                     break;
             }
         }
@@ -232,6 +324,7 @@ public class UserFragment extends BaseFragment {
         imgSetting.setOnClickListener(onClickListener);
 
         imgHead = rootView.findViewById(R.id.imgHead);
+        imgHead.setOnClickListener(onClickListener);
         tvName = rootView.findViewById(R.id.tvName);
         tvAccountType = rootView.findViewById(R.id.tvAccountType);
 
@@ -239,6 +332,8 @@ public class UserFragment extends BaseFragment {
         tvChangeType.setOnClickListener(onClickListener);
         tvAuthRealName = rootView.findViewById(R.id.tvAuthRealName);
         tvAuthRealName.setOnClickListener(onClickListener);
+        tvAuthCompany = rootView.findViewById(R.id.tvAuthCompany);
+        tvAuthCompany.setOnClickListener(onClickListener);
 
         llCanUseMoney = rootView.findViewById(R.id.llCanUseMoney);
         llCanUseMoney.setOnClickListener(onClickListener);
@@ -321,6 +416,7 @@ public class UserFragment extends BaseFragment {
         rlAuctionGoods = rootView.findViewById(R.id.rlAuctionGoods);
         rlWareHouseGoods = rootView.findViewById(R.id.rlWareHouseGoods);
         rlCheckGoods = rootView.findViewById(R.id.rlCheckGoods);
+        rlGoodsManager.setOnClickListener(onClickListener);
         rlAddGoods.setOnClickListener(onClickListener);
         rlSellGoods.setOnClickListener(onClickListener);
         rlAuctionGoods.setOnClickListener(onClickListener);
@@ -360,13 +456,20 @@ public class UserFragment extends BaseFragment {
 
     private void showUserTypeView() {
         if (userType == TYPE_BUYER) {
+            HttpUtils.USER_TOKEN = true;
             //买家中心
-            rlBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.bg_low_black));
-            tvChangeType.setText("切换到卖家中心");
-            llNotUseMoney.setVisibility(View.GONE);
+            rlBackground.setBackgroundResource(R.mipmap.buy_bg);
+            tvChangeType.setText("切换卖家");
+            if (AuthStatusBean.AUTH_SUCCESS.equals(companyStatus)) {
+                tvAuthCompany.setVisibility(View.GONE);
+            } else {
+                tvAuthCompany.setVisibility(View.VISIBLE);
+            }
+            llNotUseMoney.setVisibility(View.VISIBLE);
 
             llBuyOrder.setVisibility(View.VISIBLE);
             llSellOrder.setVisibility(View.GONE);
+            rlAuctionManager.setVisibility(View.VISIBLE);
             llBuyAuction.setVisibility(View.VISIBLE);
             llSellAuction.setVisibility(View.GONE);
 
@@ -377,15 +480,18 @@ public class UserFragment extends BaseFragment {
             rlBankCard.setVisibility(View.GONE);
             llMyManagerSecond.setVisibility(View.VISIBLE);
         } else {
+            HttpUtils.USER_TOKEN = false;
             //卖家中心
-            rlBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.bg_red));
-            tvChangeType.setText("切换到买家中心");
+            rlBackground.setBackgroundResource(R.mipmap.sell_bg);
+            tvChangeType.setText("切换买家");
+            tvAuthCompany.setVisibility(View.GONE);
             llNotUseMoney.setVisibility(View.VISIBLE);
 
             llBuyOrder.setVisibility(View.GONE);
             llSellOrder.setVisibility(View.VISIBLE);
+            rlAuctionManager.setVisibility(View.GONE);
             llBuyAuction.setVisibility(View.GONE);
-            llSellAuction.setVisibility(View.VISIBLE);
+            llSellAuction.setVisibility(View.GONE);
 
             rlGoodsManager.setVisibility(View.VISIBLE);
             llGoodsContent.setVisibility(View.VISIBLE);
@@ -398,7 +504,230 @@ public class UserFragment extends BaseFragment {
 
     @Override
     public void initData() {
+        disposable = new CompositeDisposable();
         EventManager.getInstance().registerListener(onNotifyListener);
+        initImagePicker();
+        getUserInfo();
+        getOrderNumIndex();
+        getPersonAuthStatus();
+    }
+
+
+    private void initImagePicker() {
+        ImagePicker imagePicker = ImagePicker.getInstance();
+        imagePicker.setImageLoader(new GlideImageLoader());   //设置图片加载器
+        imagePicker.setShowCamera(true);                      //显示拍照按钮
+        imagePicker.setMultiMode(false);
+        imagePicker.setCrop(true);                            //允许裁剪（单选才有效）
+        imagePicker.setSaveRectangle(true);                   //是否按矩形区域保存
+        imagePicker.setSelectLimit(1);                        //选中数量限制
+        imagePicker.setStyle(CropImageView.Style.CIRCLE);  //裁剪框的形状
+        imagePicker.setFocusWidth(800);                       //裁剪框的宽度。单位像素（圆形自动取宽高最小值）
+        imagePicker.setFocusHeight(800);                      //裁剪框的高度。单位像素（圆形自动取宽高最小值）
+        imagePicker.setOutPutX(300);                         //保存文件的宽度。单位像素
+        imagePicker.setOutPutY(300);                         //保存文件的高度。单位像素
+    }
+
+    private void getUserInfo() {
+        disposable.add(ApiUtils.getInstance().getUserInfo()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<UserInfoBean>>() {
+                    @Override
+                    public void accept(ResultBean<UserInfoBean> userInfoBeanResultBean) throws Exception {
+                        GlideUtils.loadImageHead(getActivity(), userInfoBeanResultBean.getData().getHead_portrait(), imgHead);
+                        tvName.setText(userInfoBeanResultBean.getData().getLogin_account());
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                }));
+    }
+
+    private void getOrderNumIndex() {
+        disposable.add(ApiUtils.getInstance().getMyNumFlag()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<MyNumBean>>() {
+                    @Override
+                    public void accept(ResultBean<MyNumBean> myNumBeanResultBean) throws Exception {
+                        MyNumBean data = myNumBeanResultBean.getData();
+                        if (data != null) {
+                            tvOrderOneNum.setText(data.getWait_pay_num());
+                            tvOrderOneNum.setVisibility(TextUtils.isEmpty(data.getWait_pay_num()) ? View.GONE : View.VISIBLE);
+                            tvOrderTwoNum.setText(data.getWait_send_goods_num());
+                            tvOrderTwoNum.setVisibility(TextUtils.isEmpty(data.getWait_send_goods_num()) ? View.GONE : View.VISIBLE);
+                            tvOrderThreeNum.setText(data.getWait_confirm_goods_num());
+                            tvOrderThreeNum.setVisibility(TextUtils.isEmpty(data.getWait_confirm_goods_num()) ? View.GONE : View.VISIBLE);
+                            tvCanUseMoney.setText(TextUtils.isEmpty(data.getMoney())?"0":data.getMoney());
+                            tvNotUseMoney.setText(TextUtils.isEmpty(data.getMoney_frozen())?"0":data.getMoney_frozen());
+                            tvMessageNum.setText(TextUtils.isEmpty(data.getInformation())?"0":data.getInformation());
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                }));
+    }
+
+
+    private void getPersonAuthStatus() {
+        disposable.add(ApiUtils.getInstance().getPersonAuthStatus()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<AuthStatusBean>>() {
+                    @Override
+                    public void accept(ResultBean<AuthStatusBean> authStatusBeanResultBean) throws Exception {
+                        getPersonStatusSuccess(authStatusBeanResultBean.getData());
+                        getCompanyAuthStatus();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                }));
+    }
+
+    private void getPersonStatusSuccess(AuthStatusBean data) {
+        personStatus = data.getStatus();
+        if ("active".equals(data.getStatus())) {
+            //未认证
+            tvAuthRealName.setText("实名认证");
+            tvAuthRealName.setClickable(true);
+        } else if ("locked".equals(data.getStatus())) {
+            tvAuthRealName.setText("实名认证");
+            tvAuthRealName.setClickable(true);
+        } else if ("failing".equals(data.getStatus())) {
+            tvAuthRealName.setText("实名认证");
+            tvAuthRealName.setClickable(true);
+        } else if (AuthStatusBean.AUTH_SUCCESS.equals(data.getStatus())) {
+            tvAuthRealName.setText("已认证");
+            tvAuthRealName.setClickable(false);
+        }
+    }
+
+    private void getCompanyAuthStatus() {
+        disposable.add(ApiUtils.getInstance().getCompanyAuthStatus()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<AuthStatusBean>>() {
+                    @Override
+                    public void accept(ResultBean<AuthStatusBean> authStatusBeanResultBean) throws Exception {
+                        getStatusSuccess(authStatusBeanResultBean.getData());
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                }));
+    }
+
+    private void getStatusSuccess(AuthStatusBean data) {
+        companyStatus = data.getStatus();
+        if ("active".equals(data.getStatus())) {
+            //未认证
+            tvAccountType.setText("个人");
+            tvAuthRealName.setText("实名认证");
+            tvAuthCompany.setVisibility(View.VISIBLE);
+        } else if ("locked".equals(data.getStatus())) {
+            tvAccountType.setText("个人");
+            tvAuthRealName.setText("实名认证");
+            tvAuthCompany.setVisibility(View.VISIBLE);
+        } else if ("failing".equals(data.getStatus())) {
+            tvAccountType.setText("个人");
+            tvAuthRealName.setText("实名认证");
+            tvAuthCompany.setVisibility(View.VISIBLE);
+        } else if (AuthStatusBean.AUTH_SUCCESS.equals(data.getStatus())) {
+            tvAccountType.setText("企业");
+            tvAuthRealName.setText("已认证");
+            tvAuthRealName.setClickable(false);
+            tvAuthCompany.setVisibility(View.GONE);
+        }
+    }
+
+
+    /**
+     * 设置头像
+     */
+    private void setHeadIcon() {
+        if (photoDialog == null) {
+            photoDialog = new ChoicePhotoDialog(getActivity());
+            photoDialog.setCallBackListener(new ChoicePhotoDialog.OnCallBackListener() {
+                @Override
+                public void takePhoto() {
+                    initImagePicker();
+                    openCamera(REQUEST_CODE_CHOICE_HEAD);
+                }
+
+                @Override
+                public void toPhotoAlbum() {
+                    initImagePicker();
+                    openAlbum(REQUEST_CODE_CHOICE_HEAD);
+                }
+            });
+        }
+        photoDialog.show();
+    }
+
+    private void openCamera(int requestCode) {
+        Intent intent = new Intent(getActivity(), ImageGridActivity.class);
+        intent.putExtra(ImageGridActivity.EXTRAS_TAKE_PICKERS, true); // 是否是直接打开相机
+        startActivityForResult(intent, requestCode);
+    }
+
+    private void openAlbum(int requestCode) {
+        Intent intent = new Intent(getActivity(), ImageGridActivity.class);
+        startActivityForResult(intent, requestCode);
+    }
+
+    private void checkStatus() {
+        if (userType == TYPE_BUYER) {
+            if (AuthStatusBean.AUTH_SUCCESS.equals(personStatus) || AuthStatusBean.AUTH_SUCCESS.equals(companyStatus)) {
+                changeUserType();
+            } else {
+                showLoadingDialog();
+                Observable<ResultBean<AuthStatusBean>> personAuthStatus = ApiUtils.getInstance().getPersonAuthStatus();
+                Observable<ResultBean<AuthStatusBean>> companyAuthStatus = ApiUtils.getInstance().getCompanyAuthStatus();
+                disposable.add(Observable.zip(personAuthStatus, companyAuthStatus, new BiFunction<ResultBean<AuthStatusBean>, ResultBean<AuthStatusBean>, List<AuthStatusBean>>() {
+                    @Override
+                    public List<AuthStatusBean> apply(ResultBean<AuthStatusBean> uploadImageBeanResultBean, ResultBean<AuthStatusBean> uploadImageBeanResultBean2) throws Exception {
+                        List<AuthStatusBean> imageLists = new ArrayList<>();
+                        imageLists.add(uploadImageBeanResultBean.getData());
+                        imageLists.add(uploadImageBeanResultBean2.getData());
+                        return imageLists;
+                    }
+                }).subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Consumer<List<AuthStatusBean>>() {
+                            @Override
+                            public void accept(List<AuthStatusBean> authStatusBeans) throws Exception {
+                                hideLoadingDialog();
+                                personStatus = authStatusBeans.get(0).getStatus();
+                                companyStatus = authStatusBeans.get(1).getStatus();
+                                if (AuthStatusBean.AUTH_SUCCESS.equals(authStatusBeans.get(0).getStatus()) || AuthStatusBean.AUTH_SUCCESS.equals(authStatusBeans.get(1).getStatus())) {
+                                    changeUserType();
+                                } else if (AuthStatusBean.AUTH_LOCKED.equals(authStatusBeans.get(0).getStatus()) || AuthStatusBean.AUTH_LOCKED.equals(authStatusBeans.get(1).getStatus())) {
+                                    ToastUtils.showShort("您的认证正在审核中，我们会尽快处理");
+                                } else if (AuthStatusBean.AUTH_FAILING.equals(authStatusBeans.get(0).getStatus()) || AuthStatusBean.AUTH_FAILING.equals(authStatusBeans.get(1).getStatus())) {
+                                    ToastUtils.showShort("您的认证被驳回，请重新提交资料审核");
+                                    startActivity(new Intent(getActivity(), PersonAuthActivity.class));
+                                } else {
+                                    ToastUtils.showShort("您还没有进行实名认证，请先认证");
+                                    startActivity(new Intent(getActivity(), PersonAuthActivity.class));
+                                }
+                            }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(Throwable throwable) throws Exception {
+                                hideLoadingDialog();
+                            }
+                        }));
+            }
+        } else {
+            changeUserType();
+        }
     }
 
     private void changeUserType() {
@@ -407,9 +736,99 @@ public class UserFragment extends BaseFragment {
     }
 
 
-    private void toOrderWeb() {
-        WebViewActivity.startWebViewActivity(getActivity(),
-                "http://mall.chunlangjiu.com/wap/trade-list.html?token=" + BaseApplication.getToken());
+    private void checkPersonStatus() {
+        showLoadingDialog();
+        disposable.add(ApiUtils.getInstance().getPersonAuthStatus()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<AuthStatusBean>>() {
+                    @Override
+                    public void accept(ResultBean<AuthStatusBean> authStatusBeanResultBean) throws Exception {
+                        hideLoadingDialog();
+                        if ("active".equals(authStatusBeanResultBean.getData().getStatus())) {
+                            //未认证
+                            toAuthActivity();
+                        } else if ("locked".equals(authStatusBeanResultBean.getData().getStatus())) {
+                            ToastUtils.showShort("您的认证正在审核中，我们会尽快处理");
+                        } else if ("failing".equals(authStatusBeanResultBean.getData().getStatus())) {
+                            ToastUtils.showShort("您的认证被驳回，请重新提交资料审核");
+                            toAuthActivity();
+                        } else if (AuthStatusBean.AUTH_SUCCESS.equals(authStatusBeanResultBean.getData().getStatus())) {
+                            tvAuthRealName.setText("已认证");
+                            tvAuthRealName.setClickable(false);
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        hideLoadingDialog();
+                    }
+                }));
+    }
+
+    private void toAuthActivity() {
+        startActivity(new Intent(getActivity(), PersonAuthActivity.class));
+    }
+
+
+    private void checkCompanyStatus() {
+        showLoadingDialog();
+        disposable.add(ApiUtils.getInstance().getCompanyAuthStatus()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<AuthStatusBean>>() {
+                    @Override
+                    public void accept(ResultBean<AuthStatusBean> authStatusBeanResultBean) throws Exception {
+                        hideLoadingDialog();
+                        if ("active".equals(authStatusBeanResultBean.getData().getStatus())) {
+                            //未认证
+                            toAuthCompanyActivity();
+                        } else if ("locked".equals(authStatusBeanResultBean.getData().getStatus())) {
+                            ToastUtils.showShort("您的认证正在审核中，我们会尽快处理");
+                        } else if ("failing".equals(authStatusBeanResultBean.getData().getStatus())) {
+                            ToastUtils.showShort("您的认证被驳回，请重新提交资料审核");
+                            toAuthCompanyActivity();
+                        } else if (AuthStatusBean.AUTH_SUCCESS.equals(authStatusBeanResultBean.getData().getStatus())) {
+                            tvAuthRealName.setText("已认证");
+                            tvAuthCompany.setVisibility(View.GONE);
+                            tvAuthRealName.setClickable(false);
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        hideLoadingDialog();
+                    }
+                }));
+    }
+
+    private void showShareDialog() {
+        UMImage thumb = new UMImage(getActivity(), BitmapFactory.decodeResource(getActivity().getResources(), R.mipmap.launcher));
+        UMWeb web = new UMWeb("http://mall.chunlangjiu.com/appdownload/index.html");
+        web.setTitle("给您推荐高端酒综合服务平台-醇狼");//标题
+        web.setThumb(thumb);  //缩略图
+        web.setDescription("为行业用户提供高端酒发布、估价、竞拍、鉴定等综合性服务");//描述
+        ShareUtils.shareLink(getActivity(), web, new UMShareListener() {
+            @Override
+            public void onStart(SHARE_MEDIA share_media) {
+            }
+
+            @Override
+            public void onResult(SHARE_MEDIA share_media) {
+            }
+
+            @Override
+            public void onError(SHARE_MEDIA share_media, Throwable throwable) {
+            }
+
+            @Override
+            public void onCancel(SHARE_MEDIA share_media) {
+            }
+        });
+    }
+
+    private void toAuthCompanyActivity() {
+        startActivity(new Intent(getActivity(), CompanyAuthActivity.class));
     }
 
 
@@ -417,18 +836,150 @@ public class UserFragment extends BaseFragment {
         @Override
         public void onNotify(Object object, String eventTag) {
             loginSuccess(eventTag);
+            logoutSuccess(eventTag);
+//            authSuccess(eventTag);
         }
     };
 
+    private void authSuccess(String eventTag) {
+        if (eventTag.equals(ConstantMsg.PERSON_COMPANY_AUTH_SUCCESS)) {
+            Observable<ResultBean<AuthStatusBean>> personAuthStatus = ApiUtils.getInstance().getPersonAuthStatus();
+            Observable<ResultBean<AuthStatusBean>> companyAuthStatus = ApiUtils.getInstance().getCompanyAuthStatus();
+            disposable.add(Observable.zip(personAuthStatus, companyAuthStatus, new BiFunction<ResultBean<AuthStatusBean>, ResultBean<AuthStatusBean>, List<AuthStatusBean>>() {
+                @Override
+                public List<AuthStatusBean> apply(ResultBean<AuthStatusBean> uploadImageBeanResultBean, ResultBean<AuthStatusBean> uploadImageBeanResultBean2) throws Exception {
+                    List<AuthStatusBean> imageLists = new ArrayList<>();
+                    imageLists.add(uploadImageBeanResultBean.getData());
+                    imageLists.add(uploadImageBeanResultBean2.getData());
+                    return imageLists;
+                }
+            }).subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<List<AuthStatusBean>>() {
+                        @Override
+                        public void accept(List<AuthStatusBean> authStatusBeans) throws Exception {
+                            personStatus = authStatusBeans.get(0).getStatus();
+                            companyStatus = authStatusBeans.get(1).getStatus();
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                        }
+                    }));
+        }
+    }
+
+
+    //登录成功
     private void loginSuccess(String eventTag) {
         if (eventTag.equals(ConstantMsg.LOGIN_SUCCESS)) {
             checkLogin();
+            getUserInfo();
+            getOrderNumIndex();
+            getPersonAuthStatus();
         }
     }
+
+    //退出登录
+    private void logoutSuccess(String eventTag) {
+        if (eventTag.equals(ConstantMsg.LOGOUT_SUCCESS)) {
+            SPUtils.put("token", "");
+            BaseApplication.setToken("");
+            BaseApplication.initToken();
+            checkLogin();
+            userType = TYPE_BUYER;
+            tvOrderOneNum.setVisibility(View.GONE);
+            tvOrderTwoNum.setVisibility(View.GONE);
+            tvOrderThreeNum.setVisibility(View.GONE);
+            showUserTypeView();
+            disposable.add(ApiUtils.getInstance().logout()
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<ResultBean>() {
+                        @Override
+                        public void accept(ResultBean loginBeanResultBean) throws Exception {
+
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                        }
+                    }));
+        }
+    }
+
+    private void toOrderMainActivity(int type, int target) {
+        Intent intent = new Intent(getActivity(), OrderMainActivity.class);
+        intent.putExtra(OrderParams.TYPE, type);
+        intent.putExtra(OrderParams.TARGET, target);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        try {
+            if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
+                //添加图片返回
+                if (data != null) {
+                    if (requestCode == REQUEST_CODE_CHOICE_HEAD) {
+                        ArrayList<ImageItem> mainPicLists = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+                        ImageItem imageItem = mainPicLists.get(0);
+                        int index = imageItem.path.lastIndexOf("/");
+                        imageItem.name = imageItem.path.substring(index + 1, imageItem.path.length());
+                        String base64Head = FileUtils.imgToBase64(mainPicLists.get(0).path);
+                        uploadHeadIcon(mainPicLists, base64Head);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void uploadHeadIcon(ArrayList<ImageItem> mainPicLists, String base64Head) {
+        showLoadingDialog();
+        disposable.add(ApiUtils.getInstance().userUploadImage(base64Head, mainPicLists.get(0).name, "rate")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<UploadImageBean>>() {
+                    @Override
+                    public void accept(ResultBean<UploadImageBean> uploadImageBeanResultBean) throws Exception {
+                        setHeadUrl(uploadImageBeanResultBean.getData().getUrl());
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        hideLoadingDialog();
+                        ToastUtils.showShort("上传头像失败");
+                    }
+                }));
+    }
+
+    private void setHeadUrl(final String url) {
+        disposable.add(ApiUtils.getInstance().setHeadImg(url)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean>() {
+                    @Override
+                    public void accept(ResultBean loginBeanResultBean) throws Exception {
+                        hideLoadingDialog();
+                        GlideUtils.loadImageHead(getActivity(), url, imgHead);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        hideLoadingDialog();
+                        ToastUtils.showShort("设置头像失败");
+                    }
+                }));
+    }
+
 
     @Override
     public void onDestroy() {
         super.onDestroy();
         EventManager.getInstance().unRegisterListener(onNotifyListener);
     }
+
 }

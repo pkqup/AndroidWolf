@@ -1,5 +1,6 @@
 package com.chunlangjiu.app.amain.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -11,14 +12,14 @@ import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
 import com.chunlangjiu.app.abase.BaseApplication;
 import com.chunlangjiu.app.amain.bean.LoginBean;
-import com.chunlangjiu.app.amain.bean.MainClassBean;
+import com.chunlangjiu.app.goods.activity.GoodsDetailsActivity;
 import com.chunlangjiu.app.net.ApiUtils;
 import com.chunlangjiu.app.util.ConstantMsg;
+import com.chunlangjiu.app.web.WebViewActivity;
 import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.pkqup.commonlibrary.util.SPUtils;
 import com.pkqup.commonlibrary.util.ToastUtils;
-import com.socks.library.KLog;
 
 import butterknife.BindView;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -40,10 +41,19 @@ public class LoginActivity extends BaseActivity {
     TextView tvGetCode;
     @BindView(R.id.tvLogin)
     TextView tvLogin;
+    @BindView(R.id.tvLicence)
+    TextView tvLicence;
 
     private CompositeDisposable disposable;
 
     private CountDownTimer countDownTimer;
+
+
+    public static void startLoginActivity(Activity activity ) {
+        Intent intent = new Intent(activity, LoginActivity.class);
+        activity.startActivity(intent);
+    }
+
 
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -59,8 +69,12 @@ public class LoginActivity extends BaseActivity {
                 case R.id.tvLogin:
                     checkSmsCode();
                     break;
+                case R.id.tvLicence:
+                    toLicence();
+                    break;
             }
         }
+
     };
 
 
@@ -81,6 +95,7 @@ public class LoginActivity extends BaseActivity {
         disposable = new CompositeDisposable();
         tvGetCode.setOnClickListener(onClickListener);
         tvLogin.setOnClickListener(onClickListener);
+        tvLicence.setOnClickListener(onClickListener);
     }
 
 
@@ -140,12 +155,15 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void login() {
+        showLoadingDialog();
         disposable.add(ApiUtils.getInstance().login(etPhone.getText().toString(), etAuthCode.getText().toString())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean<LoginBean>>() {
                     @Override
                     public void accept(ResultBean<LoginBean> loginBeanResultBean) throws Exception {
+                        hideLoadingDialog();
+                        ToastUtils.showShort("登录成功");
                         SPUtils.put("token", loginBeanResultBean.getData().getAccessToken());
                         BaseApplication.setToken(loginBeanResultBean.getData().getAccessToken());
                         BaseApplication.initToken();
@@ -155,9 +173,15 @@ public class LoginActivity extends BaseActivity {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        hideLoadingDialog();
                         ToastUtils.showShort("登录失败");
                     }
                 }));
+    }
+
+
+    private void toLicence() {
+        WebViewActivity.startWebViewActivity(this, ConstantMsg.WEB_URL_LICENSE, "醇狼APP隐私政策");
     }
 
 

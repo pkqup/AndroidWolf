@@ -14,7 +14,8 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
-            android:src="@mipmap/gray_down" />
+            android:src="@mipmap/gray_down"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tvName"

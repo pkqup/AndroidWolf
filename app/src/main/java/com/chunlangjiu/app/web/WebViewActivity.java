@@ -4,33 +4,63 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.view.KeyEvent;
+import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
+import com.chunlangjiu.app.util.ConstantMsg;
+import com.pkqup.commonlibrary.eventmsg.EventManager;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * @CreatedbBy: liucun on 2018/8/27
  * @Describe:
  */
-public class WebViewActivity extends BaseActivity {
+public class WebViewActivity extends FragmentActivity {
+
+    @BindView(R.id.img_back)
+    ImageView img_back;
+    @BindView(R.id.img_close)
+    ImageView img_close;
+    @BindView(R.id.tv_title)
+    TextView tv_title;
 
     @BindView(R.id.webView)
     WebView webView;
 
-    @Override
-    public void setTitleView() {
-        hideTitleView();
-    }
+    private View.OnClickListener onClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            switch (view.getId()) {
+                case R.id.img_back:
+                    webGoBack();
+                    break;
+                case R.id.img_close:
+                    finish();
+                    break;
 
-    public static void startWebViewActivity(Activity activity, String url) {
+            }
+        }
+
+    };
+    private String url;
+    private String title;
+
+    public static void startWebViewActivity(Activity activity, String url, String title) {
         Intent intent = new Intent(activity, WebViewActivity.class);
         intent.putExtra("url", url);
+        intent.putExtra("title", title);
         activity.startActivity(intent);
     }
 
@@ -38,11 +68,16 @@ public class WebViewActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.web_activity_webview);
+        EventManager.getInstance().registerListener(onNotifyListener);
+        ButterKnife.bind(this);
         initView();
         initData();
     }
 
     private void initView() {
+        img_back.setOnClickListener(onClickListener);
+        img_close.setOnClickListener(onClickListener);
+
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             //设置同时支持http和https加载
             webView.getSettings().setMixedContentMode(WebSettings.MIXED_CONTENT_ALWAYS_ALLOW);
@@ -70,12 +105,57 @@ public class WebViewActivity extends BaseActivity {
             }
         });
         webView.getSettings().setJavaScriptEnabled(true);// 设置js可用
+        webView.addJavascriptInterface(new JsUtil(this), "chunlang");
     }
 
     private void initData() {
-        String url = getIntent().getStringExtra("url");
+        title = getIntent().getStringExtra("title");
+        tv_title.setText(title);
+        url = getIntent().getStringExtra("url");
         webView.loadUrl(url);
     }
 
 
+    private void webGoBack() {
+        if (webView.canGoBack()) {
+            webView.goBack();
+        } else {
+            finish();
+        }
+    }
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && webView.canGoBack()) {
+            webView.goBack();
+            return true;
+        } else {
+            finish();
+        }
+        return true;
+    }
+
+    private EventManager.OnNotifyListener onNotifyListener = new EventManager.OnNotifyListener() {
+        @Override
+        public void onNotify(Object object, String eventTag) {
+            updateWebView(eventTag);
+        }
+    };
+
+    private void updateWebView(String eventTag) {
+        try {
+            if (eventTag.equals(ConstantMsg.UPDATE_WEBVIEW)) {
+                webView.loadUrl(url);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventManager.getInstance().registerListener(onNotifyListener);
+    }
 }

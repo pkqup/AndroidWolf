@@ -117,6 +117,7 @@
                     android:layout_toRightOf="@id/tvCardNum"
                     android:background="@null"
                     android:hint="请输入"
+                    android:digits="0123456789X"
                     android:paddingRight="10dp"
                     android:singleLine="true"
                     android:textColor="@color/t_black"

@@ -48,21 +48,29 @@
         </RelativeLayout>
     </RelativeLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/first_class_recycle_view"
-        android:layout_width="100dp"
-        android:layout_height="match_parent"
-        android:layout_below="@id/rl_title"
-        android:background="@color/bg_gray" />
-
-    <ExpandableListView
-        android:id="@+id/exListView"
+    <RelativeLayout
+        android:id="@+id/rlContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/rl_title"
-        android:layout_toRightOf="@id/first_class_recycle_view"
-        android:background="@color/bg_white"
-        android:listSelector="@android:color/transparent"
-        android:scrollbars="none" />
+        android:layout_below="@id/rl_title">
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/first_class_recycle_view"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:background="@color/bg_gray" />
+
+        <ExpandableListView
+            android:id="@+id/exListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_toRightOf="@id/first_class_recycle_view"
+            android:background="@color/bg_white"
+            android:listSelector="@android:color/transparent"
+            android:scrollbars="none" />
+    </RelativeLayout>
+
+    <include
+        android:id="@+id/rlLoading"
+        layout="@layout/abase_activity_loading_view" />
 </RelativeLayout>

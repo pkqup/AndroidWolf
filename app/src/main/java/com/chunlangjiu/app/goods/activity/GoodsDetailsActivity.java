@@ -2,6 +2,7 @@ package com.chunlangjiu.app.goods.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -21,6 +22,7 @@ import com.chunlangjiu.app.cart.CartActivity;
 import com.chunlangjiu.app.cart.ChoiceNumDialog;
 import com.chunlangjiu.app.goods.bean.ConfirmOrderBean;
 import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
+import com.chunlangjiu.app.goods.dialog.CallDialog;
 import com.chunlangjiu.app.goods.fragment.GoodsCommentFragment;
 import com.chunlangjiu.app.goods.fragment.GoodsDetailsFragment;
 import com.chunlangjiu.app.goods.fragment.GoodsWebFragment;
@@ -30,6 +32,7 @@ import com.chunlangjiu.app.util.ShareUtils;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
+import com.pkqup.commonlibrary.util.ToastUtils;
 import com.socks.library.KLog;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -72,10 +75,14 @@ public class GoodsDetailsActivity extends BaseActivity {
     RelativeLayout rlChat;
     @BindView(R.id.rlCollect)
     RelativeLayout rlCollect;
+    @BindView(R.id.imgCollect)
+    ImageView imgCollect;
     @BindView(R.id.rlCart)
     RelativeLayout rlCart;
     @BindView(R.id.tvCartNum)
     TextView tvCartNum;
+
+    private GoodsDetailsFragment goodsDetailsFragment;
 
     private BaseFragmentAdapter fragmentAdapter;
     private final String[] mTitles = {"商品", "详情", "评价"};
@@ -88,8 +95,11 @@ public class GoodsDetailsActivity extends BaseActivity {
     private int cartCount;//购物车数量
     private int realStock = 1;//库存
 
+    private boolean isFavorite = false;//是否收藏
+
     private ChoiceNumDialog buyNowDialog;
     private ChoiceNumDialog addCartDialog;
+    private CallDialog callDialog;
 
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
@@ -118,8 +128,10 @@ public class GoodsDetailsActivity extends BaseActivity {
                         showBuyNowDialog();
                         break;
                     case R.id.rlChat://聊天
+                        showCallDialog();
                         break;
                     case R.id.rlCollect://收藏
+                        changeCollectStatus();
                         break;
                     case R.id.rlCart://跳转到购物车
                         startActivity(new Intent(GoodsDetailsActivity.this, CartActivity.class));
@@ -130,6 +142,7 @@ public class GoodsDetailsActivity extends BaseActivity {
             }
         }
     };
+
 
 
     public static void startGoodsDetailsActivity(Activity activity, String goodsId) {
@@ -166,7 +179,7 @@ public class GoodsDetailsActivity extends BaseActivity {
         rlCollect.setOnClickListener(onClickListenerLogin);
         rlCart.setOnClickListener(onClickListenerLogin);
 
-        itemId = getIntent().getStringExtra("goodsId");//itemId=79  测试id
+        itemId = getIntent().getStringExtra("goodsId");
         disposable = new CompositeDisposable();
     }
 
@@ -228,10 +241,19 @@ public class GoodsDetailsActivity extends BaseActivity {
         imgShare.setVisibility(View.VISIBLE);
         viewPager.setVisibility(View.VISIBLE);
         rlBottom.setVisibility(View.VISIBLE);
+        if("true".equals(goodsDetailBean.getItem().getIs_collect())){
+            isFavorite = true;
+            imgCollect.setBackgroundResource(R.mipmap.collect_true);
+        }else{
+            isFavorite = false;
+            imgCollect.setBackgroundResource(R.mipmap.collect_false);
+        }
+
 
         mFragments = new ArrayList<>();
-        mFragments.add(GoodsDetailsFragment.newInstance(goodsDetailBean));
-        mFragments.add(new GoodsWebFragment());
+        goodsDetailsFragment = GoodsDetailsFragment.newInstance(goodsDetailBean);
+        mFragments.add(goodsDetailsFragment);
+        mFragments.add(GoodsWebFragment.newInstance(goodsDetailBean.getDesc()));
         mFragments.add(GoodsCommentFragment.newInstance(itemId));
         fragmentAdapter = new BaseFragmentAdapter(getSupportFragmentManager());
         fragmentAdapter.setLists(mFragments);
@@ -267,12 +289,74 @@ public class GoodsDetailsActivity extends BaseActivity {
         });
     }
 
+
+    private void changeCollectStatus() {
+        if (isFavorite) {
+            showLoadingDialog();
+            disposable.add(ApiUtils.getInstance().favoriteCancelGoods(itemId)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<ResultBean>() {
+                        @Override
+                        public void accept(ResultBean resultBean) throws Exception {
+                            hideLoadingDialog();
+                            isFavorite = false;
+                            imgCollect.setBackgroundResource(R.mipmap.collect_false);
+                            ToastUtils.showShort("取消收藏成功");
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            hideLoadingDialog();
+                            ToastUtils.showShort("取消收藏失败");
+                        }
+                    }));
+        } else {
+            showLoadingDialog();
+            disposable.add(ApiUtils.getInstance().favoriteAddGoods(itemId)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new Consumer<ResultBean>() {
+                        @Override
+                        public void accept(ResultBean resultBean) throws Exception {
+                            hideLoadingDialog();
+                            isFavorite = true;
+                            imgCollect.setBackgroundResource(R.mipmap.collect_true);
+                            ToastUtils.showShort("收藏成功");
+                        }
+                    }, new Consumer<Throwable>() {
+                        @Override
+                        public void accept(Throwable throwable) throws Exception {
+                            hideLoadingDialog();
+                            ToastUtils.showShort("收藏失败");
+                        }
+                    }));
+        }
+    }
+
     private EventManager.OnNotifyListener onNotifyListener = new EventManager.OnNotifyListener() {
         @Override
         public void onNotify(Object object, String eventTag) {
             changeToEvaluate(eventTag);
+            changeSlide(object, eventTag);
         }
     };
+
+    /**
+     * 图文详情滑动变化
+     *
+     * @param object
+     * @param eventTag
+     */
+    private void changeSlide(Object object, String eventTag) {
+        if (eventTag.equals(ConstantMsg.GOODS_SLIDE_CHANGE)) {
+            int pageType = (int) object;
+            if (pageType == 0) {
+                viewPager.setCurrentItem(1);
+                goodsDetailsFragment.goTop();
+            }
+        }
+    }
 
     /**
      * 跳转到评价tab
@@ -308,14 +392,34 @@ public class GoodsDetailsActivity extends BaseActivity {
                     public void accept(ResultBean resultBean) throws Exception {
                         hideLoadingDialog();
                         getCartNum();
-                        EventManager.getInstance().notify(null,ConstantMsg.UPDATE_CART_LIST);
+                        EventManager.getInstance().notify(null, ConstantMsg.UPDATE_CART_LIST);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         hideLoadingDialog();
+                        ToastUtils.showErrorMsg(throwable);
                     }
                 }));
+    }
+
+
+    private void showCallDialog() {
+        if (callDialog == null) {
+            callDialog = new CallDialog(this, goodsDetailBean.getShop().getMobile());
+            callDialog.setCallBack(new CallDialog.CallBack() {
+                @Override
+                public void onConfirm() {
+                    Intent dialIntent =  new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + goodsDetailBean.getShop().getMobile()));//跳转到拨号界面，同时传递电话号码
+                    startActivity(dialIntent);
+                }
+
+                @Override
+                public void onCancel() {
+                }
+            });
+        }
+        callDialog.show();
     }
 
     private void showBuyNowDialog() {
@@ -353,6 +457,7 @@ public class GoodsDetailsActivity extends BaseActivity {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         hideLoadingDialog();
+                        ToastUtils.showErrorMsg(throwable);
                     }
                 }));
     }

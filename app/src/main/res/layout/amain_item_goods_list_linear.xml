@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/img_pic"
-        android:layout_width="140dp"
-        android:layout_height="140dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:layout_marginTop="10dp"
         android:scaleType="centerCrop" />
 
@@ -18,6 +19,63 @@
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@id/img_pic"
         android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/llTime"
+            android:layout_width="match_parent"
+            android:layout_height="20dp"
+            android:layout_marginBottom="4dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="剩余时间"
+                android:textColor="@color/t_gray"
+                android:textSize="12sp" />
+
+            <com.pkqup.commonlibrary.view.countdownview.CountdownView
+                android:id="@+id/countdownView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                app:isConvertDaysToHours="false"
+                app:isHideTimeBackground="false"
+                app:isShowDay="true"
+                app:isShowHour="true"
+                app:isShowMillisecond="false"
+                app:isShowMinute="true"
+                app:isShowSecond="true"
+                app:suffixGravity="center"
+                app:suffixTextColor="@color/t_black"
+                app:suffixTextSize="14sp"
+                app:timeBgColor="@color/bg_red"
+                app:timeBgRadius="3dp"
+                app:timeBgSize="18dp"
+                app:timeTextColor="@color/t_white"
+                app:timeTextSize="14sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="人数"
+                android:textColor="@color/t_gray"
+                android:textSize="12sp"
+                android:visibility="gone" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:singleLine="true"
+                android:text="50000"
+                android:textColor="@color/t_black"
+                android:textSize="12sp"
+                android:visibility="gone" />
+        </LinearLayout>
+
 
         <TextView
             android:id="@+id/tv_name"
@@ -33,7 +91,7 @@
             android:id="@+id/llStartPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="2dp"
             android:orientation="horizontal">
 
             <TextView
@@ -48,10 +106,9 @@
                 android:id="@+id/tvStartPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:text="¥4000.00"
                 android:textColor="@color/t_gray"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                tools:text="¥4000.00" />
         </LinearLayout>
 
         <LinearLayout
@@ -72,7 +129,6 @@
                 android:id="@+id/tvSellPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
                 android:text="¥5000.00"
                 android:textColor="@color/t_red"
                 android:textSize="@dimen/sp_mid" />
@@ -85,7 +141,7 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/tv_country"
+                android:id="@+id/tvLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tv_name"
@@ -93,11 +149,10 @@
                 android:background="@color/bg_gray"
                 android:paddingBottom="2dp"
                 android:paddingLeft="5dp"
-                android:visibility="gone"
                 android:paddingRight="5dp"
                 android:paddingTop="2dp"
                 android:textColor="@color/t_black"
-                android:textSize="@dimen/sp_small"
+                android:textSize="12sp"
                 tools:text="法国" />
 
             <TextView
@@ -106,30 +161,31 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tv_name"
                 android:layout_marginLeft="10dp"
-                android:layout_toRightOf="@id/tv_country"
+                android:layout_toRightOf="@id/tvLabel"
                 android:background="@color/bg_gray"
                 android:paddingBottom="2dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:paddingTop="2dp"
-                android:visibility="gone"
                 android:textColor="@color/t_black"
                 android:textSize="@dimen/sp_small"
+                android:visibility="gone"
                 tools:text="92年" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="6dp"
-            android:orientation="horizontal">
+            android:layout_marginTop="2dp"
+            android:orientation="horizontal"
+            android:visibility="visible">
 
             <TextView
                 android:id="@+id/tv_attention"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/t_gray"
-                android:textSize="@dimen/sp_small"
+                android:textSize="10sp"
                 tools:text="300人关注" />
 
             <TextView
@@ -138,20 +194,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:textColor="@color/t_gray"
-                android:textSize="@dimen/sp_small"
+                android:textSize="10sp"
                 tools:text="30条评价" />
         </LinearLayout>
     </LinearLayout>
-
-    <ImageView
-        android:id="@+id/imgAddCart"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignBottom="@id/img_pic"
-        android:layout_alignParentRight="true"
-        android:padding="10dp"
-        android:src="@mipmap/goods_cart"
-        android:visibility="gone" />
 
     <View
         android:layout_width="match_parent"

@@ -111,8 +111,7 @@ public class SearchActivity extends BaseActivity {
         tagHistory.setOnTagClickListener(new OnTagClickListener() {
             @Override
             public void onItemClick(FlowTagLayout parent, View view, int position) {
-                GoodsListActivity.startGoodsListActivity(SearchActivity.this, "",
-                        "", historyLists.get(position).getName());
+                GoodsListNewActivity.startGoodsListNewActivity(SearchActivity.this, "", "", historyLists.get(position).getName());
             }
         });
     }
@@ -157,8 +156,7 @@ public class SearchActivity extends BaseActivity {
         RealmUtils.add(tagBean);
         findHistory();
 
-        GoodsListActivity.startGoodsListActivity(this, "",
-                "", titleSearchEdit.getText().toString().trim());
+        GoodsListNewActivity.startGoodsListNewActivity(this, "", "", titleSearchEdit.getText().toString().trim());
     }
 
     private void deleteHistory() {

@@ -43,6 +43,8 @@ import io.reactivex.schedulers.Schedulers;
 public class ClassFragment extends BaseFragment {
 
     private RelativeLayout rl_search;
+    private RelativeLayout rlContent;
+    private RelativeLayout rlLoading;
     private RecyclerView firstRecycleView;
     private ExpandableListView exListView;
 
@@ -75,6 +77,10 @@ public class ClassFragment extends BaseFragment {
     public void initView() {
         rl_search = rootView.findViewById(R.id.rl_search);
         rl_search.setOnClickListener(onClickListener);
+        rlContent = rootView.findViewById(R.id.rlContent);
+        rlLoading = rootView.findViewById(R.id.rlLoading);
+        rlContent.setVisibility(View.GONE);
+        rlLoading.setVisibility(View.VISIBLE);
         firstRecycleView = rootView.findViewById(R.id.first_class_recycle_view);
         exListView = rootView.findViewById(R.id.exListView);
 
@@ -105,8 +111,8 @@ public class ClassFragment extends BaseFragment {
         secondClassAdapter.setCallBackListener(new SecondClassAdapter.CallBack() {
             @Override
             public void onSubClick(int groupPosition, int subPosition) {
-                GoodsListActivity.startGoodsListActivity(getActivity(),secondList.get(groupPosition).getLv3().get(subPosition).getCat_id(),
-                        secondList.get(groupPosition).getLv3().get(subPosition).getCat_name(),"");
+                GoodsListActivity.startGoodsListActivity(getActivity(), secondList.get(groupPosition).getLv3().get(subPosition).getCat_id(),
+                        secondList.get(groupPosition).getLv3().get(subPosition).getCat_name(), "");
             }
         });
     }
@@ -125,9 +131,11 @@ public class ClassFragment extends BaseFragment {
                 .subscribe(new Consumer<ResultBean<MainClassBean>>() {
                     @Override
                     public void accept(ResultBean<MainClassBean> mainClassBean) throws Exception {
-                        mainClassBean.getData().getCategorys().get(0).setSelect(true);
+                        rlContent.setVisibility(View.VISIBLE);
+                        rlLoading.setVisibility(View.GONE);
                         firstLists = mainClassBean.getData().getCategorys();
-                        firstAdapter.setNewData(mainClassBean.getData().getCategorys());
+                        firstLists.get(0).setSelect(true);
+                        firstAdapter.setNewData(firstLists);
                         secondList = mainClassBean.getData().getCategorys().get(0).getLv2();
                         secondClassAdapter.setLists(secondList);
                         int groupCount = exListView.getCount();
@@ -139,28 +147,33 @@ public class ClassFragment extends BaseFragment {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         KLog.e(throwable.toString());
+                        rlContent.setVisibility(View.VISIBLE);
+                        rlLoading.setVisibility(View.GONE);
                     }
                 }));
     }
 
     private void changeFirstClass(int position) {
         if (!firstLists.get(position).isSelect()) {
-            for (int i = 0; i < firstLists.size(); i++) {
-                if (i == position) {
-                    firstLists.get(i).setSelect(true);
-                } else {
-                    firstLists.get(i).setSelect(false);
-                }
-            }
-            firstAdapter.notifyDataSetChanged();
-
-
             secondList = firstLists.get(position).getLv2();
-            secondClassAdapter.setLists(new ArrayList<SecondClassBean>());
-            secondClassAdapter.setLists(secondList);
-            int groupCount = exListView.getCount();
-            for (int i = 0; i < groupCount; i++) {
-                exListView.expandGroup(i);
+            if (secondList != null && secondList.size() > 0) {
+                for (int i = 0; i < firstLists.size(); i++) {
+                    if (i == position) {
+                        firstLists.get(i).setSelect(true);
+                    } else {
+                        firstLists.get(i).setSelect(false);
+                    }
+                }
+                firstAdapter.setNewData(firstLists);
+
+                secondClassAdapter.setLists(new ArrayList<SecondClassBean>());
+                secondClassAdapter.setLists(secondList);
+                int groupCount = exListView.getCount();
+                for (int i = 0; i < groupCount; i++) {
+                    exListView.expandGroup(i);
+                }
+            } else {
+                ToastUtils.showShort("此分类暂无数据");
             }
         }
     }

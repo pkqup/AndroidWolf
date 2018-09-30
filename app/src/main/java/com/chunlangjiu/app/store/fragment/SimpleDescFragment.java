@@ -10,6 +10,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.chunlangjiu.app.R;
+import com.chunlangjiu.app.amain.fragment.GoodsFragment;
+import com.chunlangjiu.app.store.bean.StoreDetailBean;
 
 /**
  * @CreatedbBy: liucun on 2018/7/30
@@ -30,6 +32,15 @@ public class SimpleDescFragment extends HeaderViewPagerFragment {
     private TextView tvPhone;
     private TextView tvWeb;
     private TextView tvAddress;
+
+    public static SimpleDescFragment newInstance(StoreDetailBean.StoreBean storeBean) {
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("storeBean", storeBean);
+        SimpleDescFragment goodsFragment = new SimpleDescFragment();
+        goodsFragment.setArguments(bundle);
+        return goodsFragment;
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -60,7 +71,7 @@ public class SimpleDescFragment extends HeaderViewPagerFragment {
     }
 
     private void initData() {
-        for (int i = 0; i < 2; i++) {
+       /* for (int i = 0; i < 2; i++) {
             View drinkItem = View.inflate(getActivity(), R.layout.store_item_detail_drink, null);
             TextView tvName = drinkItem.findViewById(R.id.tvName);
             TextView tvNum = drinkItem.findViewById(R.id.tvNum);
@@ -74,6 +85,13 @@ public class SimpleDescFragment extends HeaderViewPagerFragment {
             TextView tvName = drinkItem.findViewById(R.id.tvName);
             tvName.setText("拉菲" + i);
             llClass.addView(drinkItem);
+        }*/
+
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            StoreDetailBean.StoreBean storeBean = (StoreDetailBean.StoreBean) bundle.getSerializable("storeBean");
+            tvIntroduce.setText("        " + storeBean.getContent());
+            tvPhone.setText(storeBean.getPhone());
         }
     }
 

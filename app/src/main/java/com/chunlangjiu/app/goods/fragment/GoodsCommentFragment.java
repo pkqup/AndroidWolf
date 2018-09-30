@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RatingBar;
 
@@ -35,6 +36,7 @@ public class GoodsCommentFragment extends BaseFragment {
     private RecyclerView recyclerView;
     private CommentAdapter commentAdapter;
     private List<EvaluateListBean.EvaluateDetailBean> lists;
+    private View notDataView;
 
     private CompositeDisposable disposable;
     private String itemId;
@@ -79,6 +81,8 @@ public class GoodsCommentFragment extends BaseFragment {
 
         itemId = getArguments().getString("itemId");
         disposable = new CompositeDisposable();
+        notDataView = getLayoutInflater().inflate(R.layout.common_empty_view, (ViewGroup) recyclerView.getParent(), false);
+
     }
 
     @Override
@@ -122,7 +126,11 @@ public class GoodsCommentFragment extends BaseFragment {
         } else {
             refreshLayout.setNoMoreData(false);
         }
-        commentAdapter.setNewData(lists);
+        if (lists.size() == 0) {
+            commentAdapter.setEmptyView(notDataView);
+        } else {
+            commentAdapter.setNewData(lists);
+        }
     }
 
     public class CommentAdapter extends BaseQuickAdapter<EvaluateListBean.EvaluateDetailBean, BaseViewHolder> {

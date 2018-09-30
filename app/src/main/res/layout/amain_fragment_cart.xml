@@ -54,7 +54,8 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"
-        android:background="@color/bg_white">
+        android:background="@color/bg_white"
+        android:visibility="visible">
 
         <View
             android:layout_width="match_parent"
@@ -141,22 +142,60 @@
         </LinearLayout>
     </RelativeLayout>
 
-
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
-        android:id="@+id/refreshLayout"
+    <RelativeLayout
+        android:id="@+id/rlContent"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/rl_bottom"
-        android:layout_below="@id/title_view"
-        android:background="@color/bg_gray">
+        android:layout_below="@id/title_view">
 
-        <com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView
-            android:id="@+id/recycle_view"
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/refreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@id/rl_bottom" />
+            android:background="@color/bg_gray"
+            android:visibility="visible">
 
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView
+                    android:id="@+id/recycle_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="visible" />
+
+                <include
+                    android:id="@+id/rlEmptyView"
+                    layout="@layout/common_empty_view"
+                    android:visibility="gone" />
+            </FrameLayout>
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/rlLogin"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/title_view"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tvLogin"
+            android:layout_width="match_parent"
+            android:layout_height="45dp"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="45dp"
+            android:layout_marginRight="45dp"
+            android:background="@drawable/login_red_bg"
+            android:gravity="center"
+            android:text="请登录"
+            android:textColor="@color/t_white"
+            android:textSize="@dimen/sp_big" />
+
+    </RelativeLayout>
 
 
 </RelativeLayout>

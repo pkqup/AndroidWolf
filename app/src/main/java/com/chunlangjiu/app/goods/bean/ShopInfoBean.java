@@ -24,6 +24,15 @@ public class ShopInfoBean {
         private String status;
         private String shop_logo;
         private String mobile;
+        private String shopname;
+
+        public String getShopname() {
+            return shopname;
+        }
+
+        public void setShopname(String shopname) {
+            this.shopname = shopname;
+        }
 
         public String getShop_id() {
             return shop_id;

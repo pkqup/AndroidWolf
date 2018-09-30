@@ -44,7 +44,7 @@
                     android:layout_height="130dp"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="15dp"
-                    android:background="@color/bg_red" />
+                    android:scaleType="centerCrop" />
 
 
                 <TextView
