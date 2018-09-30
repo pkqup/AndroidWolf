@@ -200,6 +200,14 @@ public class AuctionDetailActivity extends BaseActivity {
             tvPayMoney.setText("应付定金:¥" + goodsDetailBean.getItem().getAuction().getPledge());
         }
 
+        if("true".equals(goodsDetailBean.getItem().getIs_collect())){
+            isFavorite = true;
+            imgCollect.setBackgroundResource(R.mipmap.collect_true);
+        }else{
+            isFavorite = false;
+            imgCollect.setBackgroundResource(R.mipmap.collect_false);
+        }
+
         tab.setVisibility(View.VISIBLE);
         imgShare.setVisibility(View.VISIBLE);
         viewPager.setVisibility(View.VISIBLE);

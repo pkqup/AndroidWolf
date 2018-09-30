@@ -464,7 +464,7 @@ public class ShopMainActivity extends BaseActivity {
 
     private void getShopInfoSuccess(ShopInfoBean data) {
         GlideUtils.loadImage(this, data.getShopInfo().getShop_logo(), imgHead);
-        tvShopName.setText(data.getShopInfo().getShopname());
+        tvShopName.setText(data.getShopInfo().getShop_name());
         tvShopTips.setText(data.getShopInfo().getShop_descript());
         tvShopPhone.setText(data.getShopInfo().getMobile());
         tvDesc.setText(data.getShopInfo().getShop_descript());

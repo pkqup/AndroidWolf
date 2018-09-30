@@ -241,6 +241,14 @@ public class GoodsDetailsActivity extends BaseActivity {
         imgShare.setVisibility(View.VISIBLE);
         viewPager.setVisibility(View.VISIBLE);
         rlBottom.setVisibility(View.VISIBLE);
+        if("true".equals(goodsDetailBean.getItem().getIs_collect())){
+            isFavorite = true;
+            imgCollect.setBackgroundResource(R.mipmap.collect_true);
+        }else{
+            isFavorite = false;
+            imgCollect.setBackgroundResource(R.mipmap.collect_false);
+        }
+
 
         mFragments = new ArrayList<>();
         goodsDetailsFragment = GoodsDetailsFragment.newInstance(goodsDetailBean);

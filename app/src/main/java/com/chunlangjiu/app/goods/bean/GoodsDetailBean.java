@@ -139,6 +139,7 @@ public class GoodsDetailBean implements Serializable{
         private String cat_id;
         private String brand_id;
         private String shop_cat_id;
+        private String is_collect;
 
         private List<String> images;
         private String title;
@@ -178,6 +179,14 @@ public class GoodsDetailBean implements Serializable{
         private String label;//标签
         private String explain;//商品说明
         private Auction auction;
+
+        public String getIs_collect() {
+            return is_collect;
+        }
+
+        public void setIs_collect(String is_collect) {
+            this.is_collect = is_collect;
+        }
 
         public Auction getAuction() {
             return auction;
