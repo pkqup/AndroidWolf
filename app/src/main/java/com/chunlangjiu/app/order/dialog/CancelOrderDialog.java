@@ -12,6 +12,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.chunlangjiu.app.R;
+import com.chunlangjiu.app.abase.BaseActivity;
 import com.chunlangjiu.app.net.ApiUtils;
 import com.chunlangjiu.app.order.bean.CancelOrderResultBean;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
@@ -27,7 +28,7 @@ import io.reactivex.schedulers.Schedulers;
 
 public class CancelOrderDialog extends Dialog {
     private Window window;
-    private Context context;// 上下文
+    private BaseActivity baseActivity;// 上下文
     private List<String> data;
     private RadioGroup rgReason;
     private LayoutInflater inflater;
@@ -46,7 +47,7 @@ public class CancelOrderDialog extends Dialog {
      */
     public CancelOrderDialog(Context context, List<String> data, String tid) {
         super(context, R.style.dialog_transparent);
-        this.context = context;
+        this.baseActivity = (BaseActivity) context;
         this.data = data;
         this.tid = tid;
         inflater = LayoutInflater.from(context);
@@ -127,16 +128,21 @@ public class CancelOrderDialog extends Dialog {
     };
 
     private void cancelOrder() {
+        baseActivity.showLoadingDialog();
         disposable.add(ApiUtils.getInstance().cancelOrder(tid, data.get(rgReason.getCheckedRadioButtonId()))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean<CancelOrderResultBean>>() {
                     @Override
                     public void accept(ResultBean<CancelOrderResultBean> orderListBeanResultBean) throws Exception {
+                        baseActivity.hideLoadingDialog();
                         if (0 == orderListBeanResultBean.getErrorcode()) {
-                            ToastUtils.showShort("取消订单成功");
                             if (null != cancelCallBack) {
                                 cancelCallBack.cancelSuccess();
+                            }
+                        } else {
+                            if (null != cancelCallBack) {
+                                cancelCallBack.cancelFail(orderListBeanResultBean.getMsg());
                             }
                         }
                         dismiss();
@@ -144,6 +150,11 @@ public class CancelOrderDialog extends Dialog {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        baseActivity.hideLoadingDialog();
+                        if (null != cancelCallBack) {
+                            cancelCallBack.cancelFail(throwable.getMessage());
+                        }
+                        dismiss();
                     }
                 }));
     }
@@ -154,5 +165,7 @@ public class CancelOrderDialog extends Dialog {
 
     public interface CancelCallBack {
         void cancelSuccess();
+
+        void cancelFail(String msg);
     }
 }

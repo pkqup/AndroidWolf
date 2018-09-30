@@ -121,6 +121,7 @@ public class AuctionOrderListBean {
         private int end_time;
         private String status;
         private String max_price;
+        private String original_bid;
 
         public int getAuctionitem_id() {
             return auctionitem_id;
@@ -200,6 +201,14 @@ public class AuctionOrderListBean {
 
         public void setMax_price(String max_price) {
             this.max_price = max_price;
+        }
+
+        public String getOriginal_bid() {
+            return original_bid;
+        }
+
+        public void setOriginal_bid(String original_bid) {
+            this.original_bid = original_bid;
         }
     }
 

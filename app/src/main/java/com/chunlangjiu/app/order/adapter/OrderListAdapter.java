@@ -75,11 +75,11 @@ public class OrderListAdapter extends BaseQuickAdapter<OrderListBean.ListBean, B
                         break;
                     case OrderParams.TRADE_FINISHED:
                         tv1.setVisibility(View.GONE);
-                        if (item.isIs_buyer_rate()) {
-                            tv2.setVisibility(View.GONE);
-                        } else {
+                        if (0 == item.getBuyer_rate()) {
                             tv2.setText("评价");
                             tv2.setVisibility(View.VISIBLE);
+                        } else {
+                            tv2.setVisibility(View.GONE);
                         }
                         break;
                 }
@@ -95,6 +95,14 @@ public class OrderListAdapter extends BaseQuickAdapter<OrderListBean.ListBean, B
                         tv2.setText("修改出价");
                         tv2.setVisibility(View.VISIBLE);
                         break;
+                    case "2":
+                        tv2.setText("去支付");
+                        tv2.setVisibility(View.VISIBLE);
+                        break;
+//                    case "3":
+//                        tv2.setText("删除订单");
+//                        tv2.setVisibility(View.VISIBLE);
+//                        break;
                     default:
                         tv2.setVisibility(View.GONE);
                         break;
@@ -105,23 +113,28 @@ public class OrderListAdapter extends BaseQuickAdapter<OrderListBean.ListBean, B
                     case "0":
                         tv1.setVisibility(View.GONE);
                         tv2.setText("撤销申请");
-                        tv2.setVisibility(View.VISIBLE);
+                        tv2.setVisibility(View.GONE);
                         break;
                     case "1":
                         if ("1".equals(item.getProgress())) {
                             tv1.setText("撤销申请");
-                            tv1.setVisibility(View.VISIBLE);
+                            tv1.setVisibility(View.GONE);
                             tv2.setText("退货发货");
                             tv2.setVisibility(View.VISIBLE);
                         } else {
                             tv1.setVisibility(View.GONE);
                             tv2.setText("撤销申请");
-                            tv2.setVisibility(View.VISIBLE);
+                            tv2.setVisibility(View.GONE);
                         }
                         break;
                     case "2":
                         tv1.setVisibility(View.GONE);
+                        tv2.setVisibility(View.GONE);
+                        break;
+                    case "3":
+                        tv1.setVisibility(View.GONE);
                         tv2.setText("删除");
+                        tv2.setVisibility(View.GONE);
                         break;
                 }
                 break;
@@ -207,7 +220,11 @@ public class OrderListAdapter extends BaseQuickAdapter<OrderListBean.ListBean, B
                         view_line.setVisibility(View.GONE);
                     }
                 }
-//                tvTotalNum.setText(String.format("共%s件商品;合计：¥%s", new BigDecimal(item.getTotalItem()).setScale(0, BigDecimal.ROUND_HALF_UP).toString(), new BigDecimal(item.getPayment()).setScale(2, BigDecimal.ROUND_HALF_UP).toString()));
+                if (3 == type) {
+                    tvTotalNum.setText(String.format("共%s件商品;合计：¥%s", new BigDecimal(item.getItemnum()).setScale(0, BigDecimal.ROUND_HALF_UP).toString(), new BigDecimal(item.getPayment()).setScale(2, BigDecimal.ROUND_HALF_UP).toString()));
+                } else {
+                    tvTotalNum.setText(String.format("共%s件商品;合计：¥%s", new BigDecimal(item.getTotalItem()).setScale(0, BigDecimal.ROUND_HALF_UP).toString(), new BigDecimal(item.getPayment()).setScale(2, BigDecimal.ROUND_HALF_UP).toString()));
+                }
                 break;
             case 2:
             case 4:

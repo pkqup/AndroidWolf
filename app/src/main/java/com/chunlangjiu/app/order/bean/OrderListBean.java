@@ -119,6 +119,7 @@ public class OrderListBean {
         private int buyer_rate;
         private boolean is_buyer_rate;
         private int totalItem;
+        private int itemnum;
         private String status_desc;
         private String shop_logo;
         private String shopname;
@@ -224,6 +225,14 @@ public class OrderListBean {
 
         public void setTotalItem(int totalItem) {
             this.totalItem = totalItem;
+        }
+
+        public int getItemnum() {
+            return itemnum;
+        }
+
+        public void setItemnum(int itemnum) {
+            this.itemnum = itemnum;
         }
 
         public String getStatus_desc() {

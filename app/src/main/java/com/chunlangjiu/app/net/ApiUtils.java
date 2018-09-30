@@ -28,6 +28,7 @@ import com.chunlangjiu.app.order.bean.LogisticsBean;
 import com.chunlangjiu.app.order.bean.OrderAfterSaleReasonBean;
 import com.chunlangjiu.app.order.bean.OrderDetailBean;
 import com.chunlangjiu.app.order.bean.OrderListBean;
+import com.chunlangjiu.app.order.bean.SellerOrderDetailBean;
 import com.chunlangjiu.app.store.bean.StoreClassListBean;
 import com.chunlangjiu.app.store.bean.StoreDetailBean;
 import com.chunlangjiu.app.store.bean.StoreListBean;
@@ -369,7 +370,7 @@ public class ApiUtils {
         return apiService.getSellerOrderLists("trade.list", "v1", status, pageNo, 10, "*");
     }
 
-    public Flowable<ResultBean<OrderDetailBean>> getSellerOrderDetail(String tid) {
+    public Flowable<ResultBean<SellerOrderDetailBean>> getSellerOrderDetail(String tid) {
         return apiService.getSellerOrderDetail("trade.info", "v1", tid, "*");
     }
 

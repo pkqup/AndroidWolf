@@ -2,6 +2,7 @@ package com.chunlangjiu.app.order.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -30,6 +31,7 @@ import com.lzy.imagepicker.ui.ImageGridActivity;
 import com.lzy.imagepicker.view.CropImageView;
 import com.pkqup.commonlibrary.dialog.ChoicePhotoDialog;
 import com.pkqup.commonlibrary.dialog.CommonConfirmDialog;
+import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.glide.GlideUtils;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.pkqup.commonlibrary.util.FileUtils;
@@ -287,6 +289,7 @@ public class OrderEvaluationDetailActivity extends BaseActivity {
         }
         uploadImageUrls.clear();
         if (orderEvaluationPicBeanList.size() > 1) {
+            showLoadingDialog();
             orderEvaluationPicBeanListSize = 0;
             for (OrderEvaluationPicBean orderEvaluationPicBean : orderEvaluationPicBeanList) {
                 if (!orderEvaluationPicBean.isAddButton()) {
@@ -302,16 +305,30 @@ public class OrderEvaluationDetailActivity extends BaseActivity {
                                     uploadImageUrls.add(uploadImageBeanResultBean.getData().getUrl());
                                     if (uploadImageUrls.size() == orderEvaluationPicBeanListSize) {
                                         commitContent();
+                                    } else {
+                                        if (TextUtils.isEmpty(uploadImageBeanResultBean.getMsg())) {
+                                            ToastUtils.showShort("上传图片失败");
+                                        } else {
+                                            ToastUtils.showShort(uploadImageBeanResultBean.getMsg());
+                                        }
+                                        hideLoadingDialog();
                                     }
                                 }
                             }, new Consumer<Throwable>() {
                                 @Override
                                 public void accept(Throwable throwable) throws Exception {
+                                    if (TextUtils.isEmpty(throwable.getMessage())) {
+                                        ToastUtils.showShort("上传图片失败");
+                                    } else {
+                                        ToastUtils.showShort(throwable.getMessage());
+                                    }
+                                    hideLoadingDialog();
                                 }
                             }));
                 }
             }
         } else {
+            showLoadingDialog();
             commitContent();
         }
     }
@@ -358,14 +375,29 @@ public class OrderEvaluationDetailActivity extends BaseActivity {
                 .subscribe(new Consumer<ResultBean>() {
                     @Override
                     public void accept(ResultBean uploadImageBeanResultBean) throws Exception {
+                        hideLoadingDialog();
                         if (0 == uploadImageBeanResultBean.getErrorcode()) {
-                            ToastUtils.showShort("商品评论成功");
+                            ToastUtils.showShort("商品评价成功");
+                            EventManager.getInstance().notify(null, OrderParams.REFRESH_ORDER_LIST);
+                            EventManager.getInstance().notify(null, OrderParams.REFRESH_ORDER_DETAIL);
                             finish();
+                        } else {
+                            if (TextUtils.isEmpty(uploadImageBeanResultBean.getMsg())) {
+                                ToastUtils.showShort("商品评价失败");
+                            } else {
+                                ToastUtils.showShort(uploadImageBeanResultBean.getMsg());
+                            }
                         }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
+                        if (TextUtils.isEmpty(throwable.getMessage())) {
+                            ToastUtils.showShort("商品评价失败");
+                        } else {
+                            ToastUtils.showShort(throwable.getMessage());
+                        }
+                        hideLoadingDialog();
                     }
                 }));
     }

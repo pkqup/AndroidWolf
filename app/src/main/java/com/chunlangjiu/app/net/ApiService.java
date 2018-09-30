@@ -28,6 +28,7 @@ import com.chunlangjiu.app.order.bean.LogisticsBean;
 import com.chunlangjiu.app.order.bean.OrderAfterSaleReasonBean;
 import com.chunlangjiu.app.order.bean.OrderDetailBean;
 import com.chunlangjiu.app.order.bean.OrderListBean;
+import com.chunlangjiu.app.order.bean.SellerOrderDetailBean;
 import com.chunlangjiu.app.store.bean.StoreClassListBean;
 import com.chunlangjiu.app.store.bean.StoreDetailBean;
 import com.chunlangjiu.app.store.bean.StoreListBean;
@@ -421,8 +422,8 @@ public interface ApiService {
 
     @POST("index.php/shop/topapi")
     @FormUrlEncoded
-    Flowable<ResultBean<OrderDetailBean>> getSellerOrderDetail(@Field("method") String method, @Field("v") String v,
-                                                               @Field("tid") String tid, @Field("fields") String fields);
+    Flowable<ResultBean<SellerOrderDetailBean>> getSellerOrderDetail(@Field("method") String method, @Field("v") String v,
+                                                                     @Field("tid") String tid, @Field("fields") String fields);
 
     @POST("index.php/shop/topapi")
     @FormUrlEncoded
