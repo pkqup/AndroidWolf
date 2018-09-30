@@ -68,6 +68,7 @@ public class HomeAdapter extends BaseQuickAdapter<HomeBean, BaseViewHolder> {
                     tvStartPrice.setText("¥" + item.getAuction_starting_price());
                     llTime.setVisibility(View.VISIBLE);
                     tvSellPriceStr.setVisibility(View.VISIBLE);
+                    tvSellPriceStr.setText("最高出价：");
                     if (TextUtils.isEmpty(item.getMax_price())) {
                         viewHolder.setText(R.id.tvSellPrice, "暂无出价");
                     } else {
