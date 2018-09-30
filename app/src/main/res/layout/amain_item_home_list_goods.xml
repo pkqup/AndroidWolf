@@ -43,21 +43,22 @@
                 android:id="@+id/countdownView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:isConvertDaysToHours="true"
+                android:layout_marginLeft="5dp"
+                app:isConvertDaysToHours="false"
                 app:isHideTimeBackground="false"
-                app:isShowDay="false"
+                app:isShowDay="true"
                 app:isShowHour="true"
                 app:isShowMillisecond="false"
                 app:isShowMinute="true"
                 app:isShowSecond="true"
                 app:suffixGravity="center"
                 app:suffixTextColor="@color/t_black"
-                app:suffixTextSize="16sp"
+                app:suffixTextSize="14sp"
                 app:timeBgColor="@color/bg_red"
                 app:timeBgRadius="3dp"
-                app:timeBgSize="20dp"
+                app:timeBgSize="18dp"
                 app:timeTextColor="@color/t_white"
-                app:timeTextSize="16sp" />
+                app:timeTextSize="14sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -65,7 +66,8 @@
                 android:layout_marginLeft="10dp"
                 android:text="人数"
                 android:textColor="@color/t_gray"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:visibility="gone" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -74,7 +76,8 @@
                 android:singleLine="true"
                 android:text="50000"
                 android:textColor="@color/t_black"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:visibility="gone" />
         </LinearLayout>
 
 

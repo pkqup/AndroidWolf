@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 
+import com.awen.photo.FrescoImageLoader;
 import com.chunlangjiu.app.net.ApiUtils;
 import com.github.promeg.pinyinhelper.Pinyin;
 import com.github.promeg.pinyinhelper.PinyinMapDict;
@@ -43,6 +44,7 @@ public class BaseApplication extends MultiDexApplication {
         initRealm();
         initUM();
         initPinyinCity();
+        FrescoImageLoader.init(this);
         //CrashHandler.getInstance().init(this);
         KLog.init(AppUtils.isDebug());
     }

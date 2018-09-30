@@ -2,6 +2,7 @@ package com.chunlangjiu.app.goods.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -20,6 +21,7 @@ import com.chunlangjiu.app.amain.bean.AuctionListBean;
 import com.chunlangjiu.app.cart.ChoiceNumDialog;
 import com.chunlangjiu.app.goods.bean.CreateAuctionBean;
 import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
+import com.chunlangjiu.app.goods.dialog.CallDialog;
 import com.chunlangjiu.app.goods.dialog.InputPriceDialog;
 import com.chunlangjiu.app.goods.fragment.AuctionDetailFragment;
 import com.chunlangjiu.app.goods.fragment.GoodsCommentFragment;
@@ -86,6 +88,7 @@ public class AuctionDetailActivity extends BaseActivity {
     private String skuId;
 
     private InputPriceDialog inputPriceDialog;
+    private CallDialog callDialog;
 
     private AuctionDetailFragment auctionDetailFragment;
     private boolean isFavorite = false;//是否收藏
@@ -110,6 +113,7 @@ public class AuctionDetailActivity extends BaseActivity {
             if (BaseApplication.isLogin()) {
                 switch (view.getId()) {
                     case R.id.rlChat://聊天
+                        showCallDialog();
                         break;
                     case R.id.rlCollect://收藏
                         changeCollectStatus();
@@ -196,6 +200,14 @@ public class AuctionDetailActivity extends BaseActivity {
             tvPayMoney.setText("应付定金:¥" + goodsDetailBean.getItem().getAuction().getPledge());
         }
 
+        if("true".equals(goodsDetailBean.getItem().getIs_collect())){
+            isFavorite = true;
+            imgCollect.setBackgroundResource(R.mipmap.collect_true);
+        }else{
+            isFavorite = false;
+            imgCollect.setBackgroundResource(R.mipmap.collect_false);
+        }
+
         tab.setVisibility(View.VISIBLE);
         imgShare.setVisibility(View.VISIBLE);
         viewPager.setVisibility(View.VISIBLE);
@@ -237,6 +249,24 @@ public class AuctionDetailActivity extends BaseActivity {
             public void onCancel(SHARE_MEDIA share_media) {
             }
         });
+    }
+
+    private void showCallDialog() {
+        if (callDialog == null) {
+            callDialog = new CallDialog(this, goodsDetailBean.getShop().getMobile());
+            callDialog.setCallBack(new CallDialog.CallBack() {
+                @Override
+                public void onConfirm() {
+                    Intent dialIntent =  new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + goodsDetailBean.getShop().getMobile()));//跳转到拨号界面，同时传递电话号码
+                    startActivity(dialIntent);
+                }
+
+                @Override
+                public void onCancel() {
+                }
+            });
+        }
+        callDialog.show();
     }
 
     private void changeCollectStatus() {

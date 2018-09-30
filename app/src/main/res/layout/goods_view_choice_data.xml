@@ -34,6 +34,8 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:drawablePadding="3dp"
+                android:singleLine="true"
+                android:ellipsize="end"
                 android:drawableRight="@mipmap/choice_arrow"
                 android:text="品牌"
                 android:textColor="@color/t_gray"
@@ -54,6 +56,8 @@
                 android:drawablePadding="3dp"
                 android:drawableRight="@mipmap/choice_arrow"
                 android:text="产地"
+                android:singleLine="true"
+                android:ellipsize="end"
                 android:textColor="@color/t_gray"
                 android:textSize="@dimen/sp_small" />
 
@@ -73,6 +77,8 @@
                 android:drawablePadding="3dp"
                 android:drawableRight="@mipmap/choice_arrow"
                 android:text="香型"
+                android:singleLine="true"
+                android:ellipsize="end"
                 android:textColor="@color/t_gray"
                 android:textSize="@dimen/sp_small" />
         </RelativeLayout>
@@ -91,6 +97,8 @@
                 android:drawablePadding="3dp"
                 android:drawableRight="@mipmap/choice_arrow"
                 android:text="酒精度"
+                android:singleLine="true"
+                android:ellipsize="end"
                 android:textColor="@color/t_gray"
                 android:textSize="@dimen/sp_small" />
         </RelativeLayout>
@@ -109,6 +117,8 @@
                 android:drawablePadding="3dp"
                 android:drawableRight="@mipmap/choice_arrow"
                 android:text="价格区间"
+                android:singleLine="true"
+                android:ellipsize="end"
                 android:textColor="@color/t_gray"
                 android:textSize="@dimen/sp_small" />
         </RelativeLayout>

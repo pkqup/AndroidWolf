@@ -234,6 +234,8 @@ public class MainActivity extends BaseActivity {
         public void onNotify(Object object, String eventTag) {
             msgToPageClass(eventTag);//我要买酒
             msgToPageAuction(eventTag);//竞拍专区
+            msgToPageCart(eventTag);//购物车
+            msgToPageMy(eventTag);//我的
         }
     };
 
@@ -246,6 +248,18 @@ public class MainActivity extends BaseActivity {
     private void msgToPageAuction(String eventTag) {
         if (eventTag.equals(ConstantMsg.MSG_PAGE_AUCTION)) {
             setPageFragment(2);
+        }
+    }
+
+    private void msgToPageCart(String eventTag) {
+        if (eventTag.equals(ConstantMsg.MSG_PAGE_CART)) {
+            setPageFragment(3);
+        }
+    }
+
+    private void msgToPageMy(String eventTag) {
+        if (eventTag.equals(ConstantMsg.MSG_PAGE_MY)) {
+            setPageFragment(4);
         }
     }
 

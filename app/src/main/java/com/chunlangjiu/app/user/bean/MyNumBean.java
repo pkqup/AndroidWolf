@@ -12,6 +12,33 @@ public class MyNumBean {
     private String canceled_num;//已取消订单数量
     private String notrate_num;//待评价订单数量
 
+    private String money;//余额
+    private String money_frozen;//冻结金额
+    private String information;//消息
+
+    public String getMoney() {
+        return money;
+    }
+
+    public void setMoney(String money) {
+        this.money = money;
+    }
+
+    public String getMoney_frozen() {
+        return money_frozen;
+    }
+
+    public void setMoney_frozen(String money_frozen) {
+        this.money_frozen = money_frozen;
+    }
+
+    public String getInformation() {
+        return information;
+    }
+
+    public void setInformation(String information) {
+        this.information = information;
+    }
 
     public String getWait_pay_num() {
         return wait_pay_num;

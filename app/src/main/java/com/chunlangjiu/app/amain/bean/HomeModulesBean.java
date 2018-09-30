@@ -8,6 +8,19 @@ import java.util.List;
  */
 public class HomeModulesBean {
 
+    public static final String ITEM_GOODS = "item";//商品详情
+    public static final String ITEM_SHOP = "shop";//店铺详情
+    public static final String ITEM_CLASS = "category";//我要买酒-分类
+    public static final String ITEM_BRAND = "SPbrand";//品牌
+    public static final String ITEM_ACTIVITY = "activity";//活动列表
+    public static final String ITEM_WINERY = "winery";//酒庄
+    public static final String ITEM_EVALUATION = "evaluation";//名酒估价
+    public static final String ITEM_MEMBER = "member";//我的
+    public static final String ITEM_CART = "cart";//购物车
+    public static final String ITEM_H5 = "h5";//网页
+    public static final String ITEM_SELLWINE = "sellwine";//我要卖酒
+
+
     private List<Modules> modules;
 
     public List<Modules> getModules() {
@@ -76,7 +89,7 @@ public class HomeModulesBean {
         private String linktype;
         private String imagesrc;
         private String webview;
-//        private Webparam webparam;
+        //        private Webparam webparam;
         private String itemid;
         private String categoryname;
         private String linkinfo;

@@ -73,6 +73,24 @@ public class GoodsDetailBean implements Serializable{
         private String shop_descript;
         private String shop_logo;
         private String shop_type;
+        private String shopname;
+        private String mobile;
+
+        public String getShopname() {
+            return shopname;
+        }
+
+        public void setShopname(String shopname) {
+            this.shopname = shopname;
+        }
+
+        public String getMobile() {
+            return mobile;
+        }
+
+        public void setMobile(String mobile) {
+            this.mobile = mobile;
+        }
 
         public String getShop_id() {
             return shop_id;
@@ -121,6 +139,7 @@ public class GoodsDetailBean implements Serializable{
         private String cat_id;
         private String brand_id;
         private String shop_cat_id;
+        private String is_collect;
 
         private List<String> images;
         private String title;
@@ -160,6 +179,14 @@ public class GoodsDetailBean implements Serializable{
         private String label;//标签
         private String explain;//商品说明
         private Auction auction;
+
+        public String getIs_collect() {
+            return is_collect;
+        }
+
+        public void setIs_collect(String is_collect) {
+            this.is_collect = is_collect;
+        }
 
         public Auction getAuction() {
             return auction;

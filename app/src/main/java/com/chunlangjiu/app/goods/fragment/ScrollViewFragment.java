@@ -2,19 +2,18 @@ package com.chunlangjiu.app.goods.fragment;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.awen.photo.photopick.controller.PhotoPagerConfig;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chunlangjiu.app.R;
@@ -24,7 +23,6 @@ import com.chunlangjiu.app.goods.bean.EvaluateListBean;
 import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
 import com.chunlangjiu.app.net.ApiUtils;
 import com.chunlangjiu.app.util.ConstantMsg;
-import com.chunlangjiu.app.web.WebSettingUtil;
 import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.glide.BannerGlideLoader;
 import com.pkqup.commonlibrary.glide.GlideUtils;
@@ -210,11 +208,21 @@ public class ScrollViewFragment extends BaseFragment {
             banner.setOnBannerListener(new OnBannerListener() {
                 @Override
                 public void OnBannerClick(int position) {
+                    toLargeImage(position);
                 }
             });
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void toLargeImage(int position) {
+        new PhotoPagerConfig.Builder(getActivity())
+                .setBigImageUrls((ArrayList<String>) bannerUrls)
+                .setSavaImage(false)
+                .setPosition(position)
+//                        .setSaveImageLocalPath("这里是你想保存的图片地址")
+                .build();
     }
 
     private void initCommonView() {

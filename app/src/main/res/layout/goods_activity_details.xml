@@ -89,6 +89,25 @@
 
 
             <RelativeLayout
+                android:id="@+id/rlChat"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:src="@mipmap/goods_details_msg" />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="1px"
+                android:layout_height="match_parent"
+                android:background="@color/bg_gray" />
+
+            <RelativeLayout
                 android:id="@+id/rlCollect"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -142,15 +161,6 @@
                 android:layout_width="1px"
                 android:layout_height="match_parent"
                 android:background="@color/bg_gray" />
-
-            <RelativeLayout
-                android:id="@+id/rlChat"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
-
-
-            </RelativeLayout>
 
         </LinearLayout>
     </RelativeLayout>

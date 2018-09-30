@@ -408,6 +408,14 @@ public class AddGoodsActivity extends BaseActivity {
                     public void choiceClassId(String className, String classIdChoice) {
                         classId = classIdChoice;
                         tvPlateClass.setText(className);
+                        brandId = "";
+                        areaId = "";
+                        ordoId = "";
+                        alcId = "";
+                        tvBrand.setText("");
+                        tvChoiceArea.setText("");
+                        tvIncense.setText("");
+                        tvDegree.setText("");
                         getBrandLists();
                         getAreaLists();
                         getInsenceLists();
@@ -501,6 +509,7 @@ public class AddGoodsActivity extends BaseActivity {
                         }
                     });
                 }
+                choiceBrandPopWindow.setBrandList(brandLists,brandId);
                 choiceBrandPopWindow.showAsDropDown(rlChoiceBrand, 0, 1);
             }
         }
@@ -524,6 +533,7 @@ public class AddGoodsActivity extends BaseActivity {
                         }
                     });
                 }
+                choiceAreaPopWindow.setBrandList(areaLists,areaId);
                 choiceAreaPopWindow.showAsDropDown(rlChoiceArea, 0, 1);
             }
         }
@@ -546,7 +556,8 @@ public class AddGoodsActivity extends BaseActivity {
                         }
                     });
                 }
-                choiceOrdoPopWindow.showAsDropDown(rlChoiceDegree, 0, 1);
+                choiceOrdoPopWindow.setBrandList(ordoLists,ordoId);
+                choiceOrdoPopWindow.showAsDropDown(rlChoiceIncense, 0, 1);
             }
         }
 
@@ -569,7 +580,8 @@ public class AddGoodsActivity extends BaseActivity {
                         }
                     });
                 }
-                choiceAlcPopWindow.showAsDropDown(rlChoiceIncense, 0, 1);
+                choiceAlcPopWindow.setBrandList(alcLists,alcId);
+                choiceAlcPopWindow.showAsDropDown(rlChoiceDegree, 0, 1);
             }
         }
     }

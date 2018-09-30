@@ -512,6 +512,7 @@ public class ShopMainActivity extends BaseActivity {
             }
             if (listType) {
                 if (lists.size() == 0) {
+                    linearAdapter.setNewData(lists);
                     linearAdapter.setEmptyView(getLayoutInflater().inflate(R.layout.common_empty_view, (ViewGroup) recycleView.getParent(), false));
                 } else {
                     linearAdapter.setNewData(lists);
@@ -519,6 +520,7 @@ public class ShopMainActivity extends BaseActivity {
 
             } else {
                 if (lists.size() == 0) {
+                    gridAdapter.setNewData(lists);
                     gridAdapter.setEmptyView(getLayoutInflater().inflate(R.layout.common_empty_view, (ViewGroup) recycleView.getParent(), false));
                 } else {
                     gridAdapter.setNewData(lists);
@@ -527,8 +529,10 @@ public class ShopMainActivity extends BaseActivity {
         } else {
             lists.clear();
             if (listType) {
+                linearAdapter.setNewData(lists);
                 linearAdapter.setEmptyView(getLayoutInflater().inflate(R.layout.common_empty_view, (ViewGroup) recycleView.getParent(), false));
             } else {
+                gridAdapter.setNewData(lists);
                 gridAdapter.setEmptyView(getLayoutInflater().inflate(R.layout.common_empty_view, (ViewGroup) recycleView.getParent(), false));
             }
         }
@@ -542,6 +546,7 @@ public class ShopMainActivity extends BaseActivity {
             recycleView.setLayoutManager(new GridLayoutManager(this, 2));
             recycleView.setAdapter(gridAdapter);
             if (lists.size() == 0) {
+                gridAdapter.setNewData(lists);
                 gridAdapter.setEmptyView(getLayoutInflater().inflate(R.layout.common_empty_view, (ViewGroup) recycleView.getParent(), false));
             } else {
                 gridAdapter.setNewData(lists);
@@ -553,6 +558,7 @@ public class ShopMainActivity extends BaseActivity {
             recycleView.setLayoutManager(new LinearLayoutManager(this));
             recycleView.setAdapter(linearAdapter);
             if (lists.size() == 0) {
+                linearAdapter.setNewData(lists);
                 linearAdapter.setEmptyView(getLayoutInflater().inflate(R.layout.common_empty_view, (ViewGroup) recycleView.getParent(), false));
             } else {
                 linearAdapter.setNewData(lists);

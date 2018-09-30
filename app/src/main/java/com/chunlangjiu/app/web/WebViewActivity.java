@@ -17,6 +17,8 @@ import android.widget.Toast;
 
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
+import com.chunlangjiu.app.util.ConstantMsg;
+import com.pkqup.commonlibrary.eventmsg.EventManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -52,6 +54,8 @@ public class WebViewActivity extends FragmentActivity {
         }
 
     };
+    private String url;
+    private String title;
 
     public static void startWebViewActivity(Activity activity, String url, String title) {
         Intent intent = new Intent(activity, WebViewActivity.class);
@@ -64,6 +68,7 @@ public class WebViewActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.web_activity_webview);
+        EventManager.getInstance().registerListener(onNotifyListener);
         ButterKnife.bind(this);
         initView();
         initData();
@@ -104,10 +109,9 @@ public class WebViewActivity extends FragmentActivity {
     }
 
     private void initData() {
-        String title = getIntent().getStringExtra("title");
+        title = getIntent().getStringExtra("title");
         tv_title.setText(title);
-
-        String url = getIntent().getStringExtra("url");
+        url = getIntent().getStringExtra("url");
         webView.loadUrl(url);
     }
 
@@ -130,5 +134,28 @@ public class WebViewActivity extends FragmentActivity {
             finish();
         }
         return true;
+    }
+
+    private EventManager.OnNotifyListener onNotifyListener = new EventManager.OnNotifyListener() {
+        @Override
+        public void onNotify(Object object, String eventTag) {
+            updateWebView(eventTag);
+        }
+    };
+
+    private void updateWebView(String eventTag) {
+        try {
+            if (eventTag.equals(ConstantMsg.UPDATE_WEBVIEW)) {
+                webView.loadUrl(url);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventManager.getInstance().registerListener(onNotifyListener);
     }
 }

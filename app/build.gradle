@@ -98,6 +98,7 @@ dependencies {
     implementation project(':common:citypick')
     implementation project(':common:umengshare')
     implementation project(':common:TimePickerDialog')
+    implementation project(':common:photoLibrary')
 
     //依赖注入
     implementation 'com.jakewharton:butterknife:8.8.1'

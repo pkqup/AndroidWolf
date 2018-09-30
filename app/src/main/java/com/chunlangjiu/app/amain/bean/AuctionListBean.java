@@ -45,6 +45,15 @@ public class AuctionListBean implements Serializable {
         private String auction_begin_time;
         private String auction_end_time;
         private String auction_number;
+        private String max_price;
+
+        public String getMax_price() {
+            return max_price;
+        }
+
+        public void setMax_price(String max_price) {
+            this.max_price = max_price;
+        }
 
         public String getExplain() {
             return explain;
