@@ -831,7 +831,7 @@ public class OrderDetailActivity extends BaseActivity {
                             }
                             break;
                         case 1:
-                            switch (orderDetailBean.getStatus()) {
+                            switch (orderDetailBean.getAuction().getStatus()) {
                                 case "0":
                                     paymentId = orderDetailBean.getPayments().getPayment_id();
                                     getPayment();
@@ -868,7 +868,7 @@ public class OrderDetailActivity extends BaseActivity {
                 case R.id.tvChangePrice:
                     switch (type) {
                         case 1:
-                            switch (orderDetailBean.getStatus()) {
+                            switch (orderDetailBean.getAuction().getStatus()) {
                                 case "1":
                                     changeMyPrice();
                                     break;

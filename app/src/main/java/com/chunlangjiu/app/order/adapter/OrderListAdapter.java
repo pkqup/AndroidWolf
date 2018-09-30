@@ -199,8 +199,8 @@ public class OrderListAdapter extends BaseQuickAdapter<OrderListBean.ListBean, B
         llProducts.removeAllViews();
         switch (type) {
             case 0:
-            case 1:
             case 3:
+            case 1:
                 for (OrderListBean.ListBean.OrderBean orderBean : item.getOrder()) {
                     View inflate = inflater.inflate(R.layout.order_adapter_list_product_item, null);
                     ImageView imgProduct = inflate.findViewById(R.id.imgProduct);
