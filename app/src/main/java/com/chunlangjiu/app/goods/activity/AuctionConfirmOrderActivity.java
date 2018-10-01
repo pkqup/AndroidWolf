@@ -180,9 +180,17 @@ public class AuctionConfirmOrderActivity extends BaseActivity {
 
         GlideUtils.loadImage(this, goodsDetailBean.getItem().getImage_default_id(), img_pic);
         tv_name.setText(goodsDetailBean.getItem().getTitle());
-        tv_price.setText("¥" +goodsDetailBean.getItem().getPrice());
+        tv_price.setText("¥" + goodsDetailBean.getItem().getAuction().getStarting_price());
         tvGivePrice.setText("¥" + goodsDetailBean.getItem().getAuction().getPledge());
         tvPayPrice.setText(goodsDetailBean.getItem().getAuction().getPledge());
+
+        if ("true".equals(goodsDetailBean.getItem().getAuction().getStatus())) {
+            //明拍
+            etPrice.setHint("目前最高出价为¥" + goodsDetailBean.getItem().getAuction().getMax_price());
+        } else {
+            //暗拍
+            etPrice.setHint("暗拍商品，其他出价保密");
+        }
     }
 
 
@@ -260,7 +268,7 @@ public class AuctionConfirmOrderActivity extends BaseActivity {
         } else if (TextUtils.isEmpty(payMehtodId)) {
             ToastUtils.showShort("请选择支付方式");
         } else if (TextUtils.isEmpty(etPrice.getText().toString().trim())) {
-            ToastUtils.showShort("请输入价格");
+            ToastUtils.showShort("请输入出钱金额");
         } else {
             commitOrder();
         }
@@ -433,7 +441,6 @@ public class AuctionConfirmOrderActivity extends BaseActivity {
                 //支付成功
                 ToastUtils.showShort("支付成功");
                 EventManager.getInstance().notify(null, ConstantMsg.UPDATE_CART_LIST);
-                finish();
             } else if (code == -1) {
                 //支付错误
                 ToastUtils.showShort("支付失败");
@@ -441,6 +448,7 @@ public class AuctionConfirmOrderActivity extends BaseActivity {
                 //支付取消
                 ToastUtils.showShort("支付失败");
             }
+            finish();
             toOrderMainActivity(0, 0);
         }
     }

@@ -245,7 +245,7 @@ public class AuctionScrollViewFragment extends BaseFragment {
 
 
     private void initCommonView() {
-        tvPrice.setText("¥" + goodsDetailBean.getItem().getPrice());
+        tvPrice.setText("¥" + goodsDetailBean.getItem().getAuction().getStarting_price());
         tvGoodsName.setText(goodsDetailBean.getItem().getTitle());
 
         try {
@@ -272,12 +272,9 @@ public class AuctionScrollViewFragment extends BaseFragment {
             tvPriceList.setVisibility(View.GONE);
         }
 
-
         GlideUtils.loadImage(getActivity(), goodsDetailBean.getShop().getShop_logo(), imgStore);
         tvStoreName.setText(goodsDetailBean.getShop().getShop_name());
         tvStoreDesc.setText(goodsDetailBean.getShop().getShop_descript());
-
-
     }
 
 
