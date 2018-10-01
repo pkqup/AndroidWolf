@@ -365,7 +365,7 @@ public class AuctionConfirmOrderActivity extends BaseActivity {
                     Toast.makeText(AuctionConfirmOrderActivity.this, "支付失败", Toast.LENGTH_SHORT).show();
                     finish();
                 }
-                toOrderMainActivity(0, 0);
+                toOrderMainActivity(1, 0);
             }
         }
     };
@@ -449,7 +449,7 @@ public class AuctionConfirmOrderActivity extends BaseActivity {
                 ToastUtils.showShort("支付失败");
             }
             finish();
-            toOrderMainActivity(0, 0);
+            toOrderMainActivity(1, 0);
         }
     }
 
