@@ -144,6 +144,11 @@ public class OrderListAdapter extends BaseQuickAdapter<OrderListBean.ListBean, B
                         if ("REFUND_PROCESS".equals(item.getCancel_status())) {
                             tv1.setVisibility(View.GONE);
                             tv2.setVisibility(View.GONE);
+                        } else if ("WAIT_PROCESS".equals(item.getCancel_status())) {
+                            tv1.setText("同意退款");
+                            tv1.setVisibility(View.VISIBLE);
+                            tv2.setText("拒绝");
+                            tv2.setVisibility(View.VISIBLE);
                         } else {
                             tv1.setText("无货");
                             tv1.setVisibility(View.VISIBLE);
