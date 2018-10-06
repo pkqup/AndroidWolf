@@ -112,6 +112,7 @@ public class UserFragment extends BaseFragment {
     private TextView tvSellOrderThreeNum;
     private RelativeLayout rlSellOrderFour;
     private TextView tvSellOrderFourNum;
+    private RelativeLayout rlSellOrderFive;
     //-----------卖家中心------------//
     /*订单管理*/
 
@@ -231,8 +232,11 @@ public class UserFragment extends BaseFragment {
                 case R.id.rlSellOrderThree:// 卖家售后订单
                     toOrderMainActivity(4, 0);
                     break;
-                case R.id.rlSellOrderFour:// 卖家全部订单
-                    toOrderMainActivity(3, 0);
+                case R.id.rlSellOrderFour:// 卖家取消订单
+                    toOrderMainActivity(5, 0);
+                    break;
+                case R.id.rlSellOrderFive://卖家待收货
+                    toOrderMainActivity(3, 3);
                     break;
                 case R.id.rlAuctionManager:// 竞拍订单管理
                     toOrderMainActivity(1, 0);
@@ -376,6 +380,8 @@ public class UserFragment extends BaseFragment {
         rlSellOrderFour = rootView.findViewById(R.id.rlSellOrderFour);
         rlSellOrderFour.setOnClickListener(onClickListener);
         tvSellOrderFourNum = rootView.findViewById(R.id.tvSellOrderFourNum);
+        rlSellOrderFive = rootView.findViewById(R.id.rlSellOrderFive);
+        rlSellOrderFive.setOnClickListener(onClickListener);
 
         rlAuctionManager = rootView.findViewById(R.id.rlAuctionManager);
         llBuyAuction = rootView.findViewById(R.id.llBuyAuction);

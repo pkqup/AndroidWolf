@@ -299,7 +299,7 @@ public class ApiUtils {
                                            String price, String dlytmpl_id, String sku, String label, String explain, String parameter,
                                            String area_id, String odor_id, String alcohol_id, String store) {
         return apiService.addGoods("item.create", "v1", cat_id, brand_id, shop_cat_id, title, sub_title, weight, list_image,
-                price, dlytmpl_id, sku, label, explain, parameter, "瓶", "1",area_id,odor_id,alcohol_id,store);
+                price, dlytmpl_id, sku, label, explain, parameter, "瓶", "1", area_id, odor_id, alcohol_id, store);
     }
 
     public Flowable<ResultBean<OrderListBean>> getOrderLists(String status, int pageNo) {
@@ -394,6 +394,18 @@ public class ApiUtils {
         return apiService.getSellerAfterSaleOrderDetail("aftersales.get", "v1", aftersales_bn, oid, "*");
     }
 
+    public Flowable<ResultBean<OrderListBean>> getSellerAfterSaleCencelOrderList(int pageNo) {
+        return apiService.getSellerAfterSaleCencelOrderList("aftersales.cencel.list", "v1", pageNo, 10, "*");
+    }
+
+    public Flowable<ResultBean<OrderDetailBean>> getSellerAfterSaleCencelOrderDetail(String cancel_id) {
+        return apiService.getSellerAfterSaleCencelOrderDetail("aftersales.cencel.get", "v1", cancel_id, "*");
+    }
+
+    public Flowable<ResultBean> applySellerCancelOrder(String cancel_id, String status, String reason) {
+        return apiService.applySellerCancelOrder("trade.cencel.shop.check", "v1", cancel_id, status, reason);
+    }
+
     public Flowable<ResultBean> applySellerAfterSale(String aftersales_bn, String check_result, String total_price, String refunds_reason) {
         return apiService.applySellerAfterSale("trade.cancel.shop.check", "v1", aftersales_bn, check_result, total_price, refunds_reason);
     }
@@ -432,10 +444,10 @@ public class ApiUtils {
     }
 
     public Flowable<ResultBean> favoriteAddGoods(String item_id) {
-        return apiService.favoriteAddGoods("member.favorite.item.add", "v1",item_id);
+        return apiService.favoriteAddGoods("member.favorite.item.add", "v1", item_id);
     }
 
     public Flowable<ResultBean> favoriteCancelGoods(String item_id) {
-        return apiService.favoriteCancelGoods("member.favorite.item.remove", "v1",item_id);
+        return apiService.favoriteCancelGoods("member.favorite.item.remove", "v1", item_id);
     }
 }

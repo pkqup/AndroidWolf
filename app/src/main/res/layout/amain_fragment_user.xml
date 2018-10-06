@@ -23,8 +23,8 @@
                 android:layout_width="23dp"
                 android:layout_height="23dp"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="10dp"
                 android:layout_marginTop="15dp"
+                android:layout_marginRight="10dp"
                 android:src="@mipmap/setting" />
 
             <TextView
@@ -76,10 +76,10 @@
                     android:layout_marginTop="4dp"
                     android:layout_toRightOf="@id/tvName"
                     android:background="@drawable/bg_white_solid"
-                    android:paddingBottom="1dp"
                     android:paddingLeft="5dp"
-                    android:paddingRight="5dp"
                     android:paddingTop="1dp"
+                    android:paddingRight="5dp"
+                    android:paddingBottom="1dp"
                     android:text="个人"
                     android:textColor="@color/bg_black"
                     android:textSize="10sp" />
@@ -102,8 +102,8 @@
                         android:layout_marginTop="10dp"
                         android:background="@drawable/bg_white_solid"
                         android:gravity="center"
-                        android:paddingBottom="3dp"
                         android:paddingTop="2dp"
+                        android:paddingBottom="3dp"
                         android:text="切换卖家"
                         android:textColor="@color/t_black"
                         android:textSize="@dimen/sp_small" />
@@ -116,8 +116,8 @@
                         android:layout_marginTop="10dp"
                         android:background="@drawable/bg_white_solid"
                         android:gravity="center"
-                        android:paddingBottom="3dp"
                         android:paddingTop="2dp"
+                        android:paddingBottom="3dp"
                         android:text="实名认证"
                         android:textColor="@color/t_black"
                         android:textSize="@dimen/sp_small" />
@@ -130,8 +130,8 @@
                         android:layout_marginTop="10dp"
                         android:background="@drawable/bg_white_solid"
                         android:gravity="center"
-                        android:paddingBottom="3dp"
                         android:paddingTop="2dp"
+                        android:paddingBottom="3dp"
                         android:text="我是商家"
                         android:textColor="@color/t_black"
                         android:textSize="@dimen/sp_small" />
@@ -566,6 +566,48 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/rlSellOrderFive"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/imgSellOrderFive"
+                    android:layout_width="24dp"
+                    android:layout_height="22dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="14dp"
+                    android:src="@mipmap/order_icon_two" />
+
+                <TextView
+                    android:id="@+id/tvSellOrderFive"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/imgSellOrderFive"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:text="待收货"
+                    android:textColor="@color/t_black"
+                    android:textSize="@dimen/sp_small" />
+
+                <TextView
+                    android:id="@+id/tvSellOrderFiveNum"
+                    android:layout_width="13dp"
+                    android:layout_height="13dp"
+                    android:layout_marginLeft="-10dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_toRightOf="@id/tvSellOrderFive"
+                    android:background="@drawable/cart_num_bg"
+                    android:gravity="center"
+                    android:textColor="@color/t_white"
+                    android:textSize="8sp"
+                    android:visibility="gone"
+                    tools:text="1" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/rlSellOrderThree"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -629,7 +671,7 @@
                     android:layout_below="@id/imgSellOrderFour"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
-                    android:text="全部订单"
+                    android:text="取消订单"
                     android:textColor="@color/t_black"
                     android:textSize="@dimen/sp_small" />
 
@@ -648,12 +690,6 @@
                     tools:text="1" />
 
             </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical" />
 
         </LinearLayout>
 

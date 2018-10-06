@@ -33,6 +33,7 @@ import com.chunlangjiu.app.order.bean.SellerOrderDetailBean;
 import com.chunlangjiu.app.order.dialog.CancelOrderDialog;
 import com.chunlangjiu.app.order.dialog.ChooseExpressDialog;
 import com.chunlangjiu.app.order.dialog.ChooseExpressSellerDialog;
+import com.chunlangjiu.app.order.dialog.RefundAfterSaleOrderDialog;
 import com.chunlangjiu.app.order.dialog.SellerCancelOrderDialog;
 import com.chunlangjiu.app.order.params.OrderParams;
 import com.chunlangjiu.app.util.ConstantMsg;
@@ -154,6 +155,7 @@ public class OrderDetailActivity extends BaseActivity {
     private String tid;
     private ChooseExpressDialog chooseExpressDialog;
     private String aftersales_bn;
+    private String cancel_id;
     private SellerCancelOrderDialog sellerCancelOrderDialog;
     private ChooseExpressSellerDialog chooseExpressSellerDialog;
 
@@ -166,6 +168,9 @@ public class OrderDetailActivity extends BaseActivity {
     private ResultBean<CreateOrderBean> createOrderBeanResultBean;
     private String paymentId;
     private InputPriceDialog inputPriceDialog;
+
+    private RefundAfterSaleOrderDialog refundAfterSaleOrderDialog;
+    private RefundAfterSaleOrderDialog refundCancelOrderDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -363,6 +368,38 @@ public class OrderDetailActivity extends BaseActivity {
                             }
                         }));
                 break;
+            case 5:
+                disposable.add(ApiUtils.getInstance().getSellerAfterSaleCencelOrderDetail(String.valueOf(getIntent().getLongExtra(OrderParams.CANCELID, 0)))
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new Consumer<ResultBean<OrderDetailBean>>() {
+                            @Override
+                            public void accept(ResultBean<OrderDetailBean> orderDetailBeanResultBean) throws Exception {
+                                if (0 == orderDetailBeanResultBean.getErrorcode()) {
+                                    orderDetailBean = orderDetailBeanResultBean.getData();
+                                    processData();
+                                } else {
+                                    if (TextUtils.isEmpty(orderDetailBeanResultBean.getMsg())) {
+                                        ToastUtils.showShort("获取订单详情失败");
+                                    } else {
+                                        ToastUtils.showShort(orderDetailBeanResultBean.getMsg());
+                                    }
+                                }
+                                rlLoading.setVisibility(View.GONE);
+                            }
+                        }, new Consumer<Throwable>() {
+                            @Override
+                            public void accept(Throwable throwable) throws Exception {
+                                if (TextUtils.isEmpty(throwable.getMessage())) {
+                                    ToastUtils.showShort("获取订单详情失败");
+                                } else {
+                                    ToastUtils.showShort(throwable.getMessage());
+                                }
+                                rlLoading.setVisibility(View.GONE);
+                                Log.e(OrderDetailActivity.class.getSimpleName(), throwable.toString());
+                            }
+                        }));
+                break;
         }
     }
 
@@ -383,111 +420,128 @@ public class OrderDetailActivity extends BaseActivity {
         switch (type) {
             case 0:
             case 3:
-                switch (orderDetailBean.getStatus()) {
-                    case OrderParams.WAIT_BUYER_PAY:
-                        if (0 == type) {
-                            tvRightContentDesc.setText("剩余支付时间：");
-                            int close_time = orderDetailBean.getClose_time();
-                            try {
-                                int i = close_time * 1000;
-                                countdownView.start(i);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            tvRightContent.setVisibility(View.GONE);
-                            tv1.setText("取消订单");
+            case 5:
+                if (5 == type) {
+                    switch (orderDetailBean.getStatus()) {
+                        case "WAIT_CHECK":
+                            tv1.setText("拒绝");
                             tv1.setVisibility(View.VISIBLE);
-                            tv2.setText("去支付");
+                            tv2.setText("同意退款");
                             tv2.setVisibility(View.VISIBLE);
-                        } else {
-                            tvRightContentDesc.setVisibility(View.GONE);
-                            tvRightContent.setVisibility(View.GONE);
+                            break;
+                        default:
                             tv1.setVisibility(View.GONE);
                             tv2.setVisibility(View.GONE);
-                        }
-                        llPayTime.setVisibility(View.GONE);
-                        llSendTime.setVisibility(View.GONE);
-                        llFinishTime.setVisibility(View.GONE);
-                        break;
-                    case OrderParams.TRADE_CLOSED_BY_SYSTEM:
-                        if (0 == type) {
-                            tv1.setText("删除订单");
-                            tv2.setText("重新购买");
-                            tv1.setVisibility(View.VISIBLE);
-                            tv2.setVisibility(View.VISIBLE);
-                        } else {
-                            tv1.setVisibility(View.GONE);
-                            tv2.setVisibility(View.GONE);
-                        }
-                        tvRightContentDesc.setText("取消原因：");
-                        tvRightContent.setText(orderDetailBean.getCancel_reason());
-                        llPayTime.setVisibility(View.GONE);
-                        llSendTime.setVisibility(View.GONE);
-                        llFinishTime.setVisibility(View.GONE);
-                        countdownView.setVisibility(View.GONE);
-                        break;
-                    case OrderParams.WAIT_SELLER_SEND_GOODS:
-                        if (0 == type) {
-                            tv1.setVisibility(View.GONE);
-                            tv2.setText("申请退款");
-                            tv2.setVisibility(View.VISIBLE);
-                        } else {
-                            if ("REFUND_PROCESS".equals(orderDetailBean.getCancel_status())) {
+                            break;
+                    }
+                    tvRightContentDesc.setVisibility(View.GONE);
+                    tvRightContent.setVisibility(View.GONE);
+                    llPayTime.setVisibility(View.GONE);
+                    llSendTime.setVisibility(View.GONE);
+                    llFinishTime.setVisibility(View.GONE);
+                    countdownView.setVisibility(View.GONE);
+                } else {
+                    switch (orderDetailBean.getStatus()) {
+                        case OrderParams.WAIT_BUYER_PAY:
+                            if (0 == type) {
+                                tvRightContentDesc.setText("剩余支付时间：");
+                                int close_time = orderDetailBean.getClose_time();
+                                try {
+                                    int i = close_time * 1000;
+                                    countdownView.start(i);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                tvRightContent.setVisibility(View.GONE);
+                                tv1.setText("取消订单");
+                                tv1.setVisibility(View.VISIBLE);
+                                tv2.setText("去支付");
+                                tv2.setVisibility(View.VISIBLE);
+                            } else {
+                                tvRightContentDesc.setVisibility(View.GONE);
+                                tvRightContent.setVisibility(View.GONE);
                                 tv1.setVisibility(View.GONE);
                                 tv2.setVisibility(View.GONE);
-                            } else if ("WAIT_PROCESS".equals(orderDetailBean.getCancel_status())) {
-                                tv1.setText("同意退款");
+                            }
+                            llPayTime.setVisibility(View.GONE);
+                            llSendTime.setVisibility(View.GONE);
+                            llFinishTime.setVisibility(View.GONE);
+                            break;
+                        case OrderParams.TRADE_CLOSED_BY_SYSTEM:
+                            if (0 == type) {
+                                tv1.setText("删除订单");
+                                tv2.setText("重新购买");
                                 tv1.setVisibility(View.VISIBLE);
-                                tv2.setText("拒绝");
                                 tv2.setVisibility(View.VISIBLE);
                             } else {
-                                tv1.setText("无货");
-                                tv1.setVisibility(View.VISIBLE);
-                                tv2.setText("发货");
-                                tv2.setVisibility(View.VISIBLE);
+                                tv1.setVisibility(View.GONE);
+                                tv2.setVisibility(View.GONE);
                             }
-                        }
-                        tvRightContentDesc.setVisibility(View.GONE);
-                        tvRightContent.setVisibility(View.GONE);
-                        tvPayTime.setText(TimeUtils.millisToDate(String.valueOf(orderDetailBean.getPay_time() + "000")));
-                        llSendTime.setVisibility(View.GONE);
-                        llFinishTime.setVisibility(View.GONE);
-                        countdownView.setVisibility(View.GONE);
-                        break;
-                    case OrderParams.WAIT_BUYER_CONFIRM_GOODS:
-                        tv1.setVisibility(View.GONE);
-                        if (0 == type) {
-                            tv2.setText("确认收货");
-                            tv2.setVisibility(View.VISIBLE);
-                        } else {
-                            tv2.setVisibility(View.GONE);
-                        }
-                        tvRightContentDesc.setVisibility(View.GONE);
-                        tvRightContent.setVisibility(View.GONE);
-                        tvPayTime.setText(TimeUtils.millisToDate(String.valueOf(orderDetailBean.getPay_time() + "000")));
-                        tvSendTime.setText(TimeUtils.millisToDate(String.valueOf(orderDetailBean.getConsign_time() + "000")));
-                        llFinishTime.setVisibility(View.GONE);
-                        countdownView.setVisibility(View.GONE);
-                        break;
-                    case OrderParams.TRADE_FINISHED:
-                        tv1.setVisibility(View.GONE);
-                        if (0 == type) {
-                            if (0 == orderDetailBean.getBuyer_rate()) {
-                                tv2.setText("评价");
+                            tvRightContentDesc.setText("取消原因：");
+                            tvRightContent.setText(orderDetailBean.getCancel_reason());
+                            llPayTime.setVisibility(View.GONE);
+                            llSendTime.setVisibility(View.GONE);
+                            llFinishTime.setVisibility(View.GONE);
+                            countdownView.setVisibility(View.GONE);
+                            break;
+                        case OrderParams.WAIT_SELLER_SEND_GOODS:
+                            if (0 == type) {
+                                tv1.setVisibility(View.GONE);
+                                tv2.setText("申请退款");
+                                tv2.setVisibility(View.VISIBLE);
+                            } else {
+                                if ("NO_APPLY_CANCEL".equals(orderDetailBean.getCancel_status()) && "FAILS".equals(orderDetailBean.getCancel_status())) {
+                                    tv1.setText("无货");
+                                    tv1.setVisibility(View.VISIBLE);
+                                    tv2.setText("发货");
+                                    tv2.setVisibility(View.VISIBLE);
+                                } else {
+                                    tv1.setVisibility(View.GONE);
+                                    tv2.setVisibility(View.GONE);
+                                }
+                            }
+                            tvRightContentDesc.setVisibility(View.GONE);
+                            tvRightContent.setVisibility(View.GONE);
+                            tvPayTime.setText(TimeUtils.millisToDate(String.valueOf(orderDetailBean.getPay_time() + "000")));
+                            llSendTime.setVisibility(View.GONE);
+                            llFinishTime.setVisibility(View.GONE);
+                            countdownView.setVisibility(View.GONE);
+                            break;
+                        case OrderParams.WAIT_BUYER_CONFIRM_GOODS:
+                            tv1.setVisibility(View.GONE);
+                            if (0 == type) {
+                                tv2.setText("确认收货");
                                 tv2.setVisibility(View.VISIBLE);
                             } else {
                                 tv2.setVisibility(View.GONE);
                             }
-                        } else {
-                            tv2.setVisibility(View.GONE);
-                        }
-                        tvRightContentDesc.setVisibility(View.GONE);
-                        tvRightContent.setVisibility(View.GONE);
-                        countdownView.setVisibility(View.GONE);
-                        tvPayTime.setText(TimeUtils.millisToDate(String.valueOf(orderDetailBean.getPay_time() + "000")));
-                        tvSendTime.setText(TimeUtils.millisToDate(String.valueOf(orderDetailBean.getConsign_time() + "000")));
-                        tvFinishTime.setText(TimeUtils.millisToDate(String.valueOf(orderDetailBean.getEnd_time() + "000")));
-                        break;
+                            tvRightContentDesc.setVisibility(View.GONE);
+                            tvRightContent.setVisibility(View.GONE);
+                            tvPayTime.setText(TimeUtils.millisToDate(String.valueOf(orderDetailBean.getPay_time() + "000")));
+                            tvSendTime.setText(TimeUtils.millisToDate(String.valueOf(orderDetailBean.getConsign_time() + "000")));
+                            llFinishTime.setVisibility(View.GONE);
+                            countdownView.setVisibility(View.GONE);
+                            break;
+                        case OrderParams.TRADE_FINISHED:
+                            tv1.setVisibility(View.GONE);
+                            if (0 == type) {
+                                if (0 == orderDetailBean.getBuyer_rate()) {
+                                    tv2.setText("评价");
+                                    tv2.setVisibility(View.VISIBLE);
+                                } else {
+                                    tv2.setVisibility(View.GONE);
+                                }
+                            } else {
+                                tv2.setVisibility(View.GONE);
+                            }
+                            tvRightContentDesc.setVisibility(View.GONE);
+                            tvRightContent.setVisibility(View.GONE);
+                            countdownView.setVisibility(View.GONE);
+                            tvPayTime.setText(TimeUtils.millisToDate(String.valueOf(orderDetailBean.getPay_time() + "000")));
+                            tvSendTime.setText(TimeUtils.millisToDate(String.valueOf(orderDetailBean.getConsign_time() + "000")));
+                            tvFinishTime.setText(TimeUtils.millisToDate(String.valueOf(orderDetailBean.getEnd_time() + "000")));
+                            break;
+                    }
                 }
                 llAfterSaleTme.setVisibility(View.GONE);
                 LayoutInflater inflater = LayoutInflater.from(this);
@@ -791,16 +845,101 @@ public class OrderDetailActivity extends BaseActivity {
                                     tid = String.valueOf(orderDetailBean.getTid());
                                     getCancelReason();
                                     break;
-                                case OrderParams.TRADE_CLOSED_BY_SYSTEM:
-                                    //删除订单
-                                    tid = String.valueOf(orderDetailBean.getTid());
-                                    delete();
-                                    break;
                             }
                             break;
                         case 3:
                             tid = String.valueOf(orderDetailBean.getTid());
                             getSellerCancelReason();
+                            break;
+                        case 4:
+                            switch (orderDetailBean.getStatus()) {
+                                case "0":
+                                    aftersales_bn = String.valueOf(orderDetailBean.getAftersales_bn());
+                                    if (null == refundAfterSaleOrderDialog) {
+                                        refundAfterSaleOrderDialog = new RefundAfterSaleOrderDialog(OrderDetailActivity.this);
+                                        refundAfterSaleOrderDialog.setCallBack(new RefundAfterSaleOrderDialog.CallBack() {
+                                            @Override
+                                            public void confirm(String reason) {
+                                                showLoadingDialog();
+                                                disposable.add(ApiUtils.getInstance().applySellerAfterSale(aftersales_bn, "true", "", reason)
+                                                        .subscribeOn(Schedulers.io())
+                                                        .observeOn(AndroidSchedulers.mainThread())
+                                                        .subscribe(new Consumer<ResultBean>() {
+                                                            @Override
+                                                            public void accept(ResultBean resultBean) throws Exception {
+                                                                hideLoadingDialog();
+                                                                if (0 == resultBean.getErrorcode()) {
+                                                                    ToastUtils.showShort("拒绝申请成功");
+                                                                    initData();
+                                                                    EventManager.getInstance().notify(null, OrderParams.REFRESH_ORDER_LIST);
+                                                                } else {
+                                                                    if (TextUtils.isEmpty(resultBean.getMsg())) {
+                                                                        ToastUtils.showShort("拒绝申请失败");
+                                                                    } else {
+                                                                        ToastUtils.showShort(resultBean.getMsg());
+                                                                    }
+                                                                }
+                                                            }
+                                                        }, new Consumer<Throwable>() {
+                                                            @Override
+                                                            public void accept(Throwable throwable) throws Exception {
+                                                                hideLoadingDialog();
+                                                                if (TextUtils.isEmpty(throwable.getMessage())) {
+                                                                    ToastUtils.showShort("拒绝申请失败");
+                                                                } else {
+                                                                    ToastUtils.showShort(throwable.getMessage());
+                                                                }
+                                                            }
+                                                        }));
+                                            }
+                                        });
+                                    }
+                                    refundAfterSaleOrderDialog.show();
+                                    break;
+                            }
+                            break;
+                        case 5:
+                            cancel_id = String.valueOf(orderDetailBean.getCancel_id());
+                            if (null == refundCancelOrderDialog) {
+                                refundCancelOrderDialog = new RefundAfterSaleOrderDialog(OrderDetailActivity.this);
+                                refundCancelOrderDialog.setCallBack(new RefundAfterSaleOrderDialog.CallBack() {
+                                    @Override
+                                    public void confirm(String reason) {
+                                        showLoadingDialog();
+                                        disposable.add(ApiUtils.getInstance().applySellerCancelOrder(cancel_id, "reject", reason)
+                                                .subscribeOn(Schedulers.io())
+                                                .observeOn(AndroidSchedulers.mainThread())
+                                                .subscribe(new Consumer<ResultBean>() {
+                                                    @Override
+                                                    public void accept(ResultBean resultBean) throws Exception {
+                                                        hideLoadingDialog();
+                                                        if (0 == resultBean.getErrorcode()) {
+                                                            ToastUtils.showShort("拒绝申请成功");
+                                                            initData();
+                                                            EventManager.getInstance().notify(null, OrderParams.REFRESH_ORDER_LIST);
+                                                        } else {
+                                                            if (TextUtils.isEmpty(resultBean.getMsg())) {
+                                                                ToastUtils.showShort("拒绝申请失败");
+                                                            } else {
+                                                                ToastUtils.showShort(resultBean.getMsg());
+                                                            }
+                                                        }
+                                                    }
+                                                }, new Consumer<Throwable>() {
+                                                    @Override
+                                                    public void accept(Throwable throwable) throws Exception {
+                                                        hideLoadingDialog();
+                                                        if (TextUtils.isEmpty(throwable.getMessage())) {
+                                                            ToastUtils.showShort("拒绝申请失败");
+                                                        } else {
+                                                            ToastUtils.showShort(throwable.getMessage());
+                                                        }
+                                                    }
+                                                }));
+                                    }
+                                });
+                            }
+                            refundCancelOrderDialog.show();
                             break;
                     }
                     break;
@@ -808,16 +947,9 @@ public class OrderDetailActivity extends BaseActivity {
                     switch (type) {
                         case 0:
                             switch (orderDetailBean.getStatus()) {
-                                case OrderParams.TRADE_CLOSED_BY_SYSTEM:
                                 case OrderParams.WAIT_BUYER_PAY:
-                                    if (countdownView.getRemainTime() > 1000) {
-                                        tid = String.valueOf(orderDetailBean.getTid());
-                                        repay();
-                                    } else {
-                                        if (OrderParams.WAIT_BUYER_PAY.equals(orderDetailBean.getStatus())) {
-                                            ToastUtils.showShort("已到支付结束时间");
-                                        }
-                                    }
+                                    tid = String.valueOf(orderDetailBean.getTid());
+                                    repay();
                                     break;
                                 case OrderParams.WAIT_BUYER_CONFIRM_GOODS:
                                     tid = String.valueOf(orderDetailBean.getTid());
@@ -833,40 +965,148 @@ public class OrderDetailActivity extends BaseActivity {
                                     tid = String.valueOf(orderDetailBean.getTid());
                                     getCancelReason();
                                     break;
+                                case OrderParams.TRADE_CLOSED_BY_SYSTEM:
+                                    //删除订单
+                                    tid = String.valueOf(orderDetailBean.getTid());
+                                    delete();
+                                    break;
                             }
                             break;
                         case 1:
-                            switch (orderDetailBean.getAuction().getStatus()) {
+                            switch (orderDetailBean.getStatus()) {
                                 case "0":
-                                    paymentId = orderDetailBean.getPayments().getPayment_id();
+                                    paymentId = orderDetailBean.getPaymentId();
                                     getPayment();
                                     break;
                                 case "1":
                                     changeMyPrice();
                                     break;
                                 case "2":
-                                    paymentId = orderDetailBean.getPayments().getPayment_id();
+                                    paymentId = orderDetailBean.getPaymentId();
                                     getPayment();
                                     break;
                             }
                             break;
                         case 2:
                             switch (orderDetailBean.getStatus()) {
-                                case "0":
-                                    break;
                                 case "1":
                                     aftersales_bn = String.valueOf(orderDetailBean.getAftersales_bn());
                                     getLogisticsList();
-                                    break;
-                                case "2":
-                                    break;
-                                case "3":
                                     break;
                             }
                             break;
                         case 3:
                             tid = String.valueOf(orderDetailBean.getTid());
                             getSellerLogisticsList();
+                            break;
+                        case 4:
+                            switch (orderDetailBean.getStatus()) {
+                                case "0":
+                                    showLoadingDialog();
+                                    aftersales_bn = String.valueOf(orderDetailBean.getAftersales_bn());
+                                    disposable.add(ApiUtils.getInstance().applySellerAfterSale(aftersales_bn, "true", "", "")
+                                            .subscribeOn(Schedulers.io())
+                                            .observeOn(AndroidSchedulers.mainThread())
+                                            .subscribe(new Consumer<ResultBean>() {
+                                                @Override
+                                                public void accept(ResultBean resultBean) throws Exception {
+                                                    hideLoadingDialog();
+                                                    if (0 == resultBean.getErrorcode()) {
+                                                        ToastUtils.showShort("同意申请成功");
+                                                        initData();
+                                                        EventManager.getInstance().notify(null, OrderParams.REFRESH_ORDER_LIST);
+                                                    } else {
+                                                        if (TextUtils.isEmpty(resultBean.getMsg())) {
+                                                            ToastUtils.showShort("同意申请失败");
+                                                        } else {
+                                                            ToastUtils.showShort(resultBean.getMsg());
+                                                        }
+                                                    }
+                                                }
+                                            }, new Consumer<Throwable>() {
+                                                @Override
+                                                public void accept(Throwable throwable) throws Exception {
+                                                    hideLoadingDialog();
+                                                    if (TextUtils.isEmpty(throwable.getMessage())) {
+                                                        ToastUtils.showShort("同意申请失败");
+                                                    } else {
+                                                        ToastUtils.showShort(throwable.getMessage());
+                                                    }
+                                                }
+                                            }));
+                                    break;
+                                case "1":
+                                    if ("2".equals(orderDetailBean.getProgress())) {
+                                        showLoadingDialog();
+                                        aftersales_bn = String.valueOf(orderDetailBean.getAftersales_bn());
+                                        disposable.add(ApiUtils.getInstance().applySellerAfterSale(aftersales_bn, "true",
+                                                new BigDecimal(orderDetailBean.getPayment()).setScale(2, BigDecimal.ROUND_HALF_UP).toString(), "")
+                                                .subscribeOn(Schedulers.io())
+                                                .observeOn(AndroidSchedulers.mainThread())
+                                                .subscribe(new Consumer<ResultBean>() {
+                                                    @Override
+                                                    public void accept(ResultBean resultBean) throws Exception {
+                                                        hideLoadingDialog();
+                                                        if (0 == resultBean.getErrorcode()) {
+                                                            ToastUtils.showShort("确认收货并同意退款成功");
+                                                            initData();
+                                                            EventManager.getInstance().notify(null, OrderParams.REFRESH_ORDER_LIST);
+                                                        } else {
+                                                            if (TextUtils.isEmpty(resultBean.getMsg())) {
+                                                                ToastUtils.showShort("确认收货并同意退款失败");
+                                                            } else {
+                                                                ToastUtils.showShort(resultBean.getMsg());
+                                                            }
+                                                        }
+                                                    }
+                                                }, new Consumer<Throwable>() {
+                                                    @Override
+                                                    public void accept(Throwable throwable) throws Exception {
+                                                        hideLoadingDialog();
+                                                        if (TextUtils.isEmpty(throwable.getMessage())) {
+                                                            ToastUtils.showShort("确认收货并同意退款失败");
+                                                        } else {
+                                                            ToastUtils.showShort(throwable.getMessage());
+                                                        }
+                                                    }
+                                                }));
+                                    }
+                                    break;
+                            }
+                            break;
+                        case 5:
+                            cancel_id = String.valueOf(orderDetailBean.getCancel_id());
+                            showLoadingDialog();
+                            disposable.add(ApiUtils.getInstance().applySellerCancelOrder(cancel_id, "agree", "")
+                                    .subscribeOn(Schedulers.io())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(new Consumer<ResultBean>() {
+                                        @Override
+                                        public void accept(ResultBean resultBean) throws Exception {
+                                            hideLoadingDialog();
+                                            if (0 == resultBean.getErrorcode()) {
+                                                ToastUtils.showShort("同意退款成功");
+                                                initData();
+                                                EventManager.getInstance().notify(null, OrderParams.REFRESH_ORDER_LIST);
+                                            } else {
+                                                if (TextUtils.isEmpty(resultBean.getMsg())) {
+                                                    ToastUtils.showShort("同意退款失败");
+                                                } else {
+                                                    ToastUtils.showShort(resultBean.getMsg());
+                                                }
+                                            }
+                                        }
+                                    }, new Consumer<Throwable>() {
+                                        @Override
+                                        public void accept(Throwable throwable) throws Exception {
+                                            hideLoadingDialog();
+                                            if (TextUtils.isEmpty(throwable.getMessage())) {
+                                                ToastUtils.showShort("同意退款失败");
+                                            } else {
+                                                ToastUtils.showShort(throwable.getMessage());
+                                            }
+                                        }
+                                    }));
                             break;
                     }
                     break;
