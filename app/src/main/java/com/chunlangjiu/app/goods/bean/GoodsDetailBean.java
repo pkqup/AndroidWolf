@@ -511,7 +511,7 @@ public class GoodsDetailBean implements Serializable{
         private String number;
         private String begin_time;
         private String end_time;
-        private String status;
+        private String status;//true-明拍   false-暗拍
         private String max_price;//最高出价
         private String check;//是否已经出过价
         private String pledge;//定金

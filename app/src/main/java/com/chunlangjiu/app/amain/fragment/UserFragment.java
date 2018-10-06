@@ -19,7 +19,6 @@ import com.chunlangjiu.app.net.ApiUtils;
 import com.chunlangjiu.app.order.activity.OrderMainActivity;
 import com.chunlangjiu.app.order.params.OrderParams;
 import com.chunlangjiu.app.user.activity.AddGoodsActivity;
-import com.chunlangjiu.app.user.activity.AddGoodsSuccessActivity;
 import com.chunlangjiu.app.user.activity.AddressListActivity;
 import com.chunlangjiu.app.user.activity.CompanyAuthActivity;
 import com.chunlangjiu.app.user.activity.PersonAuthActivity;
@@ -212,10 +211,10 @@ public class UserFragment extends BaseFragment {
                     toOrderMainActivity(0, 1);
                     break;
                 case R.id.rlOrderTwo:// 买家待收货
-                    toOrderMainActivity(0, 3);
+                    toOrderMainActivity(0, 2);
                     break;
                 case R.id.rlOrderThree:// 买家待发货
-                    toOrderMainActivity(0, 2);
+                    toOrderMainActivity(0, 3);
                     break;
                 case R.id.rlOrderFour:// 买家售后订单
                     toOrderMainActivity(2, 0);

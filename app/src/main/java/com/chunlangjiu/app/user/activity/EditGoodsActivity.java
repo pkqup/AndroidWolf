@@ -1,7 +1,11 @@
 package com.chunlangjiu.app.user.activity;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,17 +15,22 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.SimpleTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
 import com.chunlangjiu.app.amain.bean.FirstClassBean;
 import com.chunlangjiu.app.amain.bean.SecondClassBean;
 import com.chunlangjiu.app.amain.bean.ThirdClassBean;
+import com.chunlangjiu.app.goods.activity.GoodsDetailsActivity;
 import com.chunlangjiu.app.goods.bean.AlcListBean;
 import com.chunlangjiu.app.goods.bean.AreaListBean;
 import com.chunlangjiu.app.goods.bean.BrandsListBean;
 import com.chunlangjiu.app.goods.bean.OrdoListBean;
 import com.chunlangjiu.app.net.ApiUtils;
 import com.chunlangjiu.app.user.bean.AddGoodsValueBean;
+import com.chunlangjiu.app.user.bean.EditGoodsDetailBean;
 import com.chunlangjiu.app.user.bean.ShopClassList;
 import com.chunlangjiu.app.user.bean.SkuBean;
 import com.chunlangjiu.app.user.bean.UploadImageBean;
@@ -32,11 +41,14 @@ import com.chunlangjiu.app.user.dialog.ChoiceOrdoPopWindow;
 import com.chunlangjiu.app.user.dialog.ShopClassPopWindow;
 import com.chunlangjiu.app.util.GlideImageLoader;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.lzy.imagepicker.ui.ImageGridActivity;
 import com.lzy.imagepicker.view.CropImageView;
 import com.pkqup.commonlibrary.dialog.ChoicePhotoDialog;
+import com.pkqup.commonlibrary.glide.GlideApp;
 import com.pkqup.commonlibrary.glide.GlideUtils;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.pkqup.commonlibrary.util.FileUtils;
@@ -52,16 +64,15 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function3;
 import io.reactivex.functions.Function5;
 import io.reactivex.functions.Function6;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * @CreatedbBy: liucun on 2018/7/22.
+ * @CreatedbBy: liucun on 2018/9/30.
  * @Describe:
  */
-public class AddGoodsActivity extends BaseActivity {
+public class EditGoodsActivity extends BaseActivity {
 
     public static final int REQUEST_CODE_SELECT_MAIN_PIC = 1001;
     public static final int REQUEST_CODE_SELECT_DETAIL_ONE_PIC = 10021;
@@ -232,6 +243,15 @@ public class AddGoodsActivity extends BaseActivity {
     private String base64DetailFour;
     private String base64Goods;
 
+
+    private String itemId;
+
+    public static void startEditGoodsDetailsActivity(Activity activity, String item_id) {
+        Intent intent = new Intent(activity, EditGoodsActivity.class);
+        intent.putExtra("item_id", item_id);
+        activity.startActivity(intent);
+    }
+
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
@@ -355,7 +375,14 @@ public class AddGoodsActivity extends BaseActivity {
 
         tvCommit.setOnClickListener(onClickListener);
 
+        rlDescTwo.setVisibility(View.VISIBLE);
+        rlDescThree.setVisibility(View.VISIBLE);
+        rlDescFour.setVisibility(View.VISIBLE);
+        rlGoods.setVisibility(View.VISIBLE);
+
+
         classLists = new ArrayList<>();
+        itemId = getIntent().getStringExtra("item_id");
     }
 
     private void initImagePicker() {
@@ -375,6 +402,10 @@ public class AddGoodsActivity extends BaseActivity {
 
 
     private void initData() {
+        getDetail();
+    }
+
+    private void getClassList() {
         //获取平台分类
         disposable.add(ApiUtils.getInstance().getShopClassList()
                 .subscribeOn(Schedulers.io())
@@ -390,6 +421,12 @@ public class AddGoodsActivity extends BaseActivity {
                                 classLists.addAll(lv3);
                             }
                         }
+
+                        for (int i = 0; i < classLists.size(); i++) {
+                            if (classLists.get(i).getCat_id().equals(classId)) {
+                                tvPlateClass.setText(classLists.get(i).getCat_name());
+                            }
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -397,6 +434,121 @@ public class AddGoodsActivity extends BaseActivity {
 
                     }
                 }));
+    }
+
+    private void getDetail() {
+        showLoadingDialog();
+        disposable.add(ApiUtils.getInstance().editGoodsDetail(itemId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<EditGoodsDetailBean>>() {
+                    @Override
+                    public void accept(ResultBean<EditGoodsDetailBean> editGoodsDetailBeanResultBean) throws Exception {
+                        hideLoadingDialog();
+                        getDetailSuccess(editGoodsDetailBeanResultBean.getData());
+                        getClassList();
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        hideLoadingDialog();
+                    }
+                }));
+    }
+
+
+    private void getDetailSuccess(EditGoodsDetailBean data) {
+        EditGoodsDetailBean.Item item = data.getItem();
+
+        classId = item.getCat_id();
+        brandId = item.getBrand_id();
+        areaId = item.getArea_id();
+        ordoId = item.getOdor_id();
+        alcId = item.getAlcohol_id();
+
+        etTitle.setText(item.getTitle());
+        etSecondName.setText(item.getSub_title());
+        etTag.setText(item.getLabel());
+        etPrice.setText(item.getPrice());
+        etCount.setText(item.getStore());
+        etGoodsDesc.setText(item.getExplain());
+
+        try {
+            String parameter = item.getParameter();
+            List<AddGoodsValueBean> ps = new Gson().fromJson(parameter, new TypeToken<List<AddGoodsValueBean>>() {
+            }.getType());
+            for (int i = 0; i < ps.size(); i++) {
+                if (ps.get(i).getTitle().equals("容量")) {
+                    etSize.setText(ps.get(i).getValue());
+                }
+                if (ps.get(i).getTitle().equals("酒庄")) {
+                    etChateau.setText(ps.get(i).getValue());
+                }
+                if (ps.get(i).getTitle().equals("系列")) {
+                    etSeries.setText(ps.get(i).getValue());
+                }
+                if (ps.get(i).getTitle().equals("包装")) {
+                    etPackage.setText(ps.get(i).getValue());
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            List<String> images = item.getImages();
+            GlideApp.with(this).asBitmap().load(images.get(0)).into(new SimpleTarget<Bitmap>() {
+                @Override
+                public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                    imgMainPic.setImageBitmap(resource);
+                    base64Main = FileUtils.bitMapToBase64(resource);
+                }
+            });
+            GlideApp.with(this).asBitmap().load(images.get(1)).into(new SimpleTarget<Bitmap>() {
+                @Override
+                public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                    imgDescOnePic.setImageBitmap(resource);
+                    base64DetailOne = FileUtils.bitMapToBase64(resource);
+                }
+            });
+            GlideApp.with(this).asBitmap().load(images.get(2)).into(new SimpleTarget<Bitmap>() {
+                @Override
+                public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                    imgDescTwoPic.setImageBitmap(resource);
+                    base64DetailTwo = FileUtils.bitMapToBase64(resource);
+                }
+            });
+            GlideApp.with(this).asBitmap().load(images.get(3)).into(new SimpleTarget<Bitmap>() {
+                @Override
+                public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                    imgDescThreePic.setImageBitmap(resource);
+                    base64DetailThree = FileUtils.bitMapToBase64(resource);
+                }
+            });
+            GlideApp.with(this).asBitmap().load(images.get(4)).into(new SimpleTarget<Bitmap>() {
+                @Override
+                public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                    imgDescFourPic.setImageBitmap(resource);
+                    base64DetailFour = FileUtils.bitMapToBase64(resource);
+                }
+            });
+            if (images.size() == 6) {
+                GlideApp.with(this).asBitmap().load(images.get(5)).into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                        imgGoodsPic.setImageBitmap(resource);
+                        base64Goods = FileUtils.bitMapToBase64(resource);
+                    }
+                });
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        getBrandLists();
+        getAreaLists();
+        getInsenceLists();
+        getAlcLists();
     }
 
 
@@ -439,6 +591,11 @@ public class AddGoodsActivity extends BaseActivity {
                     @Override
                     public void accept(ResultBean<BrandsListBean> brandsListBeanResultBean) throws Exception {
                         brandLists = brandsListBeanResultBean.getData().getBrands();
+                        for (int i = 0; i < brandLists.size(); i++) {
+                            if (brandLists.get(i).getBrand_id().equals(brandId)) {
+                                tvBrand.setText(brandLists.get(i).getBrand_name());
+                            }
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -455,6 +612,11 @@ public class AddGoodsActivity extends BaseActivity {
                     @Override
                     public void accept(ResultBean<AreaListBean> areaListBeanResultBean) throws Exception {
                         areaLists = areaListBeanResultBean.getData().getList();
+                        for (int i = 0; i < areaLists.size(); i++) {
+                            if (areaLists.get(i).getArea_id().equals(areaId)) {
+                                tvChoiceArea.setText(areaLists.get(i).getArea_name());
+                            }
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -471,6 +633,11 @@ public class AddGoodsActivity extends BaseActivity {
                     @Override
                     public void accept(ResultBean<OrdoListBean> ordoListBeanResultBean) throws Exception {
                         ordoLists = ordoListBeanResultBean.getData().getList();
+                        for (int i = 0; i < ordoLists.size(); i++) {
+                            if (ordoLists.get(i).getOdor_id().equals(ordoId)) {
+                                tvIncense.setText(ordoLists.get(i).getOdor_name());
+                            }
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -487,6 +654,11 @@ public class AddGoodsActivity extends BaseActivity {
                     @Override
                     public void accept(ResultBean<AlcListBean> alcListBeanResultBean) throws Exception {
                         alcLists = alcListBeanResultBean.getData().getList();
+                        for (int i = 0; i < alcLists.size(); i++) {
+                            if (alcLists.get(i).getAlcohol_id().equals(alcId)) {
+                                tvDegree.setText(alcLists.get(i).getAlcohol_name());
+                            }
+                        }
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -633,7 +805,7 @@ public class AddGoodsActivity extends BaseActivity {
             ToastUtils.showShort("请填写库存");
         } else if (TextUtils.isEmpty(etSize.getText().toString().trim())) {
             ToastUtils.showShort("请填写容量");
-        } else if (mainPicLists == null || detailOnePicLists == null || detailTwoPicLists == null || detailThreePicLists == null || detailFourPicLists == null) {
+        } else if (base64Main == null || base64DetailOne == null || base64DetailTwo == null || base64DetailThree == null || base64DetailFour == null) {
             ToastUtils.showShort("请添加图片");
         } else {
             uploadImageNew();
@@ -642,7 +814,7 @@ public class AddGoodsActivity extends BaseActivity {
 
     private void uploadImageNew() {
         showLoadingDialog();
-        final List<String> base64Lists = new ArrayList<>();
+/*        final List<String> base64Lists = new ArrayList<>();
         List<String> nameLists = new ArrayList<>();
         final List<String> imageLists = new ArrayList<>();
         if (base64Main != null) {
@@ -668,16 +840,16 @@ public class AddGoodsActivity extends BaseActivity {
         if (base64Goods != null) {
             base64Lists.add(base64Goods);
             nameLists.add(goodsPicLists.get(0).name);
-        }
+        }*/
 
-        Observable<ResultBean<UploadImageBean>> main = ApiUtils.getInstance().shopUploadImage(base64Main, mainPicLists.get(0).name);
-        Observable<ResultBean<UploadImageBean>> detailOne = ApiUtils.getInstance().shopUploadImage(base64DetailOne, detailOnePicLists.get(0).name);
-        Observable<ResultBean<UploadImageBean>> detailTwo = ApiUtils.getInstance().shopUploadImage(base64DetailTwo, detailTwoPicLists.get(0).name);
-        Observable<ResultBean<UploadImageBean>> detailThree = ApiUtils.getInstance().shopUploadImage(base64DetailThree, detailThreePicLists.get(0).name);
-        Observable<ResultBean<UploadImageBean>> detailFour = ApiUtils.getInstance().shopUploadImage(base64DetailFour, detailFourPicLists.get(0).name);
+        Observable<ResultBean<UploadImageBean>> main = ApiUtils.getInstance().shopUploadImage(base64Main, (mainPicLists == null || mainPicLists.size() == 0) ? "main.jpg" : mainPicLists.get(0).name);
+        Observable<ResultBean<UploadImageBean>> detailOne = ApiUtils.getInstance().shopUploadImage(base64DetailOne, (detailOnePicLists == null || detailOnePicLists.size() == 0) ? "one.jpg" : detailOnePicLists.get(0).name);
+        Observable<ResultBean<UploadImageBean>> detailTwo = ApiUtils.getInstance().shopUploadImage(base64DetailTwo, (detailTwoPicLists == null || detailTwoPicLists.size() == 0) ? "two.jpg" : detailTwoPicLists.get(0).name);
+        Observable<ResultBean<UploadImageBean>> detailThree = ApiUtils.getInstance().shopUploadImage(base64DetailThree, (detailThreePicLists == null || detailThreePicLists.size() == 0) ? "three.jpg" : detailThreePicLists.get(0).name);
+        Observable<ResultBean<UploadImageBean>> detailFour = ApiUtils.getInstance().shopUploadImage(base64DetailFour, (detailFourPicLists == null || detailFourPicLists.size() == 0) ? "four.jpg" : detailFourPicLists.get(0).name);
 
         if (base64Goods != null) {
-            Observable<ResultBean<UploadImageBean>> goods = ApiUtils.getInstance().shopUploadImage(base64Goods, goodsPicLists.get(0).name);
+            Observable<ResultBean<UploadImageBean>> goods = ApiUtils.getInstance().shopUploadImage(base64Goods, (goodsPicLists == null || goodsPicLists.size() == 0) ? "goods.jpg" :goodsPicLists.get(0).name);
             disposable.add(Observable.zip(main, detailOne, detailTwo, detailThree, detailFour, goods, new Function6<ResultBean<UploadImageBean>, ResultBean<UploadImageBean>,
                     ResultBean<UploadImageBean>, ResultBean<UploadImageBean>, ResultBean<UploadImageBean>, ResultBean<UploadImageBean>, List<String>>() {
                 @Override
@@ -795,18 +967,19 @@ public class AddGoodsActivity extends BaseActivity {
 //        valueBeanList.add(new AddGoodsValueBean("酒精度", etAlco.getText().toString().trim()));
 //        valueBeanList.add(new AddGoodsValueBean("产地", etArea.getText().toString().trim()));
         String parameter = new Gson().toJson(valueBeanList);
+        KLog.e(parameter);
 
-        disposable.add(ApiUtils.getInstance().addGoods(classId, brandId, "", etTitle.getText().toString().trim(),
+        disposable.add(ApiUtils.getInstance().commitEditGoodsDetail(classId, brandId, "", etTitle.getText().toString().trim(),
                 etSecondName.getText().toString().trim(), etSize.getText().toString().trim(), images,
                 etPrice.getText().toString().trim(), "15", skuArray, etTag.getText().toString().trim(),
-                etGoodsDesc.getText().toString().trim(), parameter, areaId, ordoId, alcId, etCount.getText().toString().trim())
+                etGoodsDesc.getText().toString().trim(), parameter, areaId, ordoId, alcId, etCount.getText().toString().trim(), itemId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean>() {
                     @Override
                     public void accept(ResultBean resultBean) throws Exception {
                         hideLoadingDialog();
-                        startActivity(new Intent(AddGoodsActivity.this, AddGoodsSuccessActivity.class));
+                        startActivity(new Intent(EditGoodsActivity.this, AddGoodsSuccessActivity.class));
                         finish();
                     }
                 }, new Consumer<Throwable>() {
@@ -834,7 +1007,7 @@ public class AddGoodsActivity extends BaseActivity {
                         base64Main = FileUtils.imgToBase64(mainPicLists.get(0).path);
                         imgMainPic.setVisibility(View.VISIBLE);
                         imgDeleteMainPic.setVisibility(View.VISIBLE);
-                        GlideUtils.loadImage(AddGoodsActivity.this, mainPicLists.get(0).path, imgMainPic);
+                        GlideUtils.loadImage(EditGoodsActivity.this, mainPicLists.get(0).path, imgMainPic);
                     } else if (requestCode == REQUEST_CODE_SELECT_DETAIL_ONE_PIC) {
                         detailOnePicLists = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
                         ImageItem imageItem = detailOnePicLists.get(0);
@@ -843,7 +1016,7 @@ public class AddGoodsActivity extends BaseActivity {
                         base64DetailOne = FileUtils.imgToBase64(detailOnePicLists.get(0).path);
                         imgDescOnePic.setVisibility(View.VISIBLE);
                         imgDeleteDescOnePic.setVisibility(View.VISIBLE);
-                        GlideUtils.loadImage(AddGoodsActivity.this, detailOnePicLists.get(0).path, imgDescOnePic);
+                        GlideUtils.loadImage(EditGoodsActivity.this, detailOnePicLists.get(0).path, imgDescOnePic);
                         rlDescTwo.setVisibility(View.VISIBLE);
                     } else if (requestCode == REQUEST_CODE_SELECT_DETAIL_TWO_PIC) {
                         detailTwoPicLists = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
@@ -853,7 +1026,7 @@ public class AddGoodsActivity extends BaseActivity {
                         base64DetailTwo = FileUtils.imgToBase64(detailTwoPicLists.get(0).path);
                         imgDescTwoPic.setVisibility(View.VISIBLE);
                         imgDeleteDescTwoPic.setVisibility(View.VISIBLE);
-                        GlideUtils.loadImage(AddGoodsActivity.this, detailTwoPicLists.get(0).path, imgDescTwoPic);
+                        GlideUtils.loadImage(EditGoodsActivity.this, detailTwoPicLists.get(0).path, imgDescTwoPic);
                         rlDescThree.setVisibility(View.VISIBLE);
                     } else if (requestCode == REQUEST_CODE_SELECT_DETAIL_THREE_PIC) {
                         detailThreePicLists = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
@@ -863,7 +1036,7 @@ public class AddGoodsActivity extends BaseActivity {
                         base64DetailThree = FileUtils.imgToBase64(detailThreePicLists.get(0).path);
                         imgDescThreePic.setVisibility(View.VISIBLE);
                         imgDeleteDescThreePic.setVisibility(View.VISIBLE);
-                        GlideUtils.loadImage(AddGoodsActivity.this, detailThreePicLists.get(0).path, imgDescThreePic);
+                        GlideUtils.loadImage(EditGoodsActivity.this, detailThreePicLists.get(0).path, imgDescThreePic);
                         rlDescFour.setVisibility(View.VISIBLE);
                     } else if (requestCode == REQUEST_CODE_SELECT_DETAIL_FOUR_PIC) {
                         detailFourPicLists = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
@@ -873,7 +1046,7 @@ public class AddGoodsActivity extends BaseActivity {
                         base64DetailFour = FileUtils.imgToBase64(detailFourPicLists.get(0).path);
                         imgDescFourPic.setVisibility(View.VISIBLE);
                         imgDeleteDescFourPic.setVisibility(View.VISIBLE);
-                        GlideUtils.loadImage(AddGoodsActivity.this, detailFourPicLists.get(0).path, imgDescFourPic);
+                        GlideUtils.loadImage(EditGoodsActivity.this, detailFourPicLists.get(0).path, imgDescFourPic);
                         rlGoods.setVisibility(View.VISIBLE);
                     } else if (requestCode == REQUEST_CODE_SELECT_GOODS_PIC) {
                         goodsPicLists = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
@@ -883,7 +1056,7 @@ public class AddGoodsActivity extends BaseActivity {
                         base64Goods = FileUtils.imgToBase64(goodsPicLists.get(0).path);
                         imgGoodsPic.setVisibility(View.VISIBLE);
                         imgDeleteGoodsPic.setVisibility(View.VISIBLE);
-                        GlideUtils.loadImage(AddGoodsActivity.this, goodsPicLists.get(0).path, imgGoodsPic);
+                        GlideUtils.loadImage(EditGoodsActivity.this, goodsPicLists.get(0).path, imgGoodsPic);
                     }
                 }
             }

@@ -27,7 +27,7 @@ public class ConstantMsg {
     public static final String WEB_URL_SETTING = "http://mall.chunlangjiu.com/index.php/wap/app-setting.html?apitoken=";//设置
     public static final String WEB_URL_LICENSE = "http://mall.chunlangjiu.com/index.php/wap/app-license.html";//协议
 
-    public static final String WEB_URL_GOODS_MANAGER = "http://mall.chunlangjiu.com/index.php/wap/onsale.html?apitoken=";//在售商品
+    public static final String WEB_URL_GOODS_MANAGER = "http://mall.chunlangjiu.com/index.php/wap/app-itemCenter.html?apitoken=";//商品管理
     public static final String WEB_URL_SELL_GOODS = "http://mall.chunlangjiu.com/index.php/wap/onsale.html?apitoken=";//在售商品
     public static final String WEB_URL_ACTION_GOODS = "http://mall.chunlangjiu.com/index.php/wap/auctionList.html?apitoken=";//竞拍商品
     public static final String WEB_URL_STORE_GOODS = "http://mall.chunlangjiu.com/index.php/wap/instock.html?apitoken=";//仓库商品

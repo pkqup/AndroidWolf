@@ -161,30 +161,44 @@
                         android:textSize="@dimen/sp_mid"
                         tools:text="法国红酒" />
 
-                    <TextView
-                        android:id="@+id/tv_price"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+
+                    <LinearLayout
+    android:id="@+id/ll_price"
                         android:layout_below="@id/tv_name"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="15dp"
-                        android:layout_marginTop="4dp"
+                        android:layout_marginTop="6dp"
                         android:layout_toRightOf="@id/img_pic"
-                        android:singleLine="true"
-                        android:textColor="@color/t_black"
-                        android:textSize="@dimen/sp_mid"
-                        tools:text="￥50000.00" />
+                        android:orientation="horizontal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="起拍价:"
+                            android:textColor="@color/t_black"
+                            android:textSize="@dimen/sp_mid" />
+                        <TextView
+                            android:id="@+id/tv_price"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:singleLine="true"
+                            android:textColor="@color/t_black"
+                            android:textSize="@dimen/sp_mid"
+                            tools:text="￥50000.00" />
+                    </LinearLayout>
+
 
 
                     <TextView
                         android:id="@+id/tv_size"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignBottom="@id/tv_price"
+                        android:layout_alignBottom="@id/ll_price"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="15dp"
                         android:layout_marginTop="4dp"
-                        android:layout_toRightOf="@id/tv_price"
+                        android:layout_toRightOf="@id/ll_price"
                         android:singleLine="true"
                         android:textColor="@color/t_gray"
                         android:textSize="14sp"
@@ -354,6 +368,24 @@
                     android:textSize="@dimen/sp_mid"
                     tools:text="¥500" />
             </RelativeLayout>
+
+            <TextView
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="15dp"
+                android:text="说明："
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="15dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginRight="15dp"
+                android:lineSpacingExtra="5dp"
+                android:text="1、仅第一次对竞拍商品出价需交付定金；\n2、您中标此竞拍商品后，定金将抵扣同等金额的商品货款，商品货款以最后一次您对此竞拍商品的出价为准；\n3、买家中标后不可申请退款退货，如违约平台将有权不返还定金，请您在出价前务必慎重考虑。"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+
         </LinearLayout>
     </ScrollView>
 

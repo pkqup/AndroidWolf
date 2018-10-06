@@ -307,48 +307,6 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/rlOrderThree"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/imgOrderThree"
-                    android:layout_width="24dp"
-                    android:layout_height="22dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="14dp"
-                    android:src="@mipmap/order_icon_two" />
-
-                <TextView
-                    android:id="@+id/tvOrderThree"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/imgOrderThree"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="10dp"
-                    android:text="待发货"
-                    android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_small" />
-
-                <TextView
-                    android:id="@+id/tvOrderThreeNum"
-                    android:layout_width="13dp"
-                    android:layout_height="13dp"
-                    android:layout_marginLeft="-10dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_toRightOf="@id/imgOrderThree"
-                    android:background="@drawable/cart_num_bg"
-                    android:gravity="center"
-                    android:textColor="@color/t_white"
-                    android:textSize="8sp"
-                    android:visibility="gone"
-                    tools:text="1" />
-
-            </RelativeLayout>
-
-            <RelativeLayout
                 android:id="@+id/rlOrderTwo"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
@@ -370,7 +328,7 @@
                     android:layout_below="@id/imgOrderTwo"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
-                    android:text="待收货"
+                    android:text="待发货"
                     android:textColor="@color/t_black"
                     android:textSize="@dimen/sp_small" />
 
@@ -381,6 +339,48 @@
                     android:layout_marginLeft="-10dp"
                     android:layout_marginTop="8dp"
                     android:layout_toRightOf="@id/imgOrderTwo"
+                    android:background="@drawable/cart_num_bg"
+                    android:gravity="center"
+                    android:textColor="@color/t_white"
+                    android:textSize="8sp"
+                    android:visibility="gone"
+                    tools:text="1" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rlOrderThree"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/imgOrderThree"
+                    android:layout_width="24dp"
+                    android:layout_height="22dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="14dp"
+                    android:src="@mipmap/order_icon_two" />
+
+                <TextView
+                    android:id="@+id/tvOrderThree"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/imgOrderThree"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:text="待收货"
+                    android:textColor="@color/t_black"
+                    android:textSize="@dimen/sp_small" />
+
+                <TextView
+                    android:id="@+id/tvOrderThreeNum"
+                    android:layout_width="13dp"
+                    android:layout_height="13dp"
+                    android:layout_marginLeft="-10dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_toRightOf="@id/imgOrderThree"
                     android:background="@drawable/cart_num_bg"
                     android:gravity="center"
                     android:textColor="@color/t_white"

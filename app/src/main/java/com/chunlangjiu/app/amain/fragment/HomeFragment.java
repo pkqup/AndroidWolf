@@ -34,6 +34,7 @@ import com.chunlangjiu.app.goods.activity.ValuationActivity;
 import com.chunlangjiu.app.net.ApiUtils;
 import com.chunlangjiu.app.store.activity.StoreListActivity;
 import com.chunlangjiu.app.user.activity.AddGoodsActivity;
+import com.chunlangjiu.app.user.activity.EditGoodsActivity;
 import com.chunlangjiu.app.user.activity.PersonAuthActivity;
 import com.chunlangjiu.app.user.bean.AuthStatusBean;
 import com.chunlangjiu.app.util.AreaUtils;
