@@ -48,6 +48,7 @@ public class OrderDetailBean {
      */
 
     private long tid;
+    private long cancel_id;
     private long aftersales_bn;
     private String shipping_type;
     private String status;
@@ -148,6 +149,7 @@ public class OrderDetailBean {
     private List<?> spec_desc;
     private AuctionBean auction;
     private PaymentsBean payments;
+    private String paymentId;
 
     public long getTid() {
         return tid;
@@ -155,6 +157,14 @@ public class OrderDetailBean {
 
     public void setTid(long tid) {
         this.tid = tid;
+    }
+
+    public long getCancel_id() {
+        return cancel_id;
+    }
+
+    public void setCancel_id(long cancel_id) {
+        this.cancel_id = cancel_id;
     }
 
     public long getAftersales_bn() {
@@ -955,6 +965,14 @@ public class OrderDetailBean {
 
     public void setPayments(PaymentsBean payments) {
         this.payments = payments;
+    }
+
+    public String getPaymentId() {
+        return paymentId;
+    }
+
+    public void setPaymentId(String paymentId) {
+        this.paymentId = paymentId;
     }
 
     public static class LogiBean {

@@ -141,14 +141,14 @@ public class OrderListAdapter extends BaseQuickAdapter<OrderListBean.ListBean, B
             case 3:
                 switch (item.getStatus()) {
                     case OrderParams.WAIT_SELLER_SEND_GOODS:
-                        if ("REFUND_PROCESS".equals(item.getCancel_status())) {
-                            tv1.setVisibility(View.GONE);
-                            tv2.setVisibility(View.GONE);
-                        } else {
+                        if ("NO_APPLY_CANCEL".equals(item.getCancel_status()) && "FAILS".equals(item.getCancel_status())) {
                             tv1.setText("无货");
                             tv1.setVisibility(View.VISIBLE);
                             tv2.setText("发货");
                             tv2.setVisibility(View.VISIBLE);
+                        } else {
+                            tv1.setVisibility(View.GONE);
+                            tv2.setVisibility(View.GONE);
                         }
                         break;
                     default:
@@ -181,6 +181,20 @@ public class OrderListAdapter extends BaseQuickAdapter<OrderListBean.ListBean, B
                         break;
                 }
                 break;
+            case 5:
+                switch (item.getStatus()) {
+                    case "WAIT_CHECK":
+                        tv1.setText("拒绝");
+                        tv1.setVisibility(View.VISIBLE);
+                        tv2.setText("同意退款");
+                        tv2.setVisibility(View.VISIBLE);
+                        break;
+                    default:
+                        tv1.setVisibility(View.GONE);
+                        tv2.setVisibility(View.GONE);
+                        break;
+                }
+                break;
         }
 
         llStore.setTag(helper.getAdapterPosition());
@@ -201,6 +215,7 @@ public class OrderListAdapter extends BaseQuickAdapter<OrderListBean.ListBean, B
             case 0:
             case 3:
             case 1:
+            case 5:
                 for (OrderListBean.ListBean.OrderBean orderBean : item.getOrder()) {
                     View inflate = inflater.inflate(R.layout.order_adapter_list_product_item, null);
                     ImageView imgProduct = inflate.findViewById(R.id.imgProduct);

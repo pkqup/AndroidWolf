@@ -108,6 +108,7 @@ public class OrderListBean {
          */
 
         private long tid;
+        private long cancel_id;
         private int shop_id;
         private int user_id;
         private String status;
@@ -137,6 +138,14 @@ public class OrderListBean {
 
         public void setTid(long tid) {
             this.tid = tid;
+        }
+
+        public long getCancel_id() {
+            return cancel_id;
+        }
+
+        public void setCancel_id(long cancel_id) {
+            this.cancel_id = cancel_id;
         }
 
         public int getShop_id() {
