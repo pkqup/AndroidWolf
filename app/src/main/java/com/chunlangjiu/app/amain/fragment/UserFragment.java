@@ -554,14 +554,20 @@ public class UserFragment extends BaseFragment {
                         MyNumBean data = myNumBeanResultBean.getData();
                         if (data != null) {
                             tvOrderOneNum.setText(data.getWait_pay_num());
-                            tvOrderOneNum.setVisibility(TextUtils.isEmpty(data.getWait_pay_num()) ? View.GONE : View.VISIBLE);
+                            tvOrderOneNum.setVisibility(TextUtils.isEmpty(data.getWait_pay_num()) ||
+                                    "0".equals(data.getWait_pay_num()) ? View.GONE : View.VISIBLE);
+
                             tvOrderTwoNum.setText(data.getWait_send_goods_num());
-                            tvOrderTwoNum.setVisibility(TextUtils.isEmpty(data.getWait_send_goods_num()) ? View.GONE : View.VISIBLE);
+                            tvOrderTwoNum.setVisibility(TextUtils.isEmpty(data.getWait_send_goods_num()) ||
+                                    "0".equals(data.getWait_send_goods_num()) ? View.GONE : View.VISIBLE);
+
                             tvOrderThreeNum.setText(data.getWait_confirm_goods_num());
-                            tvOrderThreeNum.setVisibility(TextUtils.isEmpty(data.getWait_confirm_goods_num()) ? View.GONE : View.VISIBLE);
-                            tvCanUseMoney.setText(TextUtils.isEmpty(data.getMoney())?"0":data.getMoney());
-                            tvNotUseMoney.setText(TextUtils.isEmpty(data.getMoney_frozen())?"0":data.getMoney_frozen());
-                            tvMessageNum.setText(TextUtils.isEmpty(data.getInformation())?"0":data.getInformation());
+                            tvOrderThreeNum.setVisibility(TextUtils.isEmpty(data.getWait_confirm_goods_num()) ||
+                                    "0".equals(data.getWait_confirm_goods_num()) ? View.GONE : View.VISIBLE);
+
+                            tvCanUseMoney.setText(TextUtils.isEmpty(data.getMoney()) ? "0" : data.getMoney());
+                            tvNotUseMoney.setText(TextUtils.isEmpty(data.getMoney_frozen()) ? "0" : data.getMoney_frozen());
+                            tvMessageNum.setText(TextUtils.isEmpty(data.getInformation()) ? "0" : data.getInformation());
                         }
                     }
                 }, new Consumer<Throwable>() {

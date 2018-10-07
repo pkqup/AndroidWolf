@@ -586,14 +586,18 @@ public class HomeFragment extends BaseFragment {
                     homeBean.setMax_price(auction_list.get(i).getMax_price());
                     lists.add(homeBean);
                 }
-                HomeBean tuijian = new HomeBean();
-                tuijian.setItemType(HomeBean.ITEM_TUIJIAN);
-                lists.add(tuijian);
+                if (newLists.size() > 0) {
+                    HomeBean tuijian = new HomeBean();
+                    tuijian.setItemType(HomeBean.ITEM_TUIJIAN);
+                    lists.add(tuijian);
+                }
                 lists.addAll(newLists);
             } else {
-                HomeBean tuijian = new HomeBean();
-                tuijian.setItemType(HomeBean.ITEM_TUIJIAN);
-                lists.add(tuijian);
+                if (newLists.size() > 0) {
+                    HomeBean tuijian = new HomeBean();
+                    tuijian.setItemType(HomeBean.ITEM_TUIJIAN);
+                    lists.add(tuijian);
+                }
                 lists.addAll(newLists);
             }
         } else {
