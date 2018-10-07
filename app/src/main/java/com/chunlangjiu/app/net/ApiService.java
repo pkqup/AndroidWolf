@@ -95,11 +95,12 @@ public interface ApiService {
     @POST("index.php/topapi")
     @FormUrlEncoded
     Flowable<ResultBean> companyAuth(@Field("method") String method, @Field("v") String v,
-                                    @Field("company_name") String company_name, @Field("representative") String representative,
-                                    @Field("license_num") String license_num, @Field("establish_date") String establish_date,
-                                    @Field("area") String area, @Field("address") String address,
+                                     @Field("company_name") String company_name, @Field("representative") String representative,
+                                     @Field("license_num") String license_num, @Field("establish_date") String establish_date,
+                                     @Field("area") String area, @Field("address") String address,
                                      @Field("company_phone") String company_phone, @Field("license_img") String license_img,
                                      @Field("shopuser_identity_img_z") String shopuser_identity_img_z);
+
     @POST("index.php/topapi")
     @FormUrlEncoded
     Observable<ResultBean<AuthStatusBean>> getPersonAuthStatus(@Field("method") String method, @Field("v") String v);
@@ -453,6 +454,22 @@ public interface ApiService {
 
     @POST("index.php/shop/topapi")
     @FormUrlEncoded
+    Flowable<ResultBean<OrderListBean>> getSellerAfterSaleCencelOrderList(@Field("method") String method, @Field("v") String v,
+                                                                          @Field("page_no") int page_no, @Field("pagesize") int pagesize, @Field("fields") String fields);
+
+    @POST("index.php/shop/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<OrderDetailBean>> getSellerAfterSaleCencelOrderDetail(@Field("method") String method, @Field("v") String v,
+                                                                              @Field("cancel_id") String cancel_id, @Field("fields") String fields);
+
+    @POST("index.php/shop/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean> applySellerCancelOrder(@Field("method") String method, @Field("v") String v,
+                                                @Field("cancel_id") String cancel_id, @Field("status") String status,
+                                                @Field("reason") String reason);
+
+    @POST("index.php/shop/topapi")
+    @FormUrlEncoded
     Flowable<ResultBean> applySellerAfterSale(@Field("method") String method, @Field("v") String v,
                                               @Field("aftersales_bn") String aftersales_bn, @Field("check_result") String check_result,
                                               @Field("total_price") String total_price, @Field("refunds_reason") String refunds_reason);
@@ -475,8 +492,6 @@ public interface ApiService {
     Flowable<ResultBean<AlcListBean>> getUserAlcList(@Field("method") String method, @Field("v") String v);
 
 
-
-
     @POST("index.php/shop/topapi")
     @FormUrlEncoded
     Flowable<ResultBean<BrandsListBean>> getAddShopBrandList(@Field("method") String method, @Field("v") String v, @Field("cat_id") String cat_id);
@@ -493,8 +508,6 @@ public interface ApiService {
     @POST("index.php/shop/topapi")
     @FormUrlEncoded
     Flowable<ResultBean<AlcListBean>> getShopAlcList(@Field("method") String method, @Field("v") String v, @Field("cat_id") String cat_id);
-
-
 
 
     @POST("index.php/topapi")
