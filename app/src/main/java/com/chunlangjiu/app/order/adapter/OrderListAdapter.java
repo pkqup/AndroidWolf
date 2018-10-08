@@ -1,6 +1,7 @@
 package com.chunlangjiu.app.order.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -223,7 +224,9 @@ public class OrderListAdapter extends BaseQuickAdapter<OrderListBean.ListBean, B
                     TextView tvProductName = inflate.findViewById(R.id.tvProductName);
                     tvProductName.setText(orderBean.getTitle());
                     TextView tvProductPrice = inflate.findViewById(R.id.tvProductPrice);
-                    tvProductPrice.setText(String.format("¥%s", new BigDecimal(orderBean.getPrice()).setScale(2, BigDecimal.ROUND_HALF_UP).toString()));
+                    if (!TextUtils.isEmpty(orderBean.getPrice())) {
+                        tvProductPrice.setText(String.format("¥%s", new BigDecimal(orderBean.getPrice()).setScale(2, BigDecimal.ROUND_HALF_UP).toString()));
+                    }
                     TextView tvProductDesc = inflate.findViewById(R.id.tvProductDesc);
                     tvProductDesc.setText(orderBean.getSpec_nature_info());
 

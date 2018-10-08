@@ -791,7 +791,9 @@ public class OrderDetailActivity extends BaseActivity {
                 tvProductName = inflate.findViewById(R.id.tvProductName);
                 tvProductName.setText(orderDetailBean.getTitle());
                 tvProductPrice = inflate.findViewById(R.id.tvProductPrice);
-                tvProductPrice.setText(String.format("¥%s", new BigDecimal(orderDetailBean.getCost_price()).setScale(2, BigDecimal.ROUND_HALF_UP).toString()));
+                if (!TextUtils.isEmpty(orderDetailBean.getCost_price())) {
+                    tvProductPrice.setText(String.format("¥%s", new BigDecimal(orderDetailBean.getCost_price()).setScale(2, BigDecimal.ROUND_HALF_UP).toString()));
+                }
                 tvProductDesc = inflate.findViewById(R.id.tvProductDesc);
 //                tvProductDesc.setText(orderDetailBean.getSpec_desc());
                 tvProductNum = inflate.findViewById(R.id.tvProductNum);
@@ -800,8 +802,12 @@ public class OrderDetailActivity extends BaseActivity {
                 view_line = inflate.findViewById(R.id.view_line);
                 view_line.setVisibility(View.GONE);
 
-                tvTotalPrice.setText(String.format("¥%s", new BigDecimal(orderDetailBean.getAuction().getStarting_price()).setScale(2, BigDecimal.ROUND_HALF_UP).toString()));
-                tvSendPrice.setText(String.format("¥%s", new BigDecimal(orderDetailBean.getAuction().getMax_price()).setScale(2, BigDecimal.ROUND_HALF_UP).toString()));
+                if (!TextUtils.isEmpty(orderDetailBean.getAuction().getStarting_price())) {
+                    tvTotalPrice.setText(String.format("¥%s", new BigDecimal(orderDetailBean.getAuction().getStarting_price()).setScale(2, BigDecimal.ROUND_HALF_UP).toString()));
+                }
+                if (!TextUtils.isEmpty(orderDetailBean.getAuction().getMax_price())) {
+                    tvSendPrice.setText(String.format("¥%s", new BigDecimal(orderDetailBean.getAuction().getMax_price()).setScale(2, BigDecimal.ROUND_HALF_UP).toString()));
+                }
                 LinearLayout llTips3 = findViewById(R.id.llTips3);
                 llTips3.setVisibility(View.VISIBLE);
                 TextView tvContent3 = findViewById(R.id.tvContent3);
