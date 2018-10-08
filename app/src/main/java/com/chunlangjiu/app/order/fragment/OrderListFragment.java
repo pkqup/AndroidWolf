@@ -386,7 +386,7 @@ public class OrderListFragment extends BaseFragment {
                                     OrderListBean.ListBean.OrderBean orderBean = new OrderListBean.ListBean.OrderBean();
                                     orderBean.setNum(1);
                                     orderBean.setTitle(bean.getItem().getTitle());
-                                    orderBean.setPrice(bean.getAuction().getStarting_price());
+                                    orderBean.setPrice(TextUtils.isEmpty(bean.getAuction().getStarting_price()) ? "0" : bean.getAuction().getStarting_price());
                                     orderBean.setPic_path(bean.getItem().getImage_default_id());
                                     order.add(orderBean);
                                     listBean.setOrder(order);
