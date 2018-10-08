@@ -263,7 +263,7 @@ public class AuctionScrollViewFragment extends BaseFragment {
             e.printStackTrace();
         }
 
-        String status = goodsDetailBean.getItem().getAuction().getStatus();
+        String status = goodsDetailBean.getItem().getAuction().getAuction_status();
         if ("true".equals(status)) {
             //明拍
             tvType.setText("明拍");
