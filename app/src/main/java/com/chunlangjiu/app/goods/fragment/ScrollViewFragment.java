@@ -230,7 +230,7 @@ public class ScrollViewFragment extends BaseFragment {
         tvGoodsName.setText(goodsDetailBean.getItem().getTitle());
         tvCountry.setText(goodsDetailBean.getItem().getLabel());
         tvDesc.setText(goodsDetailBean.getItem().getExplain());
-        GlideUtils.loadImage(getActivity(), goodsDetailBean.getShop().getShop_logo(), imgStore);
+        GlideUtils.loadImageShop(getActivity(), goodsDetailBean.getShop().getShop_logo(), imgStore);
         tvStoreName.setText(goodsDetailBean.getShop().getShop_name());
         tvStoreDesc.setText(goodsDetailBean.getShop().getShop_descript());
         if (TextUtils.isEmpty(goodsDetailBean.getItem().getLabel())) {

@@ -812,7 +812,7 @@ public class AddGoodsActivity extends BaseActivity {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        ToastUtils.showShort("添加商品失败");
+                        ToastUtils.showErrorMsg(throwable);
                         hideLoadingDialog();
                     }
                 }));

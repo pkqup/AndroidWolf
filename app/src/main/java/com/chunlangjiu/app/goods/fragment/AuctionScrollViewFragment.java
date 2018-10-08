@@ -272,7 +272,7 @@ public class AuctionScrollViewFragment extends BaseFragment {
             tvPriceList.setVisibility(View.GONE);
         }
 
-        GlideUtils.loadImage(getActivity(), goodsDetailBean.getShop().getShop_logo(), imgStore);
+        GlideUtils.loadImageShop(getActivity(), goodsDetailBean.getShop().getShop_logo(), imgStore);
         tvStoreName.setText(goodsDetailBean.getShop().getShop_name());
         tvStoreDesc.setText(goodsDetailBean.getShop().getShop_descript());
     }

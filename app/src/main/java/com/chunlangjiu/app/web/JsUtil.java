@@ -91,13 +91,35 @@ public class JsUtil {
         });
     }
 
-    //登录
+    //添加商品
     @JavascriptInterface
     public void addGoods() {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
               activity.startActivity(new Intent(activity, AddGoodsActivity.class));
+            }
+        });
+    }
+
+    //设置竞拍起始时间
+    @JavascriptInterface
+    public void showStartTimeDialog() {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                activity.showStartTime();
+            }
+        });
+    }
+
+    //设置竞拍结束时间
+    @JavascriptInterface
+    public void showEndTimeDialog() {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                activity.showEndTime();
             }
         });
     }

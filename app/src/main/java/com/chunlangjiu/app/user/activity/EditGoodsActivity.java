@@ -323,7 +323,7 @@ public class EditGoodsActivity extends BaseActivity {
 
     @Override
     public void setTitleView() {
-        titleName.setText("商品添加");
+        titleName.setText("商品编辑");
         titleImgLeft.setOnClickListener(onClickListener);
     }
 
@@ -985,7 +985,7 @@ public class EditGoodsActivity extends BaseActivity {
                 }, new Consumer<Throwable>() {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
-                        ToastUtils.showShort("添加商品失败");
+                        ToastUtils.showErrorMsg(throwable);
                         hideLoadingDialog();
                     }
                 }));
