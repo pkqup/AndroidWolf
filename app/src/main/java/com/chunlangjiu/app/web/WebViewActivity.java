@@ -13,11 +13,12 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.chunlangjiu.app.R;
-import com.chunlangjiu.app.abase.BaseActivity;
 import com.chunlangjiu.app.util.ConstantMsg;
+import com.jzxiang.pickerview.TimePickerDialog;
+import com.jzxiang.pickerview.data.Type;
+import com.jzxiang.pickerview.listener.OnDateSetListener;
 import com.pkqup.commonlibrary.eventmsg.EventManager;
 
 import butterknife.BindView;
@@ -38,6 +39,9 @@ public class WebViewActivity extends FragmentActivity {
 
     @BindView(R.id.webView)
     WebView webView;
+
+    private TimePickerDialog startTimeDialog;
+    private TimePickerDialog endTimeDialog;
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -115,6 +119,71 @@ public class WebViewActivity extends FragmentActivity {
         webView.loadUrl(url);
     }
 
+    public void showStartTime() {
+        if (startTimeDialog == null) {
+            startTimeDialog = new TimePickerDialog.Builder().setCallBack(startDataSetListener)
+                    .setCancelStringId("取消")
+                    .setSureStringId("确定")
+                    .setTitleStringId("")
+                    .setYearText("年")
+                    .setMonthText("月")
+                    .setDayText("日")
+                    .setHourText("时")
+                    .setMinuteText("分")
+                    .setCyclic(false)
+                    .setMinMillseconds(System.currentTimeMillis())
+                    .setCurrentMillseconds(System.currentTimeMillis())
+                    .setThemeColor(getResources().getColor(R.color.timepicker_dialog_bg))
+                    .setType(Type.ALL)
+                    .setWheelItemTextNormalColor(
+                            getResources().getColor(R.color.timetimepicker_default_text_color))
+                    .setWheelItemTextSelectorColor(
+                            getResources().getColor(R.color.timepicker_toolbar_bg))
+                    .setWheelItemTextSize(12).build();
+        }
+        startTimeDialog.show(getSupportFragmentManager(), "all");
+    }
+
+    private OnDateSetListener startDataSetListener = new OnDateSetListener() {
+        @Override
+        public void onDateSet(TimePickerDialog timePickerView, long millSeconds) {
+            long startTime = millSeconds / 1000;
+            webView.loadUrl("javascript:setStartTime(" + startTime + ")");
+        }
+    };
+
+    public void showEndTime() {
+        if (endTimeDialog == null) {
+            endTimeDialog = new TimePickerDialog.Builder().setCallBack(endDataSetListener)
+                    .setCancelStringId("取消")
+                    .setSureStringId("确定")
+                    .setTitleStringId("")
+                    .setYearText("年")
+                    .setMonthText("月")
+                    .setDayText("日")
+                    .setHourText("时")
+                    .setMinuteText("分")
+                    .setCyclic(false)
+                    .setMinMillseconds(System.currentTimeMillis())
+                    .setCurrentMillseconds(System.currentTimeMillis())
+                    .setThemeColor(getResources().getColor(R.color.timepicker_dialog_bg))
+                    .setType(Type.ALL)
+                    .setWheelItemTextNormalColor(
+                            getResources().getColor(R.color.timetimepicker_default_text_color))
+                    .setWheelItemTextSelectorColor(
+                            getResources().getColor(R.color.timepicker_toolbar_bg))
+                    .setWheelItemTextSize(12).build();
+        }
+        endTimeDialog.show(getSupportFragmentManager(), "all");
+    }
+
+    private OnDateSetListener endDataSetListener = new OnDateSetListener() {
+        @Override
+        public void onDateSet(TimePickerDialog timePickerView, long millSeconds) {
+            long endTime = millSeconds / 1000;
+            webView.loadUrl("javascript:setEndTime((" + endTime + ")");
+        }
+    };
 
     private void webGoBack() {
         if (webView.canGoBack()) {
