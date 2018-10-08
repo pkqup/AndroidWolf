@@ -181,7 +181,7 @@ public class WebViewActivity extends FragmentActivity {
         @Override
         public void onDateSet(TimePickerDialog timePickerView, long millSeconds) {
             long endTime = millSeconds / 1000;
-            webView.loadUrl("javascript:setEndTime((" + endTime + ")");
+            webView.loadUrl("javascript:setEndTime(" + endTime + ")");
         }
     };
 
