@@ -5,6 +5,7 @@ import android.graphics.Paint;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -32,11 +33,23 @@ public class AuctionListAdapter extends BaseQuickAdapter<AuctionListBean.Auction
     @Override
     protected void convert(BaseViewHolder helper, AuctionListBean.AuctionBean item) {
         ImageView imageView = helper.getView(R.id.img_pic);
+        LinearLayout llHighPrice = helper.getView(R.id.llHighPrice);
+        TextView tvAnPaiStr = helper.getView(R.id.tvAnPaiStr);
         TextView tvStartPrice = helper.getView(R.id.tvStartPrice);
         GlideUtils.loadImage(context, item.getImage_default_id(), imageView);
         helper.setText(R.id.tv_name, item.getTitle());
         helper.setText(R.id.tvStartPrice, "¥" + item.getAuction_starting_price());
         tvStartPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);  // 设置中划线并加清晰
+
+        if ("true".equals(item.getAuction_status())) {
+            //明拍
+            llHighPrice.setVisibility(View.VISIBLE);
+            tvAnPaiStr.setVisibility(View.GONE);
+        }else{
+            llHighPrice.setVisibility(View.GONE);
+            tvAnPaiStr.setVisibility(View.VISIBLE);
+        }
+
         if (TextUtils.isEmpty(item.getMax_price())) {
             helper.setText(R.id.tvSellPrice, "暂无出价");
         } else {

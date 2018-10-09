@@ -63,30 +63,46 @@ public class HomeAdapter extends BaseQuickAdapter<HomeBean, BaseViewHolder> {
                     tvLabel.setText(item.getLabel());
                 }
                 LinearLayout llTime = viewHolder.getView(R.id.llTime);
+                TextView tvStartPriceStr = viewHolder.getView(R.id.tvStartPriceStr);
+                LinearLayout llHighPrice = viewHolder.getView(R.id.llHighPrice);
+                TextView tvAnPaiStr = viewHolder.getView(R.id.tvAnPaiStr);
                 TextView tvSellPriceStr = viewHolder.getView(R.id.tvSellPriceStr);
+                TextView tvSellPrice = viewHolder.getView(R.id.tvSellPrice);
                 if (item.isAuction()) {
+                    tvStartPriceStr.setText("起拍价：");
                     tvStartPrice.setText("¥" + item.getAuction_starting_price());
                     llTime.setVisibility(View.VISIBLE);
-                    tvSellPriceStr.setVisibility(View.VISIBLE);
-                    tvSellPriceStr.setText("最高出价：");
-                    if (TextUtils.isEmpty(item.getMax_price())) {
-                        viewHolder.setText(R.id.tvSellPrice, "暂无出价");
+                    if ("true".equals(item.getAuction_status())) {
+                        //明拍
+                        llHighPrice.setVisibility(View.VISIBLE);
+                        tvAnPaiStr.setVisibility(View.GONE);
+                        tvSellPriceStr.setVisibility(View.VISIBLE);
+                        tvSellPriceStr.setText("最高出价：");
+                        if (TextUtils.isEmpty(item.getMax_price())) {
+                            viewHolder.setText(R.id.tvSellPrice, "暂无出价");
+                        } else {
+                            viewHolder.setText(R.id.tvSellPrice, "¥" + item.getAuction_starting_price());
+                        }
                     } else {
-                        viewHolder.setText(R.id.tvSellPrice, "¥" + item.getAuction_starting_price());
+                        //暗拍
+                        llHighPrice.setVisibility(View.GONE);
+                        tvAnPaiStr.setVisibility(View.VISIBLE);
                     }
 
                     String end_time = item.getAuction_end_time();
-                        long endTime = 0;
-                        if (!TextUtils.isEmpty(end_time)) {
-                            endTime = Long.parseLong(end_time);
-                        }
-                        if ((endTime * 1000 - System.currentTimeMillis()) > 0) {
-                            countdownView.start(endTime * 1000 - System.currentTimeMillis());
-                            dealWithLifeCycle(viewHolder, viewHolder.getAdapterPosition(), item);
-                        }
+                    long endTime = 0;
+                    if (!TextUtils.isEmpty(end_time)) {
+                        endTime = Long.parseLong(end_time);
+                    }
+                    if ((endTime * 1000 - System.currentTimeMillis()) > 0) {
+                        countdownView.start(endTime * 1000 - System.currentTimeMillis());
+                        dealWithLifeCycle(viewHolder, viewHolder.getAdapterPosition(), item);
+                    }
                 } else {
                     llTime.setVisibility(View.GONE);
                     tvSellPriceStr.setVisibility(View.GONE);
+                    llHighPrice.setVisibility(View.VISIBLE);
+                    tvAnPaiStr.setVisibility(View.GONE);
                     viewHolder.setText(R.id.tvStartPriceStr, "原价：");
                     tvStartPrice.setText("¥" + item.getMkt_price());
                     viewHolder.setText(R.id.tvSellPriceStr, "");

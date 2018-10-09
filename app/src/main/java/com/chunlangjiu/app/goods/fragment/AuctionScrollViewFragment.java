@@ -63,6 +63,7 @@ public class AuctionScrollViewFragment extends BaseFragment {
     private LinearLayout indicator;
     private TextView tvPrice;
     private TextView tvGoodsName;
+    private TextView tvGoodsNameSecond;
     private CountdownView countdownView;
     private TextView tvType;
     private TextView tvPriceList;
@@ -137,6 +138,7 @@ public class AuctionScrollViewFragment extends BaseFragment {
 
         tvPrice = rootView.findViewById(R.id.tvPrice);
         tvGoodsName = rootView.findViewById(R.id.tvGoodsName);
+        tvGoodsNameSecond = rootView.findViewById(R.id.tvGoodsNameSecond);
         countdownView = rootView.findViewById(R.id.countdownView);
         tvType = rootView.findViewById(R.id.tvType);
         tvPriceList = rootView.findViewById(R.id.tvPriceList);
@@ -247,7 +249,12 @@ public class AuctionScrollViewFragment extends BaseFragment {
     private void initCommonView() {
         tvPrice.setText("¥" + goodsDetailBean.getItem().getAuction().getStarting_price());
         tvGoodsName.setText(goodsDetailBean.getItem().getTitle());
-
+        tvGoodsNameSecond.setText(goodsDetailBean.getItem().getSub_title());
+        if (TextUtils.isEmpty(goodsDetailBean.getItem().getSub_title())) {
+            tvGoodsNameSecond.setVisibility(View.GONE);
+        } else {
+            tvGoodsNameSecond.setVisibility(View.VISIBLE);
+        }
         try {
             GoodsDetailBean.Auction auction = goodsDetailBean.getItem().getAuction();
             String end_time = auction.getEnd_time();
