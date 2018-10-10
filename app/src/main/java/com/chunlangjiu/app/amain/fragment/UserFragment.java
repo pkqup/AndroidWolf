@@ -990,6 +990,7 @@ public class UserFragment extends BaseFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        disposable.dispose();
         EventManager.getInstance().unRegisterListener(onNotifyListener);
     }
 

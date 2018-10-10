@@ -57,6 +57,7 @@ public class ScrollViewFragment extends BaseFragment {
     private LinearLayout indicator;
     private TextView tvPrice;
     private TextView tvGoodsName;
+    private TextView tvGoodsNameSecond;
     private TextView tvCountry;
     private TextView tvYear;
     private TextView tvDesc;
@@ -124,6 +125,7 @@ public class ScrollViewFragment extends BaseFragment {
 
         tvPrice = rootView.findViewById(R.id.tvPrice);
         tvGoodsName = rootView.findViewById(R.id.tvGoodsName);
+        tvGoodsNameSecond = rootView.findViewById(R.id.tvGoodsNameSecond);
         tvCountry = rootView.findViewById(R.id.tvCountry);
         tvYear = rootView.findViewById(R.id.tvYear);
         tvDesc = rootView.findViewById(R.id.tvDesc);
@@ -228,6 +230,12 @@ public class ScrollViewFragment extends BaseFragment {
     private void initCommonView() {
         tvPrice.setText("¥" + goodsDetailBean.getItem().getPrice());
         tvGoodsName.setText(goodsDetailBean.getItem().getTitle());
+        tvGoodsNameSecond.setText(goodsDetailBean.getItem().getSub_title());
+        if (TextUtils.isEmpty(goodsDetailBean.getItem().getSub_title())) {
+            tvGoodsNameSecond.setVisibility(View.GONE);
+        } else {
+            tvGoodsNameSecond.setVisibility(View.VISIBLE);
+        }
         tvCountry.setText(goodsDetailBean.getItem().getLabel());
         tvDesc.setText(goodsDetailBean.getItem().getExplain());
         GlideUtils.loadImageShop(getActivity(), goodsDetailBean.getShop().getShop_logo(), imgStore);

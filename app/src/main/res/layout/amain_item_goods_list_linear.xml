@@ -12,6 +12,14 @@
         android:layout_marginTop="10dp"
         android:scaleType="centerCrop" />
 
+    <ImageView
+        android:id="@+id/imgAuction"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="10dp"
+        android:src="@mipmap/auction_icon"
+        android:visibility="gone" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -31,7 +39,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="剩余时间"
+                android:text="距离结束："
                 android:textColor="@color/t_gray"
                 android:textSize="12sp" />
 
@@ -39,22 +47,21 @@
                 android:id="@+id/countdownView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                app:isConvertDaysToHours="false"
-                app:isHideTimeBackground="false"
                 app:isShowDay="true"
                 app:isShowHour="true"
                 app:isShowMillisecond="false"
                 app:isShowMinute="true"
                 app:isShowSecond="true"
-                app:suffixGravity="center"
-                app:suffixTextColor="@color/t_black"
-                app:suffixTextSize="14sp"
-                app:timeBgColor="@color/bg_red"
-                app:timeBgRadius="3dp"
-                app:timeBgSize="18dp"
-                app:timeTextColor="@color/t_white"
-                app:timeTextSize="14sp" />
+                app:isTimeTextBold="true"
+                app:suffixDay="天"
+                app:suffixGravity="bottom"
+                app:suffixHour="时"
+                app:suffixMinute="分"
+                app:suffixSecond="秒"
+                app:suffixTextColor="@color/t_gray"
+                app:suffixTextSize="12sp"
+                app:timeTextColor="@color/t_red"
+                app:timeTextSize="16sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -132,7 +139,27 @@
                 android:text="¥5000.00"
                 android:textColor="@color/t_red"
                 android:textSize="@dimen/sp_mid" />
+
+            <TextView
+                android:id="@+id/tv_give_price_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="出价人数："
+                android:textColor="@color/t_gray"
+                android:textSize="12sp"
+                android:visibility="gone" />
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvAnPaiStr"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="暗拍商品，保密出价"
+            android:textColor="@color/t_orange"
+            android:textSize="12sp"
+            android:visibility="gone" />
 
         <LinearLayout
             android:layout_width="match_parent"

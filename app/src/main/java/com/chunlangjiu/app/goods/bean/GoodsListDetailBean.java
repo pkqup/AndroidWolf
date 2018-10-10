@@ -14,12 +14,20 @@ public class GoodsListDetailBean {
     private String price;
     private String mkt_price;
     private String label;
-    private String view_count ;//关注人数
-    private String rate_count  ;//评价条数
+    private String view_count;//关注人数
+    private String rate_count;//评价条数
     private String sold_quantity;
     private List promotion;//促销信息
     private GiftDetail gift;
+    private Auction auction;
 
+    public Auction getAuction() {
+        return auction;
+    }
+
+    public void setAuction(Auction auction) {
+        this.auction = auction;
+    }
 
     public String getLabel() {
         return label;
@@ -109,7 +117,7 @@ public class GoodsListDetailBean {
         this.gift = gift;
     }
 
-    public class PromotionDetail{
+    public class PromotionDetail {
         private String promotion_id;
         private String tag;
 
@@ -130,7 +138,7 @@ public class GoodsListDetailBean {
         }
     }
 
-    public class GiftDetail{
+    public class GiftDetail {
         private String gift_id;
         private String promotion_tag;
 
@@ -151,5 +159,71 @@ public class GoodsListDetailBean {
         }
     }
 
+    public class Auction {
+        private String auctionitem_id;
+        private String item_id;
+        private String starting_price;
+        private String auction_status;
+        private String max_price;
+
+        private String begin_time;
+        private String end_time;
+
+        public String getAuctionitem_id() {
+            return auctionitem_id;
+        }
+
+        public void setAuctionitem_id(String auctionitem_id) {
+            this.auctionitem_id = auctionitem_id;
+        }
+
+        public String getItem_id() {
+            return item_id;
+        }
+
+        public void setItem_id(String item_id) {
+            this.item_id = item_id;
+        }
+
+        public String getStarting_price() {
+            return starting_price;
+        }
+
+        public void setStarting_price(String starting_price) {
+            this.starting_price = starting_price;
+        }
+
+        public String getAuction_status() {
+            return auction_status;
+        }
+
+        public void setAuction_status(String auction_status) {
+            this.auction_status = auction_status;
+        }
+
+        public String getMax_price() {
+            return max_price;
+        }
+
+        public void setMax_price(String max_price) {
+            this.max_price = max_price;
+        }
+
+        public String getBegin_time() {
+            return begin_time;
+        }
+
+        public void setBegin_time(String begin_time) {
+            this.begin_time = begin_time;
+        }
+
+        public String getEnd_time() {
+            return end_time;
+        }
+
+        public void setEnd_time(String end_time) {
+            this.end_time = end_time;
+        }
+    }
 
 }

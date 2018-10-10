@@ -45,15 +45,16 @@
             android:background="@color/bg_gray" />
 
         <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
             android:layout_marginTop="15dp"
-            android:orientation="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:orientation="horizontal">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="起拍价:"
+                android:text="起拍价："
                 android:textColor="@color/t_red"
                 android:textSize="@dimen/sp_big" />
 
@@ -79,11 +80,23 @@
             android:textSize="@dimen/sp_mid"
             tools:text="法国红酒" />
 
+        <TextView
+            android:id="@+id/tvGoodsNameSecond"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="5dp"
+            android:maxLines="2"
+            android:textColor="@color/t_gray"
+            android:textSize="@dimen/sp_small"
+            tools:text="副标题" />
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="5dp"
             android:orientation="horizontal">
 
             <TextView
@@ -91,7 +104,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:text="剩余时间"
+                android:text="距离结束："
                 android:textColor="@color/t_gray"
                 android:textSize="12sp" />
 
@@ -100,66 +113,65 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="4dp"
                 android:layout_toRightOf="@id/tvTimeStr"
-                app:isConvertDaysToHours="false"
-                app:isHideTimeBackground="false"
                 app:isShowDay="true"
                 app:isShowHour="true"
                 app:isShowMillisecond="false"
                 app:isShowMinute="true"
                 app:isShowSecond="true"
-                app:suffixGravity="center"
-                app:suffixTextColor="@color/t_black"
-                app:suffixTextSize="14sp"
-                app:timeBgColor="@color/bg_red"
-                app:timeBgRadius="3dp"
-                app:timeBgSize="17dp"
-                app:timeTextColor="@color/t_white"
-                app:timeTextSize="14sp" />
-
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="15dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="竞拍方式:"
-                    android:textColor="@color/t_gray"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/tvType"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="明拍"
-                    android:textColor="@color/t_black"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/tvPriceList"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="8dp"
-                    android:background="@drawable/orange_bg_stroke"
-                    android:paddingBottom="4dp"
-                    android:paddingLeft="8dp"
-                    android:paddingRight="8dp"
-                    android:paddingTop="4dp"
-                    android:text="查看竞拍出价"
-                    android:textColor="@color/t_orange"
-                    android:textSize="10sp" />
-
-            </LinearLayout>
+                app:isTimeTextBold="true"
+                app:suffixDay="天"
+                app:suffixGravity="bottom"
+                app:suffixHour="时"
+                app:suffixMinute="分"
+                app:suffixSecond="秒"
+                app:suffixTextColor="@color/t_gray"
+                app:suffixTextSize="12sp"
+                app:timeTextColor="@color/t_red"
+                app:timeTextSize="16sp" />
 
         </RelativeLayout>
+
+        <LinearLayout
+            android:layout_marginLeft="15dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="竞拍方式："
+                android:textColor="@color/t_gray"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tvType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="明拍"
+                android:textColor="@color/t_black"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/tvPriceList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:background="@drawable/orange_bg_stroke"
+                android:paddingBottom="4dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp"
+                android:paddingTop="4dp"
+                android:text="查看竞拍出价"
+                android:textColor="@color/t_orange"
+                android:textSize="10sp" />
+
+        </LinearLayout>
+
 
         <LinearLayout
             android:layout_width="wrap_content"

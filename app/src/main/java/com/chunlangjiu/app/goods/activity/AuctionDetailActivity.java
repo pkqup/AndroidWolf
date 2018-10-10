@@ -200,10 +200,10 @@ public class AuctionDetailActivity extends BaseActivity {
             tvPayMoney.setText("应付定金:¥" + goodsDetailBean.getItem().getAuction().getPledge());
         }
 
-        if("true".equals(goodsDetailBean.getItem().getIs_collect())){
+        if ("true".equals(goodsDetailBean.getItem().getIs_collect())) {
             isFavorite = true;
             imgCollect.setBackgroundResource(R.mipmap.collect_true);
-        }else{
+        } else {
             isFavorite = false;
             imgCollect.setBackgroundResource(R.mipmap.collect_false);
         }
@@ -257,7 +257,7 @@ public class AuctionDetailActivity extends BaseActivity {
             callDialog.setCallBack(new CallDialog.CallBack() {
                 @Override
                 public void onConfirm() {
-                    Intent dialIntent =  new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + goodsDetailBean.getShop().getMobile()));//跳转到拨号界面，同时传递电话号码
+                    Intent dialIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + goodsDetailBean.getShop().getMobile()));//跳转到拨号界面，同时传递电话号码
                     startActivity(dialIntent);
                 }
 
@@ -318,7 +318,7 @@ public class AuctionDetailActivity extends BaseActivity {
         String check = goodsDetailBean.getItem().getAuction().getCheck();
         if ("true".equals(check)) {
             if (inputPriceDialog == null) {
-                inputPriceDialog = new InputPriceDialog(this,goodsDetailBean.getItem().getAuction().getMax_price(),
+                inputPriceDialog = new InputPriceDialog(this, goodsDetailBean.getItem().getAuction().getMax_price(),
                         goodsDetailBean.getItem().getAuction().getOriginal_bid());
                 inputPriceDialog.setCallBack(new InputPriceDialog.CallBack() {
                     @Override
@@ -359,8 +359,16 @@ public class AuctionDetailActivity extends BaseActivity {
         public void onNotify(Object object, String eventTag) {
             changeToEvaluate(eventTag);
             changeSlide(object, eventTag);
+            detailCountEnd(eventTag);
         }
     };
+
+    private void detailCountEnd(String eventTag) {
+        if (eventTag.equals(ConstantMsg.DETAIL_COUNT_END)) {
+            GoodsDetailsActivity.startGoodsDetailsActivity(this, itemId);
+            finish();
+        }
+    }
 
 
     /**

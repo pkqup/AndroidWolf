@@ -89,6 +89,14 @@ public class ApiUtils {
         return apiService.login("user.oauthlogin", "v2", account, code);
     }
 
+    public Flowable<ResultBean<LoginBean>> psdLogin(String account, String psd, String deviceId) {
+        return apiService.psdLogin("user.login", "v2", account, psd, deviceId, deviceId, "android", "igexin");
+    }
+
+    public Flowable<ResultBean> setPsd(String account, String vcode, String psd) {
+        return apiService.setPsd("user.forgot.resetpassword", "v2", account, vcode, psd);
+    }
+
     public Flowable<ResultBean> logout() {
         return apiService.logout("user.logout", "v1");
     }
@@ -453,13 +461,13 @@ public class ApiUtils {
     }
 
     public Flowable<ResultBean<EditGoodsDetailBean>> editGoodsDetail(String item_id) {
-        return apiService.editGoodsDetail("item.detail", "v1",item_id);
+        return apiService.editGoodsDetail("item.detail", "v1", item_id);
     }
 
     public Observable<ResultBean> commitEditGoodsDetail(String cat_id, String brand_id, String shop_cat_id, String title, String sub_title, String weight, String list_image,
-                                           String price, String dlytmpl_id, String sku, String label, String explain, String parameter,
-                                           String area_id, String odor_id, String alcohol_id, String store,String itemId) {
+                                                        String price, String dlytmpl_id, String sku, String label, String explain, String parameter,
+                                                        String area_id, String odor_id, String alcohol_id, String store, String itemId) {
         return apiService.commitEditGoodsDetail("item.save", "v1", cat_id, brand_id, shop_cat_id, title, sub_title, weight, list_image,
-                price, dlytmpl_id, sku, label, explain, parameter, "瓶", "1",area_id,odor_id,alcohol_id,store,itemId);
+                price, dlytmpl_id, sku, label, explain, parameter, "瓶", "1", area_id, odor_id, alcohol_id, store, itemId);
     }
 }

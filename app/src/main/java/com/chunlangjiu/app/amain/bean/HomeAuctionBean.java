@@ -14,6 +14,24 @@ public class HomeAuctionBean {
     private String auction_starting_price;
     private String max_price;
     private String auction_end_time;
+    private String auction_status;
+    private String auction_number;
+
+    public String getAuction_number() {
+        return auction_number;
+    }
+
+    public void setAuction_number(String auction_number) {
+        this.auction_number = auction_number;
+    }
+
+    public String getAuction_status() {
+        return auction_status;
+    }
+
+    public void setAuction_status(String auction_status) {
+        this.auction_status = auction_status;
+    }
 
     public String getImage_default_id() {
         return image_default_id;

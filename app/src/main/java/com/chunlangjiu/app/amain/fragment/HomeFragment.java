@@ -5,6 +5,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -225,6 +226,7 @@ public class HomeFragment extends BaseFragment {
 
     @Override
     public void initData() {
+        EventManager.getInstance().registerListener(onNotifyListener);
         locationCity();
         initBrandRecycleView();
         initRecyclerView();
@@ -574,17 +576,26 @@ public class HomeFragment extends BaseFragment {
                 jingpaiFlag.setItemType(HomeBean.ITEM_JINGPAI);
                 lists.add(jingpaiFlag);
                 for (int i = 0; i < auction_list.size(); i++) {
-                    HomeBean homeBean = new HomeBean();
-                    homeBean.setItemType(HomeBean.ITEM_GOODS);
-                    homeBean.setAuction(true);
-                    homeBean.setItem_id(auction_list.get(i).getItem_id());
-                    homeBean.setTitle(auction_list.get(i).getTitle());
-                    homeBean.setImage_default_id(auction_list.get(i).getImage_default_id());
-                    homeBean.setLabel(auction_list.get(i).getLabel());
-                    homeBean.setAuction_starting_price(auction_list.get(i).getAuction_starting_price());
-                    homeBean.setAuction_end_time(auction_list.get(i).getAuction_end_time());
-                    homeBean.setMax_price(auction_list.get(i).getMax_price());
-                    lists.add(homeBean);
+                    String end_time = auction_list.get(i).getAuction_end_time();
+                    long endTime = 0;
+                    if (!TextUtils.isEmpty(end_time)) {
+                        endTime = Long.parseLong(end_time);
+                    }
+                    if ((endTime * 1000 - System.currentTimeMillis()) > 0) {
+                        HomeBean homeBean = new HomeBean();
+                        homeBean.setItemType(HomeBean.ITEM_GOODS);
+                        homeBean.setAuction(true);
+                        homeBean.setItem_id(auction_list.get(i).getItem_id());
+                        homeBean.setTitle(auction_list.get(i).getTitle());
+                        homeBean.setImage_default_id(auction_list.get(i).getImage_default_id());
+                        homeBean.setLabel(auction_list.get(i).getLabel());
+                        homeBean.setAuction_starting_price(auction_list.get(i).getAuction_starting_price());
+                        homeBean.setAuction_end_time(auction_list.get(i).getAuction_end_time());
+                        homeBean.setMax_price(auction_list.get(i).getMax_price());
+                        homeBean.setAuction_status(auction_list.get(i).getAuction_status());
+                        homeBean.setAuction_number(auction_list.get(i).getAuction_number());
+                        lists.add(homeBean);
+                    }
                 }
                 if (newLists.size() > 0) {
                     HomeBean tuijian = new HomeBean();
@@ -660,6 +671,18 @@ public class HomeFragment extends BaseFragment {
         }
     }
 
+    private EventManager.OnNotifyListener onNotifyListener = new EventManager.OnNotifyListener() {
+        @Override
+        public void onNotify(Object object, String eventTag) {
+            homeCountEnd(eventTag);
+        }
+    };
+
+    private void homeCountEnd(String eventTag) {
+        if (eventTag.equals(ConstantMsg.HOME_COUNT_END)) {
+            getHomeList(1, true);
+        }
+    }
 
     @Override
     public void onStart() {
@@ -673,6 +696,11 @@ public class HomeFragment extends BaseFragment {
         banner.stopAutoPlay();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        EventManager.getInstance().unRegisterListener(onNotifyListener);
+    }
 
     private void iconFunctionClick(int index) {
         if (iconPicLists != null && iconPicLists.size() > 0) {

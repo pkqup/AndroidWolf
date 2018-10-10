@@ -5,12 +5,15 @@ import android.graphics.Paint;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.amain.bean.AuctionListBean;
+import com.chunlangjiu.app.util.ConstantMsg;
+import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.glide.GlideUtils;
 import com.pkqup.commonlibrary.view.countdownview.CountdownView;
 
@@ -32,11 +35,26 @@ public class AuctionListAdapter extends BaseQuickAdapter<AuctionListBean.Auction
     @Override
     protected void convert(BaseViewHolder helper, AuctionListBean.AuctionBean item) {
         ImageView imageView = helper.getView(R.id.img_pic);
+        LinearLayout llHighPrice = helper.getView(R.id.llHighPrice);
+        TextView tvAnPaiStr = helper.getView(R.id.tvAnPaiStr);
         TextView tvStartPrice = helper.getView(R.id.tvStartPrice);
+        TextView tv_give_price_num = helper.getView(R.id.tv_give_price_num);
+        tv_give_price_num.setVisibility(View.VISIBLE);
+        tv_give_price_num.setText("人数："+ item.getAuction_number());
         GlideUtils.loadImage(context, item.getImage_default_id(), imageView);
         helper.setText(R.id.tv_name, item.getTitle());
         helper.setText(R.id.tvStartPrice, "¥" + item.getAuction_starting_price());
-        tvStartPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);  // 设置中划线并加清晰
+//        tvStartPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);  // 设置中划线并加清晰
+
+        if ("true".equals(item.getAuction_status())) {
+            //明拍
+            llHighPrice.setVisibility(View.VISIBLE);
+            tvAnPaiStr.setVisibility(View.GONE);
+        }else{
+            llHighPrice.setVisibility(View.GONE);
+            tvAnPaiStr.setVisibility(View.VISIBLE);
+        }
+
         if (TextUtils.isEmpty(item.getMax_price())) {
             helper.setText(R.id.tvSellPrice, "暂无出价");
         } else {
@@ -60,6 +78,12 @@ public class AuctionListAdapter extends BaseQuickAdapter<AuctionListBean.Auction
             }
             if ((endTime * 1000 - System.currentTimeMillis()) > 0) {
                 countdownView.start(endTime * 1000 - System.currentTimeMillis());
+                countdownView.setOnCountdownEndListener(new CountdownView.OnCountdownEndListener() {
+                    @Override
+                    public void onEnd(CountdownView cv) {
+                        EventManager.getInstance().notify(null, ConstantMsg.AUCTION_COUNT_END);
+                    }
+                });
                 dealWithLifeCycle(helper, helper.getAdapterPosition(), item);
             }
         } catch (Exception e) {
@@ -83,6 +107,12 @@ public class AuctionListAdapter extends BaseQuickAdapter<AuctionListBean.Auction
                     }
                     if ((endTime * 1000 - System.currentTimeMillis()) > 0) {
                         countdownView.start(endTime * 1000 - System.currentTimeMillis());
+                        countdownView.setOnCountdownEndListener(new CountdownView.OnCountdownEndListener() {
+                            @Override
+                            public void onEnd(CountdownView cv) {
+                                EventManager.getInstance().notify(null, ConstantMsg.AUCTION_COUNT_END);
+                            }
+                        });
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
