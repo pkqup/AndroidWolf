@@ -487,10 +487,10 @@ public class OrderDetailActivity extends BaseActivity {
                         case OrderParams.WAIT_SELLER_SEND_GOODS:
                             if (0 == type) {
                                 tv1.setVisibility(View.GONE);
-                                tv2.setText("申请退款");
+                                tv2.setText("取消订单");
                                 tv2.setVisibility(View.VISIBLE);
                             } else {
-                                if ("NO_APPLY_CANCEL".equals(orderDetailBean.getCancel_status()) && "FAILS".equals(orderDetailBean.getCancel_status())) {
+                                if ("NO_APPLY_CANCEL".equals(orderDetailBean.getCancel_status()) || "FAILS".equals(orderDetailBean.getCancel_status())) {
                                     tv1.setText("无货");
                                     tv1.setVisibility(View.VISIBLE);
                                     tv2.setText("发货");
