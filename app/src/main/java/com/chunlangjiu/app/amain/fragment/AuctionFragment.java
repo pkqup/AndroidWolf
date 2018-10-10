@@ -1,18 +1,12 @@
 package com.chunlangjiu.app.amain.fragment;
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -30,25 +24,20 @@ import com.chunlangjiu.app.amain.bean.SecondClassBean;
 import com.chunlangjiu.app.amain.bean.ThirdClassBean;
 import com.chunlangjiu.app.goods.activity.AuctionDetailActivity;
 import com.chunlangjiu.app.goods.activity.SearchActivity;
-import com.chunlangjiu.app.goods.adapter.FilterBrandAdapter;
-import com.chunlangjiu.app.goods.adapter.FilterStoreAdapter;
 import com.chunlangjiu.app.goods.bean.AlcListBean;
 import com.chunlangjiu.app.goods.bean.AreaListBean;
 import com.chunlangjiu.app.goods.bean.BrandsListBean;
-import com.chunlangjiu.app.goods.bean.FilterBrandBean;
-import com.chunlangjiu.app.goods.bean.FilterListBean;
-import com.chunlangjiu.app.goods.bean.FilterStoreBean;
 import com.chunlangjiu.app.goods.bean.OrdoListBean;
 import com.chunlangjiu.app.goods.bean.PriceBean;
-import com.chunlangjiu.app.goods.dialog.ClassPopWindow;
 import com.chunlangjiu.app.net.ApiUtils;
 import com.chunlangjiu.app.user.dialog.ChoiceAlcPopWindow;
 import com.chunlangjiu.app.user.dialog.ChoiceAreaPopWindow;
 import com.chunlangjiu.app.user.dialog.ChoiceBrandPopWindow;
 import com.chunlangjiu.app.user.dialog.ChoiceOrdoPopWindow;
 import com.chunlangjiu.app.user.dialog.ChoicePricePopWindow;
+import com.chunlangjiu.app.util.ConstantMsg;
+import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
-import com.pkqup.commonlibrary.util.SizeUtils;
 import com.pkqup.commonlibrary.util.ToastUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -57,7 +46,6 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindView;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.functions.Consumer;
@@ -226,6 +214,7 @@ public class AuctionFragment extends BaseFragment {
 
     @Override
     public void initData() {
+        EventManager.getInstance().registerListener(onNotifyListener);
         initPriceLists();
         getClassData();
         getBrandLists();
@@ -376,7 +365,17 @@ public class AuctionFragment extends BaseFragment {
 
     private void getListSuccess(List<AuctionListBean.AuctionBean> list) {
         if (list != null) {
-            this.lists = list;
+            lists.clear();
+            for (int i = 0; i < list.size(); i++) {
+                String end_time = list.get(i).getAuction_end_time();
+                long endTime = 0;
+                if (!TextUtils.isEmpty(end_time)) {
+                    endTime = Long.parseLong(end_time);
+                }
+                if ((endTime * 1000 - System.currentTimeMillis()) > 0) {
+                    lists.add(list.get(i));
+                }
+            }
             linearAdapter.setNewData(lists);
         }
     }
@@ -488,10 +487,23 @@ public class AuctionFragment extends BaseFragment {
         }
     }
 
+    private EventManager.OnNotifyListener onNotifyListener = new EventManager.OnNotifyListener() {
+        @Override
+        public void onNotify(Object object, String eventTag) {
+            auctionCountEnd(eventTag);
+        }
+    };
+
+    private void auctionCountEnd(String eventTag) {
+        if (eventTag.equals(ConstantMsg.AUCTION_COUNT_END)) {
+            getListData();
+        }
+    }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        EventManager.getInstance().unRegisterListener(onNotifyListener);
         disposable.dispose();
     }
 }

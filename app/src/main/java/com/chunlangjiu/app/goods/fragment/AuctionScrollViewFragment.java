@@ -264,6 +264,12 @@ public class AuctionScrollViewFragment extends BaseFragment {
             }
             if ((endTime * 1000 - System.currentTimeMillis()) > 0) {
                 countdownView.start(endTime * 1000 - System.currentTimeMillis());
+                countdownView.setOnCountdownEndListener(new CountdownView.OnCountdownEndListener() {
+                    @Override
+                    public void onEnd(CountdownView cv) {
+                        EventManager.getInstance().notify(null, ConstantMsg.DETAIL_COUNT_END);
+                    }
+                });
                 dealWithLifeCycle();
             }
         } catch (Exception e) {
@@ -300,6 +306,12 @@ public class AuctionScrollViewFragment extends BaseFragment {
                     }
                     if ((endTime * 1000 - System.currentTimeMillis()) > 0) {
                         countdownView.start(endTime * 1000 - System.currentTimeMillis());
+                        countdownView.setOnCountdownEndListener(new CountdownView.OnCountdownEndListener() {
+                            @Override
+                            public void onEnd(CountdownView cv) {
+                                EventManager.getInstance().notify(null, ConstantMsg.DETAIL_COUNT_END);
+                            }
+                        });
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

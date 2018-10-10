@@ -12,6 +12,8 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.amain.bean.AuctionListBean;
+import com.chunlangjiu.app.util.ConstantMsg;
+import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.glide.GlideUtils;
 import com.pkqup.commonlibrary.view.countdownview.CountdownView;
 
@@ -73,6 +75,12 @@ public class AuctionListAdapter extends BaseQuickAdapter<AuctionListBean.Auction
             }
             if ((endTime * 1000 - System.currentTimeMillis()) > 0) {
                 countdownView.start(endTime * 1000 - System.currentTimeMillis());
+                countdownView.setOnCountdownEndListener(new CountdownView.OnCountdownEndListener() {
+                    @Override
+                    public void onEnd(CountdownView cv) {
+                        EventManager.getInstance().notify(null, ConstantMsg.AUCTION_COUNT_END);
+                    }
+                });
                 dealWithLifeCycle(helper, helper.getAdapterPosition(), item);
             }
         } catch (Exception e) {
@@ -96,6 +104,12 @@ public class AuctionListAdapter extends BaseQuickAdapter<AuctionListBean.Auction
                     }
                     if ((endTime * 1000 - System.currentTimeMillis()) > 0) {
                         countdownView.start(endTime * 1000 - System.currentTimeMillis());
+                        countdownView.setOnCountdownEndListener(new CountdownView.OnCountdownEndListener() {
+                            @Override
+                            public void onEnd(CountdownView cv) {
+                                EventManager.getInstance().notify(null, ConstantMsg.AUCTION_COUNT_END);
+                            }
+                        });
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

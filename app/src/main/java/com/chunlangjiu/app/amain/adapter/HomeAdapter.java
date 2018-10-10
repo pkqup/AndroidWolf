@@ -14,6 +14,8 @@ import com.chad.library.adapter.base.util.MultiTypeDelegate;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.amain.bean.AuctionListBean;
 import com.chunlangjiu.app.amain.bean.HomeBean;
+import com.chunlangjiu.app.util.ConstantMsg;
+import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.glide.GlideUtils;
 import com.pkqup.commonlibrary.view.countdownview.CountdownView;
 
@@ -96,6 +98,12 @@ public class HomeAdapter extends BaseQuickAdapter<HomeBean, BaseViewHolder> {
                     }
                     if ((endTime * 1000 - System.currentTimeMillis()) > 0) {
                         countdownView.start(endTime * 1000 - System.currentTimeMillis());
+                        countdownView.setOnCountdownEndListener(new CountdownView.OnCountdownEndListener() {
+                            @Override
+                            public void onEnd(CountdownView cv) {
+                                EventManager.getInstance().notify(null, ConstantMsg.HOME_COUNT_END);
+                            }
+                        });
                         dealWithLifeCycle(viewHolder, viewHolder.getAdapterPosition(), item);
                     }
                 } else {
@@ -131,6 +139,12 @@ public class HomeAdapter extends BaseQuickAdapter<HomeBean, BaseViewHolder> {
                     }
                     if ((endTime * 1000 - System.currentTimeMillis()) > 0) {
                         countdownView.start(endTime * 1000 - System.currentTimeMillis());
+                        countdownView.setOnCountdownEndListener(new CountdownView.OnCountdownEndListener() {
+                            @Override
+                            public void onEnd(CountdownView cv) {
+                                EventManager.getInstance().notify(null, ConstantMsg.HOME_COUNT_END);
+                            }
+                        });
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
