@@ -53,10 +53,18 @@ public class HomeAdapter extends BaseQuickAdapter<HomeBean, BaseViewHolder> {
                 CountdownView countdownView = viewHolder.getView(R.id.countdownView);
                 ImageView imgPic = viewHolder.getView(R.id.imgPic);
                 TextView tvStartPrice = viewHolder.getView(R.id.tvStartPrice);
+                TextView tv_give_price_num = viewHolder.getView(R.id.tv_give_price_num);
+                LinearLayout llStartPrice = viewHolder.getView(R.id.llStartPrice);
+                LinearLayout llTime = viewHolder.getView(R.id.llTime);
+                TextView tvStartPriceStr = viewHolder.getView(R.id.tvStartPriceStr);
+                LinearLayout llHighPrice = viewHolder.getView(R.id.llHighPrice);
+                TextView tvAnPaiStr = viewHolder.getView(R.id.tvAnPaiStr);
+                TextView tvSellPriceStr = viewHolder.getView(R.id.tvSellPriceStr);
+                TextView tvSellPrice = viewHolder.getView(R.id.tvSellPrice);
 
                 GlideUtils.loadImage(context, item.getImage_default_id(), imgPic);
                 viewHolder.setText(R.id.tv_name, item.getTitle());
-                tvStartPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);  // 设置中划线并加清晰
+//                tvStartPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);  // 设置中划线并加清晰
                 TextView tvLabel = viewHolder.getView(R.id.tvLabel);
                 if (TextUtils.isEmpty(item.getLabel())) {
                     tvLabel.setVisibility(View.GONE);
@@ -64,13 +72,10 @@ public class HomeAdapter extends BaseQuickAdapter<HomeBean, BaseViewHolder> {
                     tvLabel.setVisibility(View.VISIBLE);
                     tvLabel.setText(item.getLabel());
                 }
-                LinearLayout llTime = viewHolder.getView(R.id.llTime);
-                TextView tvStartPriceStr = viewHolder.getView(R.id.tvStartPriceStr);
-                LinearLayout llHighPrice = viewHolder.getView(R.id.llHighPrice);
-                TextView tvAnPaiStr = viewHolder.getView(R.id.tvAnPaiStr);
-                TextView tvSellPriceStr = viewHolder.getView(R.id.tvSellPriceStr);
-                TextView tvSellPrice = viewHolder.getView(R.id.tvSellPrice);
                 if (item.isAuction()) {
+                    llStartPrice.setVisibility(View.VISIBLE);
+                    tv_give_price_num.setVisibility(View.VISIBLE);
+                    tv_give_price_num.setText("人数："+ item.getAuction_number());
                     tvStartPriceStr.setText("起拍价：");
                     tvStartPrice.setText("¥" + item.getAuction_starting_price());
                     llTime.setVisibility(View.VISIBLE);
@@ -107,6 +112,8 @@ public class HomeAdapter extends BaseQuickAdapter<HomeBean, BaseViewHolder> {
                         dealWithLifeCycle(viewHolder, viewHolder.getAdapterPosition(), item);
                     }
                 } else {
+                    llStartPrice.setVisibility(View.GONE);
+                    tv_give_price_num.setVisibility(View.GONE);
                     llTime.setVisibility(View.GONE);
                     tvSellPriceStr.setVisibility(View.GONE);
                     llHighPrice.setVisibility(View.VISIBLE);

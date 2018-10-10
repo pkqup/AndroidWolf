@@ -38,10 +38,13 @@ public class AuctionListAdapter extends BaseQuickAdapter<AuctionListBean.Auction
         LinearLayout llHighPrice = helper.getView(R.id.llHighPrice);
         TextView tvAnPaiStr = helper.getView(R.id.tvAnPaiStr);
         TextView tvStartPrice = helper.getView(R.id.tvStartPrice);
+        TextView tv_give_price_num = helper.getView(R.id.tv_give_price_num);
+        tv_give_price_num.setVisibility(View.VISIBLE);
+        tv_give_price_num.setText("人数："+ item.getAuction_number());
         GlideUtils.loadImage(context, item.getImage_default_id(), imageView);
         helper.setText(R.id.tv_name, item.getTitle());
         helper.setText(R.id.tvStartPrice, "¥" + item.getAuction_starting_price());
-        tvStartPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);  // 设置中划线并加清晰
+//        tvStartPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);  // 设置中划线并加清晰
 
         if ("true".equals(item.getAuction_status())) {
             //明拍

@@ -593,6 +593,7 @@ public class HomeFragment extends BaseFragment {
                         homeBean.setAuction_end_time(auction_list.get(i).getAuction_end_time());
                         homeBean.setMax_price(auction_list.get(i).getMax_price());
                         homeBean.setAuction_status(auction_list.get(i).getAuction_status());
+                        homeBean.setAuction_number(auction_list.get(i).getAuction_number());
                         lists.add(homeBean);
                     }
                 }
