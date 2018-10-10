@@ -54,7 +54,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="起拍价:"
+                android:text="起拍价："
                 android:textColor="@color/t_red"
                 android:textSize="@dimen/sp_big" />
 

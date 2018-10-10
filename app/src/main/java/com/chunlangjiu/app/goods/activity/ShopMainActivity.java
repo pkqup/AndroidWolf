@@ -283,14 +283,22 @@ public class ShopMainActivity extends BaseActivity {
         linearAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                GoodsDetailsActivity.startGoodsDetailsActivity(ShopMainActivity.this, lists.get(position).getItem_id());
+                if (TextUtils.isEmpty(lists.get(position).getAuction().getAuctionitem_id())) {
+                    GoodsDetailsActivity.startGoodsDetailsActivity(ShopMainActivity.this, lists.get(position).getItem_id());
+                } else {
+                    AuctionDetailActivity.startAuctionDetailsActivity(ShopMainActivity.this, lists.get(position).getItem_id());
+                }
             }
         });
         gridAdapter = new GridAdapter(R.layout.amain_item_goods_list_grid, lists);
         gridAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                GoodsDetailsActivity.startGoodsDetailsActivity(ShopMainActivity.this, lists.get(position).getItem_id());
+                if (TextUtils.isEmpty(lists.get(position).getAuction().getAuctionitem_id())) {
+                    GoodsDetailsActivity.startGoodsDetailsActivity(ShopMainActivity.this, lists.get(position).getItem_id());
+                } else {
+                    AuctionDetailActivity.startAuctionDetailsActivity(ShopMainActivity.this, lists.get(position).getItem_id());
+                }
             }
         });
         recycleView.setLayoutManager(new LinearLayoutManager(this));
@@ -685,28 +693,61 @@ public class ShopMainActivity extends BaseActivity {
 
         @Override
         protected void convert(BaseViewHolder helper, GoodsListDetailBean item) {
-            ImageView imgPic = helper.getView(R.id.img_pic);
-            TextView tvStartPrice = helper.getView(R.id.tvStartPrice);
+            try {
+                ImageView imgPic = helper.getView(R.id.img_pic);
+                ImageView imgAuction = helper.getView(R.id.imgAuction);
+                LinearLayout llStartPrice = helper.getView(R.id.llStartPrice);
+                LinearLayout llHighPrice = helper.getView(R.id.llHighPrice);
+                TextView tvStartPrice = helper.getView(R.id.tvStartPrice);
+                TextView tvAnPaiStr = helper.getView(R.id.tvAnPaiStr);
 
-            GlideUtils.loadImage(ShopMainActivity.this, item.getImage_default_id(), imgPic);
-            helper.setText(R.id.tv_name, item.getTitle());
-            helper.setText(R.id.tvStartPriceStr, "原价：");
-            tvStartPrice.setText(item.getMkt_price());
-            tvStartPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);  // 设置中划线并加清晰
-            helper.setText(R.id.tvSellPriceStr, "");
-            helper.setText(R.id.tvSellPrice, item.getPrice());
+                GlideUtils.loadImage(ShopMainActivity.this, item.getImage_default_id(), imgPic);
+                helper.setText(R.id.tv_name, item.getTitle());
 
-            LinearLayout llTime = helper.getView(R.id.llTime);
-            llTime.setVisibility(View.GONE);
-            helper.setText(R.id.tvLabel, item.getLabel());
-            TextView tvLabel = helper.getView(R.id.tvLabel);
-            if (TextUtils.isEmpty(item.getLabel())) {
-                tvLabel.setVisibility(View.GONE);
-            } else {
-                tvLabel.setVisibility(View.VISIBLE);
+                if (TextUtils.isEmpty(item.getAuction().getAuctionitem_id())) {
+                    //普通商品
+                    imgAuction.setVisibility(View.GONE);
+                    llStartPrice.setVisibility(View.GONE);
+                    llHighPrice.setVisibility(View.VISIBLE);
+                    tvAnPaiStr.setVisibility(View.GONE);
+                    helper.setText(R.id.tvSellPriceStr, "");
+                    helper.setText(R.id.tvSellPrice, item.getPrice());
+                } else {
+                    //竞拍
+                    imgAuction.setVisibility(View.VISIBLE);
+                    llStartPrice.setVisibility(View.VISIBLE);
+                    helper.setText(R.id.tvStartPriceStr, "起拍价：");
+                    tvStartPrice.setText("¥" + item.getAuction().getStarting_price());
+                    if ("true".equals(item.getAuction().getAuction_status())) {
+                        //明拍
+                        llHighPrice.setVisibility(View.VISIBLE);
+                        tvAnPaiStr.setVisibility(View.GONE);
+                        helper.setText(R.id.tvSellPriceStr, "最高出价：");
+                        if (TextUtils.isEmpty(item.getAuction().getMax_price())) {
+                            helper.setText(R.id.tvSellPrice, "暂无出价");
+                        } else {
+                            helper.setText(R.id.tvSellPrice, "¥" + item.getAuction().getMax_price());
+                        }
+                    } else {
+                        llHighPrice.setVisibility(View.GONE);
+                        tvAnPaiStr.setVisibility(View.VISIBLE);
+                    }
+                }
+
+                LinearLayout llTime = helper.getView(R.id.llTime);
+                llTime.setVisibility(View.GONE);
+                helper.setText(R.id.tvLabel, item.getLabel());
+                TextView tvLabel = helper.getView(R.id.tvLabel);
+                if (TextUtils.isEmpty(item.getLabel())) {
+                    tvLabel.setVisibility(View.GONE);
+                } else {
+                    tvLabel.setVisibility(View.VISIBLE);
+                }
+                helper.setText(R.id.tv_attention, item.getView_count() + "人关注");
+                helper.setText(R.id.tv_evaluate, item.getRate_count() + "条评价");
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            helper.setText(R.id.tv_attention, item.getView_count() + "人关注");
-            helper.setText(R.id.tv_evaluate, item.getRate_count() + "条评价");
         }
     }
 
@@ -717,31 +758,64 @@ public class ShopMainActivity extends BaseActivity {
 
         @Override
         protected void convert(BaseViewHolder helper, GoodsListDetailBean item) {
-            ImageView imgPic = helper.getView(R.id.img_pic);
-            ViewGroup.LayoutParams layoutParams = imgPic.getLayoutParams();
-            int picWidth = (SizeUtils.getScreenWidth() - SizeUtils.dp2px(40)) / 2;
-            layoutParams.width = picWidth;
-            layoutParams.height = picWidth;
-            imgPic.setLayoutParams(layoutParams);
-            GlideUtils.loadImage(ShopMainActivity.this, item.getImage_default_id(), imgPic);
-            helper.setText(R.id.tv_name, item.getTitle());
+            try {
+                ImageView imgPic = helper.getView(R.id.img_pic);
+                ImageView imgAuction = helper.getView(R.id.imgAuction);
+                LinearLayout llStartPrice = helper.getView(R.id.llStartPrice);
+                LinearLayout llHighPrice = helper.getView(R.id.llHighPrice);
+                TextView tvStartPrice = helper.getView(R.id.tvStartPrice);
+                TextView tvAnPaiStr = helper.getView(R.id.tvAnPaiStr);
 
-            TextView tvStartPrice = helper.getView(R.id.tvStartPrice);
-            helper.setText(R.id.tvStartPriceStr, "原价：");
-            tvStartPrice.setText(item.getMkt_price());
-            tvStartPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);  // 设置中划线并加清晰
-            helper.setText(R.id.tvSellPriceStr, "");
-            helper.setText(R.id.tvSellPrice, item.getPrice());
+                ViewGroup.LayoutParams layoutParams = imgPic.getLayoutParams();
+                int picWidth = (SizeUtils.getScreenWidth() - SizeUtils.dp2px(40)) / 2;
+                layoutParams.width = picWidth;
+                layoutParams.height = picWidth;
+                imgPic.setLayoutParams(layoutParams);
+                GlideUtils.loadImage(ShopMainActivity.this, item.getImage_default_id(), imgPic);
+                helper.setText(R.id.tv_name, item.getTitle());
 
-            helper.setText(R.id.tvLabel, item.getLabel());
-            TextView tvLabel = helper.getView(R.id.tvLabel);
-            if (TextUtils.isEmpty(item.getLabel())) {
-                tvLabel.setVisibility(View.GONE);
-            } else {
-                tvLabel.setVisibility(View.VISIBLE);
+                if (TextUtils.isEmpty(item.getAuction().getAuctionitem_id())) {
+                    //普通商品
+                    imgAuction.setVisibility(View.GONE);
+                    llStartPrice.setVisibility(View.GONE);
+                    llHighPrice.setVisibility(View.VISIBLE);
+                    tvAnPaiStr.setVisibility(View.GONE);
+                    helper.setText(R.id.tvSellPriceStr, "");
+                    helper.setText(R.id.tvSellPrice, item.getPrice());
+                } else {
+                    //竞拍
+                    imgAuction.setVisibility(View.VISIBLE);
+                    llStartPrice.setVisibility(View.VISIBLE);
+                    helper.setText(R.id.tvStartPriceStr, "起拍价：");
+                    tvStartPrice.setText("¥" + item.getAuction().getStarting_price());
+                    if ("true".equals(item.getAuction().getAuction_status())) {
+                        //明拍
+                        llHighPrice.setVisibility(View.VISIBLE);
+                        tvAnPaiStr.setVisibility(View.GONE);
+                        helper.setText(R.id.tvSellPriceStr, "最高出价：");
+                        if (TextUtils.isEmpty(item.getAuction().getMax_price())) {
+                            helper.setText(R.id.tvSellPrice, "暂无出价");
+                        } else {
+                            helper.setText(R.id.tvSellPrice, "¥" + item.getAuction().getMax_price());
+                        }
+                    } else {
+                        llHighPrice.setVisibility(View.GONE);
+                        tvAnPaiStr.setVisibility(View.VISIBLE);
+                    }
+                }
+
+                helper.setText(R.id.tvLabel, item.getLabel());
+                TextView tvLabel = helper.getView(R.id.tvLabel);
+                if (TextUtils.isEmpty(item.getLabel())) {
+                    tvLabel.setVisibility(View.GONE);
+                } else {
+                    tvLabel.setVisibility(View.VISIBLE);
+                }
+                helper.setText(R.id.tvAttention, item.getView_count() + "人关注");
+                helper.setText(R.id.tvEvaluate, item.getRate_count() + "条评价");
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            helper.setText(R.id.tvAttention, item.getView_count() + "人关注");
-            helper.setText(R.id.tvEvaluate, item.getRate_count() + "条评价");
         }
     }
 
