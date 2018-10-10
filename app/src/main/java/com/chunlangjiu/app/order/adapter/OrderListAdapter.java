@@ -66,7 +66,7 @@ public class OrderListAdapter extends BaseQuickAdapter<OrderListBean.ListBean, B
                         break;
                     case OrderParams.WAIT_SELLER_SEND_GOODS:
                         tv1.setVisibility(View.GONE);
-                        tv2.setText("申请退款");
+                        tv2.setText("取消订单");
                         tv2.setVisibility(View.VISIBLE);
                         break;
                     case OrderParams.WAIT_BUYER_CONFIRM_GOODS:
@@ -142,7 +142,7 @@ public class OrderListAdapter extends BaseQuickAdapter<OrderListBean.ListBean, B
             case 3:
                 switch (item.getStatus()) {
                     case OrderParams.WAIT_SELLER_SEND_GOODS:
-                        if ("NO_APPLY_CANCEL".equals(item.getCancel_status()) && "FAILS".equals(item.getCancel_status())) {
+                        if ("NO_APPLY_CANCEL".equals(item.getCancel_status()) || "FAILS".equals(item.getCancel_status())) {
                             tv1.setText("无货");
                             tv1.setVisibility(View.VISIBLE);
                             tv2.setText("发货");
