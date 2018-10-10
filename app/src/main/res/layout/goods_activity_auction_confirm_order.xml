@@ -381,7 +381,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_marginRight="15dp"
                 android:lineSpacingExtra="5dp"
-                android:text="1、仅第一次对竞拍商品出价需交付定金；\n2、您中标此竞拍商品后，定金将抵扣同等金额的商品货款，商品货款以最后一次您对此竞拍商品的出价为准；\n3、买家中标后不可申请退款退货，如违约平台将有权不返还定金，请您在出价前务必慎重考虑。"
+                android:text="1、仅第一次对竞拍商品出价需交付定金；\n2、定金将会在三个工作日内进行退还；\n3、买家中标后不可申请退款退货，如违约平台将有权不返还定金，请您在出价前务必慎重考虑。"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
