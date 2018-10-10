@@ -6,19 +6,12 @@
     android:orientation="vertical">
 
 
-    <ImageView
-        android:layout_width="78dp"
-        android:layout_height="78dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="60dp"
-        android:src="@mipmap/logo" />
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_marginLeft="45dp"
         android:layout_marginRight="45dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="100dp"
         android:background="@drawable/login_gray_stroke">
 
         <ImageView
@@ -87,8 +80,38 @@
             android:textSize="@dimen/sp_mid" />
     </RelativeLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginLeft="45dp"
+        android:layout_marginRight="45dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/login_gray_stroke">
+
+        <ImageView
+            android:id="@+id/imgPsd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="12dp"
+            android:src="@mipmap/login_auth_code" />
+
+        <EditText
+            android:id="@+id/etPsd"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
+            android:layout_toRightOf="@id/imgPsd"
+            android:background="@null"
+            android:hint="请输入密码"
+            android:inputType="textPassword"
+            android:maxLength="20"
+            android:textColor="@color/t_black"
+            android:textSize="@dimen/sp_mid" />
+    </RelativeLayout>
+
     <TextView
-        android:id="@+id/tvLogin"
+        android:id="@+id/tvSave"
         android:layout_width="match_parent"
         android:layout_height="45dp"
         android:layout_marginLeft="45dp"
@@ -96,36 +119,8 @@
         android:layout_marginTop="20dp"
         android:background="@drawable/login_red_bg"
         android:gravity="center"
-        android:text="登录"
+        android:text="保存"
         android:textColor="@color/t_white"
         android:textSize="@dimen/sp_big" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:id="@+id/tvLicence"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="50dp"
-            android:layout_marginTop="15dp"
-            android:text="醇狼APP隐私政策"
-            android:textColor="@color/t_red"
-            android:textSize="@dimen/sp_small" />
-
-        <TextView
-            android:id="@+id/tvPsdLogin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="45dp"
-            android:layout_marginTop="15dp"
-            android:text="密码登录"
-            android:textColor="@color/t_red"
-            android:textSize="@dimen/sp_small" />
-
-    </RelativeLayout>
-
 
 </LinearLayout>

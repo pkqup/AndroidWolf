@@ -1,7 +1,5 @@
 package com.chunlangjiu.app.amain.activity;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.TextUtils;
@@ -11,15 +9,8 @@ import android.widget.TextView;
 
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
-import com.chunlangjiu.app.abase.BaseApplication;
-import com.chunlangjiu.app.amain.bean.LoginBean;
-import com.chunlangjiu.app.goods.activity.GoodsDetailsActivity;
 import com.chunlangjiu.app.net.ApiUtils;
-import com.chunlangjiu.app.util.ConstantMsg;
-import com.chunlangjiu.app.web.WebViewActivity;
-import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
-import com.pkqup.commonlibrary.util.SPUtils;
 import com.pkqup.commonlibrary.util.ToastUtils;
 
 import butterknife.BindView;
@@ -29,10 +20,11 @@ import io.reactivex.functions.Consumer;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * @CreatedbBy: liucun on 2018/7/6
- * @Describe: 登录页面
+ * @CreatedbBy: liucun on 2018/10/10
+ * @Describe:
  */
-public class LoginActivity extends BaseActivity {
+public class ResetPsdActivity extends BaseActivity {
+
 
     @BindView(R.id.etPhone)
     EditText etPhone;
@@ -40,24 +32,15 @@ public class LoginActivity extends BaseActivity {
     EditText etAuthCode;
     @BindView(R.id.tvGetCode)
     TextView tvGetCode;
-    @BindView(R.id.tvLogin)
-    TextView tvLogin;
-    @BindView(R.id.tvLicence)
-    TextView tvLicence;
+    @BindView(R.id.etPsd)
+    EditText etPsd;
 
-    @BindView(R.id.tvPsdLogin)
-    TextView tvPsdLogin;
+    @BindView(R.id.tvSave)
+    TextView tvSave;
 
     private CompositeDisposable disposable;
 
     private CountDownTimer countDownTimer;
-
-
-    public static void startLoginActivity(Activity activity) {
-        Intent intent = new Intent(activity, LoginActivity.class);
-        activity.startActivity(intent);
-    }
-
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -69,43 +52,32 @@ public class LoginActivity extends BaseActivity {
                 case R.id.tvGetCode:
                     checkPhone();
                     break;
-                case R.id.tvLogin:
-                    checkSmsCode();
-                    break;
-                case R.id.tvLicence:
-                    toLicence();
-                    break;
-                case R.id.tvPsdLogin:
-                    startActivity(new Intent(LoginActivity.this, PasswordLoginActivity.class));
+                case R.id.tvSave:
+                    checkData();
                     break;
             }
         }
-
     };
-
 
     @Override
     public void setTitleView() {
-        titleName.setText("登录注册");
+        titleName.setText("忘记密码");
         titleImgLeft.setOnClickListener(onClickListener);
     }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.amain_activity_login);
-        EventManager.getInstance().registerListener(onNotifyListener);
+        setContentView(R.layout.amain_activity_set_psd);
         initView();
     }
 
     private void initView() {
         disposable = new CompositeDisposable();
         tvGetCode.setOnClickListener(onClickListener);
-        tvLogin.setOnClickListener(onClickListener);
-        tvLicence.setOnClickListener(onClickListener);
-        tvPsdLogin.setOnClickListener(onClickListener);
+        tvSave.setOnClickListener(onClickListener);
     }
-
 
     private void checkPhone() {
         if (etPhone.getText().toString().length() == 11) {
@@ -154,28 +126,28 @@ public class LoginActivity extends BaseActivity {
     }
 
 
-    private void checkSmsCode() {
-        if (!TextUtils.isEmpty(etAuthCode.getText().toString())) {
-            login();
-        } else {
+    private void checkData() {
+        if (etPhone.getText().toString().length() < 11) {
+            ToastUtils.showShort("请输入正确的手机号码");
+        } else if (TextUtils.isEmpty(etAuthCode.getText().toString())) {
             ToastUtils.showShort("请输入正确的验证码");
+        } else if (etPsd.getText().toString().length() < 6) {
+            ToastUtils.showShort("密码长度最低为6位");
+        } else {
+            setPsd();
         }
     }
 
-    private void login() {
+    private void setPsd() {
         showLoadingDialog();
-        disposable.add(ApiUtils.getInstance().login(etPhone.getText().toString(), etAuthCode.getText().toString())
+        disposable.add(ApiUtils.getInstance().setPsd(etPhone.getText().toString(), etAuthCode.getText().toString(), etPsd.getText().toString())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<ResultBean<LoginBean>>() {
+                .subscribe(new Consumer<ResultBean>() {
                     @Override
-                    public void accept(ResultBean<LoginBean> loginBeanResultBean) throws Exception {
+                    public void accept(ResultBean resultBean) throws Exception {
                         hideLoadingDialog();
-                        ToastUtils.showShort("登录成功");
-                        SPUtils.put("token", loginBeanResultBean.getData().getAccessToken());
-                        BaseApplication.setToken(loginBeanResultBean.getData().getAccessToken());
-                        BaseApplication.initToken();
-                        EventManager.getInstance().notify(null, ConstantMsg.LOGIN_SUCCESS);
+                        ToastUtils.showShort("密码设置成功");
                         finish();
                     }
                 }, new Consumer<Throwable>() {
@@ -188,28 +160,9 @@ public class LoginActivity extends BaseActivity {
     }
 
 
-    private void toLicence() {
-        WebViewActivity.startWebViewActivity(this, ConstantMsg.WEB_URL_LICENSE, "醇狼APP隐私政策");
-    }
-
-    private EventManager.OnNotifyListener onNotifyListener = new EventManager.OnNotifyListener() {
-        @Override
-        public void onNotify(Object object, String eventTag) {
-            loginSuccess(eventTag);
-        }
-    };
-
-    //登录成功
-    private void loginSuccess(String eventTag) {
-        if (eventTag.equals(ConstantMsg.LOGIN_SUCCESS)) {
-            finish();
-        }
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
         disposable.dispose();
-        EventManager.getInstance().unRegisterListener(onNotifyListener);
     }
 }

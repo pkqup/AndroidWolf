@@ -69,6 +69,17 @@ public interface ApiService {
 
     @POST("index.php/topapi")
     @FormUrlEncoded
+    Flowable<ResultBean<LoginBean>> psdLogin(@Field("method") String method, @Field("v") String v, @Field("account") String mobile, @Field("password") String password,
+                                             @Field("deviceid") String deviceid, @Field("clientid") String clientid,
+                                             @Field("type") String type, @Field("plugin") String plugin);
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean> setPsd(@Field("method") String method, @Field("v") String v, @Field("mobile") String mobile, @Field("vcode") String vcode,
+                                @Field("password") String password);
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
     Flowable<ResultBean> logout(@Field("method") String method, @Field("v") String v);
 
     @POST("index.php/topapi")
@@ -520,7 +531,6 @@ public interface ApiService {
     Flowable<ResultBean> favoriteCancelGoods(@Field("method") String method, @Field("v") String v, @Field("item_id") String item_id);
 
 
-
     @POST("index.php/shop/topapi")
     @FormUrlEncoded
     Flowable<ResultBean<EditGoodsDetailBean>> editGoodsDetail(@Field("method") String method, @Field("v") String v, @Field("item_id") String item_id);
@@ -529,13 +539,13 @@ public interface ApiService {
     @POST("index.php/shop/topapi")
     @FormUrlEncoded
     Observable<ResultBean> commitEditGoodsDetail(@Field("method") String method, @Field("v") String v,
-                                               @Field("cat_id") String cat_id, @Field("brand_id") String brand_id,
-                                               @Field("shop_cat_id") String shop_cat_id,
-                                               @Field("title") String title, @Field("sub_title") String sub_title,
-                                               @Field("weight") String weight, @Field("list_image") String list_image, @Field("price") String price,
-                                               @Field("dlytmpl_id") String dlytmpl_id, @Field("sku") String sku,
-                                               @Field("label") String label, @Field("explain") String explain,
-                                               @Field("parameter") String parameter, @Field("unit") String unit, @Field("nospec") String nospec,
-                                               @Field("area_id") String area_id, @Field("odor_id") String odor_id, @Field("alcohol_id") String alcohol_id,
-                                               @Field("store") String store,  @Field("item_id") String item_id);
+                                                 @Field("cat_id") String cat_id, @Field("brand_id") String brand_id,
+                                                 @Field("shop_cat_id") String shop_cat_id,
+                                                 @Field("title") String title, @Field("sub_title") String sub_title,
+                                                 @Field("weight") String weight, @Field("list_image") String list_image, @Field("price") String price,
+                                                 @Field("dlytmpl_id") String dlytmpl_id, @Field("sku") String sku,
+                                                 @Field("label") String label, @Field("explain") String explain,
+                                                 @Field("parameter") String parameter, @Field("unit") String unit, @Field("nospec") String nospec,
+                                                 @Field("area_id") String area_id, @Field("odor_id") String odor_id, @Field("alcohol_id") String alcohol_id,
+                                                 @Field("store") String store, @Field("item_id") String item_id);
 }
