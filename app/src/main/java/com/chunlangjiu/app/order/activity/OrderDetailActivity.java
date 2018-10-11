@@ -753,28 +753,35 @@ public class OrderDetailActivity extends BaseActivity {
                         tvPaymentTips = findViewById(R.id.tvPaymentTips);
                         tvPaymentTips.setText("已付定金：");
                         break;
-                    case "2":
-                        tvRightContentDesc.setText("剩余支付时间：");
-                        close_time = orderDetailBean.getClose_time();
-                        try {
-                            int i = close_time * 1000;
-                            countdownView.start(i);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        tvRightContent.setVisibility(View.GONE);
-                        tv2.setText("去支付");
-                        tv2.setVisibility(View.VISIBLE);
-                        llPayTime.setVisibility(View.GONE);
-                        llSendTime.setVisibility(View.GONE);
-                        llFinishTime.setVisibility(View.GONE);
-                        tvPaymentTips = findViewById(R.id.tvPaymentTips);
-                        tvPaymentTips.setText("应付定金：");
-                        tvChangePrice.setVisibility(View.GONE);
-                        break;
+//                    case "2":
+//                        tvRightContentDesc.setText("剩余支付时间：");
+//                        close_time = orderDetailBean.getClose_time();
+//                        try {
+//                            int i = close_time * 1000;
+//                            countdownView.start(i);
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                        tvRightContent.setVisibility(View.GONE);
+//                        tv2.setText("去支付");
+//                        tv2.setVisibility(View.VISIBLE);
+//                        llPayTime.setVisibility(View.GONE);
+//                        llSendTime.setVisibility(View.GONE);
+//                        llFinishTime.setVisibility(View.GONE);
+//                        tvPaymentTips = findViewById(R.id.tvPaymentTips);
+//                        tvPaymentTips.setText("应付定金：");
+//                        tvChangePrice.setVisibility(View.GONE);
+//                        break;
 //                    case "3":
 //                        break;
                     default:
+                        tvRightContentDesc.setVisibility(View.GONE);
+                        tvRightContent.setVisibility(View.GONE);
+                        llPayTime.setVisibility(View.GONE);
+                        llSendTime.setVisibility(View.GONE);
+                        llFinishTime.setVisibility(View.GONE);
+                        countdownView.setVisibility(View.GONE);
+                        tvOrderId.setText(orderDetailBean.getPayments().getPayment_id());
                         tv2.setVisibility(View.GONE);
                         tvPaymentTips = findViewById(R.id.tvPaymentTips);
                         tvPaymentTips.setText("已付定金：");
