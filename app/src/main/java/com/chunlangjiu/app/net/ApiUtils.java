@@ -420,20 +420,20 @@ public class ApiUtils {
     }
 
 
-    public Flowable<ResultBean<BrandsListBean>> getUserBrandList() {
-        return apiService.getUserBrandList("category.brand.get", "v1");
+    public Flowable<ResultBean<BrandsListBean>> getUserBrandList(String cat_id) {
+        return apiService.getUserBrandList("category.brand.get", "v1", cat_id);
     }
 
-    public Flowable<ResultBean<AreaListBean>> getUserAreaList() {
-        return apiService.getUserAreaList("category.area.get", "v1");
+    public Flowable<ResultBean<AreaListBean>> getUserAreaList(String cat_id) {
+        return apiService.getUserAreaList("category.area.get", "v1", cat_id);
     }
 
-    public Flowable<ResultBean<OrdoListBean>> getUserOrdoList() {
-        return apiService.getUserOrdoList("category.odor.get", "v1");
+    public Flowable<ResultBean<OrdoListBean>> getUserOrdoList(String cat_id) {
+        return apiService.getUserOrdoList("category.odor.get", "v1", cat_id);
     }
 
-    public Flowable<ResultBean<AlcListBean>> getUserAlcList() {
-        return apiService.getUserAlcList("category.alcohol.get", "v1");
+    public Flowable<ResultBean<AlcListBean>> getUserAlcList(String cat_id) {
+        return apiService.getUserAlcList("category.alcohol.get", "v1", cat_id);
     }
 
     public Flowable<ResultBean<BrandsListBean>> getAddShopBrandList(String cat_id) {
