@@ -96,10 +96,10 @@ public class OrderListAdapter extends BaseQuickAdapter<OrderListBean.ListBean, B
                         tv2.setText("修改出价");
                         tv2.setVisibility(View.VISIBLE);
                         break;
-                    case "2":
-                        tv2.setText("去支付");
-                        tv2.setVisibility(View.VISIBLE);
-                        break;
+//                    case "2":
+//                        tv2.setText("去支付");
+//                        tv2.setVisibility(View.VISIBLE);
+//                        break;
 //                    case "3":
 //                        tv2.setText("删除订单");
 //                        tv2.setVisibility(View.VISIBLE);
