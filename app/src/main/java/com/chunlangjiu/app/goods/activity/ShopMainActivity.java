@@ -602,6 +602,7 @@ public class ShopMainActivity extends BaseActivity {
                     }
                 });
             }
+            choiceBrandPopWindow.setBrandList(brandLists,brandId);
             choiceBrandPopWindow.showAsDropDown(rlBrand, 0, 1);
         }
     }
@@ -622,6 +623,7 @@ public class ShopMainActivity extends BaseActivity {
                     }
                 });
             }
+            choiceAreaPopWindow.setBrandList(areaLists,areaId);
             choiceAreaPopWindow.showAsDropDown(rlBrand, 0, 1);
         }
     }
@@ -641,6 +643,7 @@ public class ShopMainActivity extends BaseActivity {
                     }
                 });
             }
+            choiceOrdoPopWindow.setBrandList(ordoLists,ordoId);
             choiceOrdoPopWindow.showAsDropDown(rlBrand, 0, 1);
         }
     }
@@ -660,6 +663,7 @@ public class ShopMainActivity extends BaseActivity {
                     }
                 });
             }
+            choiceAlcPopWindow.setBrandList(alcLists,alcoholId);
             choiceAlcPopWindow.showAsDropDown(rlBrand, 0, 1);
         }
     }

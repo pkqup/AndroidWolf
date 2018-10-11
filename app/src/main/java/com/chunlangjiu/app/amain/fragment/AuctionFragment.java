@@ -395,6 +395,7 @@ public class AuctionFragment extends BaseFragment {
                     }
                 });
             }
+            choiceBrandPopWindow.setBrandList(brandLists,brandId);
             choiceBrandPopWindow.showAsDropDown(rlBrand, 0, 1);
         }
     }
@@ -414,6 +415,7 @@ public class AuctionFragment extends BaseFragment {
                     }
                 });
             }
+            choiceAreaPopWindow.setBrandList(areaLists,areaId);
             choiceAreaPopWindow.showAsDropDown(rlBrand, 0, 1);
         }
     }
@@ -432,6 +434,7 @@ public class AuctionFragment extends BaseFragment {
                     }
                 });
             }
+            choiceOrdoPopWindow.setBrandList(ordoLists,ordoId);
             choiceOrdoPopWindow.showAsDropDown(rlBrand, 0, 1);
         }
     }
@@ -450,6 +453,7 @@ public class AuctionFragment extends BaseFragment {
                     }
                 });
             }
+            choiceAlcPopWindow.setBrandList(alcLists,alcoholId);
             choiceAlcPopWindow.showAsDropDown(rlBrand, 0, 1);
         }
     }

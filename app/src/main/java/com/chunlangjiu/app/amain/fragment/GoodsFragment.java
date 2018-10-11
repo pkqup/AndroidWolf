@@ -552,6 +552,7 @@ public class GoodsFragment extends BaseFragment {
                     }
                 });
             }
+            choiceBrandPopWindow.setBrandList(brandLists,brandId);
             choiceBrandPopWindow.showAsDropDown(rlBrand, 0, 1);
         }
     }
@@ -572,6 +573,7 @@ public class GoodsFragment extends BaseFragment {
                     }
                 });
             }
+            choiceAreaPopWindow.setBrandList(areaLists,areaId);
             choiceAreaPopWindow.showAsDropDown(rlBrand, 0, 1);
         }
     }
@@ -591,6 +593,7 @@ public class GoodsFragment extends BaseFragment {
                     }
                 });
             }
+            choiceOrdoPopWindow.setBrandList(ordoLists,ordoId);
             choiceOrdoPopWindow.showAsDropDown(rlBrand, 0, 1);
         }
     }
@@ -610,6 +613,7 @@ public class GoodsFragment extends BaseFragment {
                     }
                 });
             }
+            choiceAlcPopWindow.setBrandList(alcLists,alcoholId);
             choiceAlcPopWindow.showAsDropDown(rlBrand, 0, 1);
         }
     }
