@@ -102,7 +102,9 @@ public class InputPriceDialog extends Dialog {
             if (TextUtils.isEmpty(etPrice.getText().toString().trim())) {
                 ToastUtils.showShort("请输入金额");
             } else {
-                String trim = etPrice.getText().toString().trim();
+                callBack.editPrice(etPrice.getText().toString().trim());
+                dismiss();
+              /*  String trim = etPrice.getText().toString().trim();
                 double inPutprice = Double.parseDouble(trim);
                 double currentPrice = Double.parseDouble(myPrice);
                 if (inPutprice > currentPrice) {
@@ -110,7 +112,7 @@ public class InputPriceDialog extends Dialog {
                     dismiss();
                 } else {
                     ToastUtils.showShort("新出价金额必须大于原出价金额");
-                }
+                }*/
             }
         } catch (Exception e) {
             e.printStackTrace();
