@@ -562,7 +562,7 @@ public class OrderDetailActivity extends BaseActivity {
                         case 0:
                             switch (orderDetailBean.getStatus()) {
                                 case OrderParams.TRADE_FINISHED:
-                                    if (TextUtils.isEmpty(orderBean.getAftersales_status())) {
+                                    if (TextUtils.isEmpty(orderBean.getAftersales_status()) && orderBean.isRefund_enabled()) {
                                         TextView tvAfterSale = inflate.findViewById(R.id.tvAfterSale);
                                         tvAfterSale.setTag(i);
                                         tvAfterSale.setOnClickListener(onClickListener);
