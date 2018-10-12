@@ -404,7 +404,7 @@ public class OrderDetailActivity extends BaseActivity {
     }
 
     private void processData() {
-        GlideUtils.loadImage(getApplicationContext(), orderDetailBean.getShoplogo(), imgStore);
+        GlideUtils.loadImageShop(getApplicationContext(), orderDetailBean.getShoplogo(), imgStore);
         tvStore.setText(orderDetailBean.getShopname());
 
         tvCopy.setOnClickListener(onClickListener);
@@ -1139,7 +1139,13 @@ public class OrderDetailActivity extends BaseActivity {
     };
 
     private void changeMyPrice() {
-        String max_price = orderDetailBean.getAuction().getMax_price();
+        String max_price;
+        if (!TextUtils.isEmpty(orderDetailBean.getAuction().getAuction_status())
+                && "false".equalsIgnoreCase(orderDetailBean.getAuction().getAuction_status())) {
+            max_price = "保密出价";
+        } else {
+            max_price = orderDetailBean.getAuction().getMax_price();
+        }
         String original_bid = orderDetailBean.getAuction().getOriginal_bid();
         if (inputPriceDialog == null) {
             inputPriceDialog = new InputPriceDialog(this, max_price, original_bid);
