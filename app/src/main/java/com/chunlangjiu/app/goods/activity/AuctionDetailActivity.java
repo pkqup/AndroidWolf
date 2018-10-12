@@ -365,7 +365,6 @@ public class AuctionDetailActivity extends BaseActivity {
 
     private void detailCountEnd(String eventTag) {
         if (eventTag.equals(ConstantMsg.DETAIL_COUNT_END)) {
-            GoodsDetailsActivity.startGoodsDetailsActivity(this, itemId);
             finish();
         }
     }
