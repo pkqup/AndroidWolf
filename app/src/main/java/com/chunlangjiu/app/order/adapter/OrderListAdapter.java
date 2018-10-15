@@ -70,6 +70,8 @@ public class OrderListAdapter extends BaseQuickAdapter<OrderListBean.ListBean, B
                         if ("NO_APPLY_CANCEL".equals(item.getCancel_status())) {
                             tv2.setText("取消订单");
                             tv2.setVisibility(View.VISIBLE);
+                        } else {
+                            tv2.setVisibility(View.GONE);
                         }
                         break;
                     case OrderParams.WAIT_BUYER_CONFIRM_GOODS:
