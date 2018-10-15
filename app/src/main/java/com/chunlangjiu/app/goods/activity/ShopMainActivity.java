@@ -630,7 +630,7 @@ public class ShopMainActivity extends BaseActivity {
 
     private void showIncensePopWindow() {
         if (ordoLists == null || ordoLists.size() == 0) {
-            ToastUtils.showShort("暂无香型");
+            ToastUtils.showShort("暂无类型");
         } else {
             if (choiceOrdoPopWindow == null) {
                 choiceOrdoPopWindow = new ChoiceOrdoPopWindow(this, ordoLists, ordoId);
@@ -638,7 +638,7 @@ public class ShopMainActivity extends BaseActivity {
                     @Override
                     public void choiceBrand(String brandName, String brandId) {
                         ordoId = brandId;
-                        tvIncense.setText(TextUtils.isEmpty(ordoId) ? "香型" : brandName);
+                        tvIncense.setText(TextUtils.isEmpty(ordoId) ? "类型" : brandName);
                         getGoodsList(1, true);
                     }
                 });

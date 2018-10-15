@@ -76,7 +76,7 @@
                 android:layout_centerInParent="true"
                 android:drawablePadding="3dp"
                 android:drawableRight="@mipmap/choice_arrow"
-                android:text="香型"
+                android:text="类型"
                 android:singleLine="true"
                 android:ellipsize="end"
                 android:textColor="@color/t_gray"
