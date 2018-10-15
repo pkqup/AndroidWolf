@@ -499,26 +499,40 @@ public class HomeFragment extends BaseFragment {
                 switch (i) {
                     case 0:
                         GlideUtils.loadImage(getActivity(), iconPicLists.get(i).getImagesrc(), imgIconOne);
-                        tvStrOne.setText(iconPicLists.get(i).getTag());
-                        break;
+                        setIconText(tvStrOne, i);
+                         break;
                     case 1:
                         GlideUtils.loadImage(getActivity(), iconPicLists.get(i).getImagesrc(), imgIconTwo);
-                        tvStrTwo.setText(iconPicLists.get(i).getTag());
+                        setIconText(tvStrTwo, i);
                         break;
                     case 2:
                         GlideUtils.loadImage(getActivity(), iconPicLists.get(i).getImagesrc(), imgIconThree);
-                        tvStrThree.setText(iconPicLists.get(i).getTag());
+                        setIconText(tvStrThree, i);
                         break;
                     case 3:
                         GlideUtils.loadImage(getActivity(), iconPicLists.get(i).getImagesrc(), imgIconFour);
-                        tvStrFour.setText(iconPicLists.get(i).getTag());
+                        setIconText(tvStrFour, i);
                         break;
                     case 4:
                         GlideUtils.loadImage(getActivity(), iconPicLists.get(i).getImagesrc(), imgIconFive);
-                        tvStrFive.setText(iconPicLists.get(i).getTag());
+                        setIconText(tvStrFive, i);
                         break;
                 }
             }
+        }
+    }
+
+    /**
+     * 替换竞拍专区的文案
+     *
+     * @param textView
+     * @param index
+     */
+    private void setIconText(TextView textView, int index) {
+        if ("竞拍专区".equals(iconPicLists.get(index).getTag())) {
+            textView.setText("精品专区");
+        } else {
+            textView.setText(iconPicLists.get(index).getTag());
         }
     }
 
@@ -570,7 +584,7 @@ public class HomeFragment extends BaseFragment {
         }
         if (isRefresh) {
             pageNo = 1;
-            if (auction_list != null && auction_list.size() > 0) {
+            /*if (auction_list != null && auction_list.size() > 0) {
                 lists.clear();
                 HomeBean jingpaiFlag = new HomeBean();
                 jingpaiFlag.setItemType(HomeBean.ITEM_JINGPAI);
@@ -603,14 +617,15 @@ public class HomeFragment extends BaseFragment {
                     lists.add(tuijian);
                 }
                 lists.addAll(newLists);
-            } else {
-                if (newLists.size() > 0) {
-                    HomeBean tuijian = new HomeBean();
-                    tuijian.setItemType(HomeBean.ITEM_TUIJIAN);
-                    lists.add(tuijian);
-                }
-                lists.addAll(newLists);
+            } else {*/
+            lists.clear();
+            if (newLists.size() > 0) {
+                HomeBean tuijian = new HomeBean();
+                tuijian.setItemType(HomeBean.ITEM_TUIJIAN);
+                lists.add(tuijian);
             }
+            lists.addAll(newLists);
+//            }
         } else {
             pageNo++;
             lists.addAll(newLists);
@@ -709,7 +724,7 @@ public class HomeFragment extends BaseFragment {
         } else {
             switch (index) {
                 case 0:
-                    EventManager.getInstance().notify(null, ConstantMsg.MSG_PAGE_AUCTION);
+                    EventManager.getInstance().notify(null, ConstantMsg.MSG_PAGE_CLASS);
                     break;
                 case 1:
                     EventManager.getInstance().notify(null, ConstantMsg.MSG_PAGE_CLASS);
@@ -747,7 +762,7 @@ public class HomeFragment extends BaseFragment {
                 GoodsListNewActivity.startGoodsListNewActivity(getActivity(), function.getLinktarget(), "", "");
                 break;
             case HomeModulesBean.ITEM_ACTIVITY:
-                EventManager.getInstance().notify(null, ConstantMsg.MSG_PAGE_AUCTION);
+                EventManager.getInstance().notify(null, ConstantMsg.MSG_PAGE_CLASS);
                 break;
             case HomeModulesBean.ITEM_WINERY:
                 startActivity(new Intent(getActivity(), StoreListActivity.class));

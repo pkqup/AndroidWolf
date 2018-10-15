@@ -467,7 +467,21 @@ public class GoodsFragment extends BaseFragment {
 
     private void getListSuccess(GoodsListBean goodsListBean, boolean isRefresh) {
         if (goodsListBean != null && goodsListBean.getList() != null && goodsListBean.getList().size() > 0) {
-            List<GoodsListDetailBean> newLists = goodsListBean.getList();
+            List<GoodsListDetailBean> dataLists = goodsListBean.getList();
+            List<GoodsListDetailBean> newLists =new ArrayList<>();
+
+            //过滤竞拍商品
+            try {
+                for (int i = 0; i < dataLists.size(); i++) {
+                    if (TextUtils.isEmpty(dataLists.get(i).getAuction().getAuctionitem_id())) {
+                        newLists.add(dataLists.get(i));
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+
             if (newLists == null) newLists = new ArrayList<>();
             if (isRefresh) {
                 pageNum = 1;
