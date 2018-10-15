@@ -719,7 +719,7 @@ public class EditGoodsActivity extends BaseActivity {
             ToastUtils.showShort("请先选择分类");
         } else {
             if (ordoLists == null || ordoLists.size() == 0) {
-                ToastUtils.showShort("暂无香型");
+                ToastUtils.showShort("暂无类型");
             } else {
                 if (choiceOrdoPopWindow == null) {
                     choiceOrdoPopWindow = new ChoiceOrdoPopWindow(this, ordoLists, ordoId);
