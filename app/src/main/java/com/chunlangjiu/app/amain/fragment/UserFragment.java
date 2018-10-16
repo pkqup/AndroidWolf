@@ -514,7 +514,7 @@ public class UserFragment extends BaseFragment {
         initImagePicker();
         getUserInfo();
         getOrderNumIndex();
-        getPersonAuthStatus();
+        getPersonAndCompanyAuthStatus();
     }
 
 
@@ -584,8 +584,47 @@ public class UserFragment extends BaseFragment {
     }
 
 
-    private void getPersonAuthStatus() {
-        disposable.add(ApiUtils.getInstance().getPersonAuthStatus()
+    private void getPersonAndCompanyAuthStatus() {
+        Observable<ResultBean<AuthStatusBean>> personAuthStatus = ApiUtils.getInstance().getPersonAuthStatus();
+        Observable<ResultBean<AuthStatusBean>> companyAuthStatus = ApiUtils.getInstance().getCompanyAuthStatus();
+        disposable.add(Observable.zip(personAuthStatus, companyAuthStatus, new BiFunction<ResultBean<AuthStatusBean>, ResultBean<AuthStatusBean>, List<AuthStatusBean>>() {
+            @Override
+            public List<AuthStatusBean> apply(ResultBean<AuthStatusBean> uploadImageBeanResultBean, ResultBean<AuthStatusBean> uploadImageBeanResultBean2) throws Exception {
+                List<AuthStatusBean> imageLists = new ArrayList<>();
+                imageLists.add(uploadImageBeanResultBean.getData());
+                imageLists.add(uploadImageBeanResultBean2.getData());
+                return imageLists;
+            }
+        }).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<List<AuthStatusBean>>() {
+                    @Override
+                    public void accept(List<AuthStatusBean> authStatusBeans) throws Exception {
+                        personStatus = authStatusBeans.get(0).getStatus();
+                        companyStatus = authStatusBeans.get(1).getStatus();
+                        if ((AuthStatusBean.AUTH_SUCCESS.equals(personStatus) || AuthStatusBean.AUTH_SUCCESS.equals(companyStatus))) {
+                            tvAuthRealName.setText("已认证");
+                            tvAuthRealName.setClickable(false);
+                        } else {
+                            tvAuthRealName.setText("实名认证");
+                            tvAuthRealName.setClickable(true);
+                        }
+
+                        if (AuthStatusBean.AUTH_SUCCESS.equals(companyStatus)) {
+                            tvAccountType.setText("企业");
+                            tvAuthCompany.setVisibility(View.GONE);
+                        } else {
+                            tvAccountType.setText("个人");
+                            tvAuthCompany.setVisibility(View.VISIBLE);
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        hideLoadingDialog();
+                    }
+                }));
+     /*   disposable.add(ApiUtils.getInstance().getPersonAuthStatus()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean<AuthStatusBean>>() {
@@ -598,10 +637,10 @@ public class UserFragment extends BaseFragment {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                     }
-                }));
+                }));*/
     }
 
-    private void getPersonStatusSuccess(AuthStatusBean data) {
+  /*  private void getPersonStatusSuccess(AuthStatusBean data) {
         personStatus = data.getStatus();
         if ("active".equals(data.getStatus())) {
             //未认证
@@ -656,7 +695,7 @@ public class UserFragment extends BaseFragment {
             tvAuthRealName.setClickable(false);
             tvAuthCompany.setVisibility(View.GONE);
         }
-    }
+    }*/
 
 
     /**
@@ -717,6 +756,22 @@ public class UserFragment extends BaseFragment {
                                 hideLoadingDialog();
                                 personStatus = authStatusBeans.get(0).getStatus();
                                 companyStatus = authStatusBeans.get(1).getStatus();
+
+                                if ((AuthStatusBean.AUTH_SUCCESS.equals(personStatus) || AuthStatusBean.AUTH_SUCCESS.equals(companyStatus))) {
+                                    tvAuthRealName.setText("已认证");
+                                    tvAuthRealName.setClickable(false);
+                                } else {
+                                    tvAuthRealName.setText("实名认证");
+                                    tvAuthRealName.setClickable(true);
+                                }
+
+                                if (AuthStatusBean.AUTH_SUCCESS.equals(companyStatus)) {
+                                    tvAccountType.setText("企业");
+                                    tvAuthCompany.setVisibility(View.GONE);
+                                } else {
+                                    tvAccountType.setText("个人");
+                                    tvAuthCompany.setVisibility(View.VISIBLE);
+                                }
                                 if (AuthStatusBean.AUTH_SUCCESS.equals(authStatusBeans.get(0).getStatus()) || AuthStatusBean.AUTH_SUCCESS.equals(authStatusBeans.get(1).getStatus())) {
                                     changeUserType();
                                 } else if (AuthStatusBean.AUTH_LOCKED.equals(authStatusBeans.get(0).getStatus()) || AuthStatusBean.AUTH_LOCKED.equals(authStatusBeans.get(1).getStatus())) {
@@ -755,6 +810,7 @@ public class UserFragment extends BaseFragment {
                 .subscribe(new Consumer<ResultBean<AuthStatusBean>>() {
                     @Override
                     public void accept(ResultBean<AuthStatusBean> authStatusBeanResultBean) throws Exception {
+                        personStatus = authStatusBeanResultBean.getData().getStatus();
                         hideLoadingDialog();
                         if ("active".equals(authStatusBeanResultBean.getData().getStatus())) {
                             //未认证
@@ -790,6 +846,7 @@ public class UserFragment extends BaseFragment {
                 .subscribe(new Consumer<ResultBean<AuthStatusBean>>() {
                     @Override
                     public void accept(ResultBean<AuthStatusBean> authStatusBeanResultBean) throws Exception {
+                        companyStatus = authStatusBeanResultBean.getData().getStatus();
                         hideLoadingDialog();
                         if ("active".equals(authStatusBeanResultBean.getData().getStatus())) {
                             //未认证
@@ -800,6 +857,7 @@ public class UserFragment extends BaseFragment {
                             ToastUtils.showShort("您的认证被驳回，请重新提交资料审核");
                             toAuthCompanyActivity();
                         } else if (AuthStatusBean.AUTH_SUCCESS.equals(authStatusBeanResultBean.getData().getStatus())) {
+                            tvAccountType.setText("企业");
                             tvAuthRealName.setText("已认证");
                             tvAuthCompany.setVisibility(View.GONE);
                             tvAuthRealName.setClickable(false);
@@ -887,7 +945,7 @@ public class UserFragment extends BaseFragment {
             checkLogin();
             getUserInfo();
             getOrderNumIndex();
-            getPersonAuthStatus();
+            getPersonAndCompanyAuthStatus();
         }
     }
 
