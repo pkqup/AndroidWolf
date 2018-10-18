@@ -88,7 +88,7 @@ public class GoodsFragment extends BaseFragment {
     private List<GoodsListDetailBean> lists;
     private LinearAdapter linearAdapter;
     private GridAdapter gridAdapter;
-    private boolean listType = true;//是否是列表形式
+    private boolean listType = false;//是否是列表形式
     private int pageNum = 1;
 
     private String brandId = "";
@@ -199,7 +199,7 @@ public class GoodsFragment extends BaseFragment {
         }
         titleView.setVisibility(View.VISIBLE);
         tvTitleF.setText("全部商品");
-        imgTitleRightTwoF.setImageResource(R.mipmap.icon_grid);
+        imgTitleRightTwoF.setImageResource(R.mipmap.icon_list);
         imgTitleLeftF.setOnClickListener(onClickListener);
         imgTitleRightOneF.setOnClickListener(onClickListener);
         imgTitleRightTwoF.setOnClickListener(onClickListener);
@@ -291,8 +291,8 @@ public class GoodsFragment extends BaseFragment {
                 }
             }
         });
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setAdapter(linearAdapter);
+        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        recyclerView.setAdapter(gridAdapter);
 
         refreshLayout.setEnableAutoLoadMore(false);//关闭自动加载更多
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
