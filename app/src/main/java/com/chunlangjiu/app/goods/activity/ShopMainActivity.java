@@ -148,7 +148,7 @@ public class ShopMainActivity extends BaseActivity {
     private View notDataView;
 
     private CompositeDisposable disposable;
-    private boolean listType = true;//是否是列表形式
+    private boolean listType = false;//是否是列表形式
     private List<GoodsListDetailBean> lists;
     private LinearAdapter linearAdapter;
     private GridAdapter gridAdapter;
@@ -205,7 +205,7 @@ public class ShopMainActivity extends BaseActivity {
     public void setTitleView() {
         titleImgLeft.setOnClickListener(onClickListener);
         titleImgRightOne.setVisibility(View.VISIBLE);
-        titleImgRightOne.setImageResource(R.mipmap.icon_grid);
+        titleImgRightOne.setImageResource(R.mipmap.icon_list);
         titleImgRightOne.setOnClickListener(onClickListener);
         titleName.setVisibility(View.GONE);
         titleSearchView.setVisibility(View.VISIBLE);
@@ -302,8 +302,8 @@ public class ShopMainActivity extends BaseActivity {
                 }
             }
         });
-        recycleView.setLayoutManager(new LinearLayoutManager(this));
-        recycleView.setAdapter(linearAdapter);
+        recycleView.setLayoutManager(new GridLayoutManager(this, 2));
+        recycleView.setAdapter(gridAdapter);
 
         refreshLayout.setEnableAutoLoadMore(false);//关闭自动加载更多
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
