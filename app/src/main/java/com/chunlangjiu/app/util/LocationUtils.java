@@ -4,6 +4,7 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationListener;
 import com.pkqup.commonlibrary.util.AppUtils;
+import com.socks.library.KLog;
 
 /**
  * @CreatedbBy: liucun on 2018/6/20
@@ -31,6 +32,9 @@ public class LocationUtils {
                 if (null == aMapLocation || aMapLocation.getErrorCode() != 0) {
                     //定位失败
                     locationCallBack.locationFail();
+                    if (null != aMapLocation) {
+                        KLog.e("------定位失败-------", aMapLocation.getErrorCode());
+                    }
                 } else {
                     //定位成功
                     locationCallBack.locationSuccess(aMapLocation);
