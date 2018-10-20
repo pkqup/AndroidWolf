@@ -147,6 +147,15 @@ public class OrderDetailActivity extends BaseActivity {
     @BindView(R.id.tvChangePrice)
     TextView tvChangePrice;
 
+    @BindView(R.id.llLogi)
+    LinearLayout llLogi;
+    @BindView(R.id.tvLogiName)
+    TextView tvLogiName;
+    @BindView(R.id.tvLogiNo)
+    TextView tvLogiNo;
+    @BindView(R.id.tvLogiNoCopy)
+    TextView tvLogiNoCopy;
+
     private int type = 0;
     private String oid;
     private String aftersalesBn;
@@ -311,6 +320,7 @@ public class OrderDetailActivity extends BaseActivity {
                                     orderDetailBean = new OrderDetailBean();
                                     beanCopyUitl.copyPropertiesExclude(orderDetailBeanResultBean.getData(), orderDetailBean, new String[]{"order", "orders"});
                                     orderDetailBean.setOrders(orderDetailBeanResultBean.getData().getOrder());
+                                    orderDetailBean.setLogi(orderDetailBeanResultBean.getData().getLogi());
                                     processData();
                                 } else {
                                     if (TextUtils.isEmpty(orderDetailBeanResultBean.getMsg())) {
@@ -583,6 +593,14 @@ public class OrderDetailActivity extends BaseActivity {
                 tvPayment.setText(String.format("¥%s", new BigDecimal(orderDetailBean.getPayment()).setScale(2, BigDecimal.ROUND_HALF_UP).toString()));
                 tvPaymentTips.setText("实付金额：");
 
+                OrderDetailBean.LogiBean logi = orderDetailBean.getLogi();
+                if (null != logi) {
+                    tvLogiName.setText(logi.getLogi_name());
+                    tvLogiNo.setText(logi.getLogi_no());
+                    tvLogiNoCopy.setOnClickListener(onClickListener);
+                    llLogi.setVisibility(View.VISIBLE);
+                }
+
                 tvUserInfo.setText(String.format("%s\u3000%s", orderDetailBean.getReceiver_name(), orderDetailBean.getReceiver_mobile()));
                 tvAddress.setText(String.format("%s%s%s%s", orderDetailBean.getReceiver_state(), orderDetailBean.getReceiver_city(), orderDetailBean.getReceiver_district(), orderDetailBean.getReceiver_address()));
                 tvTotalPrice.setText(String.format("¥%s", new BigDecimal(orderDetailBean.getTotal_fee()).setScale(2, BigDecimal.ROUND_HALF_UP).toString()));
@@ -832,6 +850,9 @@ public class OrderDetailActivity extends BaseActivity {
             switch (view.getId()) {
                 case R.id.img_title_left:
                     finish();
+                    break;
+                case R.id.tvLogiNoCopy:
+                    copyLogiNo();
                     break;
                 case R.id.tvCopy:
                     copy();
@@ -1658,6 +1679,12 @@ public class OrderDetailActivity extends BaseActivity {
         ClipData text = ClipData.newPlainText("chunLangOrderId", String.valueOf(orderDetailBean.getTid()));
         myClipboard.setPrimaryClip(text);
         ToastUtils.showShort("订单号已复制");
+    }
+
+    public void copyLogiNo() {
+        ClipData text = ClipData.newPlainText("chunLangLogiNo", String.valueOf(orderDetailBean.getLogi().getLogi_no()));
+        myClipboard.setPrimaryClip(text);
+        ToastUtils.showShort("物流单号已复制");
     }
 
     private EventManager.OnNotifyListener onNotifyListener = new EventManager.OnNotifyListener() {
