@@ -24,10 +24,10 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -64,8 +64,8 @@
                         android:id="@+id/countdownView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="5dp"
                         android:layout_marginStart="5dp"
+                        android:layout_marginLeft="5dp"
                         app:isConvertDaysToHours="true"
                         app:isHideTimeBackground="false"
                         app:isShowDay="false"
@@ -95,10 +95,10 @@
                 android:id="@+id/llStore"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -127,12 +127,12 @@
                 android:id="@+id/llProducts"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="4dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
                 android:layout_marginTop="4dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginBottom="4dp"
                 android:orientation="vertical" />
 
             <View
@@ -149,10 +149,10 @@
                 android:id="@+id/llOrderId"
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -170,8 +170,8 @@
                     android:id="@+id/tvCopy"
                     android:layout_width="48dp"
                     android:layout_height="20dp"
-                    android:layout_marginLeft="8dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
                     android:background="@drawable/orange_bg_soild"
                     android:gravity="center"
                     android:text="复制"
@@ -183,10 +183,10 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -211,10 +211,10 @@
                 android:id="@+id/llPayType"
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -234,10 +234,10 @@
                 android:id="@+id/llPayTime"
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:visibility="visible">
@@ -258,10 +258,10 @@
                 android:id="@+id/llSendTime"
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:visibility="visible">
@@ -282,10 +282,10 @@
                 android:id="@+id/llFinishTime"
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:visibility="visible">
@@ -316,10 +316,10 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="36dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:visibility="visible">
@@ -340,10 +340,10 @@
                     android:id="@+id/llAfterSaleSendTime"
                     android:layout_width="match_parent"
                     android:layout_height="36dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:visibility="visible">
@@ -364,10 +364,10 @@
                     android:id="@+id/llAfterSalePayTime"
                     android:layout_width="match_parent"
                     android:layout_height="36dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
                     android:visibility="visible">
@@ -400,10 +400,10 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="36dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -418,10 +418,10 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="36dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -430,6 +430,74 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content" />
 
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llLogi"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="12dp"
+                    android:background="@color/bg_gray" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="物流公司：" />
+
+                    <TextView
+                        android:id="@+id/tvLogiName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="物流单号：" />
+
+                    <TextView
+                        android:id="@+id/tvLogiNo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+
+                    <TextView
+                        android:id="@+id/tvLogiNoCopy"
+                        android:layout_width="48dp"
+                        android:layout_height="20dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:background="@drawable/orange_bg_soild"
+                        android:gravity="center"
+                        android:text="复制"
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -442,10 +510,10 @@
                 android:id="@+id/llTotalPrice"
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -467,10 +535,10 @@
                 android:id="@+id/llSendPrice"
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -492,10 +560,10 @@
                 android:id="@+id/llTips3"
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:visibility="gone">
@@ -514,10 +582,10 @@
                     android:id="@+id/tvChangePrice"
                     android:layout_width="70dp"
                     android:layout_height="20dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
                     android:background="@drawable/bg_white_soild_gray_stroke_round"
                     android:gravity="center"
                     android:text="修改出价"
@@ -539,10 +607,10 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="36dp"
-                android:layout_marginEnd="8dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
                 android:layout_marginStart="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginRight="8dp"
                 android:gravity="center_vertical|end"
                 android:orientation="horizontal">
 
@@ -584,8 +652,8 @@
             android:id="@+id/tv2"
             android:layout_width="80dp"
             android:layout_height="36dp"
-            android:layout_marginLeft="12dp"
             android:layout_marginStart="12dp"
+            android:layout_marginLeft="12dp"
             android:background="@drawable/bg_red_soild"
             android:gravity="center"
             android:text="申请退款"
