@@ -88,7 +88,7 @@ public class HomeAdapter extends BaseQuickAdapter<HomeBean, BaseViewHolder> {
                         if (TextUtils.isEmpty(item.getMax_price())) {
                             viewHolder.setText(R.id.tvSellPrice, "暂无出价");
                         } else {
-                            viewHolder.setText(R.id.tvSellPrice, "¥" + item.getAuction_starting_price());
+                            viewHolder.setText(R.id.tvSellPrice, "¥" + item.getMax_price());
                         }
                     } else {
                         //暗拍

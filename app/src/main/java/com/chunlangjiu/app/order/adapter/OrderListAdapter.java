@@ -2,6 +2,7 @@ package com.chunlangjiu.app.order.adapter;
 
 import android.content.Context;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -66,8 +67,12 @@ public class OrderListAdapter extends BaseQuickAdapter<OrderListBean.ListBean, B
                         break;
                     case OrderParams.WAIT_SELLER_SEND_GOODS:
                         tv1.setVisibility(View.GONE);
-                        tv2.setText("取消订单");
-                        tv2.setVisibility(View.VISIBLE);
+                        if ("NO_APPLY_CANCEL".equals(item.getCancel_status())) {
+                            tv2.setText("取消订单");
+                            tv2.setVisibility(View.VISIBLE);
+                        } else {
+                            tv2.setVisibility(View.GONE);
+                        }
                         break;
                     case OrderParams.WAIT_BUYER_CONFIRM_GOODS:
                         tv1.setVisibility(View.GONE);
@@ -96,10 +101,10 @@ public class OrderListAdapter extends BaseQuickAdapter<OrderListBean.ListBean, B
                         tv2.setText("修改出价");
                         tv2.setVisibility(View.VISIBLE);
                         break;
-                    case "2":
-                        tv2.setText("去支付");
-                        tv2.setVisibility(View.VISIBLE);
-                        break;
+//                    case "2":
+//                        tv2.setText("去支付");
+//                        tv2.setVisibility(View.VISIBLE);
+//                        break;
 //                    case "3":
 //                        tv2.setText("删除订单");
 //                        tv2.setVisibility(View.VISIBLE);
@@ -210,12 +215,11 @@ public class OrderListAdapter extends BaseQuickAdapter<OrderListBean.ListBean, B
         tv2.setOnClickListener(onClickListener);
         tvStore.setText(item.getShopname());
         tvStatus.setText(item.getStatus_desc());
-        GlideUtils.loadImage(context, item.getShop_logo(), imgStore);
+        GlideUtils.loadImageShop(context, item.getShop_logo(), imgStore);
         llProducts.removeAllViews();
         switch (type) {
             case 0:
             case 3:
-            case 1:
             case 5:
                 for (OrderListBean.ListBean.OrderBean orderBean : item.getOrder()) {
                     View inflate = inflater.inflate(R.layout.order_adapter_list_product_item, null);
@@ -232,6 +236,37 @@ public class OrderListAdapter extends BaseQuickAdapter<OrderListBean.ListBean, B
 
                     TextView tvProductNum = inflate.findViewById(R.id.tvProductNum);
                     tvProductNum.setText(String.format("x%d", orderBean.getNum()));
+                    llProducts.addView(inflate);
+                    if (llProducts.getChildCount() == item.getOrder().size()) {
+                        View view_line = inflate.findViewById(R.id.view_line);
+                        view_line.setVisibility(View.GONE);
+                    }
+                }
+                if (3 == type) {
+                    tvTotalNum.setText(String.format("共%s件商品;合计：¥%s", new BigDecimal(item.getItemnum()).setScale(0, BigDecimal.ROUND_HALF_UP).toString(), new BigDecimal(item.getPayment()).setScale(2, BigDecimal.ROUND_HALF_UP).toString()));
+                } else {
+                    tvTotalNum.setText(String.format("共%s件商品;合计：¥%s", new BigDecimal(item.getTotalItem()).setScale(0, BigDecimal.ROUND_HALF_UP).toString(), new BigDecimal(item.getPayment()).setScale(2, BigDecimal.ROUND_HALF_UP).toString()));
+                }
+                break;
+            case 1:
+                for (OrderListBean.ListBean.OrderBean orderBean : item.getOrder()) {
+                    View inflate = inflater.inflate(R.layout.order_adapter_list_product_item, null);
+                    ImageView imgProduct = inflate.findViewById(R.id.imgProduct);
+                    GlideUtils.loadImage(context, orderBean.getPic_path(), imgProduct);
+                    TextView tvProductName = inflate.findViewById(R.id.tvProductName);
+                    tvProductName.setText(orderBean.getTitle());
+                    TextView tvProductPrice = inflate.findViewById(R.id.tvProductPrice);
+                    if (!TextUtils.isEmpty(orderBean.getPrice())) {
+                        tvProductPrice.setText(String.format("起拍价：%s", String.format("¥%s", new BigDecimal(orderBean.getPrice()).setScale(2, BigDecimal.ROUND_HALF_UP).toString())));
+                    }
+                    TextView tvProductNum = inflate.findViewById(R.id.tvProductNum);
+                    tvProductNum.setGravity(Gravity.CENTER_VERTICAL);
+                    try {
+                        BigDecimal bigDecimal = new BigDecimal(orderBean.getSpec_nature_info());
+                        tvProductNum.setText(String.format("最高出价：%s", String.format("¥%s", bigDecimal.setScale(2, BigDecimal.ROUND_HALF_UP).toString())));
+                    } catch (Exception ex) {
+                        tvProductNum.setText(String.format("最高出价：%s", orderBean.getSpec_nature_info()));
+                    }
                     llProducts.addView(inflate);
                     if (llProducts.getChildCount() == item.getOrder().size()) {
                         View view_line = inflate.findViewById(R.id.view_line);

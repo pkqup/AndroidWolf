@@ -487,20 +487,20 @@ public interface ApiService {
 
     @POST("index.php/topapi")
     @FormUrlEncoded
-    Flowable<ResultBean<BrandsListBean>> getUserBrandList(@Field("method") String method, @Field("v") String v);
+    Flowable<ResultBean<BrandsListBean>> getUserBrandList(@Field("method") String method, @Field("v") String v, @Field("cat_id") String cat_id);
 
     @POST("index.php/topapi")
     @FormUrlEncoded
-    Flowable<ResultBean<AreaListBean>> getUserAreaList(@Field("method") String method, @Field("v") String v);
+    Flowable<ResultBean<AreaListBean>> getUserAreaList(@Field("method") String method, @Field("v") String v, @Field("cat_id") String cat_id);
 
 
     @POST("index.php/topapi")
     @FormUrlEncoded
-    Flowable<ResultBean<OrdoListBean>> getUserOrdoList(@Field("method") String method, @Field("v") String v);
+    Flowable<ResultBean<OrdoListBean>> getUserOrdoList(@Field("method") String method, @Field("v") String v, @Field("cat_id") String cat_id);
 
     @POST("index.php/topapi")
     @FormUrlEncoded
-    Flowable<ResultBean<AlcListBean>> getUserAlcList(@Field("method") String method, @Field("v") String v);
+    Flowable<ResultBean<AlcListBean>> getUserAlcList(@Field("method") String method, @Field("v") String v, @Field("cat_id") String cat_id);
 
 
     @POST("index.php/shop/topapi")

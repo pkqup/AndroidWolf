@@ -517,6 +517,15 @@ public class GoodsDetailBean implements Serializable{
         private String pledge;//定金
         private String original_bid;//自己当前的出价
         private String is_pay;//是否支付过定金
+        private String payment_id;//订单id
+
+        public String getPayment_id() {
+            return payment_id;
+        }
+
+        public void setPayment_id(String payment_id) {
+            this.payment_id = payment_id;
+        }
 
         public String getOriginal_bid() {
             return original_bid;

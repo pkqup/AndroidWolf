@@ -414,7 +414,7 @@ public class OrderDetailActivity extends BaseActivity {
     }
 
     private void processData() {
-        GlideUtils.loadImage(getApplicationContext(), orderDetailBean.getShoplogo(), imgStore);
+        GlideUtils.loadImageShop(getApplicationContext(), orderDetailBean.getShoplogo(), imgStore);
         tvStore.setText(orderDetailBean.getShopname());
 
         tvCopy.setOnClickListener(onClickListener);
@@ -497,8 +497,12 @@ public class OrderDetailActivity extends BaseActivity {
                         case OrderParams.WAIT_SELLER_SEND_GOODS:
                             if (0 == type) {
                                 tv1.setVisibility(View.GONE);
-                                tv2.setText("取消订单");
-                                tv2.setVisibility(View.VISIBLE);
+                                if ("NO_APPLY_CANCEL".equals(orderDetailBean.getCancel_status())) {
+                                    tv2.setText("取消订单");
+                                    tv2.setVisibility(View.VISIBLE);
+                                } else {
+                                    tv2.setVisibility(View.GONE);
+                                }
                             } else {
                                 if ("NO_APPLY_CANCEL".equals(orderDetailBean.getCancel_status()) || "FAILS".equals(orderDetailBean.getCancel_status())) {
                                     tv1.setText("无货");
@@ -572,7 +576,7 @@ public class OrderDetailActivity extends BaseActivity {
                         case 0:
                             switch (orderDetailBean.getStatus()) {
                                 case OrderParams.TRADE_FINISHED:
-                                    if (TextUtils.isEmpty(orderBean.getAftersales_status())) {
+                                    if (TextUtils.isEmpty(orderBean.getAftersales_status()) && orderBean.isRefund_enabled()) {
                                         TextView tvAfterSale = inflate.findViewById(R.id.tvAfterSale);
                                         tvAfterSale.setTag(i);
                                         tvAfterSale.setOnClickListener(onClickListener);
@@ -771,28 +775,35 @@ public class OrderDetailActivity extends BaseActivity {
                         tvPaymentTips = findViewById(R.id.tvPaymentTips);
                         tvPaymentTips.setText("已付定金：");
                         break;
-                    case "2":
-                        tvRightContentDesc.setText("剩余支付时间：");
-                        close_time = orderDetailBean.getClose_time();
-                        try {
-                            int i = close_time * 1000;
-                            countdownView.start(i);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
-                        tvRightContent.setVisibility(View.GONE);
-                        tv2.setText("去支付");
-                        tv2.setVisibility(View.VISIBLE);
-                        llPayTime.setVisibility(View.GONE);
-                        llSendTime.setVisibility(View.GONE);
-                        llFinishTime.setVisibility(View.GONE);
-                        tvPaymentTips = findViewById(R.id.tvPaymentTips);
-                        tvPaymentTips.setText("应付定金：");
-                        tvChangePrice.setVisibility(View.GONE);
-                        break;
+//                    case "2":
+//                        tvRightContentDesc.setText("剩余支付时间：");
+//                        close_time = orderDetailBean.getClose_time();
+//                        try {
+//                            int i = close_time * 1000;
+//                            countdownView.start(i);
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                        tvRightContent.setVisibility(View.GONE);
+//                        tv2.setText("去支付");
+//                        tv2.setVisibility(View.VISIBLE);
+//                        llPayTime.setVisibility(View.GONE);
+//                        llSendTime.setVisibility(View.GONE);
+//                        llFinishTime.setVisibility(View.GONE);
+//                        tvPaymentTips = findViewById(R.id.tvPaymentTips);
+//                        tvPaymentTips.setText("应付定金：");
+//                        tvChangePrice.setVisibility(View.GONE);
+//                        break;
 //                    case "3":
 //                        break;
                     default:
+                        tvRightContentDesc.setVisibility(View.GONE);
+                        tvRightContent.setVisibility(View.GONE);
+                        llPayTime.setVisibility(View.GONE);
+                        llSendTime.setVisibility(View.GONE);
+                        llFinishTime.setVisibility(View.GONE);
+                        countdownView.setVisibility(View.GONE);
+                        tvOrderId.setText(orderDetailBean.getPayments().getPayment_id());
                         tv2.setVisibility(View.GONE);
                         tvPaymentTips = findViewById(R.id.tvPaymentTips);
                         tvPaymentTips.setText("已付定金：");
@@ -1153,7 +1164,13 @@ public class OrderDetailActivity extends BaseActivity {
     };
 
     private void changeMyPrice() {
-        String max_price = orderDetailBean.getAuction().getMax_price();
+        String max_price;
+        if (!TextUtils.isEmpty(orderDetailBean.getAuction().getAuction_status())
+                && "false".equalsIgnoreCase(orderDetailBean.getAuction().getAuction_status())) {
+            max_price = "保密出价";
+        } else {
+            max_price = orderDetailBean.getAuction().getMax_price();
+        }
         String original_bid = orderDetailBean.getAuction().getOriginal_bid();
         if (inputPriceDialog == null) {
             inputPriceDialog = new InputPriceDialog(this, max_price, original_bid);

@@ -206,6 +206,7 @@ public class AuctionFragment extends BaseFragment {
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 selectClassId = classLists.get(position).getCat_id();
                 classAdapter.notifyDataSetChanged();
+                clearSelectFilterData();
                 getListData();
             }
         });
@@ -235,7 +236,7 @@ public class AuctionFragment extends BaseFragment {
     }
 
     private void getBrandLists() {
-        disposable.add(ApiUtils.getInstance().getUserBrandList()
+        disposable.add(ApiUtils.getInstance().getUserBrandList(selectClassId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean<BrandsListBean>>() {
@@ -255,7 +256,7 @@ public class AuctionFragment extends BaseFragment {
     }
 
     private void getAreaLists() {
-        disposable.add(ApiUtils.getInstance().getUserAreaList()
+        disposable.add(ApiUtils.getInstance().getUserAreaList(selectClassId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean<AreaListBean>>() {
@@ -275,7 +276,7 @@ public class AuctionFragment extends BaseFragment {
     }
 
     private void getInsenceLists() {
-        disposable.add(ApiUtils.getInstance().getUserOrdoList()
+        disposable.add(ApiUtils.getInstance().getUserOrdoList(selectClassId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean<OrdoListBean>>() {
@@ -295,7 +296,7 @@ public class AuctionFragment extends BaseFragment {
     }
 
     private void getAlcLists() {
-        disposable.add(ApiUtils.getInstance().getUserAlcList()
+        disposable.add(ApiUtils.getInstance().getUserAlcList(selectClassId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean<AlcListBean>>() {
@@ -394,6 +395,7 @@ public class AuctionFragment extends BaseFragment {
                     }
                 });
             }
+            choiceBrandPopWindow.setBrandList(brandLists,brandId);
             choiceBrandPopWindow.showAsDropDown(rlBrand, 0, 1);
         }
     }
@@ -413,13 +415,14 @@ public class AuctionFragment extends BaseFragment {
                     }
                 });
             }
+            choiceAreaPopWindow.setBrandList(areaLists,areaId);
             choiceAreaPopWindow.showAsDropDown(rlBrand, 0, 1);
         }
     }
 
     private void showIncensePopWindow() {
         if (ordoLists == null || ordoLists.size() == 0) {
-            ToastUtils.showShort("暂无香型");
+            ToastUtils.showShort("暂无类型");
         } else {
             if (choiceOrdoPopWindow == null) {
                 choiceOrdoPopWindow = new ChoiceOrdoPopWindow(getActivity(), ordoLists, ordoId);
@@ -427,10 +430,11 @@ public class AuctionFragment extends BaseFragment {
                     @Override
                     public void choiceBrand(String brandName, String brandId) {
                         ordoId = brandId;
-                        tvIncense.setText(TextUtils.isEmpty(ordoId) ? "香型" : brandName);
+                        tvIncense.setText(TextUtils.isEmpty(ordoId) ? "类型" : brandName);
                     }
                 });
             }
+            choiceOrdoPopWindow.setBrandList(ordoLists,ordoId);
             choiceOrdoPopWindow.showAsDropDown(rlBrand, 0, 1);
         }
     }
@@ -449,6 +453,7 @@ public class AuctionFragment extends BaseFragment {
                     }
                 });
             }
+            choiceAlcPopWindow.setBrandList(alcLists,alcoholId);
             choiceAlcPopWindow.showAsDropDown(rlBrand, 0, 1);
         }
     }
@@ -473,6 +478,27 @@ public class AuctionFragment extends BaseFragment {
             choicePricePopWindow.showAsDropDown(rlBrand, 0, 1);
         }
     }
+    //重置品牌、产地、香型、酒精度
+    private void clearSelectFilterData() {
+        brandId = "";
+        tvBrand.setText("品牌");
+
+        areaId = "";
+        tvArea.setText("产地");
+
+        ordoId = "";
+        tvIncense.setText("香型");
+
+        alcoholId = "";
+        tvAlc.setText("酒精度");
+
+        //重新请求相关数据
+        getBrandLists();
+        getAreaLists();
+        getInsenceLists();
+        getAlcLists();
+    }
+
 
     public class ClassAdapter extends BaseQuickAdapter<ThirdClassBean, BaseViewHolder> {
         public ClassAdapter(int layoutResId, List<ThirdClassBean> data) {

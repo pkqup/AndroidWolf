@@ -381,6 +381,7 @@ public class OrderListFragment extends BaseFragment {
                                     listBean.setPaymentId(bean.getPayment_id());
                                     listBean.setAuctionitem_id(bean.getAuctionitem_id());
                                     listBean.setAuction(bean.getAuction());
+                                    listBean.setStatus_desc(bean.getStatus_desc());
 
                                     List<OrderListBean.ListBean.OrderBean> order = new ArrayList<>();
                                     OrderListBean.ListBean.OrderBean orderBean = new OrderListBean.ListBean.OrderBean();
@@ -388,6 +389,12 @@ public class OrderListFragment extends BaseFragment {
                                     orderBean.setTitle(bean.getItem().getTitle());
                                     orderBean.setPrice(bean.getAuction().getStarting_price());
                                     orderBean.setPic_path(bean.getItem().getImage_default_id());
+                                    if (!TextUtils.isEmpty(bean.getAuction().getAuction_status())
+                                            && "false".equalsIgnoreCase(bean.getAuction().getAuction_status())) {
+                                        orderBean.setSpec_nature_info("保密出价");
+                                    } else {
+                                        orderBean.setSpec_nature_info(bean.getAuction().getMax_price());
+                                    }
                                     order.add(orderBean);
                                     listBean.setOrder(order);
 
@@ -944,7 +951,13 @@ public class OrderListFragment extends BaseFragment {
     };
 
     private void changeMyPrice() {
-        String max_price = listBeans.get(position).getAuction().getMax_price();
+        String max_price;
+        if (!TextUtils.isEmpty(listBeans.get(position).getAuction().getAuction_status())
+                && "false".equalsIgnoreCase(listBeans.get(position).getAuction().getAuction_status())) {
+            max_price = "保密出价";
+        } else {
+            max_price = listBeans.get(position).getAuction().getMax_price();
+        }
         String original_bid = listBeans.get(position).getAuction().getOriginal_bid();
         if (inputPriceDialog == null) {
             inputPriceDialog = new InputPriceDialog(activity, max_price, original_bid);

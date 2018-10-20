@@ -25,6 +25,7 @@ public class AuctionOrderListBean {
     private ItemBean item;
     private String status;
     private String type;
+    private String status_desc;
 
     public String getPayment_id() {
         return payment_id;
@@ -96,6 +97,14 @@ public class AuctionOrderListBean {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getStatus_desc() {
+        return status_desc;
+    }
+
+    public void setStatus_desc(String status_desc) {
+        this.status_desc = status_desc;
     }
 
     public static class AuctionBean implements Serializable{

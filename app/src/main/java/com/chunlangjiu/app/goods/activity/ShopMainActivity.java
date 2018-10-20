@@ -148,7 +148,7 @@ public class ShopMainActivity extends BaseActivity {
     private View notDataView;
 
     private CompositeDisposable disposable;
-    private boolean listType = true;//是否是列表形式
+    private boolean listType = false;//是否是列表形式
     private List<GoodsListDetailBean> lists;
     private LinearAdapter linearAdapter;
     private GridAdapter gridAdapter;
@@ -205,7 +205,7 @@ public class ShopMainActivity extends BaseActivity {
     public void setTitleView() {
         titleImgLeft.setOnClickListener(onClickListener);
         titleImgRightOne.setVisibility(View.VISIBLE);
-        titleImgRightOne.setImageResource(R.mipmap.icon_grid);
+        titleImgRightOne.setImageResource(R.mipmap.icon_list);
         titleImgRightOne.setOnClickListener(onClickListener);
         titleName.setVisibility(View.GONE);
         titleSearchView.setVisibility(View.VISIBLE);
@@ -268,6 +268,7 @@ public class ShopMainActivity extends BaseActivity {
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 selectClassId = classLists.get(position).getCat_id();
                 classAdapter.notifyDataSetChanged();
+                clearSelectFilterData();
                 getGoodsList(1, true);
             }
         });
@@ -301,8 +302,8 @@ public class ShopMainActivity extends BaseActivity {
                 }
             }
         });
-        recycleView.setLayoutManager(new LinearLayoutManager(this));
-        recycleView.setAdapter(linearAdapter);
+        recycleView.setLayoutManager(new GridLayoutManager(this, 2));
+        recycleView.setAdapter(gridAdapter);
 
         refreshLayout.setEnableAutoLoadMore(false);//关闭自动加载更多
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
@@ -345,7 +346,7 @@ public class ShopMainActivity extends BaseActivity {
     }
 
     private void getBrandLists() {
-        disposable.add(ApiUtils.getInstance().getUserBrandList()
+        disposable.add(ApiUtils.getInstance().getUserBrandList(selectClassId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean<BrandsListBean>>() {
@@ -365,7 +366,7 @@ public class ShopMainActivity extends BaseActivity {
     }
 
     private void getAreaLists() {
-        disposable.add(ApiUtils.getInstance().getUserAreaList()
+        disposable.add(ApiUtils.getInstance().getUserAreaList(selectClassId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean<AreaListBean>>() {
@@ -385,7 +386,7 @@ public class ShopMainActivity extends BaseActivity {
     }
 
     private void getInsenceLists() {
-        disposable.add(ApiUtils.getInstance().getUserOrdoList()
+        disposable.add(ApiUtils.getInstance().getUserOrdoList(selectClassId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean<OrdoListBean>>() {
@@ -405,7 +406,7 @@ public class ShopMainActivity extends BaseActivity {
     }
 
     private void getAlcLists() {
-        disposable.add(ApiUtils.getInstance().getUserAlcList()
+        disposable.add(ApiUtils.getInstance().getUserAlcList(selectClassId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean<AlcListBean>>() {
@@ -601,6 +602,7 @@ public class ShopMainActivity extends BaseActivity {
                     }
                 });
             }
+            choiceBrandPopWindow.setBrandList(brandLists,brandId);
             choiceBrandPopWindow.showAsDropDown(rlBrand, 0, 1);
         }
     }
@@ -621,13 +623,14 @@ public class ShopMainActivity extends BaseActivity {
                     }
                 });
             }
+            choiceAreaPopWindow.setBrandList(areaLists,areaId);
             choiceAreaPopWindow.showAsDropDown(rlBrand, 0, 1);
         }
     }
 
     private void showIncensePopWindow() {
         if (ordoLists == null || ordoLists.size() == 0) {
-            ToastUtils.showShort("暂无香型");
+            ToastUtils.showShort("暂无类型");
         } else {
             if (choiceOrdoPopWindow == null) {
                 choiceOrdoPopWindow = new ChoiceOrdoPopWindow(this, ordoLists, ordoId);
@@ -635,11 +638,12 @@ public class ShopMainActivity extends BaseActivity {
                     @Override
                     public void choiceBrand(String brandName, String brandId) {
                         ordoId = brandId;
-                        tvIncense.setText(TextUtils.isEmpty(ordoId) ? "香型" : brandName);
+                        tvIncense.setText(TextUtils.isEmpty(ordoId) ? "类型" : brandName);
                         getGoodsList(1, true);
                     }
                 });
             }
+            choiceOrdoPopWindow.setBrandList(ordoLists,ordoId);
             choiceOrdoPopWindow.showAsDropDown(rlBrand, 0, 1);
         }
     }
@@ -659,6 +663,7 @@ public class ShopMainActivity extends BaseActivity {
                     }
                 });
             }
+            choiceAlcPopWindow.setBrandList(alcLists,alcoholId);
             choiceAlcPopWindow.showAsDropDown(rlBrand, 0, 1);
         }
     }
@@ -685,6 +690,26 @@ public class ShopMainActivity extends BaseActivity {
         }
     }
 
+    //重置品牌、产地、香型、酒精度
+    private void clearSelectFilterData() {
+        brandId = "";
+        tvBrand.setText("品牌");
+
+        areaId = "";
+        tvArea.setText("产地");
+
+        ordoId = "";
+        tvIncense.setText("香型");
+
+        alcoholId = "";
+        tvAlc.setText("酒精度");
+
+        //重新请求相关数据
+        getBrandLists();
+        getAreaLists();
+        getInsenceLists();
+        getAlcLists();
+    }
 
     public class LinearAdapter extends BaseQuickAdapter<GoodsListDetailBean, BaseViewHolder> {
         public LinearAdapter(int layoutResId, List<GoodsListDetailBean> data) {
