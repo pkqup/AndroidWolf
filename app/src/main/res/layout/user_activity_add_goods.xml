@@ -1356,6 +1356,156 @@
                         </RelativeLayout>
                     </LinearLayout>
 
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="36dp">
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1">
+
+                            <TextView
+                                android:id="@+id/tvYearStr"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="年份："
+                                android:textColor="@color/t_black"
+                                android:textSize="@dimen/sp_small" />
+
+                            <EditText
+                                android:id="@+id/etYear"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_toRightOf="@id/tvYearStr"
+                                android:background="@null"
+                                android:gravity="start"
+                                android:hint=""
+                                android:textColor="@color/t_black"
+                                android:textSize="@dimen/sp_small" />
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1px"
+                                android:layout_alignParentBottom="true"
+                                android:layout_marginBottom="8dp"
+                                android:background="@color/line" />
+                        </RelativeLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="36dp">
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1">
+
+                            <TextView
+                                android:id="@+id/tvYuanLiaoStr"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="原料："
+                                android:textColor="@color/t_black"
+                                android:textSize="@dimen/sp_small" />
+
+                            <EditText
+                                android:id="@+id/etYuanLiao"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_toRightOf="@id/tvYuanLiaoStr"
+                                android:background="@null"
+                                android:gravity="start"
+                                android:hint=""
+                                android:textColor="@color/t_black"
+                                android:textSize="@dimen/sp_small" />
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1px"
+                                android:layout_alignParentBottom="true"
+                                android:layout_marginBottom="8dp"
+                                android:background="@color/line" />
+                        </RelativeLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="36dp">
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1">
+
+                            <TextView
+                                android:id="@+id/tvSaveStr"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="储存条件："
+                                android:textColor="@color/t_black"
+                                android:textSize="@dimen/sp_small" />
+
+                            <EditText
+                                android:id="@+id/etSave"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_toRightOf="@id/tvSaveStr"
+                                android:background="@null"
+                                android:gravity="start"
+                                android:hint=""
+                                android:textColor="@color/t_black"
+                                android:textSize="@dimen/sp_small" />
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1px"
+                                android:layout_alignParentBottom="true"
+                                android:layout_marginBottom="8dp"
+                                android:background="@color/line" />
+                        </RelativeLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="36dp">
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1">
+
+                            <TextView
+                                android:id="@+id/tvOtherStr"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="附件："
+                                android:textColor="@color/t_black"
+                                android:textSize="@dimen/sp_small" />
+
+                            <EditText
+                                android:id="@+id/etOther"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_toRightOf="@id/tvOtherStr"
+                                android:background="@null"
+                                android:gravity="start"
+                                android:hint="礼盒、防尘袋、保卡、说明书、吊牌等"
+                                android:textColor="@color/t_black"
+                                android:textSize="@dimen/sp_small" />
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1px"
+                                android:layout_alignParentBottom="true"
+                                android:layout_marginBottom="8dp"
+                                android:background="@color/line" />
+                        </RelativeLayout>
+                    </LinearLayout>
+
+
+
                 </LinearLayout>
 
             </LinearLayout>

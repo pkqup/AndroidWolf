@@ -200,6 +200,15 @@ public class EditGoodsActivity extends BaseActivity {
     @BindView(R.id.etArea)
     EditText etArea;
 
+    @BindView(R.id.etYear)
+    EditText etYear;
+    @BindView(R.id.etYuanLiao)
+    EditText etYuanLiao;
+    @BindView(R.id.etSave)
+    EditText etSave;
+    @BindView(R.id.etOther)
+    EditText etOther;
+
     @BindView(R.id.tvCommit)
     TextView tvCommit;
 
@@ -489,6 +498,19 @@ public class EditGoodsActivity extends BaseActivity {
                 }
                 if (ps.get(i).getTitle().equals("包装")) {
                     etPackage.setText(ps.get(i).getValue());
+                }
+
+                if (ps.get(i).getTitle().equals("年份")) {
+                    etYear.setText(ps.get(i).getValue());
+                }
+                if (ps.get(i).getTitle().equals("原料")) {
+                    etYuanLiao.setText(ps.get(i).getValue());
+                }
+                if (ps.get(i).getTitle().equals("储存条件")) {
+                    etSave.setText(ps.get(i).getValue());
+                }
+                if (ps.get(i).getTitle().equals("附件")) {
+                    etOther.setText(ps.get(i).getValue());
                 }
             }
         } catch (Exception e) {
@@ -966,6 +988,10 @@ public class EditGoodsActivity extends BaseActivity {
         valueBeanList.add(new AddGoodsValueBean("包装", etPackage.getText().toString().trim()));
 //        valueBeanList.add(new AddGoodsValueBean("酒精度", etAlco.getText().toString().trim()));
 //        valueBeanList.add(new AddGoodsValueBean("产地", etArea.getText().toString().trim()));
+        valueBeanList.add(new AddGoodsValueBean("年份", etYear.getText().toString().trim()));
+        valueBeanList.add(new AddGoodsValueBean("原料", etYuanLiao.getText().toString().trim()));
+        valueBeanList.add(new AddGoodsValueBean("储存条件", etSave.getText().toString().trim()));
+        valueBeanList.add(new AddGoodsValueBean("附件", etOther.getText().toString().trim()));
         String parameter = new Gson().toJson(valueBeanList);
         KLog.e(parameter);
 
