@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.chunlangjiu.app.R;
 import com.pkqup.commonlibrary.dialog.CommonLoadingDialog;
+import com.umeng.analytics.MobclickAgent;
 
 public abstract class BaseFragment extends Fragment {
 
@@ -30,6 +31,15 @@ public abstract class BaseFragment extends Fragment {
     public RelativeLayout errorView;//加载失败
 
     public CommonLoadingDialog loadingDialog;
+
+    public void onResume() {
+        super.onResume();
+        MobclickAgent.onPageStart(getClass().getName()); //统计页面("MainScreen"为页面名称，可自定义)
+    }
+    public void onPause() {
+        super.onPause();
+        MobclickAgent.onPageEnd(getClass().getName());
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
