@@ -93,8 +93,8 @@ public class OrderDetailBean {
     private int consign_time;//发货时间
     private String shopname;
     private String shoplogo;
-    //    private LogiBean logi;
-//    private List<?> cancelInfo;
+    private LogiBean logi;
+    //    private List<?> cancelInfo;
     private List<OrdersBean> orders;
     private OrdersBean order;
     private int item_id;
@@ -519,13 +519,13 @@ public class OrderDetailBean {
         this.shoplogo = shoplogo;
     }
 
-    //    public LogiBean getLogi() {
-//        return logi;
-//    }
-//
-//    public void setLogi(LogiBean logi) {
-//        this.logi = logi;
-//    }
+    public LogiBean getLogi() {
+        return logi;
+    }
+
+    public void setLogi(LogiBean logi) {
+        this.logi = logi;
+    }
 
 //    public List<?> getCancelInfo() {
 //        return cancelInfo;
@@ -990,7 +990,7 @@ public class OrderDetailBean {
         private String corp_code;
         private long delivery_id;
         private String receiver_name;
-        private int t_begin;
+        private long t_begin;
 
         public String getLogi_name() {
             return logi_name;
@@ -1032,11 +1032,11 @@ public class OrderDetailBean {
             this.receiver_name = receiver_name;
         }
 
-        public int getT_begin() {
+        public long getT_begin() {
             return t_begin;
         }
 
-        public void setT_begin(int t_begin) {
+        public void setT_begin(long t_begin) {
             this.t_begin = t_begin;
         }
     }

@@ -92,8 +92,8 @@ public class SellerOrderDetailBean {
     private int consign_time;//发货时间
     private String shopname;
     private String shoplogo;
-    //    private LogiBean logi;
-//    private List<?> cancelInfo;
+    private OrderDetailBean.LogiBean logi;
+    //    private List<?> cancelInfo;
     private List<OrderDetailBean.OrdersBean> order;
     private int item_id;
     private int cat_id;
@@ -508,13 +508,13 @@ public class SellerOrderDetailBean {
         this.shoplogo = shoplogo;
     }
 
-    //    public LogiBean getLogi() {
-//        return logi;
-//    }
-//
-//    public void setLogi(LogiBean logi) {
-//        this.logi = logi;
-//    }
+    public OrderDetailBean.LogiBean getLogi() {
+        return logi;
+    }
+
+    public void setLogi(OrderDetailBean.LogiBean logi) {
+        this.logi = logi;
+    }
 
 //    public List<?> getCancelInfo() {
 //        return cancelInfo;
