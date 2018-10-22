@@ -27,6 +27,7 @@ import com.chunlangjiu.app.util.ConstantMsg;
 import com.chunlangjiu.app.util.GeTuiIntentService;
 import com.chunlangjiu.app.util.GeTuiPushService;
 import com.chunlangjiu.app.util.LocationUtils;
+import com.chunlangjiu.app.util.UmengEventUtil;
 import com.github.promeg.pinyinhelper.Pinyin;
 import com.igexin.sdk.PushManager;
 import com.pkqup.commonlibrary.dialog.CommonConfirmDialog;
@@ -211,6 +212,9 @@ public class MainActivity extends BaseActivity {
     };
 
     private void setPageFragment(int position) {
+
+        UMENGIndexEvent(position);
+
         viewPager.setCurrentItem(position, false);
         for (int i = 0; i < imageViews.size(); i++) {
             if (position == i) {
@@ -226,7 +230,26 @@ public class MainActivity extends BaseActivity {
                 textViews.get(i).setSelected(false);
             }
         }
+    }
 
+    private void UMENGIndexEvent(int position) {
+        switch (position){
+            case 0:
+                UmengEventUtil.homeEvent(this);
+                break;
+            case 1:
+                UmengEventUtil.allEvent(this);
+                break;
+            case 2:
+                UmengEventUtil.auctionEvent(this);
+                break;
+            case 3:
+                UmengEventUtil.shopCartEvent(this);
+                break;
+            case 4:
+                UmengEventUtil.mimeEvent(this);
+                break;
+        }
     }
 
     private EventManager.OnNotifyListener onNotifyListener = new EventManager.OnNotifyListener() {
