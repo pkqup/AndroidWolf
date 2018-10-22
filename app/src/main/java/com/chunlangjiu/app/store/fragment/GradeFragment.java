@@ -52,24 +52,28 @@ public class GradeFragment extends HeaderViewPagerFragment {
     }
 
     private void initData() {
-        Bundle bundle = getArguments();
-        if (bundle != null) {
-            StoreDetailBean.StoreBean storeBean = (StoreDetailBean.StoreBean) bundle.getSerializable("storeBean");
-            List<StoreDetailBean.Grade> grade = storeBean.getGrade();
-            if (grade != null && grade.size() > 0) {
-                for (int i = 0; i < grade.size(); i++) {
-                    View grandItem = View.inflate(getActivity(), R.layout.store_item_grand, null);
-                    TextView tvYear = grandItem.findViewById(R.id.tvYear);
-                    TextView tvRp = grandItem.findViewById(R.id.tvRp);
-                    TextView tvWs = grandItem.findViewById(R.id.tvWs);
-                    TextView tvJr = grandItem.findViewById(R.id.tvJr);
-                    tvYear.setText(grade.get(i).getYear());
-                    tvRp.setText(grade.get(i).getRp());
-                    tvWs.setText(grade.get(i).getWs());
-                    tvJr.setText(grade.get(i).getJr());
-                    llGrand.addView(grandItem);
+        try {
+            Bundle bundle = getArguments();
+            if (bundle != null) {
+                StoreDetailBean.StoreBean storeBean = (StoreDetailBean.StoreBean) bundle.getSerializable("storeBean");
+                List<StoreDetailBean.Grade> grade = storeBean.getGrade();
+                if (grade != null && grade.size() > 0) {
+                    for (int i = 0; i < grade.size(); i++) {
+                        View grandItem = View.inflate(getActivity(), R.layout.store_item_grand, null);
+                        TextView tvYear = grandItem.findViewById(R.id.tvYear);
+                        TextView tvRp = grandItem.findViewById(R.id.tvRp);
+                        TextView tvWs = grandItem.findViewById(R.id.tvWs);
+                        TextView tvJr = grandItem.findViewById(R.id.tvJr);
+                        tvYear.setText(grade.get(i).getYear());
+                        tvRp.setText(grade.get(i).getRp());
+                        tvWs.setText(grade.get(i).getWs());
+                        tvJr.setText(grade.get(i).getJr());
+                        llGrand.addView(grandItem);
+                    }
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
