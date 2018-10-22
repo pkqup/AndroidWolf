@@ -67,7 +67,7 @@ public class StoreSearchActivity extends BaseActivity {
     };
 
 
-    public static void startStoreSearchActivity(Activity activity, String className,String classId) {
+    public static void startStoreSearchActivity(Activity activity, String className, String classId) {
         Intent intent = new Intent(activity, StoreSearchActivity.class);
         intent.putExtra("className", className);
         intent.putExtra("classId", classId);
@@ -79,8 +79,10 @@ public class StoreSearchActivity extends BaseActivity {
         titleImgLeft.setOnClickListener(onClickListener);
         titleImgRightOne.setVisibility(View.VISIBLE);
         titleImgRightOne.setOnClickListener(onClickListener);
-        titleName.setVisibility(View.GONE);
-        titleSearchView.setVisibility(View.VISIBLE);
+        titleImgRightOne.setVisibility(View.GONE);
+        titleSearchView.setVisibility(View.GONE);
+        titleName.setVisibility(View.VISIBLE);
+        titleName.setText(getIntent().getStringExtra("className"));
     }
 
     @Override
@@ -110,7 +112,7 @@ public class StoreSearchActivity extends BaseActivity {
         exListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
-                StoreDetailsActivity.startStoreDetailActivity(StoreSearchActivity.this,lists.get(groupPosition).getList().get(childPosition).getId());
+                StoreDetailsActivity.startStoreDetailActivity(StoreSearchActivity.this, lists.get(groupPosition).getList().get(childPosition).getId());
 
                 return true;
             }
@@ -122,7 +124,7 @@ public class StoreSearchActivity extends BaseActivity {
 
     private void initData() {
 
-        disposable.add(ApiUtils.getInstance().getStoreList(classId,0)
+        disposable.add(ApiUtils.getInstance().getStoreList(classId, 0)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean<StoreListBean>>() {
@@ -156,7 +158,7 @@ public class StoreSearchActivity extends BaseActivity {
 
         int groupCount = exListView.getCount();
 
-        for (int i=0; i<groupCount; i++) {
+        for (int i = 0; i < groupCount; i++) {
             exListView.expandGroup(i);
         }
     }
