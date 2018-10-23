@@ -26,11 +26,16 @@ import com.chunlangjiu.app.store.fragment.GradeFragment;
 import com.chunlangjiu.app.store.fragment.HeaderViewPagerFragment;
 import com.chunlangjiu.app.store.fragment.PhotoFragment;
 import com.chunlangjiu.app.store.fragment.SimpleDescFragment;
+import com.chunlangjiu.app.util.ShareUtils;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.lzy.widget.HeaderViewPager;
 import com.pkqup.commonlibrary.glide.GlideUtils;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.socks.library.KLog;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.media.UMWeb;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,6 +78,7 @@ public class StoreDetailsActivity extends BaseActivity {
     private final String[] mTitles = {"名庄简介", "详细介绍", "历年评分", "酒庄图片"};
     private FragmentAdapter fragmentAdapter;
     private List<HeaderViewPagerFragment> mFragments;
+    private StoreDetailBean.StoreBean storeBean;
 
 
     public static void startStoreDetailActivity(Activity activity, String chateau_id) {
@@ -88,7 +94,8 @@ public class StoreDetailsActivity extends BaseActivity {
                 case R.id.img_title_left:
                     finish();
                     break;
-                case R.id.img_title_right_one:
+                case R.id.imgShare:
+                    showShare();
                     break;
 
             }
@@ -112,6 +119,7 @@ public class StoreDetailsActivity extends BaseActivity {
 
     private void initView() {
         disposable = new CompositeDisposable();
+        imgShare.setOnClickListener(onClickListener);
         chateau_id = getIntent().getStringExtra("chateau_id");
     }
 
@@ -131,17 +139,18 @@ public class StoreDetailsActivity extends BaseActivity {
                     @Override
                     public void accept(Throwable throwable) throws Exception {
                         hideLoadingDialog();
+                        showErrorView();
                     }
                 }));
     }
 
 
     private void getDetailSuccess(List<StoreDetailBean.StoreBean> detail) {
-        StoreDetailBean.StoreBean storeBean = detail.get(0);
+        storeBean = detail.get(0);
         tvFirstName.setText(storeBean.getName());
-        GlideUtils.loadImage(this, storeBean.getImg(), imgMainPic);
+        GlideUtils.loadImageShop(this, storeBean.getImg(), imgMainPic);
         tvSecondName.setText(storeBean.getName());
-        tvDesc.setText(storeBean.getContent());
+        tvDesc.setText(storeBean.getIntro());
     }
 
 
@@ -191,6 +200,34 @@ public class StoreDetailsActivity extends BaseActivity {
         @Override
         public int getCount() {
             return lists == null ? 0 : lists.size();
+        }
+    }
+
+    private void showShare() {
+        if(storeBean!=null){
+            UMImage thumb = new UMImage(this, storeBean.getImg());
+            UMWeb web = new UMWeb("http://mall.chunlangjiu.com/appdownload/index.html");
+            web.setTitle(storeBean.getName());//标题
+            web.setThumb(thumb);  //缩略图
+            web.setDescription(storeBean.getContent());//描述
+
+            ShareUtils.shareLink(this, web, new UMShareListener() {
+                @Override
+                public void onStart(SHARE_MEDIA share_media) {
+                }
+
+                @Override
+                public void onResult(SHARE_MEDIA share_media) {
+                }
+
+                @Override
+                public void onError(SHARE_MEDIA share_media, Throwable throwable) {
+                }
+
+                @Override
+                public void onCancel(SHARE_MEDIA share_media) {
+                }
+            });
         }
     }
 }
