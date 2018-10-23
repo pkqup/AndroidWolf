@@ -50,7 +50,7 @@ public class DetailDescFragment extends HeaderViewPagerFragment {
         Bundle bundle = getArguments();
         if (bundle != null) {
             StoreDetailBean.StoreBean storeBean = (StoreDetailBean.StoreBean) bundle.getSerializable("storeBean");
-            tvIntroduce.setText("        " + storeBean.getIntro());
+            tvIntroduce.setText(storeBean.getIntro());
         }
     }
 }
