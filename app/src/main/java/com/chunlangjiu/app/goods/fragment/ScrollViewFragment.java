@@ -327,11 +327,12 @@ public class ScrollViewFragment extends BaseFragment {
         recommendAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                if ("true".equals(recommendLists.get(position).getAuction_status())) {
+                /*if ("true".equals(recommendLists.get(position).getAuction_status())) {
                     AuctionDetailActivity.startAuctionDetailsActivity(getActivity(), recommendLists.get(position).getItem_id());
                 } else {
                     GoodsDetailsActivity.startGoodsDetailsActivity(getActivity(), recommendLists.get(position).getItem_id());
-                }
+                }*/
+                GoodsDetailsActivity.startGoodsDetailsActivity(getActivity(), recommendLists.get(position).getItem_id());
             }
         });
     }
