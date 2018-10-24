@@ -20,6 +20,7 @@ import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
 import com.chunlangjiu.app.goods.bean.GoodsListBean;
 import com.chunlangjiu.app.goods.bean.OrdoListBean;
 import com.chunlangjiu.app.goods.bean.PaymentBean;
+import com.chunlangjiu.app.goods.bean.RecommendGoodsBean;
 import com.chunlangjiu.app.goods.bean.ShopInfoBean;
 import com.chunlangjiu.app.order.bean.AuctionOrderListBean;
 import com.chunlangjiu.app.order.bean.CancelOrderResultBean;
@@ -548,4 +549,12 @@ public interface ApiService {
                                                  @Field("parameter") String parameter, @Field("unit") String unit, @Field("nospec") String nospec,
                                                  @Field("area_id") String area_id, @Field("odor_id") String odor_id, @Field("alcohol_id") String alcohol_id,
                                                  @Field("store") String store, @Field("item_id") String item_id);
+
+
+
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<List<RecommendGoodsBean>>> getRecommendGoods(@Field("method") String method, @Field("v") String v,
+                                                               @Field("item_id") String item_id);
 }

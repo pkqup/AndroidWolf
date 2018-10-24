@@ -20,6 +20,7 @@ import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
 import com.chunlangjiu.app.goods.bean.GoodsListBean;
 import com.chunlangjiu.app.goods.bean.OrdoListBean;
 import com.chunlangjiu.app.goods.bean.PaymentBean;
+import com.chunlangjiu.app.goods.bean.RecommendGoodsBean;
 import com.chunlangjiu.app.goods.bean.ShopInfoBean;
 import com.chunlangjiu.app.order.bean.AuctionOrderListBean;
 import com.chunlangjiu.app.order.bean.CancelOrderResultBean;
@@ -469,5 +470,9 @@ public class ApiUtils {
                                                         String area_id, String odor_id, String alcohol_id, String store, String itemId) {
         return apiService.commitEditGoodsDetail("item.save", "v1", cat_id, brand_id, shop_cat_id, title, sub_title, weight, list_image,
                 price, dlytmpl_id, sku, label, explain, parameter, "瓶", "1", area_id, odor_id, alcohol_id, store, itemId);
+    }
+
+    public Flowable<ResultBean<List<RecommendGoodsBean>>> getRecommendGoods(String item_id) {
+        return apiService.getRecommendGoods("item.recommend", "v1", item_id);
     }
 }

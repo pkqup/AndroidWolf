@@ -64,8 +64,9 @@ public class BaseApplication extends MultiDexApplication {
      * 友盟初始化
      */
     private void initUM() {
-        MobclickAgent.openActivityDurationTrack(false);//禁止默认的页面统计功能
         UMConfigure.init(this, "5b3b3744f43e4879b8000236", "chunlang", UMConfigure.DEVICE_TYPE_PHONE, "");
+        MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
+//        MobclickAgent.openActivityDurationTrack(false);//禁止默认的页面统计功能
         PlatformConfig.setWeixin("wx0e1869b241d7234f", "13a3d322c7055d7c33e3de912a4fad2a");
         PlatformConfig.setQQZone("1106941413", "9qybO7qdrpQIYPiq");
         PlatformConfig.setSinaWeibo("1325843831", "bccdf04dac982831efd444a71588daea", "http://sns.whalecloud.com");
