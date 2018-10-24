@@ -512,26 +512,44 @@ public class HomeFragment extends BaseFragment {
                 switch (i) {
                     case 0:
                         GlideUtils.loadImage(getActivity(), iconPicLists.get(i).getImagesrc(), imgIconOne);
-                        tvStrOne.setText(iconPicLists.get(i).getTag());
+                        setIconText(tvStrOne, i);
                         break;
                     case 1:
                         GlideUtils.loadImage(getActivity(), iconPicLists.get(i).getImagesrc(), imgIconTwo);
-                        tvStrTwo.setText(iconPicLists.get(i).getTag());
+                        setIconText(tvStrTwo, i);
                         break;
                     case 2:
                         GlideUtils.loadImage(getActivity(), iconPicLists.get(i).getImagesrc(), imgIconThree);
-                        tvStrThree.setText(iconPicLists.get(i).getTag());
+                        setIconText(tvStrThree, i);
                         break;
                     case 3:
                         GlideUtils.loadImage(getActivity(), iconPicLists.get(i).getImagesrc(), imgIconFour);
-                        tvStrFour.setText(iconPicLists.get(i).getTag());
+                        setIconText(tvStrFour, i);
                         break;
                     case 4:
                         GlideUtils.loadImage(getActivity(), iconPicLists.get(i).getImagesrc(), imgIconFive);
-                        tvStrFive.setText(iconPicLists.get(i).getTag());
+                        setIconText(tvStrFive, i);
                         break;
                 }
             }
+        }
+    }
+
+    /**
+     * 替换竞拍专区的文案
+     *
+     * @param textView
+     * @param index
+     */
+    private void setIconText(TextView textView, int index) {
+        if ("竞拍专区".equals(iconPicLists.get(index).getTag())) {
+            if (BaseApplication.HIDE_AUCTION) {
+                textView.setText("精品专区");
+            } else {
+                textView.setText(iconPicLists.get(index).getTag());
+            }
+        } else {
+            textView.setText(iconPicLists.get(index).getTag());
         }
     }
 
@@ -577,6 +595,7 @@ public class HomeFragment extends BaseFragment {
         newLists = homeListBeanResultBean.getData().getList();
         auction_list = homeListBeanResultBean.getData().getAuction_list();
         if (newLists == null) newLists = new ArrayList<>();
+        if (auction_list == null) auction_list = new ArrayList<>();
         for (HomeBean homeBean : newLists) {
             homeBean.setItemType(HomeBean.ITEM_GOODS);
             homeBean.setAuction(false);
@@ -585,31 +604,36 @@ public class HomeFragment extends BaseFragment {
             pageNo = 1;
             if (auction_list != null && auction_list.size() > 0) {
                 lists.clear();
-                HomeBean jingpaiFlag = new HomeBean();
-                jingpaiFlag.setItemType(HomeBean.ITEM_JINGPAI);
-                lists.add(jingpaiFlag);
-                for (int i = 0; i < auction_list.size(); i++) {
-                    String end_time = auction_list.get(i).getAuction_end_time();
-                    long endTime = 0;
-                    if (!TextUtils.isEmpty(end_time)) {
-                        endTime = Long.parseLong(end_time);
-                    }
-                    if ((endTime * 1000 - System.currentTimeMillis()) > 0) {
-                        HomeBean homeBean = new HomeBean();
-                        homeBean.setItemType(HomeBean.ITEM_GOODS);
-                        homeBean.setAuction(true);
-                        homeBean.setItem_id(auction_list.get(i).getItem_id());
-                        homeBean.setTitle(auction_list.get(i).getTitle());
-                        homeBean.setImage_default_id(auction_list.get(i).getImage_default_id());
-                        homeBean.setLabel(auction_list.get(i).getLabel());
-                        homeBean.setAuction_starting_price(auction_list.get(i).getAuction_starting_price());
-                        homeBean.setAuction_end_time(auction_list.get(i).getAuction_end_time());
-                        homeBean.setMax_price(auction_list.get(i).getMax_price());
-                        homeBean.setAuction_status(auction_list.get(i).getAuction_status());
-                        homeBean.setAuction_number(auction_list.get(i).getAuction_number());
-                        lists.add(homeBean);
+                if (BaseApplication.HIDE_AUCTION) {
+                    auction_list.clear();
+                } else {
+                    HomeBean jingpaiFlag = new HomeBean();
+                    jingpaiFlag.setItemType(HomeBean.ITEM_JINGPAI);
+                    lists.add(jingpaiFlag);
+                    for (int i = 0; i < auction_list.size(); i++) {
+                        String end_time = auction_list.get(i).getAuction_end_time();
+                        long endTime = 0;
+                        if (!TextUtils.isEmpty(end_time)) {
+                            endTime = Long.parseLong(end_time);
+                        }
+                        if ((endTime * 1000 - System.currentTimeMillis()) > 0) {
+                            HomeBean homeBean = new HomeBean();
+                            homeBean.setItemType(HomeBean.ITEM_GOODS);
+                            homeBean.setAuction(true);
+                            homeBean.setItem_id(auction_list.get(i).getItem_id());
+                            homeBean.setTitle(auction_list.get(i).getTitle());
+                            homeBean.setImage_default_id(auction_list.get(i).getImage_default_id());
+                            homeBean.setLabel(auction_list.get(i).getLabel());
+                            homeBean.setAuction_starting_price(auction_list.get(i).getAuction_starting_price());
+                            homeBean.setAuction_end_time(auction_list.get(i).getAuction_end_time());
+                            homeBean.setMax_price(auction_list.get(i).getMax_price());
+                            homeBean.setAuction_status(auction_list.get(i).getAuction_status());
+                            homeBean.setAuction_number(auction_list.get(i).getAuction_number());
+                            lists.add(homeBean);
+                        }
                     }
                 }
+
                 if (newLists.size() > 0) {
                     HomeBean tuijian = new HomeBean();
                     tuijian.setItemType(HomeBean.ITEM_TUIJIAN);
@@ -617,6 +641,7 @@ public class HomeFragment extends BaseFragment {
                 }
                 lists.addAll(newLists);
             } else {
+                lists.clear();
                 if (newLists.size() > 0) {
                     HomeBean tuijian = new HomeBean();
                     tuijian.setItemType(HomeBean.ITEM_TUIJIAN);
@@ -722,7 +747,7 @@ public class HomeFragment extends BaseFragment {
         } else {
             switch (index) {
                 case 0:
-                    EventManager.getInstance().notify(null, ConstantMsg.MSG_PAGE_AUCTION);
+                    EventManager.getInstance().notify(null, BaseApplication.HIDE_AUCTION ? ConstantMsg.MSG_PAGE_CLASS : ConstantMsg.MSG_PAGE_AUCTION);
                     UmengEventUtil.iconEvent(getActivity(), "竞拍专区");
                     break;
                 case 1:
@@ -784,7 +809,7 @@ public class HomeFragment extends BaseFragment {
                 }
                 break;
             case HomeModulesBean.ITEM_ACTIVITY:
-                EventManager.getInstance().notify(null, ConstantMsg.MSG_PAGE_AUCTION);
+                EventManager.getInstance().notify(null, BaseApplication.HIDE_AUCTION ? ConstantMsg.MSG_PAGE_CLASS : ConstantMsg.MSG_PAGE_AUCTION);
                 if ("banner".equals(type)) {
                     UmengEventUtil.bannerEvent(getActivity(), "竞拍专区");
                 } else {

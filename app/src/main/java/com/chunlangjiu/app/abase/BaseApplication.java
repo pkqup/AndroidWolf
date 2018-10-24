@@ -34,6 +34,9 @@ import io.realm.RealmConfiguration;
 
 public class BaseApplication extends MultiDexApplication {
 
+    //是否隐藏竞拍专区
+    public static boolean HIDE_AUCTION = false;
+
     private static String token = "";
 
     @Override

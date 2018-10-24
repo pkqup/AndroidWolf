@@ -24,6 +24,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
+import com.chunlangjiu.app.abase.BaseApplication;
 import com.chunlangjiu.app.amain.bean.FirstClassBean;
 import com.chunlangjiu.app.amain.bean.MainClassBean;
 import com.chunlangjiu.app.amain.bean.SecondClassBean;
@@ -504,8 +505,22 @@ public class ShopMainActivity extends BaseActivity {
 
     private void getListSuccess(GoodsListBean goodsListBean, boolean isRefresh) {
         if (goodsListBean != null && goodsListBean.getList() != null && goodsListBean.getList().size() > 0) {
-            List<GoodsListDetailBean> newLists = goodsListBean.getList();
-            if (newLists == null) newLists = new ArrayList<>();
+            List<GoodsListDetailBean> dataLists = goodsListBean.getList();
+            List<GoodsListDetailBean> newLists = new ArrayList<>();
+
+            if (BaseApplication.HIDE_AUCTION) {
+                //过滤竞拍商品
+                try {
+                    for (int i = 0; i < dataLists.size(); i++) {
+                        if (TextUtils.isEmpty(dataLists.get(i).getAuction().getAuctionitem_id())) {
+                            newLists.add(dataLists.get(i));
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
             if (isRefresh) {
                 pageNum = 1;
                 lists = newLists;

@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chunlangjiu.app.R;
+import com.chunlangjiu.app.abase.BaseApplication;
 import com.chunlangjiu.app.abase.BaseFragment;
 import com.chunlangjiu.app.amain.bean.FirstClassBean;
 import com.chunlangjiu.app.amain.bean.MainClassBean;
@@ -260,7 +261,7 @@ public class GoodsFragment extends BaseFragment {
         classAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                UmengEventUtil.search_category(getActivity(),classLists.get(position).getCat_name());
+                UmengEventUtil.search_category(getActivity(), classLists.get(position).getCat_name());
                 selectClassId = classLists.get(position).getCat_id();
                 classAdapter.notifyDataSetChanged();
                 clearSelectFilterData();
@@ -469,8 +470,22 @@ public class GoodsFragment extends BaseFragment {
 
     private void getListSuccess(GoodsListBean goodsListBean, boolean isRefresh) {
         if (goodsListBean != null && goodsListBean.getList() != null && goodsListBean.getList().size() > 0) {
-            List<GoodsListDetailBean> newLists = goodsListBean.getList();
-            if (newLists == null) newLists = new ArrayList<>();
+            List<GoodsListDetailBean> dataLists = goodsListBean.getList();
+            List<GoodsListDetailBean> newLists = new ArrayList<>();
+
+            if (BaseApplication.HIDE_AUCTION) {
+                //过滤竞拍商品
+                try {
+                    for (int i = 0; i < dataLists.size(); i++) {
+                        if (TextUtils.isEmpty(dataLists.get(i).getAuction().getAuctionitem_id())) {
+                            newLists.add(dataLists.get(i));
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+
             if (isRefresh) {
                 pageNum = 1;
                 lists = newLists;
@@ -555,7 +570,7 @@ public class GoodsFragment extends BaseFragment {
                     }
                 });
             }
-            choiceBrandPopWindow.setBrandList(brandLists,brandId);
+            choiceBrandPopWindow.setBrandList(brandLists, brandId);
             choiceBrandPopWindow.showAsDropDown(rlBrand, 0, 1);
         }
     }
@@ -577,7 +592,7 @@ public class GoodsFragment extends BaseFragment {
                     }
                 });
             }
-            choiceAreaPopWindow.setBrandList(areaLists,areaId);
+            choiceAreaPopWindow.setBrandList(areaLists, areaId);
             choiceAreaPopWindow.showAsDropDown(rlBrand, 0, 1);
         }
     }
@@ -598,7 +613,7 @@ public class GoodsFragment extends BaseFragment {
                     }
                 });
             }
-            choiceOrdoPopWindow.setBrandList(ordoLists,ordoId);
+            choiceOrdoPopWindow.setBrandList(ordoLists, ordoId);
             choiceOrdoPopWindow.showAsDropDown(rlBrand, 0, 1);
         }
     }
@@ -619,7 +634,7 @@ public class GoodsFragment extends BaseFragment {
                     }
                 });
             }
-            choiceAlcPopWindow.setBrandList(alcLists,alcoholId);
+            choiceAlcPopWindow.setBrandList(alcLists, alcoholId);
             choiceAlcPopWindow.showAsDropDown(rlBrand, 0, 1);
         }
     }

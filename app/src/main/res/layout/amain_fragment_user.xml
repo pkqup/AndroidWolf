@@ -228,11 +228,11 @@
                     <LinearLayout
                         android:id="@+id/llNotUseMoney"
                         android:layout_width="0dp"
-                        android:visibility="visible"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:visibility="visible">
 
                         <TextView
                             android:id="@+id/tvNotUseMoney"
@@ -749,434 +749,442 @@
 
         </LinearLayout>
 
-        <RelativeLayout
-            android:id="@+id/rlAuctionManager"
-            android:layout_width="match_parent"
-            android:layout_height="44dp"
-            android:layout_marginTop="10dp"
-            android:background="@color/bg_white">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="15dp"
-                android:text="竞拍订单"
-                android:textColor="@color/t_black"
-                android:textSize="18sp" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="25dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="15dp"
-                android:src="@mipmap/black_right_arrow" />
-        </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="@color/bg_gray" />
-
+        <!--隐藏竞拍-->
         <LinearLayout
-            android:id="@+id/llBuyAuction"
-            android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:background="@color/bg_white"
-            android:orientation="horizontal">
+            android:id="@+id/llAuctionContent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <RelativeLayout
-                android:id="@+id/rlAuctionOne"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/imgAuctionOne"
-                    android:layout_width="24dp"
-                    android:layout_height="22dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="14dp"
-                    android:src="@mipmap/auction_icon_one" />
+                android:id="@+id/rlAuctionManager"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/bg_white">
 
                 <TextView
-                    android:id="@+id/tvAuctionOne"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/imgAuctionOne"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="10dp"
-                    android:text="待付定金"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:text="竞拍订单"
                     android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_small" />
-
-                <TextView
-                    android:id="@+id/tvAuctionOneNum"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginLeft="-15dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_toRightOf="@id/imgAuctionOne"
-                    android:background="@drawable/cart_num_bg"
-                    android:gravity="center"
-                    android:textColor="@color/t_white"
-                    android:textSize="10sp"
-                    android:visibility="gone"
-                    tools:text="1" />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/rlAuctionTwo"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                    android:textSize="18sp" />
 
                 <ImageView
-                    android:id="@+id/imgAuctionTwo"
-                    android:layout_width="24dp"
-                    android:layout_height="22dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="14dp"
-                    android:src="@mipmap/auction_icon_two" />
-
-                <TextView
-                    android:id="@+id/tvAuctionTwo"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/imgAuctionTwo"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="10dp"
-                    android:text="竞拍中"
-                    android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_small" />
-
-                <TextView
-                    android:id="@+id/tvAuctionTwoNum"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginLeft="-15dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_toRightOf="@id/imgAuctionTwo"
-                    android:background="@drawable/cart_num_bg"
-                    android:gravity="center"
-                    android:textColor="@color/t_white"
-                    android:textSize="10sp"
-                    android:visibility="gone"
-                    tools:text="1" />
-
+                    android:layout_height="25dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:src="@mipmap/black_right_arrow" />
             </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/rlAuctionThree"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:background="@color/bg_gray" />
 
-                <ImageView
-                    android:id="@+id/imgAuctionThree"
-                    android:layout_width="24dp"
-                    android:layout_height="22dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="14dp"
-                    android:src="@mipmap/order_icon_three" />
+            <LinearLayout
+                android:id="@+id/llBuyAuction"
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:background="@color/bg_white"
+                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/tvAuctionThree"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/imgAuctionThree"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="10dp"
-                    android:text="已中标"
-                    android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_small" />
+                <RelativeLayout
+                    android:id="@+id/rlAuctionOne"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tvAuctionThreeNum"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginLeft="-15dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_toRightOf="@id/imgAuctionThree"
-                    android:background="@drawable/cart_num_bg"
-                    android:gravity="center"
-                    android:textColor="@color/t_white"
-                    android:textSize="10sp"
-                    android:visibility="gone"
-                    tools:text="1" />
+                    <ImageView
+                        android:id="@+id/imgAuctionOne"
+                        android:layout_width="24dp"
+                        android:layout_height="22dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="14dp"
+                        android:src="@mipmap/auction_icon_one" />
 
-            </RelativeLayout>
+                    <TextView
+                        android:id="@+id/tvAuctionOne"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/imgAuctionOne"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="10dp"
+                        android:text="待付定金"
+                        android:textColor="@color/t_black"
+                        android:textSize="@dimen/sp_small" />
 
-            <RelativeLayout
-                android:id="@+id/rlAuctionFour"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/tvAuctionOneNum"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="-15dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_toRightOf="@id/imgAuctionOne"
+                        android:background="@drawable/cart_num_bg"
+                        android:gravity="center"
+                        android:textColor="@color/t_white"
+                        android:textSize="10sp"
+                        android:visibility="gone"
+                        tools:text="1" />
 
-                <ImageView
-                    android:id="@+id/imgAuctionFour"
-                    android:layout_width="24dp"
-                    android:layout_height="22dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="14dp"
-                    android:src="@mipmap/auction_icon_four" />
+                </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/tvAuctionFour"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/imgAuctionFour"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="10dp"
-                    android:text="落标"
-                    android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_small" />
+                <RelativeLayout
+                    android:id="@+id/rlAuctionTwo"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tvAuctionFourNum"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginLeft="-15dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_toRightOf="@id/imgAuctionFour"
-                    android:background="@drawable/cart_num_bg"
-                    android:gravity="center"
-                    android:textColor="@color/t_white"
-                    android:textSize="10sp"
-                    android:visibility="gone"
-                    tools:text="1" />
+                    <ImageView
+                        android:id="@+id/imgAuctionTwo"
+                        android:layout_width="24dp"
+                        android:layout_height="22dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="14dp"
+                        android:src="@mipmap/auction_icon_two" />
 
-            </RelativeLayout>
+                    <TextView
+                        android:id="@+id/tvAuctionTwo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/imgAuctionTwo"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="10dp"
+                        android:text="竞拍中"
+                        android:textColor="@color/t_black"
+                        android:textSize="@dimen/sp_small" />
 
-            <RelativeLayout
-                android:id="@+id/rlAuctionFive"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/tvAuctionTwoNum"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="-15dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_toRightOf="@id/imgAuctionTwo"
+                        android:background="@drawable/cart_num_bg"
+                        android:gravity="center"
+                        android:textColor="@color/t_white"
+                        android:textSize="10sp"
+                        android:visibility="gone"
+                        tools:text="1" />
 
-                <ImageView
-                    android:id="@+id/imgAuctionFive"
-                    android:layout_width="24dp"
-                    android:layout_height="22dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="14dp"
-                    android:src="@mipmap/auction_icon_five" />
+                </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/tvAuctionFive"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/imgAuctionFive"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="10dp"
-                    android:text="全部订单"
-                    android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_small" />
+                <RelativeLayout
+                    android:id="@+id/rlAuctionThree"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tvAuctionFiveNum"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginLeft="-15dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_toRightOf="@id/imgAuctionFive"
-                    android:background="@drawable/cart_num_bg"
-                    android:gravity="center"
-                    android:textColor="@color/t_white"
-                    android:textSize="10sp"
-                    android:visibility="gone"
-                    tools:text="1" />
-            </RelativeLayout>
-        </LinearLayout>
+                    <ImageView
+                        android:id="@+id/imgAuctionThree"
+                        android:layout_width="24dp"
+                        android:layout_height="22dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="14dp"
+                        android:src="@mipmap/order_icon_three" />
 
-        <LinearLayout
-            android:id="@+id/llSellAuction"
-            android:layout_width="match_parent"
-            android:layout_height="75dp"
-            android:background="@color/bg_white"
-            android:orientation="horizontal">
+                    <TextView
+                        android:id="@+id/tvAuctionThree"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/imgAuctionThree"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="10dp"
+                        android:text="已中标"
+                        android:textColor="@color/t_black"
+                        android:textSize="@dimen/sp_small" />
 
-            <RelativeLayout
-                android:id="@+id/rlSellAuctionOne"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/tvAuctionThreeNum"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="-15dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_toRightOf="@id/imgAuctionThree"
+                        android:background="@drawable/cart_num_bg"
+                        android:gravity="center"
+                        android:textColor="@color/t_white"
+                        android:textSize="10sp"
+                        android:visibility="gone"
+                        tools:text="1" />
 
-                <ImageView
-                    android:id="@+id/imgSellAuctionOne"
-                    android:layout_width="24dp"
-                    android:layout_height="22dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="14dp"
-                    android:src="@mipmap/auction_icon_one" />
+                </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/tvSellAuctionOne"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/imgSellAuctionOne"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="10dp"
-                    android:text="待付定金"
-                    android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_small" />
+                <RelativeLayout
+                    android:id="@+id/rlAuctionFour"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tvSellAuctionOneNum"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginLeft="-15dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_toRightOf="@id/imgSellAuctionOne"
-                    android:background="@drawable/cart_num_bg"
-                    android:gravity="center"
-                    android:textColor="@color/t_white"
-                    android:textSize="10sp"
-                    android:visibility="gone"
-                    tools:text="1" />
+                    <ImageView
+                        android:id="@+id/imgAuctionFour"
+                        android:layout_width="24dp"
+                        android:layout_height="22dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="14dp"
+                        android:src="@mipmap/auction_icon_four" />
 
-            </RelativeLayout>
+                    <TextView
+                        android:id="@+id/tvAuctionFour"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/imgAuctionFour"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="10dp"
+                        android:text="落标"
+                        android:textColor="@color/t_black"
+                        android:textSize="@dimen/sp_small" />
 
-            <RelativeLayout
-                android:id="@+id/rlSellAuctionTwo"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/tvAuctionFourNum"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="-15dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_toRightOf="@id/imgAuctionFour"
+                        android:background="@drawable/cart_num_bg"
+                        android:gravity="center"
+                        android:textColor="@color/t_white"
+                        android:textSize="10sp"
+                        android:visibility="gone"
+                        tools:text="1" />
 
-                <ImageView
-                    android:id="@+id/imgSellAuctionTwo"
-                    android:layout_width="24dp"
-                    android:layout_height="22dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="14dp"
-                    android:src="@mipmap/auction_icon_two" />
+                </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/tvSellAuctionTwo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/imgSellAuctionTwo"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="10dp"
-                    android:text="竞拍中"
-                    android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_small" />
+                <RelativeLayout
+                    android:id="@+id/rlAuctionFive"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tvSellAuctionTwoNum"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginLeft="-15dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_toRightOf="@id/imgSellAuctionTwo"
-                    android:background="@drawable/cart_num_bg"
-                    android:gravity="center"
-                    android:textColor="@color/t_white"
-                    android:textSize="10sp"
-                    android:visibility="gone"
-                    tools:text="1" />
+                    <ImageView
+                        android:id="@+id/imgAuctionFive"
+                        android:layout_width="24dp"
+                        android:layout_height="22dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="14dp"
+                        android:src="@mipmap/auction_icon_five" />
 
-            </RelativeLayout>
+                    <TextView
+                        android:id="@+id/tvAuctionFive"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/imgAuctionFive"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="10dp"
+                        android:text="全部订单"
+                        android:textColor="@color/t_black"
+                        android:textSize="@dimen/sp_small" />
 
-            <RelativeLayout
-                android:id="@+id/rlSellAuctionThree"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/tvAuctionFiveNum"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="-15dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_toRightOf="@id/imgAuctionFive"
+                        android:background="@drawable/cart_num_bg"
+                        android:gravity="center"
+                        android:textColor="@color/t_white"
+                        android:textSize="10sp"
+                        android:visibility="gone"
+                        tools:text="1" />
+                </RelativeLayout>
+            </LinearLayout>
 
-                <ImageView
-                    android:id="@+id/imgSellAuctionThree"
-                    android:layout_width="24dp"
-                    android:layout_height="22dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="14dp"
-                    android:src="@mipmap/auction_icon_three" />
+            <LinearLayout
+                android:id="@+id/llSellAuction"
+                android:layout_width="match_parent"
+                android:layout_height="75dp"
+                android:background="@color/bg_white"
+                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/tvSellAuctionThree"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/imgSellAuctionThree"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="10dp"
-                    android:text="已中标"
-                    android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_small" />
+                <RelativeLayout
+                    android:id="@+id/rlSellAuctionOne"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tvSellAuctionThreeNum"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginLeft="-15dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_toRightOf="@id/imgSellAuctionThree"
-                    android:background="@drawable/cart_num_bg"
-                    android:gravity="center"
-                    android:textColor="@color/t_white"
-                    android:textSize="10sp"
-                    android:visibility="gone"
-                    tools:text="1" />
+                    <ImageView
+                        android:id="@+id/imgSellAuctionOne"
+                        android:layout_width="24dp"
+                        android:layout_height="22dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="14dp"
+                        android:src="@mipmap/auction_icon_one" />
 
-            </RelativeLayout>
+                    <TextView
+                        android:id="@+id/tvSellAuctionOne"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/imgSellAuctionOne"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="10dp"
+                        android:text="待付定金"
+                        android:textColor="@color/t_black"
+                        android:textSize="@dimen/sp_small" />
 
-            <RelativeLayout
-                android:id="@+id/rlSellAuctionFour"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                    <TextView
+                        android:id="@+id/tvSellAuctionOneNum"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="-15dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_toRightOf="@id/imgSellAuctionOne"
+                        android:background="@drawable/cart_num_bg"
+                        android:gravity="center"
+                        android:textColor="@color/t_white"
+                        android:textSize="10sp"
+                        android:visibility="gone"
+                        tools:text="1" />
 
-                <ImageView
-                    android:id="@+id/imgSellAuctionFour"
-                    android:layout_width="24dp"
-                    android:layout_height="22dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="14dp"
-                    android:src="@mipmap/auction_icon_four" />
+                </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/tvSellAuctionFour"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/imgSellAuctionFour"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="10dp"
-                    android:text="落标"
-                    android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_small" />
+                <RelativeLayout
+                    android:id="@+id/rlSellAuctionTwo"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/tvSellAuctionFourNum"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginLeft="-15dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_toRightOf="@id/imgSellAuctionFour"
-                    android:background="@drawable/cart_num_bg"
-                    android:gravity="center"
-                    android:textColor="@color/t_white"
-                    android:textSize="10sp"
-                    android:visibility="gone"
-                    tools:text="1" />
+                    <ImageView
+                        android:id="@+id/imgSellAuctionTwo"
+                        android:layout_width="24dp"
+                        android:layout_height="22dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="14dp"
+                        android:src="@mipmap/auction_icon_two" />
 
-            </RelativeLayout>
+                    <TextView
+                        android:id="@+id/tvSellAuctionTwo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/imgSellAuctionTwo"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="10dp"
+                        android:text="竞拍中"
+                        android:textColor="@color/t_black"
+                        android:textSize="@dimen/sp_small" />
 
-            <RelativeLayout
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical" />
+                    <TextView
+                        android:id="@+id/tvSellAuctionTwoNum"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="-15dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_toRightOf="@id/imgSellAuctionTwo"
+                        android:background="@drawable/cart_num_bg"
+                        android:gravity="center"
+                        android:textColor="@color/t_white"
+                        android:textSize="10sp"
+                        android:visibility="gone"
+                        tools:text="1" />
 
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rlSellAuctionThree"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/imgSellAuctionThree"
+                        android:layout_width="24dp"
+                        android:layout_height="22dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="14dp"
+                        android:src="@mipmap/auction_icon_three" />
+
+                    <TextView
+                        android:id="@+id/tvSellAuctionThree"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/imgSellAuctionThree"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="10dp"
+                        android:text="已中标"
+                        android:textColor="@color/t_black"
+                        android:textSize="@dimen/sp_small" />
+
+                    <TextView
+                        android:id="@+id/tvSellAuctionThreeNum"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="-15dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_toRightOf="@id/imgSellAuctionThree"
+                        android:background="@drawable/cart_num_bg"
+                        android:gravity="center"
+                        android:textColor="@color/t_white"
+                        android:textSize="10sp"
+                        android:visibility="gone"
+                        tools:text="1" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rlSellAuctionFour"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:id="@+id/imgSellAuctionFour"
+                        android:layout_width="24dp"
+                        android:layout_height="22dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="14dp"
+                        android:src="@mipmap/auction_icon_four" />
+
+                    <TextView
+                        android:id="@+id/tvSellAuctionFour"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/imgSellAuctionFour"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="10dp"
+                        android:text="落标"
+                        android:textColor="@color/t_black"
+                        android:textSize="@dimen/sp_small" />
+
+                    <TextView
+                        android:id="@+id/tvSellAuctionFourNum"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="-15dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_toRightOf="@id/imgSellAuctionFour"
+                        android:background="@drawable/cart_num_bg"
+                        android:gravity="center"
+                        android:textColor="@color/t_white"
+                        android:textSize="10sp"
+                        android:visibility="gone"
+                        tools:text="1" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="vertical" />
+
+            </LinearLayout>
         </LinearLayout>
 
         <RelativeLayout
@@ -1406,6 +1414,14 @@
                     android:visibility="gone"
                     tools:text="1" />
             </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rlGoodsManagerPlace"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:visibility="gone" />
         </LinearLayout>
 
 

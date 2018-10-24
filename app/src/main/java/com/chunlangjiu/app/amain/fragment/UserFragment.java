@@ -126,6 +126,7 @@ public class UserFragment extends BaseFragment {
     /*订单管理*/
 
     /*竞拍订单管理*/
+    private LinearLayout llAuctionContent;
     private RelativeLayout rlAuctionManager;
     private LinearLayout llBuyAuction;
     private RelativeLayout rlAuctionOne;
@@ -158,6 +159,7 @@ public class UserFragment extends BaseFragment {
     private RelativeLayout rlAuctionGoods;
     private RelativeLayout rlWareHouseGoods;
     private RelativeLayout rlCheckGoods;
+    private RelativeLayout rlGoodsManagerPlace;
     /*商品管理*/
 
     /*我的管理*/
@@ -415,6 +417,7 @@ public class UserFragment extends BaseFragment {
         rlSellOrderFive = rootView.findViewById(R.id.rlSellOrderFive);
         rlSellOrderFive.setOnClickListener(onClickListener);
 
+        llAuctionContent = rootView.findViewById(R.id.llAuctionContent);
         rlAuctionManager = rootView.findViewById(R.id.rlAuctionManager);
         llBuyAuction = rootView.findViewById(R.id.llBuyAuction);
         rlAuctionOne = rootView.findViewById(R.id.rlAuctionOne);
@@ -454,6 +457,7 @@ public class UserFragment extends BaseFragment {
         rlAuctionGoods = rootView.findViewById(R.id.rlAuctionGoods);
         rlWareHouseGoods = rootView.findViewById(R.id.rlWareHouseGoods);
         rlCheckGoods = rootView.findViewById(R.id.rlCheckGoods);
+        rlGoodsManagerPlace = rootView.findViewById(R.id.rlGoodsManagerPlace);
         rlGoodsManager.setOnClickListener(onClickListener);
         rlAddGoods.setOnClickListener(onClickListener);
         rlSellGoods.setOnClickListener(onClickListener);
@@ -477,6 +481,16 @@ public class UserFragment extends BaseFragment {
         llMyManagerSecond = rootView.findViewById(R.id.llMyManagerSecond);
         rlBankCardSecond = rootView.findViewById(R.id.rlBankCardSecond);
         rlBankCardSecond.setOnClickListener(onClickListener);
+
+        if (BaseApplication.HIDE_AUCTION) {
+            llAuctionContent.setVisibility(View.GONE);
+            rlAuctionGoods.setVisibility(View.GONE);
+            rlGoodsManagerPlace.setVisibility(View.VISIBLE);
+        } else {
+            llAuctionContent.setVisibility(View.VISIBLE);
+            rlAuctionGoods.setVisibility(View.VISIBLE);
+            rlGoodsManagerPlace.setVisibility(View.GONE);
+        }
 
         checkLogin();
     }
