@@ -2,6 +2,8 @@ package com.chunlangjiu.app.goods.fragment;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -18,9 +20,13 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseFragment;
+import com.chunlangjiu.app.goods.activity.AuctionDetailActivity;
+import com.chunlangjiu.app.goods.activity.GoodsDetailsActivity;
+import com.chunlangjiu.app.goods.activity.GoodsListNewActivity;
 import com.chunlangjiu.app.goods.activity.ShopMainActivity;
 import com.chunlangjiu.app.goods.bean.EvaluateListBean;
 import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
+import com.chunlangjiu.app.goods.bean.RecommendGoodsBean;
 import com.chunlangjiu.app.net.ApiUtils;
 import com.chunlangjiu.app.util.ConstantMsg;
 import com.pkqup.commonlibrary.eventmsg.EventManager;
@@ -71,13 +77,14 @@ public class ScrollViewFragment extends BaseFragment {
     private TextView tvEvaluate;
     private LinearLayout llEvaluate;
 
+    private LinearLayout llSeeMore;
     private RecyclerView recyclerView;//推荐商品列表
 
 
     private List<ImageView> imageViews;
     private List<String> bannerUrls;
 
-    private List<String> recommendLists;
+    private List<RecommendGoodsBean> recommendLists;
     private RecommendAdapter recommendAdapter;
 
     private CompositeDisposable disposable;
@@ -99,8 +106,11 @@ public class ScrollViewFragment extends BaseFragment {
                 case R.id.tvLookAll://查看店铺
                     ShopMainActivity.startShopMainActivity(getActivity(), goodsDetailBean.getShop().getShop_id());
                     break;
-                case R.id.rlEvaluate://查看店铺
+                case R.id.rlEvaluate://评价
                     EventManager.getInstance().notify(null, ConstantMsg.CHANGE_TO_EVALUATE);
+                    break;
+                case R.id.llSeeMore://查看更多
+                    GoodsListNewActivity.startGoodsListNewActivity(getActivity(), "", "", "");
                     break;
             }
         }
@@ -140,6 +150,8 @@ public class ScrollViewFragment extends BaseFragment {
         rlEvaluate.setOnClickListener(onClickListener);
         tvEvaluate = rootView.findViewById(R.id.tvEvaluate);
         llEvaluate = rootView.findViewById(R.id.llEvaluate);
+        llSeeMore = rootView.findViewById(R.id.llSeeMore);
+        llSeeMore.setOnClickListener(onClickListener);
         recyclerView = rootView.findViewById(R.id.recyclerView);
 
         disposable = new CompositeDisposable();
@@ -150,8 +162,8 @@ public class ScrollViewFragment extends BaseFragment {
     public void initData() {
         initBannerData();
         initCommonView();
-        initRecommendView();
         getEvaluateData();
+        getRecommendGoods();
     }
 
 
@@ -284,26 +296,54 @@ public class ScrollViewFragment extends BaseFragment {
         }
     }
 
-    private void initRecommendView() {
-       /* recommendLists = new ArrayList<>();
-        recommendLists.add(bannerUrls.get(0));
-        recommendLists.add(bannerUrls.get(0));
-        recommendLists.add(bannerUrls.get(0));
-        recommendAdapter = new RecommendAdapter(R.layout.goods_item_recommend, recommendLists);
-        recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 3));
-        recyclerView.setAdapter(recommendAdapter);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setNestedScrollingEnabled(false);*/
+
+    private void getRecommendGoods() {
+        disposable.add(ApiUtils.getInstance().getRecommendGoods(goodsDetailBean.getItem().getItem_id())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<List<RecommendGoodsBean>>>() {
+                    @Override
+                    public void accept(ResultBean<List<RecommendGoodsBean>> listResultBean) throws Exception {
+                        List<RecommendGoodsBean> list = listResultBean.getData();
+                        if (list != null && list.size() > 0) {
+                            initRecommendView(list);
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                }));
     }
 
 
-    public class RecommendAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
-        public RecommendAdapter(int layoutResId, List<String> data) {
+    private void initRecommendView(List<RecommendGoodsBean> list) {
+        recommendLists = list;
+        recommendAdapter = new RecommendAdapter(R.layout.goods_item_recommend, recommendLists);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false));
+        recyclerView.setAdapter(recommendAdapter);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setNestedScrollingEnabled(false);
+        recommendAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                if ("true".equals(recommendLists.get(position).getAuction_status())) {
+                    AuctionDetailActivity.startAuctionDetailsActivity(getActivity(), recommendLists.get(position).getItem_id());
+                } else {
+                    GoodsDetailsActivity.startGoodsDetailsActivity(getActivity(), recommendLists.get(position).getItem_id());
+                }
+            }
+        });
+    }
+
+
+    public class RecommendAdapter extends BaseQuickAdapter<RecommendGoodsBean, BaseViewHolder> {
+        public RecommendAdapter(int layoutResId, List<RecommendGoodsBean> data) {
             super(layoutResId, data);
         }
 
         @Override
-        protected void convert(BaseViewHolder helper, String item) {
+        protected void convert(BaseViewHolder helper, RecommendGoodsBean item) {
             ImageView imgPic = helper.getView(R.id.img_pic);
             ViewGroup.LayoutParams layoutParams = imgPic.getLayoutParams();
             int screenWidth = SizeUtils.getScreenWidth();
@@ -317,8 +357,9 @@ public class ScrollViewFragment extends BaseFragment {
             nameLayoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT;
             nameLayoutParams.width = picWidth;
             tv_name.setLayoutParams(nameLayoutParams);
-            helper.setText(R.id.tv_name, "拉菲庄园红酒拉菲庄园红酒");
-            helper.setText(R.id.tv_price, "￥500.00");
+            helper.setText(R.id.tv_name, item.getTitle());
+            helper.setText(R.id.tv_price, "¥" + item.getPrice());
+            GlideUtils.loadImage(getActivity(), item.getImage_default_id(), imgPic);
         }
     }
 
