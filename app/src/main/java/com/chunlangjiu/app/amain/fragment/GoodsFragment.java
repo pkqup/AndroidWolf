@@ -484,7 +484,11 @@ public class GoodsFragment extends BaseFragment {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            } else {
+                newLists = dataLists;
             }
+
+            if (newLists == null) newLists = new ArrayList<>();
 
             if (isRefresh) {
                 pageNum = 1;

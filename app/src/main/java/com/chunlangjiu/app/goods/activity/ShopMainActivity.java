@@ -519,7 +519,11 @@ public class ShopMainActivity extends BaseActivity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            } else {
+                newLists = dataLists;
             }
+
+            if (newLists == null) newLists = new ArrayList<>();
 
             if (isRefresh) {
                 pageNum = 1;
@@ -617,7 +621,7 @@ public class ShopMainActivity extends BaseActivity {
                     }
                 });
             }
-            choiceBrandPopWindow.setBrandList(brandLists,brandId);
+            choiceBrandPopWindow.setBrandList(brandLists, brandId);
             choiceBrandPopWindow.showAsDropDown(rlBrand, 0, 1);
         }
     }
@@ -638,7 +642,7 @@ public class ShopMainActivity extends BaseActivity {
                     }
                 });
             }
-            choiceAreaPopWindow.setBrandList(areaLists,areaId);
+            choiceAreaPopWindow.setBrandList(areaLists, areaId);
             choiceAreaPopWindow.showAsDropDown(rlBrand, 0, 1);
         }
     }
@@ -658,7 +662,7 @@ public class ShopMainActivity extends BaseActivity {
                     }
                 });
             }
-            choiceOrdoPopWindow.setBrandList(ordoLists,ordoId);
+            choiceOrdoPopWindow.setBrandList(ordoLists, ordoId);
             choiceOrdoPopWindow.showAsDropDown(rlBrand, 0, 1);
         }
     }
@@ -678,7 +682,7 @@ public class ShopMainActivity extends BaseActivity {
                     }
                 });
             }
-            choiceAlcPopWindow.setBrandList(alcLists,alcoholId);
+            choiceAlcPopWindow.setBrandList(alcLists, alcoholId);
             choiceAlcPopWindow.showAsDropDown(rlBrand, 0, 1);
         }
     }
