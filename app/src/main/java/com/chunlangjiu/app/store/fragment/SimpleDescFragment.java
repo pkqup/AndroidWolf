@@ -90,7 +90,8 @@ public class SimpleDescFragment extends HeaderViewPagerFragment {
         Bundle bundle = getArguments();
         if (bundle != null) {
             StoreDetailBean.StoreBean storeBean = (StoreDetailBean.StoreBean) bundle.getSerializable("storeBean");
-            tvIntroduce.setText("        " + storeBean.getContent());
+            if (storeBean != null)
+                tvIntroduce.setText(storeBean.getIntro());
             tvPhone.setText(storeBean.getPhone());
         }
     }

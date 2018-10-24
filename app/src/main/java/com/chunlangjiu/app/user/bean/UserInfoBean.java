@@ -10,7 +10,25 @@ public class UserInfoBean {
     private String login_account;
     private String username;
     private String name;
+    private String shop_name;
+    private String company_name;
     private String head_portrait;
+
+    public String getShop_name() {
+        return shop_name;
+    }
+
+    public void setShop_name(String shop_name) {
+        this.shop_name = shop_name;
+    }
+
+    public String getCompany_name() {
+        return company_name;
+    }
+
+    public void setCompany_name(String company_name) {
+        this.company_name = company_name;
+    }
 
     public String getHead_portrait() {
         return head_portrait;

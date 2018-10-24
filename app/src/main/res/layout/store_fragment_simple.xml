@@ -33,144 +33,152 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:visibility="gone">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="20dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="所属产区："
+                    android:textColor="@color/t_gray"
+                    android:textSize="@dimen/sp_small" />
+
+                <TextView
+                    android:id="@+id/tvArea"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:textColor="@color/t_black"
+                    android:textSize="@dimen/sp_small"
+                    tools:text="法国波尔多左岸梅多克" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="6dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="面积："
+                    android:textColor="@color/t_gray"
+                    android:textSize="@dimen/sp_small" />
+
+                <TextView
+                    android:id="@+id/tvSize"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:textColor="@color/t_black"
+                    android:textSize="@dimen/sp_small"
+                    tools:text="107公顷" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="6dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="平均树龄："
+                    android:textColor="@color/t_gray"
+                    android:textSize="@dimen/sp_small" />
+
+                <TextView
+                    android:id="@+id/tvAge"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:textColor="@color/t_black"
+                    android:textSize="@dimen/sp_small"
+                    tools:text="35年" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/line" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="所属产区："
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="20dp"
+                android:text="酒庄旗下葡萄酒："
                 android:textColor="@color/t_gray"
                 android:textSize="@dimen/sp_small" />
 
-            <TextView
-                android:id="@+id/tvArea"
+            <LinearLayout
+                android:id="@+id/llDrink"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:ellipsize="end"
-                android:singleLine="true"
-                tools:text="法国波尔多左岸梅多克"
-                android:textColor="@color/t_black"
-                android:textSize="@dimen/sp_small" />
-        </LinearLayout>
+                android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="6dp"
-            android:orientation="horizontal">
+
+            </LinearLayout>
+
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/line" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="面积："
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="20dp"
+                android:text="葡萄品种："
                 android:textColor="@color/t_gray"
                 android:textSize="@dimen/sp_small" />
 
-            <TextView
-                android:id="@+id/tvSize"
+            <LinearLayout
+                android:id="@+id/llClass"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:ellipsize="end"
-                android:singleLine="true"
-                tools:text="107公顷"
-                android:textColor="@color/t_black"
-                android:textSize="@dimen/sp_small" />
-        </LinearLayout>
+                android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="6dp"
-            android:orientation="horizontal">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="平均树龄："
-                android:textColor="@color/t_gray"
-                android:textSize="@dimen/sp_small" />
+            </LinearLayout>
 
-            <TextView
-                android:id="@+id/tvAge"
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:ellipsize="end"
-                android:singleLine="true"
-                tools:text="35年"
-                android:textColor="@color/t_black"
-                android:textSize="@dimen/sp_small" />
+                android:layout_height="1px"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/line" />
         </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="15dp"
-            android:background="@color/line" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="20dp"
-            android:text="酒庄旗下葡萄酒："
-            android:textColor="@color/t_gray"
-            android:textSize="@dimen/sp_small" />
-
-        <LinearLayout
-            android:id="@+id/llDrink"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-
-        </LinearLayout>
-
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="15dp"
-            android:background="@color/line" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="20dp"
-            android:text="葡萄品种："
-            android:textColor="@color/t_gray"
-            android:textSize="@dimen/sp_small" />
-
-        <LinearLayout
-            android:id="@+id/llClass"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="15dp"
-            android:background="@color/line" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -203,9 +211,9 @@
                 android:layout_marginLeft="15dp"
                 android:ellipsize="end"
                 android:singleLine="true"
-                tools:text="0755-1235553"
                 android:textColor="@color/t_black"
-                android:textSize="@dimen/sp_small" />
+                android:textSize="@dimen/sp_small"
+                tools:text="0755-1235553" />
         </LinearLayout>
 
         <LinearLayout
@@ -214,7 +222,8 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="6dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -230,9 +239,9 @@
                 android:layout_marginLeft="15dp"
                 android:ellipsize="end"
                 android:singleLine="true"
-                tools:text="www.123.com"
                 android:textColor="@color/t_black"
-                android:textSize="@dimen/sp_small" />
+                android:textSize="@dimen/sp_small"
+                tools:text="www.123.com" />
         </LinearLayout>
 
         <LinearLayout
@@ -241,7 +250,8 @@
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginTop="6dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -257,9 +267,9 @@
                 android:layout_marginLeft="15dp"
                 android:ellipsize="end"
                 android:singleLine="true"
-                tools:text="Chateau Lafite"
                 android:textColor="@color/t_black"
-                android:textSize="@dimen/sp_small" />
+                android:textSize="@dimen/sp_small"
+                tools:text="Chateau Lafite" />
         </LinearLayout>
 
         <View

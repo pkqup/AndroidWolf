@@ -472,8 +472,11 @@ public class ApiUtils {
                 price, dlytmpl_id, sku, label, explain, parameter, "瓶", "1", area_id, odor_id, alcohol_id, store, itemId);
     }
 
-
     public Flowable<ResultBean<List<RecommendGoodsBean>>> getRecommendGoods(String item_id) {
         return apiService.getRecommendGoods("item.recommend", "v1", item_id);
+    }
+
+    public Flowable<ResultBean> editShopName(String token, String name) {
+        return apiService.editShopName("user.update.shop", "v1", token, name);
     }
 }
