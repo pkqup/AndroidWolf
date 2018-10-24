@@ -14,7 +14,7 @@ public class UmengEventUtil {
     public static final String INDEX_ALL = "all";
     public static final String INDEX_AUCTION = "auction";
     public static final String INDEX_SHOP_CART = "shopCart";
-    public static final String INDEX_MIME = "mime";
+    public static final String INDEX_MIME = "mine";
 
     public static final String BANNER = "banner";
     public static final String ICON = "icon";

@@ -124,14 +124,14 @@ public class StoreDetailsActivity extends BaseActivity {
     }
 
     private void initData() {
-        showLoadingDialog();
+        showLoadingView();
         disposable.add(ApiUtils.getInstance().getStoreDetail(chateau_id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean<StoreDetailBean>>() {
                     @Override
                     public void accept(ResultBean<StoreDetailBean> storeDetailBeanResultBean) throws Exception {
-                        hideLoadingDialog();
+                        showContentView();
                         getDetailSuccess(storeDetailBeanResultBean.getData().getDetail());
                         initViewPagerData(storeDetailBeanResultBean.getData().getDetail().get(0));
                     }
@@ -204,7 +204,7 @@ public class StoreDetailsActivity extends BaseActivity {
     }
 
     private void showShare() {
-        if(storeBean!=null){
+        if (storeBean != null) {
             UMImage thumb = new UMImage(this, storeBean.getImg());
             UMWeb web = new UMWeb("http://mall.chunlangjiu.com/appdownload/index.html");
             web.setTitle(storeBean.getName());//标题
