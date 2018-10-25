@@ -42,5 +42,6 @@ public class ConstantMsg {
     public static final String WEB_URL_VIP_INFO = "http://mall.chunlangjiu.com/index.php/wap/app-storeinfo.html?apitoken=";//个人会员资料
     public static final String WEB_URL_SHOP_INFO = "http://mall.chunlangjiu.com/index.php/wap/app-shopinfo.html?apitoken=";//商家会员资料
     public static final String WEB_URL_BANK_CARD = "http://mall.chunlangjiu.com/index.php/wap/app-bank.html?apitoken=";//银行卡管理
+    public static final String WEB_URL_EVALUATE = "http://mall.chunlangjiu.com/index.php/wap/app-evaluate.html?apitoken=";//我的估值
 
 }

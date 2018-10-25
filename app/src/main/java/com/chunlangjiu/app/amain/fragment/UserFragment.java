@@ -171,6 +171,8 @@ public class UserFragment extends BaseFragment {
     private RelativeLayout rlBankCard;
     private LinearLayout llMyManagerSecond;
     private RelativeLayout rlBankCardSecond;
+    private RelativeLayout rlMyEvaluate;
+    private RelativeLayout rlMySecondPlace;
     /*我的管理*/
 
     private static final int TYPE_BUYER = 0;//买家中心
@@ -327,6 +329,9 @@ public class UserFragment extends BaseFragment {
                 case R.id.rlBankCardSecond:// 银行卡管理
                     WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_BANK_CARD + BaseApplication.getToken(), "银行卡管理");
                     break;
+                case R.id.rlMyEvaluate:// 我的估价
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_EVALUATE + BaseApplication.getToken(), "我的估价");
+                    break;
             }
         }
     };
@@ -480,7 +485,10 @@ public class UserFragment extends BaseFragment {
 
         llMyManagerSecond = rootView.findViewById(R.id.llMyManagerSecond);
         rlBankCardSecond = rootView.findViewById(R.id.rlBankCardSecond);
+        rlMyEvaluate = rootView.findViewById(R.id.rlMyEvaluate);
+        rlMySecondPlace = rootView.findViewById(R.id.rlMySecondPlace);
         rlBankCardSecond.setOnClickListener(onClickListener);
+        rlMyEvaluate.setOnClickListener(onClickListener);
 
         if (BaseApplication.HIDE_AUCTION) {
             llAuctionContent.setVisibility(View.GONE);
@@ -534,6 +542,8 @@ public class UserFragment extends BaseFragment {
             rlCollect.setVisibility(View.VISIBLE);
             rlBankCard.setVisibility(View.GONE);
             llMyManagerSecond.setVisibility(View.VISIBLE);
+            rlBankCardSecond.setVisibility(View.VISIBLE);
+            rlMySecondPlace.setVisibility(View.GONE);
         } else {
             //卖家中心
             rlBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.my_sell_bg));
@@ -569,7 +579,9 @@ public class UserFragment extends BaseFragment {
 
             rlCollect.setVisibility(View.GONE);
             rlBankCard.setVisibility(View.VISIBLE);
-            llMyManagerSecond.setVisibility(View.GONE);
+            llMyManagerSecond.setVisibility(View.VISIBLE);
+            rlBankCardSecond.setVisibility(View.GONE);
+            rlMySecondPlace.setVisibility(View.VISIBLE);
         }
     }
 
