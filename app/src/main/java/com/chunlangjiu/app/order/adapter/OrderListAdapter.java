@@ -76,7 +76,7 @@ public class OrderListAdapter extends BaseQuickAdapter<OrderListBean.ListBean, B
                         break;
                     case OrderParams.WAIT_BUYER_CONFIRM_GOODS:
                         tv1.setVisibility(View.GONE);
-                        tv2.setText("确认收货");
+                        tv2.setText("商品签单");
                         tv2.setVisibility(View.VISIBLE);
                         break;
                     case OrderParams.TRADE_FINISHED:
