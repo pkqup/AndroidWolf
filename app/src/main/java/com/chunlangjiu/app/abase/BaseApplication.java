@@ -22,6 +22,7 @@ import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.socks.library.KLog;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+import com.umeng.analytics.MobclickAgent;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.socialize.PlatformConfig;
 
@@ -32,6 +33,9 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
 public class BaseApplication extends MultiDexApplication {
+
+    //是否隐藏竞拍专区
+    public static boolean HIDE_AUCTION = true;
 
     private static String token = "";
 
@@ -63,7 +67,9 @@ public class BaseApplication extends MultiDexApplication {
      * 友盟初始化
      */
     private void initUM() {
-        UMConfigure.init(this, "5b3b3744f43e4879b8000236", "", UMConfigure.DEVICE_TYPE_PHONE, "");
+        UMConfigure.init(this, "5b3b3744f43e4879b8000236", "chunlang", UMConfigure.DEVICE_TYPE_PHONE, "");
+        MobclickAgent.setScenarioType(this, MobclickAgent.EScenarioType.E_UM_NORMAL);
+//        MobclickAgent.openActivityDurationTrack(false);//禁止默认的页面统计功能
         PlatformConfig.setWeixin("wx0e1869b241d7234f", "13a3d322c7055d7c33e3de912a4fad2a");
         PlatformConfig.setQQZone("1106941413", "9qybO7qdrpQIYPiq");
         PlatformConfig.setSinaWeibo("1325843831", "bccdf04dac982831efd444a71588daea", "http://sns.whalecloud.com");

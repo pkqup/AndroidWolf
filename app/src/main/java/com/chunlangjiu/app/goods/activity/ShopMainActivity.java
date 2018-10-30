@@ -24,6 +24,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
+import com.chunlangjiu.app.abase.BaseApplication;
 import com.chunlangjiu.app.amain.bean.FirstClassBean;
 import com.chunlangjiu.app.amain.bean.MainClassBean;
 import com.chunlangjiu.app.amain.bean.SecondClassBean;
@@ -148,7 +149,7 @@ public class ShopMainActivity extends BaseActivity {
     private View notDataView;
 
     private CompositeDisposable disposable;
-    private boolean listType = true;//是否是列表形式
+    private boolean listType = false;//是否是列表形式
     private List<GoodsListDetailBean> lists;
     private LinearAdapter linearAdapter;
     private GridAdapter gridAdapter;
@@ -205,7 +206,7 @@ public class ShopMainActivity extends BaseActivity {
     public void setTitleView() {
         titleImgLeft.setOnClickListener(onClickListener);
         titleImgRightOne.setVisibility(View.VISIBLE);
-        titleImgRightOne.setImageResource(R.mipmap.icon_grid);
+        titleImgRightOne.setImageResource(R.mipmap.icon_list);
         titleImgRightOne.setOnClickListener(onClickListener);
         titleName.setVisibility(View.GONE);
         titleSearchView.setVisibility(View.VISIBLE);
@@ -302,8 +303,8 @@ public class ShopMainActivity extends BaseActivity {
                 }
             }
         });
-        recycleView.setLayoutManager(new LinearLayoutManager(this));
-        recycleView.setAdapter(linearAdapter);
+        recycleView.setLayoutManager(new GridLayoutManager(this, 2));
+        recycleView.setAdapter(gridAdapter);
 
         refreshLayout.setEnableAutoLoadMore(false);//关闭自动加载更多
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
@@ -504,8 +505,26 @@ public class ShopMainActivity extends BaseActivity {
 
     private void getListSuccess(GoodsListBean goodsListBean, boolean isRefresh) {
         if (goodsListBean != null && goodsListBean.getList() != null && goodsListBean.getList().size() > 0) {
-            List<GoodsListDetailBean> newLists = goodsListBean.getList();
+            List<GoodsListDetailBean> dataLists = goodsListBean.getList();
+            List<GoodsListDetailBean> newLists = new ArrayList<>();
+
+            if (BaseApplication.HIDE_AUCTION) {
+                //过滤竞拍商品
+                try {
+                    for (int i = 0; i < dataLists.size(); i++) {
+                        if (TextUtils.isEmpty(dataLists.get(i).getAuction().getAuctionitem_id())) {
+                            newLists.add(dataLists.get(i));
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                newLists = dataLists;
+            }
+
             if (newLists == null) newLists = new ArrayList<>();
+
             if (isRefresh) {
                 pageNum = 1;
                 lists = newLists;
@@ -602,7 +621,7 @@ public class ShopMainActivity extends BaseActivity {
                     }
                 });
             }
-            choiceBrandPopWindow.setBrandList(brandLists,brandId);
+            choiceBrandPopWindow.setBrandList(brandLists, brandId);
             choiceBrandPopWindow.showAsDropDown(rlBrand, 0, 1);
         }
     }
@@ -623,14 +642,14 @@ public class ShopMainActivity extends BaseActivity {
                     }
                 });
             }
-            choiceAreaPopWindow.setBrandList(areaLists,areaId);
+            choiceAreaPopWindow.setBrandList(areaLists, areaId);
             choiceAreaPopWindow.showAsDropDown(rlBrand, 0, 1);
         }
     }
 
     private void showIncensePopWindow() {
         if (ordoLists == null || ordoLists.size() == 0) {
-            ToastUtils.showShort("暂无香型");
+            ToastUtils.showShort("暂无类型");
         } else {
             if (choiceOrdoPopWindow == null) {
                 choiceOrdoPopWindow = new ChoiceOrdoPopWindow(this, ordoLists, ordoId);
@@ -638,12 +657,12 @@ public class ShopMainActivity extends BaseActivity {
                     @Override
                     public void choiceBrand(String brandName, String brandId) {
                         ordoId = brandId;
-                        tvIncense.setText(TextUtils.isEmpty(ordoId) ? "香型" : brandName);
+                        tvIncense.setText(TextUtils.isEmpty(ordoId) ? "类型" : brandName);
                         getGoodsList(1, true);
                     }
                 });
             }
-            choiceOrdoPopWindow.setBrandList(ordoLists,ordoId);
+            choiceOrdoPopWindow.setBrandList(ordoLists, ordoId);
             choiceOrdoPopWindow.showAsDropDown(rlBrand, 0, 1);
         }
     }
@@ -663,7 +682,7 @@ public class ShopMainActivity extends BaseActivity {
                     }
                 });
             }
-            choiceAlcPopWindow.setBrandList(alcLists,alcoholId);
+            choiceAlcPopWindow.setBrandList(alcLists, alcoholId);
             choiceAlcPopWindow.showAsDropDown(rlBrand, 0, 1);
         }
     }

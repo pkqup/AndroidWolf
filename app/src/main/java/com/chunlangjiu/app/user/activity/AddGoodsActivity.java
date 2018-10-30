@@ -189,6 +189,15 @@ public class AddGoodsActivity extends BaseActivity {
     @BindView(R.id.etArea)
     EditText etArea;
 
+    @BindView(R.id.etYear)
+    EditText etYear;
+    @BindView(R.id.etYuanLiao)
+    EditText etYuanLiao;
+    @BindView(R.id.etSave)
+    EditText etSave;
+    @BindView(R.id.etOther)
+    EditText etOther;
+
     @BindView(R.id.tvCommit)
     TextView tvCommit;
 
@@ -547,7 +556,7 @@ public class AddGoodsActivity extends BaseActivity {
             ToastUtils.showShort("请先选择分类");
         } else {
             if (ordoLists == null || ordoLists.size() == 0) {
-                ToastUtils.showShort("暂无香型");
+                ToastUtils.showShort("暂无类型");
             } else {
                 if (choiceOrdoPopWindow == null) {
                     choiceOrdoPopWindow = new ChoiceOrdoPopWindow(this, ordoLists, ordoId);
@@ -794,6 +803,10 @@ public class AddGoodsActivity extends BaseActivity {
         valueBeanList.add(new AddGoodsValueBean("包装", etPackage.getText().toString().trim()));
 //        valueBeanList.add(new AddGoodsValueBean("酒精度", etAlco.getText().toString().trim()));
 //        valueBeanList.add(new AddGoodsValueBean("产地", etArea.getText().toString().trim()));
+        valueBeanList.add(new AddGoodsValueBean("年份", etYear.getText().toString().trim()));
+        valueBeanList.add(new AddGoodsValueBean("原料", etYuanLiao.getText().toString().trim()));
+        valueBeanList.add(new AddGoodsValueBean("储存条件", etSave.getText().toString().trim()));
+        valueBeanList.add(new AddGoodsValueBean("附件", etOther.getText().toString().trim()));
         String parameter = new Gson().toJson(valueBeanList);
 
         disposable.add(ApiUtils.getInstance().addGoods(classId, brandId, "", etTitle.getText().toString().trim(),

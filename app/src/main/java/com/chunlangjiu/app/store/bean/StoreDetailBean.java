@@ -7,9 +7,9 @@ import java.util.List;
  * @CreatedbBy: liucun on 2018/8/29
  * @Describe:
  */
-public class StoreDetailBean implements Serializable{
+public class StoreDetailBean implements Serializable {
 
-    private List<StoreBean>  detail;
+    private List<StoreBean> detail;
 
     public List<StoreBean> getDetail() {
         return detail;
@@ -19,7 +19,7 @@ public class StoreDetailBean implements Serializable{
         this.detail = detail;
     }
 
-    public class StoreBean implements Serializable{
+    public class StoreBean implements Serializable {
         private String chateau_id;
         private String name;
         private String img;
@@ -29,7 +29,7 @@ public class StoreDetailBean implements Serializable{
         private String content;
         private String intro;
         private String phone;
-        private String grade;
+        private List<Grade> grade;
 
         public String getChateau_id() {
             return chateau_id;
@@ -103,12 +103,52 @@ public class StoreDetailBean implements Serializable{
             this.phone = phone;
         }
 
-        public String getGrade() {
+
+        public List<Grade> getGrade() {
             return grade;
         }
 
-        public void setGrade(String grade) {
+        public void setGrade(List<Grade> grade) {
             this.grade = grade;
+        }
+    }
+
+    public class Grade {
+        private String year;
+        private String rp;
+        private String ws;
+        private String jr;
+
+        public String getYear() {
+            return year;
+        }
+
+        public void setYear(String year) {
+            this.year = year;
+        }
+
+        public String getRp() {
+            return rp;
+        }
+
+        public void setRp(String rp) {
+            this.rp = rp;
+        }
+
+        public String getWs() {
+            return ws;
+        }
+
+        public void setWs(String ws) {
+            this.ws = ws;
+        }
+
+        public String getJr() {
+            return jr;
+        }
+
+        public void setJr(String jr) {
+            this.jr = jr;
         }
     }
 

@@ -14,6 +14,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chunlangjiu.app.R;
 import com.jaeger.library.StatusBarUtil;
 import com.pkqup.commonlibrary.dialog.CommonLoadingDialog;
+import com.umeng.analytics.MobclickAgent;
 
 import butterknife.ButterKnife;
 
@@ -39,6 +40,23 @@ public abstract class BaseActivity extends FragmentActivity {
     private View errorListView;
     private TextView tvEmpty;
     private TextView tvError;
+
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //友盟统计
+        MobclickAgent.onPageStart(getClass().getName()); //手动统计页面
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        //友盟统计
+        MobclickAgent.onPageEnd(getClass().getName()); //手动统计页面
+        MobclickAgent.onPause(this);
+    }
 
 
     @Override

@@ -1,6 +1,5 @@
 package com.chunlangjiu.app.amain.activity;
 
-import android.Manifest;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,27 +12,24 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amap.api.location.AMapLocation;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
+import com.chunlangjiu.app.abase.BaseApplication;
 import com.chunlangjiu.app.abase.BaseFragmentAdapter;
 import com.chunlangjiu.app.amain.fragment.AuctionFragment;
 import com.chunlangjiu.app.amain.fragment.CartFragment;
-import com.chunlangjiu.app.amain.fragment.ClassFragment;
 import com.chunlangjiu.app.amain.fragment.GoodsFragment;
 import com.chunlangjiu.app.amain.fragment.HomeFragment;
 import com.chunlangjiu.app.amain.fragment.UserFragment;
 import com.chunlangjiu.app.util.ConstantMsg;
 import com.chunlangjiu.app.util.GeTuiIntentService;
 import com.chunlangjiu.app.util.GeTuiPushService;
-import com.chunlangjiu.app.util.LocationUtils;
-import com.github.promeg.pinyinhelper.Pinyin;
+import com.chunlangjiu.app.util.UmengEventUtil;
 import com.igexin.sdk.PushManager;
 import com.pkqup.commonlibrary.dialog.CommonConfirmDialog;
 import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.util.PermissionUtils;
 import com.pkqup.commonlibrary.view.MyViewPager;
-import com.socks.library.KLog;
 import com.yanzhenjie.permission.PermissionListener;
 
 import java.util.ArrayList;
@@ -61,6 +57,10 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.tab_two_text)
     TextView tabTwoText;
 
+    @BindView(R.id.rlTabThreeBg)
+    RelativeLayout rlTabThreeBg;
+    @BindView(R.id.rlTabThreeContent)
+    RelativeLayout rlTabThreeContent;
     @BindView(R.id.tab_three)
     LinearLayout tabThree;
     @BindView(R.id.tab_three_image)
@@ -172,6 +172,16 @@ public class MainActivity extends BaseActivity {
         textViews.add(tabThreeText);
         textViews.add(tabFourText);
         textViews.add(tabFiveText);
+
+        if (BaseApplication.HIDE_AUCTION) {
+            tabThree.setVisibility(View.GONE);
+            rlTabThreeBg.setVisibility(View.GONE);
+            rlTabThreeContent.setVisibility(View.GONE);
+        } else {
+            tabThree.setVisibility(View.VISIBLE);
+            rlTabThreeBg.setVisibility(View.VISIBLE);
+            rlTabThreeContent.setVisibility(View.VISIBLE);
+        }
     }
 
     private void initData() {
@@ -211,6 +221,9 @@ public class MainActivity extends BaseActivity {
     };
 
     private void setPageFragment(int position) {
+
+        UMENGIndexEvent(position);
+
         viewPager.setCurrentItem(position, false);
         for (int i = 0; i < imageViews.size(); i++) {
             if (position == i) {
@@ -226,7 +239,26 @@ public class MainActivity extends BaseActivity {
                 textViews.get(i).setSelected(false);
             }
         }
+    }
 
+    private void UMENGIndexEvent(int position) {
+        switch (position) {
+            case 0:
+                UmengEventUtil.homeEvent(this);
+                break;
+            case 1:
+                UmengEventUtil.allEvent(this);
+                break;
+            case 2:
+                UmengEventUtil.auctionEvent(this);
+                break;
+            case 3:
+                UmengEventUtil.shopCartEvent(this);
+                break;
+            case 4:
+                UmengEventUtil.mimeEvent(this);
+                break;
+        }
     }
 
     private EventManager.OnNotifyListener onNotifyListener = new EventManager.OnNotifyListener() {

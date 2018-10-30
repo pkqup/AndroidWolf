@@ -154,9 +154,6 @@
             android:background="@color/line" />
     </RelativeLayout>
 
-
-
-
     <com.pkqup.commonlibrary.view.MyViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
@@ -164,6 +161,7 @@
         android:layout_above="@id/rlBottom" />
 
     <RelativeLayout
+        android:id="@+id/rlTabThreeBg"
         android:layout_width="62dp"
         android:layout_height="62dp"
         android:layout_alignParentBottom="true"
@@ -173,6 +171,7 @@
 
 
     <RelativeLayout
+        android:id="@+id/rlTabThreeContent"
         android:layout_width="wrap_content"
         android:layout_height="70dp"
         android:layout_alignParentBottom="true"
