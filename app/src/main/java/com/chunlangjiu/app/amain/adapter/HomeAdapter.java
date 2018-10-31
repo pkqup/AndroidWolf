@@ -62,6 +62,9 @@ public class HomeAdapter extends BaseQuickAdapter<HomeBean, BaseViewHolder> {
                 TextView tvSellPriceStr = viewHolder.getView(R.id.tvSellPriceStr);
                 TextView tvSellPrice = viewHolder.getView(R.id.tvSellPrice);
 
+                TextView tv_attention = viewHolder.getView(R.id.tv_attention);
+                TextView tv_evaluate = viewHolder.getView(R.id.tv_evaluate);
+
                 GlideUtils.loadImage(context, item.getImage_default_id(), imgPic);
                 viewHolder.setText(R.id.tv_name, item.getTitle());
 //                tvStartPrice.getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);  // 设置中划线并加清晰
@@ -75,7 +78,7 @@ public class HomeAdapter extends BaseQuickAdapter<HomeBean, BaseViewHolder> {
                 if (item.isAuction()) {
                     llStartPrice.setVisibility(View.VISIBLE);
                     tv_give_price_num.setVisibility(View.VISIBLE);
-                    tv_give_price_num.setText("人数："+ item.getAuction_number());
+                    tv_give_price_num.setText("人数：" + item.getAuction_number());
                     tvStartPriceStr.setText("起拍价：");
                     tvStartPrice.setText("¥" + item.getAuction_starting_price());
                     llTime.setVisibility(View.VISIBLE);
@@ -111,6 +114,8 @@ public class HomeAdapter extends BaseQuickAdapter<HomeBean, BaseViewHolder> {
                         });
                         dealWithLifeCycle(viewHolder, viewHolder.getAdapterPosition(), item);
                     }
+                    tv_attention.setVisibility(View.GONE);
+                    tv_evaluate.setVisibility(View.GONE);
                 } else {
                     llStartPrice.setVisibility(View.GONE);
                     tv_give_price_num.setVisibility(View.GONE);
@@ -122,6 +127,11 @@ public class HomeAdapter extends BaseQuickAdapter<HomeBean, BaseViewHolder> {
                     tvStartPrice.setText("¥" + item.getMkt_price());
                     viewHolder.setText(R.id.tvSellPriceStr, "");
                     viewHolder.setText(R.id.tvSellPrice, "¥" + item.getPrice());
+
+                    tv_attention.setVisibility(View.VISIBLE);
+                    tv_evaluate.setVisibility(View.VISIBLE);
+                    tv_attention.setText((TextUtils.isEmpty(item.getView_count()) ? "0" : item.getView_count()) + "人关注");
+                    tv_evaluate.setText((TextUtils.isEmpty(item.getRate_count()) ? "0" : item.getRate_count()) + "条评价");
                 }
                 break;
             case HomeBean.ITEM_TUIJIAN:

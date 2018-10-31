@@ -21,6 +21,7 @@ import com.chunlangjiu.app.amain.fragment.CartFragment;
 import com.chunlangjiu.app.amain.fragment.GoodsFragment;
 import com.chunlangjiu.app.amain.fragment.HomeFragment;
 import com.chunlangjiu.app.amain.fragment.UserFragment;
+import com.chunlangjiu.app.dialog.AppUpdateDialog;
 import com.chunlangjiu.app.util.ConstantMsg;
 import com.chunlangjiu.app.util.GeTuiIntentService;
 import com.chunlangjiu.app.util.GeTuiPushService;
@@ -91,6 +92,7 @@ public class MainActivity extends BaseActivity {
 
     private long exitTime;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,6 +103,7 @@ public class MainActivity extends BaseActivity {
         initView();
         initData();
     }
+
 
     private void initGeTuiPush() {
         PushManager.getInstance().initialize(getApplicationContext(), GeTuiPushService.class);
@@ -312,6 +315,15 @@ public class MainActivity extends BaseActivity {
             }
         }
         return true;
+    }
+
+
+    /**
+     * 强制升级对话框
+     */
+    private void showUpdateDialog() {
+        AppUpdateDialog appUpdateDialog = new AppUpdateDialog(this, "更新");
+        appUpdateDialog.show();
     }
 
 }
