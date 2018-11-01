@@ -156,6 +156,11 @@ public class OrderDetailActivity extends BaseActivity {
     @BindView(R.id.tvLogiNoCopy)
     TextView tvLogiNoCopy;
 
+    @BindView(R.id.llInfo)
+    LinearLayout llInfo;
+    @BindView(R.id.tvInfo)
+    TextView tvInfo;
+
     private int type = 0;
     private String oid;
     private String aftersalesBn;
@@ -321,6 +326,7 @@ public class OrderDetailActivity extends BaseActivity {
                                     beanCopyUitl.copyPropertiesExclude(orderDetailBeanResultBean.getData(), orderDetailBean, new String[]{"order", "orders"});
                                     orderDetailBean.setOrders(orderDetailBeanResultBean.getData().getOrder());
                                     orderDetailBean.setLogi(orderDetailBeanResultBean.getData().getLogi());
+                                    orderDetailBean.setInfo(orderDetailBeanResultBean.getData().getInfo());
                                     processData();
                                 } else {
                                     if (TextUtils.isEmpty(orderDetailBeanResultBean.getMsg())) {
@@ -612,6 +618,11 @@ public class OrderDetailActivity extends BaseActivity {
 
                 tvOrderStatus.setText(orderDetailBean.getStatus_desc());
                 tvOrderId.setText(String.valueOf(orderDetailBean.getTid()));
+
+                if (!TextUtils.isEmpty(orderDetailBean.getInfo())) {
+                    llInfo.setVisibility(View.VISIBLE);
+                    tvInfo.setText(orderDetailBean.getInfo());
+                }
                 break;
             case 2:
             case 4:
@@ -851,6 +862,11 @@ public class OrderDetailActivity extends BaseActivity {
                 tvPayment.setText(String.format("¥%s", new BigDecimal(orderDetailBean.getAuction().getPledge()).setScale(2, BigDecimal.ROUND_HALF_UP).toString()));
 
                 tvOrderStatus.setText(orderDetailBean.getAuction().getStatus_desc());
+
+                if (!TextUtils.isEmpty(orderDetailBean.getInfo())) {
+                    llInfo.setVisibility(View.VISIBLE);
+                    tvInfo.setText(orderDetailBean.getInfo());
+                }
                 break;
         }
     }
