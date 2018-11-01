@@ -208,6 +208,8 @@ public class EditGoodsActivity extends BaseActivity {
     EditText etSave;
     @BindView(R.id.etOther)
     EditText etOther;
+    @BindView(R.id.etFrom)
+    EditText etFrom;
 
     @BindView(R.id.tvCommit)
     TextView tvCommit;
@@ -511,6 +513,9 @@ public class EditGoodsActivity extends BaseActivity {
                 }
                 if (ps.get(i).getTitle().equals("附件")) {
                     etOther.setText(ps.get(i).getValue());
+                }
+                if (ps.get(i).getTitle().equals("商品来源")) {
+                    etFrom.setText(ps.get(i).getValue());
                 }
             }
         } catch (Exception e) {
@@ -827,6 +832,8 @@ public class EditGoodsActivity extends BaseActivity {
             ToastUtils.showShort("请填写库存");
         } else if (TextUtils.isEmpty(etSize.getText().toString().trim())) {
             ToastUtils.showShort("请填写容量");
+        } else if (TextUtils.isEmpty(etFrom.getText().toString().trim())) {
+            ToastUtils.showShort("请填写商品来源");
         } else if (base64Main == null || base64DetailOne == null || base64DetailTwo == null || base64DetailThree == null || base64DetailFour == null) {
             ToastUtils.showShort("请添加图片");
         } else {
@@ -871,7 +878,7 @@ public class EditGoodsActivity extends BaseActivity {
         Observable<ResultBean<UploadImageBean>> detailFour = ApiUtils.getInstance().shopUploadImage(base64DetailFour, (detailFourPicLists == null || detailFourPicLists.size() == 0) ? "four.jpg" : detailFourPicLists.get(0).name);
 
         if (base64Goods != null) {
-            Observable<ResultBean<UploadImageBean>> goods = ApiUtils.getInstance().shopUploadImage(base64Goods, (goodsPicLists == null || goodsPicLists.size() == 0) ? "goods.jpg" :goodsPicLists.get(0).name);
+            Observable<ResultBean<UploadImageBean>> goods = ApiUtils.getInstance().shopUploadImage(base64Goods, (goodsPicLists == null || goodsPicLists.size() == 0) ? "goods.jpg" : goodsPicLists.get(0).name);
             disposable.add(Observable.zip(main, detailOne, detailTwo, detailThree, detailFour, goods, new Function6<ResultBean<UploadImageBean>, ResultBean<UploadImageBean>,
                     ResultBean<UploadImageBean>, ResultBean<UploadImageBean>, ResultBean<UploadImageBean>, ResultBean<UploadImageBean>, List<String>>() {
                 @Override
@@ -992,6 +999,7 @@ public class EditGoodsActivity extends BaseActivity {
         valueBeanList.add(new AddGoodsValueBean("原料", etYuanLiao.getText().toString().trim()));
         valueBeanList.add(new AddGoodsValueBean("储存条件", etSave.getText().toString().trim()));
         valueBeanList.add(new AddGoodsValueBean("附件", etOther.getText().toString().trim()));
+        valueBeanList.add(new AddGoodsValueBean("商品来源", etFrom.getText().toString().trim()));
         String parameter = new Gson().toJson(valueBeanList);
         KLog.e(parameter);
 

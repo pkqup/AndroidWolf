@@ -3,6 +3,7 @@ package com.chunlangjiu.app.net;
 import com.chunlangjiu.app.amain.bean.AuctionListBean;
 import com.chunlangjiu.app.amain.bean.CartCountBean;
 import com.chunlangjiu.app.amain.bean.CartListBean;
+import com.chunlangjiu.app.amain.bean.CheckUpdateBean;
 import com.chunlangjiu.app.amain.bean.HomeListBean;
 import com.chunlangjiu.app.amain.bean.HomeModulesBean;
 import com.chunlangjiu.app.amain.bean.LoginBean;
@@ -81,6 +82,11 @@ public class ApiUtils {
         }
         return apiService;
     }
+
+    public Flowable<ResultBean<CheckUpdateBean>> checkUpdate() {
+        return apiService.checkUpdate("app.versions", "v1", "android","chunlang");
+    }
+
 
     public Flowable<ResultBean> getAuthSms(String mobile) {
         return apiService.getAuthSms("user.sendSms", "v1", mobile);

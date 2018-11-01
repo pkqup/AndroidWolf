@@ -22,6 +22,7 @@ public class AppUpdateDialog extends Dialog {
     private CallBack callBack;
 
     private TextView tv_content;
+    private TextView tv_cancel;
     private TextView tv_confirm;
 
     public AppUpdateDialog(Context context, String content) {
@@ -48,23 +49,36 @@ public class AppUpdateDialog extends Dialog {
         setContentView(view);// 设置布局
 
         tv_content = findViewById(R.id.tv_content);
+        tv_cancel = findViewById(R.id.tv_cancel);
         tv_confirm = findViewById(R.id.tv_confirm);
 
         tv_content.setText(content);
+
+        tv_cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+
         tv_confirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (null != callBack) {
-                    dismiss();
                     callBack.onConfirm();
                 }
             }
         });
-
     }
 
-    public void setDialogStr(String confirmStr){
-        tv_confirm.setText(confirmStr);
+
+    /**
+     * 不是强制更新，显示取消按钮，可以隐藏弹框
+     */
+    public void notForceUpdate() {
+        tv_cancel.setVisibility(View.VISIBLE);
+        setCancelable(true);
+        setCanceledOnTouchOutside(true);
     }
 
     public interface CallBack {

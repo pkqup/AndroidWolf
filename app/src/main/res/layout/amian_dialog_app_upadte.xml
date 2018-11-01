@@ -42,15 +42,38 @@
                 android:textColor="#666"
                 android:textSize="12sp" />
 
-            <TextView
-                android:id="@+id/tv_confirm"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="35dp"
-                android:layout_marginTop="18dp"
-                android:background="@drawable/shape_corner"
-                android:gravity="center"
-                android:text="升级"
-                android:textColor="@android:color/white" />
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_cancel"
+                    android:layout_width="0dp"
+                    android:layout_height="35dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginTop="18dp"
+                    android:visibility="gone"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_corner"
+                    android:gravity="center"
+                    android:text="取消"
+                    android:textColor="@android:color/white" />
+
+                <TextView
+                    android:id="@+id/tv_confirm"
+                    android:layout_width="0dp"
+                    android:layout_height="35dp"
+
+                    android:layout_marginTop="18dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/shape_corner"
+                    android:gravity="center"
+                    android:text="升级"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+
         </LinearLayout>
     </LinearLayout>
 </LinearLayout>

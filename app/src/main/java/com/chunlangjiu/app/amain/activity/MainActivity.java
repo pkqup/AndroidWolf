@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -16,19 +17,24 @@ import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
 import com.chunlangjiu.app.abase.BaseApplication;
 import com.chunlangjiu.app.abase.BaseFragmentAdapter;
+import com.chunlangjiu.app.amain.bean.CheckUpdateBean;
 import com.chunlangjiu.app.amain.fragment.AuctionFragment;
 import com.chunlangjiu.app.amain.fragment.CartFragment;
 import com.chunlangjiu.app.amain.fragment.GoodsFragment;
 import com.chunlangjiu.app.amain.fragment.HomeFragment;
 import com.chunlangjiu.app.amain.fragment.UserFragment;
 import com.chunlangjiu.app.dialog.AppUpdateDialog;
+import com.chunlangjiu.app.net.ApiUtils;
 import com.chunlangjiu.app.util.ConstantMsg;
 import com.chunlangjiu.app.util.GeTuiIntentService;
 import com.chunlangjiu.app.util.GeTuiPushService;
 import com.chunlangjiu.app.util.UmengEventUtil;
+import com.chunlangjiu.app.web.WebViewActivity;
 import com.igexin.sdk.PushManager;
 import com.pkqup.commonlibrary.dialog.CommonConfirmDialog;
 import com.pkqup.commonlibrary.eventmsg.EventManager;
+import com.pkqup.commonlibrary.net.bean.ResultBean;
+import com.pkqup.commonlibrary.util.AppUtils;
 import com.pkqup.commonlibrary.util.PermissionUtils;
 import com.pkqup.commonlibrary.view.MyViewPager;
 import com.yanzhenjie.permission.PermissionListener;
@@ -37,6 +43,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.functions.Consumer;
+import io.reactivex.schedulers.Schedulers;
 
 
 public class MainActivity extends BaseActivity {
@@ -85,6 +95,8 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.tab_five_text)
     TextView tabFiveText;
 
+    private CompositeDisposable disposable;
+
     private BaseFragmentAdapter myFragmentAdapter;
     private List<Fragment> fragments;
     private List<ImageView> imageViews;
@@ -102,8 +114,8 @@ public class MainActivity extends BaseActivity {
         initGeTuiPush();
         initView();
         initData();
+        checkUpdate();
     }
-
 
     private void initGeTuiPush() {
         PushManager.getInstance().initialize(getApplicationContext(), GeTuiPushService.class);
@@ -156,6 +168,8 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initView() {
+        disposable = new CompositeDisposable();
+
         tabOne.setOnClickListener(onClickListener);
         tabTwo.setOnClickListener(onClickListener);
         tabThree.setOnClickListener(onClickListener);
@@ -302,6 +316,7 @@ public class MainActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         EventManager.getInstance().unRegisterListener(onNotifyListener);
+        disposable.dispose();
     }
 
     @Override
@@ -318,12 +333,57 @@ public class MainActivity extends BaseActivity {
     }
 
 
+    private void checkUpdate() {
+        disposable.add(ApiUtils.getInstance().checkUpdate()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<CheckUpdateBean>>() {
+                    @Override
+                    public void accept(ResultBean<CheckUpdateBean> checkUpdateBeanResultBean) throws Exception {
+                        CheckUpdateBean checkUpdateBean = checkUpdateBeanResultBean.getData();
+                        if (checkUpdateBean != null) {
+                            String versions = checkUpdateBean.getVersions();
+                            int newVersionCode = 0;
+                            try {
+                                if (!TextUtils.isEmpty(versions)) {
+                                    newVersionCode = Integer.parseInt(versions);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            int versionCode = AppUtils.getVersionCode();
+                            if (versionCode < newVersionCode) {
+                                showUpdateDialog(checkUpdateBean);
+                            }
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                }));
+    }
+
+
     /**
      * 强制升级对话框
      */
-    private void showUpdateDialog() {
-        AppUpdateDialog appUpdateDialog = new AppUpdateDialog(this, "更新");
+    private void showUpdateDialog(final CheckUpdateBean checkUpdateBean) {
+        AppUpdateDialog appUpdateDialog = new AppUpdateDialog(this, checkUpdateBean.getMessage());
+        appUpdateDialog.setCallBack(new AppUpdateDialog.CallBack() {
+            @Override
+            public void onConfirm() {
+                Intent intent = new Intent();
+                intent.setData(Uri.parse(checkUpdateBean.getUrl()));//Url 就是你要打开的网址
+                intent.setAction(Intent.ACTION_VIEW);
+                startActivity(intent); //启动浏览器
+            }
+        });
+        if (!"true".equals(checkUpdateBean.getCoerciveness())) {
+            appUpdateDialog.notForceUpdate();
+        }
         appUpdateDialog.show();
     }
+
 
 }

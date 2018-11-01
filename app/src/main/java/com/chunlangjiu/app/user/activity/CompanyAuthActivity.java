@@ -63,6 +63,8 @@ public class CompanyAuthActivity extends BaseActivity {
 
     public static final int REQUEST_CODE_SELECT_ONE = 103;
     public static final int REQUEST_CODE_SELECT_TWO = 104;
+    public static final int REQUEST_CODE_SELECT_ALLOW_CARD = 105;
+
     private int codeType;
 
     @BindView(R.id.etCompany)
@@ -90,10 +92,14 @@ public class CompanyAuthActivity extends BaseActivity {
     RelativeLayout rlOne;
     @BindView(R.id.rlTwo)
     RelativeLayout rlTwo;
+    @BindView(R.id.rlAllowCard)
+    RelativeLayout rlAllowCard;
     @BindView(R.id.imgSellCard)
     ImageView imgSellCard;
     @BindView(R.id.imgIDCard)
     ImageView imgIDCard;
+    @BindView(R.id.imgAllowCard)
+    ImageView imgAllowCard;
 
     @BindView(R.id.tvCommit)
     TextView tvCommit;
@@ -114,8 +120,10 @@ public class CompanyAuthActivity extends BaseActivity {
     private ChoicePhotoDialog photoDialog;
     private ArrayList<ImageItem> ZhiZhaoLists;
     private ArrayList<ImageItem> cardLists;
+    private ArrayList<ImageItem> allowLists;
     private String base64ZhiZhao;
     private String base64IdCard;
+    private String base64Allow;
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -135,6 +143,9 @@ public class CompanyAuthActivity extends BaseActivity {
                     break;
                 case R.id.rlTwo:
                     showPhotoDialog(REQUEST_CODE_SELECT_TWO);
+                    break;
+                case R.id.rlAllowCard:
+                    showPhotoDialog(REQUEST_CODE_SELECT_ALLOW_CARD);
                     break;
                 case R.id.tvCommit:
                     checkData();
@@ -172,6 +183,11 @@ public class CompanyAuthActivity extends BaseActivity {
         layoutParamsTwo.height = picHeight;
         rlTwo.setLayoutParams(layoutParamsTwo);
 
+        ViewGroup.LayoutParams layoutParamsAllow = rlAllowCard.getLayoutParams();
+        layoutParamsAllow.width = picWidth;
+        layoutParamsAllow.height = picHeight;
+        rlAllowCard.setLayoutParams(layoutParamsAllow);
+
         ImagePicker imagePicker = ImagePicker.getInstance();
         imagePicker.setImageLoader(new GlideImageLoader());   //设置图片加载器
         imagePicker.setShowCamera(true);                      //显示拍照按钮
@@ -190,6 +206,7 @@ public class CompanyAuthActivity extends BaseActivity {
         disposable = new CompositeDisposable();
         rlOne.setOnClickListener(onClickListener);
         rlTwo.setOnClickListener(onClickListener);
+        rlAllowCard.setOnClickListener(onClickListener);
         rlCreateTime.setOnClickListener(onClickListener);
         rlSellArea.setOnClickListener(onClickListener);
         tvCommit.setOnClickListener(onClickListener);
@@ -460,6 +477,13 @@ public class CompanyAuthActivity extends BaseActivity {
                     imageItem.name = imageItem.path.substring(index + 1, imageItem.path.length());
                     base64IdCard = FileUtils.imgToBase64(cardLists.get(0).path);
                     GlideUtils.loadImage(CompanyAuthActivity.this, cardLists.get(0).path, imgIDCard);
+                }else if (requestCode == REQUEST_CODE_SELECT_ALLOW_CARD) {
+                    allowLists = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+                    ImageItem imageItem = allowLists.get(0);
+                    int index = imageItem.path.lastIndexOf("/");
+                    imageItem.name = imageItem.path.substring(index + 1, imageItem.path.length());
+                    base64Allow = FileUtils.imgToBase64(allowLists.get(0).path);
+                    GlideUtils.loadImage(CompanyAuthActivity.this, allowLists.get(0).path, imgAllowCard);
                 }
             }
         }
@@ -484,6 +508,8 @@ public class CompanyAuthActivity extends BaseActivity {
             ToastUtils.showShort("请上传营业执照图片");
         } else if (base64IdCard == null) {
             ToastUtils.showShort("请上传法人身份证图片");
+        } else if (base64Allow == null) {
+            ToastUtils.showShort("请上传食品流通许可证/酒类经营许可证");
         } else {
             uploadImage();
         }
@@ -493,12 +519,14 @@ public class CompanyAuthActivity extends BaseActivity {
         showLoadingDialog();
         Observable<ResultBean<UploadImageBean>> front = ApiUtils.getInstance().userUploadImage(base64ZhiZhao, ZhiZhaoLists.get(0).name, "rate");
         Observable<ResultBean<UploadImageBean>> behind = ApiUtils.getInstance().userUploadImage(base64IdCard, cardLists.get(0).name, "rate");
-        disposable.add(Observable.zip(front, behind, new BiFunction<ResultBean<UploadImageBean>, ResultBean<UploadImageBean>, List<String>>() {
+        Observable<ResultBean<UploadImageBean>> allow = ApiUtils.getInstance().userUploadImage(base64Allow, allowLists.get(0).name, "rate");
+        disposable.add(Observable.zip(front, behind,allow, new Function3<ResultBean<UploadImageBean>, ResultBean<UploadImageBean>, ResultBean<UploadImageBean>, List<String>>() {
             @Override
-            public List<String> apply(ResultBean<UploadImageBean> uploadImageBeanResultBean, ResultBean<UploadImageBean> uploadImageBeanResultBean2) throws Exception {
+            public List<String> apply(ResultBean<UploadImageBean> uploadImageBeanResultBean, ResultBean<UploadImageBean> uploadImageBeanResultBean2, ResultBean<UploadImageBean> uploadImageBeanResultBean3) throws Exception {
                 List<String> imageLists = new ArrayList<>();
                 imageLists.add(uploadImageBeanResultBean.getData().getUrl());
                 imageLists.add(uploadImageBeanResultBean2.getData().getUrl());
+                imageLists.add(uploadImageBeanResultBean3.getData().getUrl());
                 return imageLists;
             }
         }).subscribeOn(Schedulers.io())

@@ -3,6 +3,7 @@ package com.chunlangjiu.app.net;
 import com.chunlangjiu.app.amain.bean.AuctionListBean;
 import com.chunlangjiu.app.amain.bean.CartCountBean;
 import com.chunlangjiu.app.amain.bean.CartListBean;
+import com.chunlangjiu.app.amain.bean.CheckUpdateBean;
 import com.chunlangjiu.app.amain.bean.HomeListBean;
 import com.chunlangjiu.app.amain.bean.HomeModulesBean;
 import com.chunlangjiu.app.amain.bean.LoginBean;
@@ -58,6 +59,12 @@ import retrofit2.http.POST;
  * @Describe: 请求接口
  */
 public interface ApiService {
+
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
+    Flowable<ResultBean<CheckUpdateBean>> checkUpdate(@Field("method") String method, @Field("v") String v, @Field("app_type") String app_type,
+                                                      @Field("platform") String platform);
 
 
     @POST("index.php/topapi")

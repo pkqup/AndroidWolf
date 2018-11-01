@@ -197,6 +197,8 @@ public class AddGoodsActivity extends BaseActivity {
     EditText etSave;
     @BindView(R.id.etOther)
     EditText etOther;
+    @BindView(R.id.etFrom)
+    EditText etFrom;
 
     @BindView(R.id.tvCommit)
     TextView tvCommit;
@@ -642,6 +644,8 @@ public class AddGoodsActivity extends BaseActivity {
             ToastUtils.showShort("请填写库存");
         } else if (TextUtils.isEmpty(etSize.getText().toString().trim())) {
             ToastUtils.showShort("请填写容量");
+        } else if (TextUtils.isEmpty(etFrom.getText().toString().trim())) {
+            ToastUtils.showShort("请填写商品来源");
         } else if (mainPicLists == null || detailOnePicLists == null || detailTwoPicLists == null || detailThreePicLists == null || detailFourPicLists == null) {
             ToastUtils.showShort("请添加图片");
         } else {
@@ -807,6 +811,7 @@ public class AddGoodsActivity extends BaseActivity {
         valueBeanList.add(new AddGoodsValueBean("原料", etYuanLiao.getText().toString().trim()));
         valueBeanList.add(new AddGoodsValueBean("储存条件", etSave.getText().toString().trim()));
         valueBeanList.add(new AddGoodsValueBean("附件", etOther.getText().toString().trim()));
+        valueBeanList.add(new AddGoodsValueBean("商品来源", etFrom.getText().toString().trim()));
         String parameter = new Gson().toJson(valueBeanList);
 
         disposable.add(ApiUtils.getInstance().addGoods(classId, brandId, "", etTitle.getText().toString().trim(),
