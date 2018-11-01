@@ -548,7 +548,7 @@ public class CompanyAuthActivity extends BaseActivity {
     private void commitAuth(List<String> strings) {
         disposable.add(ApiUtils.getInstance().companyAuth(etCompany.getText().toString().trim(), etPersonName.getText().toString().trim(),
                 etCardNum.getText().toString().trim(), tvCreateTime.getText().toString(), tvSellArea.getText().toString(),
-                etAddress.getText().toString(), etPhone.getText().toString(), strings.get(0), strings.get(1))
+                etAddress.getText().toString(), etPhone.getText().toString(), strings.get(0), strings.get(1), strings.get(2))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean>() {
