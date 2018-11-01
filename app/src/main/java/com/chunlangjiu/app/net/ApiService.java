@@ -3,6 +3,7 @@ package com.chunlangjiu.app.net;
 import com.chunlangjiu.app.amain.bean.AuctionListBean;
 import com.chunlangjiu.app.amain.bean.CartCountBean;
 import com.chunlangjiu.app.amain.bean.CartListBean;
+import com.chunlangjiu.app.amain.bean.CheckUpdateBean;
 import com.chunlangjiu.app.amain.bean.HomeListBean;
 import com.chunlangjiu.app.amain.bean.HomeModulesBean;
 import com.chunlangjiu.app.amain.bean.LoginBean;
@@ -62,6 +63,12 @@ public interface ApiService {
 
     @POST("index.php/topapi")
     @FormUrlEncoded
+    Flowable<ResultBean<CheckUpdateBean>> checkUpdate(@Field("method") String method, @Field("v") String v, @Field("app_type") String app_type,
+                                                      @Field("platform") String platform);
+
+
+    @POST("index.php/topapi")
+    @FormUrlEncoded
     Flowable<ResultBean> getAuthSms(@Field("method") String method, @Field("v") String v, @Field("mobile") String mobile);
 
     @POST("index.php/topapi")
@@ -111,7 +118,8 @@ public interface ApiService {
                                      @Field("license_num") String license_num, @Field("establish_date") String establish_date,
                                      @Field("area") String area, @Field("address") String address,
                                      @Field("company_phone") String company_phone, @Field("license_img") String license_img,
-                                     @Field("shopuser_identity_img_z") String shopuser_identity_img_z);
+                                     @Field("shopuser_identity_img_z") String shopuser_identity_img_z,
+                                     @Field("food_or_wine_img") String food_or_wine_img);
 
     @POST("index.php/topapi")
     @FormUrlEncoded

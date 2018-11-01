@@ -19,6 +19,8 @@ public class HomeBean {
     private String label;
     private String image_default_id;
     private String imgsrc;
+    private String view_count;//关注人数
+    private String rate_count;//评价条数
 
     private boolean isAuction;
     private String auction_starting_price;
@@ -26,6 +28,22 @@ public class HomeBean {
     private String auction_end_time;
     private String auction_status;
     private String auction_number;
+
+    public String getView_count() {
+        return view_count;
+    }
+
+    public void setView_count(String view_count) {
+        this.view_count = view_count;
+    }
+
+    public String getRate_count() {
+        return rate_count;
+    }
+
+    public void setRate_count(String rate_count) {
+        this.rate_count = rate_count;
+    }
 
     public String getAuction_number() {
         return auction_number;

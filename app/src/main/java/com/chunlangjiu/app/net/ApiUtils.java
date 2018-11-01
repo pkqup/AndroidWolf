@@ -3,6 +3,7 @@ package com.chunlangjiu.app.net;
 import com.chunlangjiu.app.amain.bean.AuctionListBean;
 import com.chunlangjiu.app.amain.bean.CartCountBean;
 import com.chunlangjiu.app.amain.bean.CartListBean;
+import com.chunlangjiu.app.amain.bean.CheckUpdateBean;
 import com.chunlangjiu.app.amain.bean.HomeListBean;
 import com.chunlangjiu.app.amain.bean.HomeModulesBean;
 import com.chunlangjiu.app.amain.bean.LoginBean;
@@ -82,6 +83,11 @@ public class ApiUtils {
         return apiService;
     }
 
+    public Flowable<ResultBean<CheckUpdateBean>> checkUpdate() {
+        return apiService.checkUpdate("app.versions", "v1", "android","chunlang");
+    }
+
+
     public Flowable<ResultBean> getAuthSms(String mobile) {
         return apiService.getAuthSms("user.sendSms", "v1", mobile);
     }
@@ -119,9 +125,9 @@ public class ApiUtils {
     }
 
     public Flowable<ResultBean> companyAuth(String company_name, String representative, String license_num, String establish_date, String area,
-                                            String address, String company_phone, String license_img, String shopuser_identity_img_z) {
+                                            String address, String company_phone, String license_img, String shopuser_identity_img_z, String food_or_wine_img) {
         return apiService.companyAuth("member.enterprise", "v1", company_name, representative, license_num, establish_date, area,
-                address, company_phone, license_img, shopuser_identity_img_z);
+                address, company_phone, license_img, shopuser_identity_img_z,food_or_wine_img);
     }
 
     public Observable<ResultBean<AuthStatusBean>> getPersonAuthStatus() {

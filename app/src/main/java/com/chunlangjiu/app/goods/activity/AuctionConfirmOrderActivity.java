@@ -446,7 +446,7 @@ public class AuctionConfirmOrderActivity extends BaseActivity {
                 ToastUtils.showShort("支付失败");
             } else if (code == -2) {
                 //支付取消
-                ToastUtils.showShort("支付失败");
+                ToastUtils.showShort("支付取消");
             }
             finish();
             toOrderMainActivity(1, 0);
