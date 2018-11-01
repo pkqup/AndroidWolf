@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.chunlangjiu.app.R;
+import com.chunlangjiu.app.abase.BaseApplication;
 import com.chunlangjiu.app.abase.BaseFragment;
 import com.chunlangjiu.app.amain.bean.FirstClassBean;
 import com.chunlangjiu.app.amain.bean.MainClassBean;
@@ -41,6 +42,7 @@ import com.chunlangjiu.app.user.dialog.ChoiceAreaPopWindow;
 import com.chunlangjiu.app.user.dialog.ChoiceBrandPopWindow;
 import com.chunlangjiu.app.user.dialog.ChoiceOrdoPopWindow;
 import com.chunlangjiu.app.user.dialog.ChoicePricePopWindow;
+import com.chunlangjiu.app.util.UmengEventUtil;
 import com.pkqup.commonlibrary.glide.GlideUtils;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.pkqup.commonlibrary.util.KeyBoardUtils;
@@ -259,6 +261,7 @@ public class GoodsFragment extends BaseFragment {
         classAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                UmengEventUtil.search_category(getActivity(), classLists.get(position).getCat_name());
                 selectClassId = classLists.get(position).getCat_id();
                 classAdapter.notifyDataSetChanged();
                 clearSelectFilterData();
@@ -467,8 +470,26 @@ public class GoodsFragment extends BaseFragment {
 
     private void getListSuccess(GoodsListBean goodsListBean, boolean isRefresh) {
         if (goodsListBean != null && goodsListBean.getList() != null && goodsListBean.getList().size() > 0) {
-            List<GoodsListDetailBean> newLists = goodsListBean.getList();
+            List<GoodsListDetailBean> dataLists = goodsListBean.getList();
+            List<GoodsListDetailBean> newLists = new ArrayList<>();
+
+            if (BaseApplication.HIDE_AUCTION) {
+                //过滤竞拍商品
+                try {
+                    for (int i = 0; i < dataLists.size(); i++) {
+                        if (TextUtils.isEmpty(dataLists.get(i).getAuction().getAuctionitem_id())) {
+                            newLists.add(dataLists.get(i));
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                newLists = dataLists;
+            }
+
             if (newLists == null) newLists = new ArrayList<>();
+
             if (isRefresh) {
                 pageNum = 1;
                 lists = newLists;
@@ -546,13 +567,14 @@ public class GoodsFragment extends BaseFragment {
                 choiceBrandPopWindow.setCallBack(new ChoiceBrandPopWindow.CallBack() {
                     @Override
                     public void choiceBrand(String brandName, String brandIdC) {
+                        UmengEventUtil.search_brand(getActivity(), brandName);
                         brandId = brandIdC;
                         tvBrand.setText(TextUtils.isEmpty(brandId) ? "品牌" : brandName);
                         getGoodsList(1, true);
                     }
                 });
             }
-            choiceBrandPopWindow.setBrandList(brandLists,brandId);
+            choiceBrandPopWindow.setBrandList(brandLists, brandId);
             choiceBrandPopWindow.showAsDropDown(rlBrand, 0, 1);
         }
     }
@@ -567,13 +589,14 @@ public class GoodsFragment extends BaseFragment {
                 choiceAreaPopWindow.setCallBack(new ChoiceAreaPopWindow.CallBack() {
                     @Override
                     public void choiceBrand(String brandName, String brandId) {
+                        UmengEventUtil.search_place(getActivity(), brandName);
                         areaId = brandId;
                         tvArea.setText(TextUtils.isEmpty(areaId) ? "产地" : brandName);
                         getGoodsList(1, true);
                     }
                 });
             }
-            choiceAreaPopWindow.setBrandList(areaLists,areaId);
+            choiceAreaPopWindow.setBrandList(areaLists, areaId);
             choiceAreaPopWindow.showAsDropDown(rlBrand, 0, 1);
         }
     }
@@ -587,13 +610,14 @@ public class GoodsFragment extends BaseFragment {
                 choiceOrdoPopWindow.setCallBack(new ChoiceOrdoPopWindow.CallBack() {
                     @Override
                     public void choiceBrand(String brandName, String brandId) {
+                        UmengEventUtil.search_type(getActivity(), brandName);
                         ordoId = brandId;
                         tvIncense.setText(TextUtils.isEmpty(ordoId) ? "类型" : brandName);
                         getGoodsList(1, true);
                     }
                 });
             }
-            choiceOrdoPopWindow.setBrandList(ordoLists,ordoId);
+            choiceOrdoPopWindow.setBrandList(ordoLists, ordoId);
             choiceOrdoPopWindow.showAsDropDown(rlBrand, 0, 1);
         }
     }
@@ -607,13 +631,14 @@ public class GoodsFragment extends BaseFragment {
                 choiceAlcPopWindow.setCallBack(new ChoiceAlcPopWindow.CallBack() {
                     @Override
                     public void choiceBrand(String brandName, String brandId) {
+                        UmengEventUtil.search_alc(getActivity(), brandName);
                         alcoholId = brandId;
                         tvAlc.setText(TextUtils.isEmpty(alcoholId) ? "酒精度" : brandName);
                         getGoodsList(1, true);
                     }
                 });
             }
-            choiceAlcPopWindow.setBrandList(alcLists,alcoholId);
+            choiceAlcPopWindow.setBrandList(alcLists, alcoholId);
             choiceAlcPopWindow.showAsDropDown(rlBrand, 0, 1);
         }
     }
@@ -627,6 +652,7 @@ public class GoodsFragment extends BaseFragment {
                 choicePricePopWindow.setCallBack(new ChoicePricePopWindow.CallBack() {
                     @Override
                     public void choicePrice(String minPriceC, String maxPriceC, String id, String content) {
+                        UmengEventUtil.search_price(getActivity(), content);
                         minPrice = minPriceC;
                         maxPrice = maxPriceC;
                         priceId = id;

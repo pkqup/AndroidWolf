@@ -2,6 +2,7 @@ package com.chunlangjiu.app.amain.fragment;
 
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseApplication;
 import com.chunlangjiu.app.abase.BaseFragment;
 import com.chunlangjiu.app.amain.activity.LoginActivity;
+import com.chunlangjiu.app.goods.dialog.EditAccountNameDialog;
 import com.chunlangjiu.app.net.ApiUtils;
 import com.chunlangjiu.app.order.activity.OrderMainActivity;
 import com.chunlangjiu.app.order.params.OrderParams;
@@ -71,11 +73,19 @@ public class UserFragment extends BaseFragment {
     private RelativeLayout rlBackground;
     private ImageView imgSetting;
 
+    private LinearLayout llMyTitle;
+    private ImageView imgMyTitleType;
+    private TextView tvMyTitle;
+
+    private LinearLayout llAuthStatus;
+    private ImageView imgAuthStatus;
+    private TextView tvAuthStatus;
+
     private CircleImageView imgHead;
     private TextView tvName;
-    private TextView tvAccountType;
+    private ImageView imgEditName;
     private TextView tvChangeType;
-    private TextView tvAuthRealName;
+    private TextView tvAuthPerson;
     private TextView tvAuthCompany;
 
     private LinearLayout llCanUseMoney;
@@ -116,6 +126,7 @@ public class UserFragment extends BaseFragment {
     /*订单管理*/
 
     /*竞拍订单管理*/
+    private LinearLayout llAuctionContent;
     private RelativeLayout rlAuctionManager;
     private LinearLayout llBuyAuction;
     private RelativeLayout rlAuctionOne;
@@ -148,6 +159,7 @@ public class UserFragment extends BaseFragment {
     private RelativeLayout rlAuctionGoods;
     private RelativeLayout rlWareHouseGoods;
     private RelativeLayout rlCheckGoods;
+    private RelativeLayout rlGoodsManagerPlace;
     /*商品管理*/
 
     /*我的管理*/
@@ -159,6 +171,8 @@ public class UserFragment extends BaseFragment {
     private RelativeLayout rlBankCard;
     private LinearLayout llMyManagerSecond;
     private RelativeLayout rlBankCardSecond;
+    private RelativeLayout rlMyEvaluate;
+    private RelativeLayout rlMySecondPlace;
     /*我的管理*/
 
     private static final int TYPE_BUYER = 0;//买家中心
@@ -168,9 +182,15 @@ public class UserFragment extends BaseFragment {
     private String personStatus;
 
     private ChoicePhotoDialog photoDialog;
+    private EditAccountNameDialog editAccountNameDialog;
     public static final int REQUEST_CODE_CHOICE_HEAD = 1001;
 
     private CompositeDisposable disposable;
+
+    private String loginAccount;
+    private String personName;
+    private String companyName;
+    private String shopName;
 
     private View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
@@ -187,6 +207,9 @@ public class UserFragment extends BaseFragment {
                     break;
                 case R.id.imgHead:
                     setHeadIcon();
+                    break;
+                case R.id.imgEditName://编辑昵称或者店铺名
+                    showEditNameDialog();
                     break;
                 case R.id.tvChangeType:// 切换买/卖家中心
                     checkStatus();
@@ -306,6 +329,9 @@ public class UserFragment extends BaseFragment {
                 case R.id.rlBankCardSecond:// 银行卡管理
                     WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_BANK_CARD + BaseApplication.getToken(), "银行卡管理");
                     break;
+                case R.id.rlMyEvaluate:// 我的估价
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_EVALUATE + BaseApplication.getToken(), "我的估价");
+                    break;
             }
         }
     };
@@ -315,6 +341,7 @@ public class UserFragment extends BaseFragment {
     public void getContentView(LayoutInflater inflater, ViewGroup container) {
         inflater.inflate(R.layout.amain_fragment_user, container, true);
     }
+
 
     @Override
     public void initView() {
@@ -326,17 +353,30 @@ public class UserFragment extends BaseFragment {
         imgSetting = rootView.findViewById(R.id.imgSetting);
         imgSetting.setOnClickListener(onClickListener);
 
+        llMyTitle = rootView.findViewById(R.id.llMyTitle);
+        llMyTitle.setVisibility(View.GONE);
+        imgMyTitleType = rootView.findViewById(R.id.imgMyTitleType);
+        tvMyTitle = rootView.findViewById(R.id.tvMyTitle);
+        llAuthStatus = rootView.findViewById(R.id.llAuthStatus);
+        llAuthStatus.setVisibility(View.GONE);
+        imgAuthStatus = rootView.findViewById(R.id.imgAuthStatus);
+        tvAuthStatus = rootView.findViewById(R.id.tvAuthStatus);
+
         imgHead = rootView.findViewById(R.id.imgHead);
         imgHead.setOnClickListener(onClickListener);
         tvName = rootView.findViewById(R.id.tvName);
-        tvAccountType = rootView.findViewById(R.id.tvAccountType);
+        imgEditName = rootView.findViewById(R.id.imgEditName);
+        imgEditName.setOnClickListener(onClickListener);
+        imgEditName.setVisibility(View.GONE);
 
         tvChangeType = rootView.findViewById(R.id.tvChangeType);
         tvChangeType.setOnClickListener(onClickListener);
-        tvAuthRealName = rootView.findViewById(R.id.tvAuthRealName);
-        tvAuthRealName.setOnClickListener(onClickListener);
+        tvAuthPerson = rootView.findViewById(R.id.tvAuthRealName);
+        tvAuthPerson.setOnClickListener(onClickListener);
         tvAuthCompany = rootView.findViewById(R.id.tvAuthCompany);
         tvAuthCompany.setOnClickListener(onClickListener);
+        tvAuthPerson.setVisibility(View.GONE);
+        tvAuthCompany.setVisibility(View.GONE);
 
         llCanUseMoney = rootView.findViewById(R.id.llCanUseMoney);
         llCanUseMoney.setOnClickListener(onClickListener);
@@ -382,6 +422,7 @@ public class UserFragment extends BaseFragment {
         rlSellOrderFive = rootView.findViewById(R.id.rlSellOrderFive);
         rlSellOrderFive.setOnClickListener(onClickListener);
 
+        llAuctionContent = rootView.findViewById(R.id.llAuctionContent);
         rlAuctionManager = rootView.findViewById(R.id.rlAuctionManager);
         llBuyAuction = rootView.findViewById(R.id.llBuyAuction);
         rlAuctionOne = rootView.findViewById(R.id.rlAuctionOne);
@@ -421,6 +462,7 @@ public class UserFragment extends BaseFragment {
         rlAuctionGoods = rootView.findViewById(R.id.rlAuctionGoods);
         rlWareHouseGoods = rootView.findViewById(R.id.rlWareHouseGoods);
         rlCheckGoods = rootView.findViewById(R.id.rlCheckGoods);
+        rlGoodsManagerPlace = rootView.findViewById(R.id.rlGoodsManagerPlace);
         rlGoodsManager.setOnClickListener(onClickListener);
         rlAddGoods.setOnClickListener(onClickListener);
         rlSellGoods.setOnClickListener(onClickListener);
@@ -443,16 +485,29 @@ public class UserFragment extends BaseFragment {
 
         llMyManagerSecond = rootView.findViewById(R.id.llMyManagerSecond);
         rlBankCardSecond = rootView.findViewById(R.id.rlBankCardSecond);
+        rlMyEvaluate = rootView.findViewById(R.id.rlMyEvaluate);
+        rlMySecondPlace = rootView.findViewById(R.id.rlMySecondPlace);
         rlBankCardSecond.setOnClickListener(onClickListener);
+        rlMyEvaluate.setOnClickListener(onClickListener);
+
+        if (BaseApplication.HIDE_AUCTION) {
+            llAuctionContent.setVisibility(View.GONE);
+            rlAuctionGoods.setVisibility(View.GONE);
+            rlGoodsManagerPlace.setVisibility(View.VISIBLE);
+        } else {
+            llAuctionContent.setVisibility(View.VISIBLE);
+            rlAuctionGoods.setVisibility(View.VISIBLE);
+            rlGoodsManagerPlace.setVisibility(View.GONE);
+        }
 
         checkLogin();
-        showUserTypeView();
     }
 
     private void checkLogin() {
         if (BaseApplication.isLogin()) {
             tvToLogin.setVisibility(View.GONE);
             rlHead.setVisibility(View.VISIBLE);
+            showUserTypeView();
         } else {
             tvToLogin.setVisibility(View.VISIBLE);
             rlHead.setVisibility(View.GONE);
@@ -461,16 +516,19 @@ public class UserFragment extends BaseFragment {
 
     private void showUserTypeView() {
         if (userType == TYPE_BUYER) {
-            HttpUtils.USER_TOKEN = true;
             //买家中心
-            rlBackground.setBackgroundResource(R.mipmap.buy_bg);
-            tvChangeType.setText("切换卖家");
+            rlBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.my_buy_bg));
+            imgEditName.setVisibility(View.GONE);
+            llNotUseMoney.setVisibility(View.GONE);
+            tvName.setText(loginAccount);
+
             if (AuthStatusBean.AUTH_SUCCESS.equals(companyStatus)) {
-                tvAuthCompany.setVisibility(View.GONE);
+                tvMyTitle.setText("企业买家");
+                imgMyTitleType.setImageResource(R.mipmap.my_company);
             } else {
-                tvAuthCompany.setVisibility(View.VISIBLE);
+                tvMyTitle.setText("个人买家");
+                imgMyTitleType.setImageResource(R.mipmap.my_person);
             }
-            llNotUseMoney.setVisibility(View.VISIBLE);
 
             llBuyOrder.setVisibility(View.VISIBLE);
             llSellOrder.setVisibility(View.GONE);
@@ -484,13 +542,31 @@ public class UserFragment extends BaseFragment {
             rlCollect.setVisibility(View.VISIBLE);
             rlBankCard.setVisibility(View.GONE);
             llMyManagerSecond.setVisibility(View.VISIBLE);
+            rlBankCardSecond.setVisibility(View.VISIBLE);
+            rlMySecondPlace.setVisibility(View.GONE);
         } else {
-            HttpUtils.USER_TOKEN = false;
             //卖家中心
-            rlBackground.setBackgroundResource(R.mipmap.sell_bg);
-            tvChangeType.setText("切换买家");
-            tvAuthCompany.setVisibility(View.GONE);
+            rlBackground.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.my_sell_bg));
+            imgEditName.setVisibility(View.VISIBLE);
             llNotUseMoney.setVisibility(View.VISIBLE);
+            if (TextUtils.isEmpty(shopName)) {
+                if (TextUtils.isEmpty(companyName)) {
+                    tvName.setText(personName);
+                } else {
+                    tvName.setText(companyName);
+                }
+            } else {
+                tvName.setText(shopName);
+            }
+
+
+            if (AuthStatusBean.AUTH_SUCCESS.equals(companyStatus)) {
+                tvMyTitle.setText("企业卖家");
+                imgMyTitleType.setImageResource(R.mipmap.my_company);
+            } else {
+                tvMyTitle.setText("个人卖家");
+                imgMyTitleType.setImageResource(R.mipmap.my_person);
+            }
 
             llBuyOrder.setVisibility(View.GONE);
             llSellOrder.setVisibility(View.VISIBLE);
@@ -503,7 +579,9 @@ public class UserFragment extends BaseFragment {
 
             rlCollect.setVisibility(View.GONE);
             rlBankCard.setVisibility(View.VISIBLE);
-            llMyManagerSecond.setVisibility(View.GONE);
+            llMyManagerSecond.setVisibility(View.VISIBLE);
+            rlBankCardSecond.setVisibility(View.GONE);
+            rlMySecondPlace.setVisibility(View.VISIBLE);
         }
     }
 
@@ -512,9 +590,11 @@ public class UserFragment extends BaseFragment {
         disposable = new CompositeDisposable();
         EventManager.getInstance().registerListener(onNotifyListener);
         initImagePicker();
-        getUserInfo();
-        getOrderNumIndex();
-        getPersonAndCompanyAuthStatus();
+        if (BaseApplication.isLogin()) {
+            getUserInfo();
+            getOrderNumIndex();
+            getPersonAndCompanyAuthStatus();
+        }
     }
 
 
@@ -541,7 +621,11 @@ public class UserFragment extends BaseFragment {
                     @Override
                     public void accept(ResultBean<UserInfoBean> userInfoBeanResultBean) throws Exception {
                         GlideUtils.loadImageHead(getActivity(), userInfoBeanResultBean.getData().getHead_portrait(), imgHead);
-                        tvName.setText(userInfoBeanResultBean.getData().getLogin_account());
+                        loginAccount = userInfoBeanResultBean.getData().getLogin_account();
+                        personName = userInfoBeanResultBean.getData().getName();
+                        companyName = userInfoBeanResultBean.getData().getCompany_name();
+                        shopName = userInfoBeanResultBean.getData().getShop_name();
+                        tvName.setText(loginAccount);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -602,21 +686,7 @@ public class UserFragment extends BaseFragment {
                     public void accept(List<AuthStatusBean> authStatusBeans) throws Exception {
                         personStatus = authStatusBeans.get(0).getStatus();
                         companyStatus = authStatusBeans.get(1).getStatus();
-                        if ((AuthStatusBean.AUTH_SUCCESS.equals(personStatus) || AuthStatusBean.AUTH_SUCCESS.equals(companyStatus))) {
-                            tvAuthRealName.setText("已认证");
-                            tvAuthRealName.setClickable(false);
-                        } else {
-                            tvAuthRealName.setText("实名认证");
-                            tvAuthRealName.setClickable(true);
-                        }
-
-                        if (AuthStatusBean.AUTH_SUCCESS.equals(companyStatus)) {
-                            tvAccountType.setText("企业");
-                            tvAuthCompany.setVisibility(View.GONE);
-                        } else {
-                            tvAccountType.setText("个人");
-                            tvAuthCompany.setVisibility(View.VISIBLE);
-                        }
+                        setAuthView();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -624,78 +694,52 @@ public class UserFragment extends BaseFragment {
                         hideLoadingDialog();
                     }
                 }));
-     /*   disposable.add(ApiUtils.getInstance().getPersonAuthStatus()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<ResultBean<AuthStatusBean>>() {
-                    @Override
-                    public void accept(ResultBean<AuthStatusBean> authStatusBeanResultBean) throws Exception {
-                        getPersonStatusSuccess(authStatusBeanResultBean.getData());
-                        getCompanyAuthStatus();
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                    }
-                }));*/
     }
 
-  /*  private void getPersonStatusSuccess(AuthStatusBean data) {
-        personStatus = data.getStatus();
-        if ("active".equals(data.getStatus())) {
-            //未认证
-            tvAuthRealName.setText("实名认证");
-            tvAuthRealName.setClickable(true);
-        } else if ("locked".equals(data.getStatus())) {
-            tvAuthRealName.setText("实名认证");
-            tvAuthRealName.setClickable(true);
-        } else if ("failing".equals(data.getStatus())) {
-            tvAuthRealName.setText("实名认证");
-            tvAuthRealName.setClickable(true);
-        } else if (AuthStatusBean.AUTH_SUCCESS.equals(data.getStatus())) {
-            tvAuthRealName.setText("已认证");
-            tvAuthRealName.setClickable(false);
+    private void setAuthView() {
+        llAuthStatus.setVisibility(View.VISIBLE);
+        if ((AuthStatusBean.AUTH_SUCCESS.equals(personStatus) || AuthStatusBean.AUTH_SUCCESS.equals(companyStatus))) {
+            imgAuthStatus.setImageResource(R.mipmap.my_auth);
+            tvAuthStatus.setText("已认证");
+
+            if ((AuthStatusBean.AUTH_SUCCESS.equals(personStatus) && AuthStatusBean.AUTH_SUCCESS.equals(companyStatus))) {
+                tvAuthPerson.setVisibility(View.GONE);
+                tvAuthCompany.setVisibility(View.GONE);
+            } else if (AuthStatusBean.AUTH_SUCCESS.equals(personStatus)) {
+                tvAuthPerson.setVisibility(View.GONE);
+                tvAuthCompany.setVisibility(View.VISIBLE);
+            } else if (AuthStatusBean.AUTH_SUCCESS.equals(companyStatus)) {
+                tvAuthPerson.setVisibility(View.GONE);
+                tvAuthCompany.setVisibility(View.GONE);
+            }
+
+        } else {
+            imgAuthStatus.setImageResource(R.mipmap.my_no_auth);
+            tvAuthStatus.setText("未认证");
+
+            tvAuthPerson.setVisibility(View.VISIBLE);
+            tvAuthCompany.setVisibility(View.VISIBLE);
+        }
+
+        llMyTitle.setVisibility(View.VISIBLE);
+        if (userType == TYPE_BUYER) {
+            if (AuthStatusBean.AUTH_SUCCESS.equals(companyStatus)) {
+                tvMyTitle.setText("企业买家");
+                imgMyTitleType.setImageResource(R.mipmap.my_company);
+            } else {
+                tvMyTitle.setText("个人买家");
+                imgMyTitleType.setImageResource(R.mipmap.my_person);
+            }
+        } else {
+            if (AuthStatusBean.AUTH_SUCCESS.equals(companyStatus)) {
+                tvMyTitle.setText("企业卖家");
+                imgMyTitleType.setImageResource(R.mipmap.my_company);
+            } else {
+                tvMyTitle.setText("个人卖家");
+                imgMyTitleType.setImageResource(R.mipmap.my_person);
+            }
         }
     }
-
-    private void getCompanyAuthStatus() {
-        disposable.add(ApiUtils.getInstance().getCompanyAuthStatus()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<ResultBean<AuthStatusBean>>() {
-                    @Override
-                    public void accept(ResultBean<AuthStatusBean> authStatusBeanResultBean) throws Exception {
-                        getStatusSuccess(authStatusBeanResultBean.getData());
-                    }
-                }, new Consumer<Throwable>() {
-                    @Override
-                    public void accept(Throwable throwable) throws Exception {
-                    }
-                }));
-    }
-
-    private void getStatusSuccess(AuthStatusBean data) {
-        companyStatus = data.getStatus();
-        if ("active".equals(data.getStatus())) {
-            //未认证
-            tvAccountType.setText("个人");
-            tvAuthRealName.setText("实名认证");
-            tvAuthCompany.setVisibility(View.VISIBLE);
-        } else if ("locked".equals(data.getStatus())) {
-            tvAccountType.setText("个人");
-            tvAuthRealName.setText("实名认证");
-            tvAuthCompany.setVisibility(View.VISIBLE);
-        } else if ("failing".equals(data.getStatus())) {
-            tvAccountType.setText("个人");
-            tvAuthRealName.setText("实名认证");
-            tvAuthCompany.setVisibility(View.VISIBLE);
-        } else if (AuthStatusBean.AUTH_SUCCESS.equals(data.getStatus())) {
-            tvAccountType.setText("企业");
-            tvAuthRealName.setText("已认证");
-            tvAuthRealName.setClickable(false);
-            tvAuthCompany.setVisibility(View.GONE);
-        }
-    }*/
 
 
     /**
@@ -756,22 +800,8 @@ public class UserFragment extends BaseFragment {
                                 hideLoadingDialog();
                                 personStatus = authStatusBeans.get(0).getStatus();
                                 companyStatus = authStatusBeans.get(1).getStatus();
+                                setAuthView();
 
-                                if ((AuthStatusBean.AUTH_SUCCESS.equals(personStatus) || AuthStatusBean.AUTH_SUCCESS.equals(companyStatus))) {
-                                    tvAuthRealName.setText("已认证");
-                                    tvAuthRealName.setClickable(false);
-                                } else {
-                                    tvAuthRealName.setText("实名认证");
-                                    tvAuthRealName.setClickable(true);
-                                }
-
-                                if (AuthStatusBean.AUTH_SUCCESS.equals(companyStatus)) {
-                                    tvAccountType.setText("企业");
-                                    tvAuthCompany.setVisibility(View.GONE);
-                                } else {
-                                    tvAccountType.setText("个人");
-                                    tvAuthCompany.setVisibility(View.VISIBLE);
-                                }
                                 if (AuthStatusBean.AUTH_SUCCESS.equals(authStatusBeans.get(0).getStatus()) || AuthStatusBean.AUTH_SUCCESS.equals(authStatusBeans.get(1).getStatus())) {
                                     changeUserType();
                                 } else if (AuthStatusBean.AUTH_LOCKED.equals(authStatusBeans.get(0).getStatus()) || AuthStatusBean.AUTH_LOCKED.equals(authStatusBeans.get(1).getStatus())) {
@@ -821,8 +851,10 @@ public class UserFragment extends BaseFragment {
                             ToastUtils.showShort("您的认证被驳回，请重新提交资料审核");
                             toAuthActivity();
                         } else if (AuthStatusBean.AUTH_SUCCESS.equals(authStatusBeanResultBean.getData().getStatus())) {
-                            tvAuthRealName.setText("已认证");
-                            tvAuthRealName.setClickable(false);
+                            ToastUtils.showShort("您的认证已成功");
+                            tvAuthPerson.setVisibility(View.GONE);
+                            imgAuthStatus.setImageResource(R.mipmap.my_auth);
+                            tvAuthStatus.setText("已认证");
                         }
                     }
                 }, new Consumer<Throwable>() {
@@ -857,10 +889,28 @@ public class UserFragment extends BaseFragment {
                             ToastUtils.showShort("您的认证被驳回，请重新提交资料审核");
                             toAuthCompanyActivity();
                         } else if (AuthStatusBean.AUTH_SUCCESS.equals(authStatusBeanResultBean.getData().getStatus())) {
-                            tvAccountType.setText("企业");
-                            tvAuthRealName.setText("已认证");
+                            ToastUtils.showShort("您的认证已成功");
+                            tvAuthPerson.setVisibility(View.GONE);
                             tvAuthCompany.setVisibility(View.GONE);
-                            tvAuthRealName.setClickable(false);
+                            imgAuthStatus.setImageResource(R.mipmap.my_auth);
+                            tvAuthStatus.setText("已认证");
+                            if (userType == TYPE_BUYER) {
+                                if (AuthStatusBean.AUTH_SUCCESS.equals(companyStatus)) {
+                                    tvMyTitle.setText("企业买家");
+                                    imgMyTitleType.setImageResource(R.mipmap.my_company);
+                                } else {
+                                    tvMyTitle.setText("个人买家");
+                                    imgMyTitleType.setImageResource(R.mipmap.my_person);
+                                }
+                            } else {
+                                if (AuthStatusBean.AUTH_SUCCESS.equals(companyStatus)) {
+                                    tvMyTitle.setText("企业卖家");
+                                    imgMyTitleType.setImageResource(R.mipmap.my_company);
+                                } else {
+                                    tvMyTitle.setText("个人卖家");
+                                    imgMyTitleType.setImageResource(R.mipmap.my_person);
+                                }
+                            }
                         }
                     }
                 }, new Consumer<Throwable>() {
@@ -957,10 +1007,10 @@ public class UserFragment extends BaseFragment {
             BaseApplication.initToken();
             checkLogin();
             userType = TYPE_BUYER;
+            llMyTitle.setVisibility(View.GONE);
             tvOrderOneNum.setVisibility(View.GONE);
             tvOrderTwoNum.setVisibility(View.GONE);
             tvOrderThreeNum.setVisibility(View.GONE);
-            showUserTypeView();
             disposable.add(ApiUtils.getInstance().logout()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -1040,6 +1090,43 @@ public class UserFragment extends BaseFragment {
                     public void accept(Throwable throwable) throws Exception {
                         hideLoadingDialog();
                         ToastUtils.showShort("设置头像失败");
+                    }
+                }));
+    }
+
+
+    private void showEditNameDialog() {
+        if (editAccountNameDialog == null) {
+            editAccountNameDialog = new EditAccountNameDialog(getActivity());
+            editAccountNameDialog.setCallBack(new EditAccountNameDialog.CallBack() {
+                @Override
+                public void onConfirm(String name) {
+                    editShopName(name);
+                }
+            });
+        }
+        editAccountNameDialog.clearName();
+        editAccountNameDialog.show();
+    }
+
+    private void editShopName(final String name) {
+        showLoadingDialog();
+        disposable.add(ApiUtils.getInstance().editShopName(BaseApplication.getToken(), name)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean>() {
+                    @Override
+                    public void accept(ResultBean resultBean) throws Exception {
+                        hideLoadingDialog();
+                        ToastUtils.showShort("修改成功");
+                        shopName = name;
+                        tvName.setText(shopName);
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                        hideLoadingDialog();
+                        ToastUtils.showShort("修改失败");
                     }
                 }));
     }

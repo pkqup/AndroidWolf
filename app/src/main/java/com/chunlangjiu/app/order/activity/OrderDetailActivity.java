@@ -530,7 +530,7 @@ public class OrderDetailActivity extends BaseActivity {
                         case OrderParams.WAIT_BUYER_CONFIRM_GOODS:
                             tv1.setVisibility(View.GONE);
                             if (0 == type) {
-                                tv2.setText("确认收货");
+                                tv2.setText("商品签单");
                                 tv2.setVisibility(View.VISIBLE);
                             } else {
                                 tv2.setVisibility(View.GONE);
@@ -1102,12 +1102,12 @@ public class OrderDetailActivity extends BaseActivity {
                                                     public void accept(ResultBean resultBean) throws Exception {
                                                         hideLoadingDialog();
                                                         if (0 == resultBean.getErrorcode()) {
-                                                            ToastUtils.showShort("确认收货并同意退款成功");
+                                                            ToastUtils.showShort("商品签单并同意退款成功");
                                                             initData();
                                                             EventManager.getInstance().notify(null, OrderParams.REFRESH_ORDER_LIST);
                                                         } else {
                                                             if (TextUtils.isEmpty(resultBean.getMsg())) {
-                                                                ToastUtils.showShort("确认收货并同意退款失败");
+                                                                ToastUtils.showShort("商品签单并同意退款失败");
                                                             } else {
                                                                 ToastUtils.showShort(resultBean.getMsg());
                                                             }
@@ -1118,7 +1118,7 @@ public class OrderDetailActivity extends BaseActivity {
                                                     public void accept(Throwable throwable) throws Exception {
                                                         hideLoadingDialog();
                                                         if (TextUtils.isEmpty(throwable.getMessage())) {
-                                                            ToastUtils.showShort("确认收货并同意退款失败");
+                                                            ToastUtils.showShort("商品签单并同意退款失败");
                                                         } else {
                                                             ToastUtils.showShort(throwable.getMessage());
                                                         }
@@ -1514,12 +1514,12 @@ public class OrderDetailActivity extends BaseActivity {
                     public void accept(ResultBean resultBean) throws Exception {
                         hideLoadingDialog();
                         if (0 == resultBean.getErrorcode()) {
-                            ToastUtils.showShort("确认收货成功");
+                            ToastUtils.showShort("商品签单成功");
                             EventManager.getInstance().notify(null, OrderParams.REFRESH_ORDER_LIST);
                             finish();
                         } else {
                             if (TextUtils.isEmpty(resultBean.getMsg())) {
-                                ToastUtils.showShort("确认收货失败");
+                                ToastUtils.showShort("商品签单失败");
                             } else {
                                 ToastUtils.showShort(resultBean.getMsg());
                             }
@@ -1530,7 +1530,7 @@ public class OrderDetailActivity extends BaseActivity {
                     public void accept(Throwable throwable) throws Exception {
                         hideLoadingDialog();
                         if (TextUtils.isEmpty(throwable.getMessage())) {
-                            ToastUtils.showShort("确认收货失败");
+                            ToastUtils.showShort("商品签单失败");
                         } else {
                             ToastUtils.showShort(throwable.getMessage());
                         }
