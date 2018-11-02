@@ -156,6 +156,11 @@ public class OrderDetailActivity extends BaseActivity {
     @BindView(R.id.tvLogiNoCopy)
     TextView tvLogiNoCopy;
 
+    @BindView(R.id.llInfo)
+    LinearLayout llInfo;
+    @BindView(R.id.tvInfo)
+    TextView tvInfo;
+
     private int type = 0;
     private String oid;
     private String aftersalesBn;
@@ -321,6 +326,7 @@ public class OrderDetailActivity extends BaseActivity {
                                     beanCopyUitl.copyPropertiesExclude(orderDetailBeanResultBean.getData(), orderDetailBean, new String[]{"order", "orders"});
                                     orderDetailBean.setOrders(orderDetailBeanResultBean.getData().getOrder());
                                     orderDetailBean.setLogi(orderDetailBeanResultBean.getData().getLogi());
+                                    orderDetailBean.setInfo(orderDetailBeanResultBean.getData().getInfo());
                                     processData();
                                 } else {
                                     if (TextUtils.isEmpty(orderDetailBeanResultBean.getMsg())) {
@@ -524,7 +530,7 @@ public class OrderDetailActivity extends BaseActivity {
                         case OrderParams.WAIT_BUYER_CONFIRM_GOODS:
                             tv1.setVisibility(View.GONE);
                             if (0 == type) {
-                                tv2.setText("确认收货");
+                                tv2.setText("商品签单");
                                 tv2.setVisibility(View.VISIBLE);
                             } else {
                                 tv2.setVisibility(View.GONE);
@@ -612,6 +618,11 @@ public class OrderDetailActivity extends BaseActivity {
 
                 tvOrderStatus.setText(orderDetailBean.getStatus_desc());
                 tvOrderId.setText(String.valueOf(orderDetailBean.getTid()));
+
+                if (!TextUtils.isEmpty(orderDetailBean.getInfo())) {
+                    llInfo.setVisibility(View.VISIBLE);
+                    tvInfo.setText(orderDetailBean.getInfo());
+                }
                 break;
             case 2:
             case 4:
@@ -851,6 +862,11 @@ public class OrderDetailActivity extends BaseActivity {
                 tvPayment.setText(String.format("¥%s", new BigDecimal(orderDetailBean.getAuction().getPledge()).setScale(2, BigDecimal.ROUND_HALF_UP).toString()));
 
                 tvOrderStatus.setText(orderDetailBean.getAuction().getStatus_desc());
+
+                if (!TextUtils.isEmpty(orderDetailBean.getInfo())) {
+                    llInfo.setVisibility(View.VISIBLE);
+                    tvInfo.setText(orderDetailBean.getInfo());
+                }
                 break;
         }
     }
@@ -1086,12 +1102,12 @@ public class OrderDetailActivity extends BaseActivity {
                                                     public void accept(ResultBean resultBean) throws Exception {
                                                         hideLoadingDialog();
                                                         if (0 == resultBean.getErrorcode()) {
-                                                            ToastUtils.showShort("确认收货并同意退款成功");
+                                                            ToastUtils.showShort("商品签单并同意退款成功");
                                                             initData();
                                                             EventManager.getInstance().notify(null, OrderParams.REFRESH_ORDER_LIST);
                                                         } else {
                                                             if (TextUtils.isEmpty(resultBean.getMsg())) {
-                                                                ToastUtils.showShort("确认收货并同意退款失败");
+                                                                ToastUtils.showShort("商品签单并同意退款失败");
                                                             } else {
                                                                 ToastUtils.showShort(resultBean.getMsg());
                                                             }
@@ -1102,7 +1118,7 @@ public class OrderDetailActivity extends BaseActivity {
                                                     public void accept(Throwable throwable) throws Exception {
                                                         hideLoadingDialog();
                                                         if (TextUtils.isEmpty(throwable.getMessage())) {
-                                                            ToastUtils.showShort("确认收货并同意退款失败");
+                                                            ToastUtils.showShort("商品签单并同意退款失败");
                                                         } else {
                                                             ToastUtils.showShort(throwable.getMessage());
                                                         }
@@ -1498,12 +1514,12 @@ public class OrderDetailActivity extends BaseActivity {
                     public void accept(ResultBean resultBean) throws Exception {
                         hideLoadingDialog();
                         if (0 == resultBean.getErrorcode()) {
-                            ToastUtils.showShort("确认收货成功");
+                            ToastUtils.showShort("商品签单成功");
                             EventManager.getInstance().notify(null, OrderParams.REFRESH_ORDER_LIST);
                             finish();
                         } else {
                             if (TextUtils.isEmpty(resultBean.getMsg())) {
-                                ToastUtils.showShort("确认收货失败");
+                                ToastUtils.showShort("商品签单失败");
                             } else {
                                 ToastUtils.showShort(resultBean.getMsg());
                             }
@@ -1514,7 +1530,7 @@ public class OrderDetailActivity extends BaseActivity {
                     public void accept(Throwable throwable) throws Exception {
                         hideLoadingDialog();
                         if (TextUtils.isEmpty(throwable.getMessage())) {
-                            ToastUtils.showShort("确认收货失败");
+                            ToastUtils.showShort("商品签单失败");
                         } else {
                             ToastUtils.showShort(throwable.getMessage());
                         }
