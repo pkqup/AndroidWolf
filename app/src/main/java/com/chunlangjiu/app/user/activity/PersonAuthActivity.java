@@ -346,7 +346,7 @@ public class PersonAuthActivity extends BaseActivity {
         Observable<ResultBean<UploadImageBean>> front = ApiUtils.getInstance().userUploadImage(base64Front, frontLists.get(0).name, "rate");
         Observable<ResultBean<UploadImageBean>> behind = ApiUtils.getInstance().userUploadImage(base64Reverse, behindLists.get(0).name, "rate");
         Observable<ResultBean<UploadImageBean>> handCard = ApiUtils.getInstance().userUploadImage(base64HandCard, personLists.get(0).name, "rate");
-        disposable.add(Observable.zip(front, behind, handCard, new Function3<ResultBean<UploadImageBean>, ResultBean<UploadImageBean>,
+        disposable.add(Observable.zip(handCard, front, behind, new Function3<ResultBean<UploadImageBean>, ResultBean<UploadImageBean>,
                 ResultBean<UploadImageBean>, List<String>>() {
             @Override
             public List<String> apply(ResultBean<UploadImageBean> uploadImageBeanResultBean, ResultBean<UploadImageBean> uploadImageBeanResultBean2,
@@ -383,7 +383,7 @@ public class PersonAuthActivity extends BaseActivity {
                     public void accept(ResultBean resultBean) throws Exception {
                         hideLoadingDialog();
                         ToastUtils.showShort("提交成功，请耐心等待审核");
-                        EventManager.getInstance().notify(null,ConstantMsg.PERSON_COMPANY_AUTH_SUCCESS);
+                        EventManager.getInstance().notify(null, ConstantMsg.PERSON_COMPANY_AUTH_SUCCESS);
                         finish();
                     }
                 }, new Consumer<Throwable>() {
