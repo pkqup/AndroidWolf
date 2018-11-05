@@ -41,6 +41,7 @@
                     android:layout_toRightOf="@id/tvClassStr"
                     android:hint="请选择"
                     android:textColor="@color/t_black"
+                    android:textColorHint="@color/t_gray"
                     android:textSize="@dimen/sp_mid" />
 
                 <ImageView
@@ -82,6 +83,7 @@
                     android:layout_toRightOf="@id/tvPlateClassStr"
                     android:hint="请选择"
                     android:textColor="@color/t_black"
+                    android:textColorHint="@color/t_gray"
                     android:textSize="@dimen/sp_mid" />
 
                 <ImageView
@@ -123,6 +125,7 @@
                     android:layout_toRightOf="@id/tvBrandStr"
                     android:hint="请选择"
                     android:textColor="@color/t_black"
+                    android:textColorHint="@color/t_gray"
                     android:textSize="@dimen/sp_mid" />
 
                 <ImageView
@@ -164,6 +167,7 @@
                     android:layout_toRightOf="@id/tvAreaStr"
                     android:hint="请选择"
                     android:textColor="@color/t_black"
+                    android:textColorHint="@color/t_gray"
                     android:textSize="@dimen/sp_mid" />
 
                 <ImageView
@@ -205,6 +209,7 @@
                     android:layout_toRightOf="@id/tvIncenseStr"
                     android:hint="请选择"
                     android:textColor="@color/t_black"
+                    android:textColorHint="@color/t_gray"
                     android:textSize="@dimen/sp_mid" />
 
                 <ImageView
@@ -246,6 +251,7 @@
                     android:layout_toRightOf="@id/tvDegreeStr"
                     android:hint="请选择"
                     android:textColor="@color/t_black"
+                    android:textColorHint="@color/t_gray"
                     android:textSize="@dimen/sp_mid" />
 
                 <ImageView
@@ -293,6 +299,7 @@
                     android:paddingRight="10dp"
                     android:singleLine="true"
                     android:textColor="@color/t_black"
+                    android:textColorHint="@color/t_gray"
                     android:textSize="@dimen/sp_mid" />
 
                 <View
@@ -327,6 +334,7 @@
                     android:paddingRight="10dp"
                     android:singleLine="true"
                     android:textColor="@color/t_black"
+                    android:textColorHint="@color/t_gray"
                     android:textSize="@dimen/sp_mid" />
 
                 <View
@@ -362,6 +370,7 @@
                     android:paddingRight="10dp"
                     android:singleLine="true"
                     android:textColor="@color/t_black"
+                    android:textColorHint="@color/t_gray"
                     android:textSize="@dimen/sp_mid" />
 
                 <View
@@ -447,6 +456,7 @@
                     android:paddingRight="10dp"
                     android:singleLine="true"
                     android:textColor="@color/t_black"
+                    android:textColorHint="@color/t_gray"
                     android:textSize="@dimen/sp_mid" />
 
                 <View
@@ -667,9 +677,9 @@
 
             <RelativeLayout
                 android:id="@+id/rlDescTwo"
-                android:visibility="gone"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:id="@+id/llDescTwoPic"
@@ -758,9 +768,9 @@
 
             <RelativeLayout
                 android:id="@+id/rlDescThree"
-                android:visibility="gone"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:id="@+id/llDescThreePic"
@@ -849,9 +859,9 @@
 
             <RelativeLayout
                 android:id="@+id/rlDescFour"
-                android:visibility="gone"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:id="@+id/llDescFourPic"
@@ -939,12 +949,11 @@
             </RelativeLayout>
 
 
-
             <RelativeLayout
                 android:id="@+id/rlGoods"
-                android:visibility="gone"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:visibility="gone">
 
                 <LinearLayout
                     android:id="@+id/llGoodsPic"
@@ -1047,6 +1056,7 @@
                     android:minHeight="70dp"
                     android:paddingRight="10dp"
                     android:textColor="@color/t_black"
+                    android:textColorHint="@color/t_gray"
                     android:textSize="@dimen/sp_small" />
             </RelativeLayout>
 
@@ -1055,19 +1065,22 @@
                 android:layout_height="10dp"
                 android:background="@color/bg_gray" />
 
+            <TextView
+                android:layout_width="82dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="14dp"
+                android:text="商品参数"
+                android:visibility="visible"
+                android:textColor="@color/t_black"
+                android:textSize="@dimen/sp_mid" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <TextView
-                    android:layout_width="82dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
-                    android:layout_marginTop="14dp"
-                    android:text="商品参数"
-                    android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_mid" />
+
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -1081,10 +1094,10 @@
                         android:layout_height="36dp">
 
                         <RelativeLayout
-                            android:visibility="gone"
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
-                            android:layout_weight="1">
+                            android:layout_weight="1"
+                            android:visibility="gone">
 
                             <TextView
                                 android:id="@+id/tvTypeStr"
@@ -1102,8 +1115,8 @@
                                 android:layout_toRightOf="@id/tvTypeStr"
                                 android:background="@null"
                                 android:gravity="start"
-                                android:singleLine="true"
                                 android:hint=""
+                                android:singleLine="true"
                                 android:textColor="@color/t_black"
                                 android:textSize="@dimen/sp_small" />
 
@@ -1135,10 +1148,10 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:layout_toRightOf="@id/tvArea"
-                                    android:singleLine="true"
                                     android:background="@null"
                                     android:gravity="start"
                                     android:hint=""
+                                    android:singleLine="true"
                                     android:textColor="@color/t_black"
                                     android:textSize="@dimen/sp_small" />
 
@@ -1185,9 +1198,9 @@
                                 android:layout_toRightOf="@id/tvSizeStr"
                                 android:background="@null"
                                 android:gravity="start"
-                                android:singleLine="true"
                                 android:hint=""
                                 android:inputType="number"
+                                android:singleLine="true"
                                 android:textColor="@color/t_black"
                                 android:textSize="@dimen/sp_small" />
 
@@ -1225,8 +1238,8 @@
                                 android:layout_toRightOf="@id/tvChateauStr"
                                 android:background="@null"
                                 android:gravity="start"
-                                android:singleLine="true"
                                 android:hint=""
+                                android:singleLine="true"
                                 android:textColor="@color/t_black"
                                 android:textSize="@dimen/sp_small" />
 
@@ -1298,9 +1311,9 @@
                                 android:layout_height="match_parent"
                                 android:layout_toRightOf="@id/tvPackageStr"
                                 android:background="@null"
-                                android:singleLine="true"
                                 android:gravity="start"
                                 android:hint=""
+                                android:singleLine="true"
                                 android:textColor="@color/t_black"
                                 android:textSize="@dimen/sp_small" />
 
@@ -1314,10 +1327,10 @@
 
                         <RelativeLayout
                             android:layout_width="0dp"
-                            android:visibility="gone"
                             android:layout_height="match_parent"
                             android:layout_marginLeft="8dp"
-                            android:layout_weight="1">
+                            android:layout_weight="1"
+                            android:visibility="gone">
 
                             <TextView
                                 android:id="@+id/tvAlcoStr"
@@ -1348,8 +1361,8 @@
                                 android:background="@null"
                                 android:gravity="start"
                                 android:hint=""
-                                android:singleLine="true"
                                 android:inputType="number"
+                                android:singleLine="true"
                                 android:textColor="@color/t_black"
                                 android:textSize="@dimen/sp_small" />
 
@@ -1387,9 +1400,9 @@
                                 android:layout_height="match_parent"
                                 android:layout_toRightOf="@id/tvYearStr"
                                 android:background="@null"
-                                android:singleLine="true"
                                 android:gravity="start"
                                 android:hint=""
+                                android:singleLine="true"
                                 android:textColor="@color/t_black"
                                 android:textSize="@dimen/sp_small" />
 
@@ -1426,8 +1439,8 @@
                                 android:layout_toRightOf="@id/tvYuanLiaoStr"
                                 android:background="@null"
                                 android:gravity="start"
-                                android:singleLine="true"
                                 android:hint=""
+                                android:singleLine="true"
                                 android:textColor="@color/t_black"
                                 android:textSize="@dimen/sp_small" />
 
@@ -1502,9 +1515,12 @@
                                 android:layout_toRightOf="@id/tvOtherStr"
                                 android:background="@null"
                                 android:gravity="start"
-                                android:singleLine="true"
                                 android:hint="礼盒、防尘袋、保卡、说明书、吊牌等"
+                                android:singleLine="true"
+                                android:paddingRight="15dp"
+                                android:ellipsize="end"
                                 android:textColor="@color/t_black"
+                                android:textColorHint="@color/t_gray"
                                 android:textSize="@dimen/sp_small" />
 
                             <View
@@ -1539,10 +1555,13 @@
                                 android:layout_height="match_parent"
                                 android:layout_toRightOf="@id/tvFromStr"
                                 android:background="@null"
-                                android:singleLine="true"
                                 android:gravity="start"
                                 android:hint="珍藏、朋友赠送、礼品、自购、其他等"
+                                android:singleLine="true"
+                                android:paddingRight="15dp"
+                                android:ellipsize="end"
                                 android:textColor="@color/t_black"
+                                android:textColorHint="@color/t_gray"
                                 android:textSize="@dimen/sp_small" />
 
                             <View

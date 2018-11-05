@@ -50,6 +50,7 @@
                     android:layout_marginLeft="36dp"
                     android:layout_toRightOf="@id/tvClassStr"
                     android:hint="请选择"
+                    android:textColorHint="@color/t_gray"
                     android:textColor="@color/t_black"
                     android:textSize="@dimen/sp_mid" />
 
@@ -90,6 +91,7 @@
                     android:layout_toRightOf="@id/tvTitleStr"
                     android:background="@null"
                     android:hint="请填写"
+                    android:textColorHint="@color/t_gray"
                     android:paddingRight="10dp"
                     android:singleLine="true"
                     android:textColor="@color/t_black"
@@ -124,6 +126,7 @@
                     android:layout_toRightOf="@id/tvBrandLocationStr"
                     android:background="@null"
                     android:hint="请填写"
+                    android:textColorHint="@color/t_gray"
                     android:paddingRight="10dp"
                     android:singleLine="true"
                     android:textColor="@color/t_black"
@@ -159,6 +162,7 @@
                     android:layout_toRightOf="@id/tvSeries"
                     android:background="@null"
                     android:hint="请填写"
+                    android:textColorHint="@color/t_gray"
                     android:paddingRight="10dp"
                     android:singleLine="true"
                     android:textColor="@color/t_black"

@@ -63,6 +63,7 @@
             android:singleLine="true"
             android:background="@color/transparent"
             android:hint="请输入快递单号"
+            android:textColorHint="@color/t_gray"
             android:textSize="14sp" />
 
     </LinearLayout>

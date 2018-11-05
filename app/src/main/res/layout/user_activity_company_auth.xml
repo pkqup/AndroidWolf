@@ -39,6 +39,7 @@
                     android:layout_toRightOf="@id/tvCompanyName"
                     android:background="@null"
                     android:hint="请输入"
+                    android:textColorHint="@color/t_gray"
                     android:paddingRight="10dp"
                     android:singleLine="true"
                     android:textColor="@color/t_black"
@@ -75,6 +76,7 @@
                     android:layout_toRightOf="@id/tvPersonName"
                     android:background="@null"
                     android:hint="请输入"
+                    android:textColorHint="@color/t_gray"
                     android:paddingRight="10dp"
                     android:singleLine="true"
                     android:textColor="@color/t_black"
@@ -110,6 +112,7 @@
                     android:layout_toRightOf="@id/tvSellCard"
                     android:background="@null"
                     android:hint="请输入"
+                    android:textColorHint="@color/t_gray"
                     android:paddingRight="10dp"
                     android:singleLine="true"
                     android:textColor="@color/t_black"
@@ -146,6 +149,7 @@
                     android:layout_marginLeft="36dp"
                     android:layout_toRightOf="@id/tvTimeStr"
                     android:hint="请选择"
+                    android:textColorHint="@color/t_gray"
                     android:textColor="@color/t_black"
                     android:textSize="@dimen/sp_mid" />
 
@@ -188,6 +192,7 @@
                     android:layout_marginLeft="36dp"
                     android:layout_toRightOf="@id/tvAreaStr"
                     android:hint="请选择"
+                    android:textColorHint="@color/t_gray"
                     android:textColor="@color/t_black"
                     android:textSize="@dimen/sp_mid" />
 
@@ -229,6 +234,7 @@
                     android:layout_toRightOf="@id/tvAddressStr"
                     android:background="@null"
                     android:hint="请输入"
+                    android:textColorHint="@color/t_gray"
                     android:paddingRight="10dp"
                     android:singleLine="true"
                     android:textColor="@color/t_black"
@@ -264,6 +270,7 @@
                     android:layout_toRightOf="@id/tvPhoneStr"
                     android:background="@null"
                     android:hint="请输入"
+                    android:textColorHint="@color/t_gray"
                     android:inputType="number"
                     android:paddingRight="10dp"
                     android:singleLine="true"

@@ -95,6 +95,35 @@ public class HomeModulesBean {
         private String linkinfo;
         private String cat_id;
 
+        private String brandname;
+        private String image;
+        private String brand_id;
+
+
+        public String getBrandname() {
+            return brandname;
+        }
+
+        public void setBrandname(String brandname) {
+            this.brandname = brandname;
+        }
+
+        public String getImage() {
+            return image;
+        }
+
+        public void setImage(String image) {
+            this.image = image;
+        }
+
+        public String getBrand_id() {
+            return brand_id;
+        }
+
+        public void setBrand_id(String brand_id) {
+            this.brand_id = brand_id;
+        }
+
         public String getCategoryname() {
             return categoryname;
         }

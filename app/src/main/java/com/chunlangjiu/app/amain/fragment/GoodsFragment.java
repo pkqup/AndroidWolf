@@ -100,6 +100,8 @@ public class GoodsFragment extends BaseFragment {
     private String minPrice = "";
     private String maxPrice = "";
 
+    private String intentBrandId;
+    private String intentBrandName;
     private boolean isActivity = false;
     private String searchKey = "";
 
@@ -196,6 +198,9 @@ public class GoodsFragment extends BaseFragment {
     private void initTitleView() {
         Bundle bundle = getArguments();
         if (bundle != null) {
+            intentBrandId = bundle.getString("brandId");
+            intentBrandName = bundle.getString("brandName");
+            brandId = intentBrandId;
             isActivity = bundle.getBoolean("isActivity");
             searchKey = bundle.getString("searchKey");
         }
@@ -235,6 +240,9 @@ public class GoodsFragment extends BaseFragment {
         disposable = new CompositeDisposable();
         rlBrand = rootView.findViewById(R.id.rlBrand);
         tvBrand = rootView.findViewById(R.id.tvBrand);
+        if (!TextUtils.isEmpty(intentBrandName)) {
+            tvBrand.setText(TextUtils.isEmpty(brandId) ? "品牌" : intentBrandName);
+        }
         rlArea = rootView.findViewById(R.id.rlArea);
         tvArea = rootView.findViewById(R.id.tvArea);
         rlIncense = rootView.findViewById(R.id.rlIncense);
@@ -347,6 +355,8 @@ public class GoodsFragment extends BaseFragment {
                         brandBean.setBrand_id("");
                         brandBean.setBrand_name("全部");
                         brandLists.add(0, brandBean);
+
+//                        checkIntentBrandId();
                     }
                 }, new Consumer<Throwable>() {
                     @Override
@@ -354,6 +364,7 @@ public class GoodsFragment extends BaseFragment {
                     }
                 }));
     }
+
 
     private void getAreaLists() {
         disposable.add(ApiUtils.getInstance().getUserAreaList(selectClassId)
@@ -666,6 +677,17 @@ public class GoodsFragment extends BaseFragment {
         }
     }
 
+    private void checkIntentBrandId() {
+        if (!TextUtils.isEmpty(intentBrandId) && brandLists != null && brandLists.size() > 0) {
+            for (int i = 0; i < brandLists.size(); i++) {
+                if (brandLists.get(i).getBrand_id().equals(intentBrandId)) {
+                    brandId = brandLists.get(i).getBrand_id();
+                    tvBrand.setText(TextUtils.isEmpty(brandId) ? "品牌" : brandLists.get(i).getBrand_name());
+                    getGoodsList(1, true);
+                }
+            }
+        }
+    }
 
     //重置品牌、产地、香型、酒精度
     private void clearSelectFilterData() {

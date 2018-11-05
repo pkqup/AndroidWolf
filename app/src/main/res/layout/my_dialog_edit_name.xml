@@ -57,6 +57,7 @@
                     android:layout_height="match_parent"
                     android:background="@null"
                     android:hint="请输入名称"
+                    android:textColorHint="@color/t_gray"
                     android:maxLength="7"
                     android:paddingLeft="10dp"
                     android:textColor="@color/t_red"

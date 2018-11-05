@@ -117,6 +117,7 @@
                 android:digits="0123456789."
                 android:gravity=""
                 android:hint="请输入金额"
+                android:textColorHint="@color/t_gray"
                 android:singleLine="true"
                 android:textColor="@color/t_red"
                 android:textSize="@dimen/sp_small" />
