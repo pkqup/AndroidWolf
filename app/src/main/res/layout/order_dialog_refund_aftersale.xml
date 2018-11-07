@@ -30,6 +30,7 @@
             android:background="@color/white"
             android:gravity="top"
             android:hint="请输入拒绝申请理由"
+            android:textColorHint="@color/t_gray"
             android:minLines="5" />
     </ScrollView>
 

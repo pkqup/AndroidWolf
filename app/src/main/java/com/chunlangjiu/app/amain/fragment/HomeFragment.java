@@ -86,6 +86,7 @@ public class HomeFragment extends BaseFragment {
     private static final String MODULE_SLIDER = "slider";
     private static final String MODULE_ICONS_NAV = "icons_nav";
     private static final String MODULE_CATEGORY_NAV = "category_nav";
+    private static final String MODULE_BRAND = "brand";
 
     private TextView tvCity;
     private RelativeLayout rlTitleSearch;
@@ -364,7 +365,7 @@ public class HomeFragment extends BaseFragment {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 UmengEventUtil.brandEvent(getActivity(), brandLists.get(position).getCategoryname());
-                GoodsListNewActivity.startGoodsListNewActivity(getActivity(), brandLists.get(position).getCat_id(), brandLists.get(position).getCategoryname(), "");
+                GoodsListNewActivity.startGoodsListNewActivity(getActivity(), brandLists.get(position).getBrand_id(), brandLists.get(position).getBrandname(), "");
             }
         });
     }
@@ -486,7 +487,7 @@ public class HomeFragment extends BaseFragment {
                 if (MODULE_ICONS_NAV.equals(modules.get(i).getWidget())) {
                     updateIconData(modules.get(i).getParams());
                 }
-                if (MODULE_CATEGORY_NAV.equals(modules.get(i).getWidget())) {
+                if (MODULE_BRAND.equals(modules.get(i).getWidget())) {
                     updateBrandData(modules.get(i).getParams());
                 }
             }

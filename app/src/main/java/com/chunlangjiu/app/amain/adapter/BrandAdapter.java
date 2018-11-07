@@ -27,8 +27,8 @@ public class BrandAdapter extends BaseQuickAdapter<HomeModulesBean.Pic, BaseView
     @Override
     protected void convert(BaseViewHolder helper, HomeModulesBean.Pic item) {
         ImageView imgPic = helper.getView(R.id.imgPic);
-        GlideUtils.loadImage(context,item.getImagesrc(),imgPic);
-        helper.setText(R.id.tvBrandName,item.getCategoryname());
+        GlideUtils.loadImage(context,item.getImage(),imgPic);
+        helper.setText(R.id.tvBrandName,item.getBrandname());
         helper.setText(R.id.tvDesc,item.getLinkinfo());
     }
 

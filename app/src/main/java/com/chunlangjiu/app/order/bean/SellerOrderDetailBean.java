@@ -147,6 +147,7 @@ public class SellerOrderDetailBean {
     private List<?> spec_desc;
     private OrderDetailBean.AuctionBean auction;
     private OrderDetailBean.PaymentsBean payments;
+    private String info;
 
     public long getTid() {
         return tid;
@@ -949,4 +950,11 @@ public class SellerOrderDetailBean {
         this.payments = payments;
     }
 
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
+    }
 }

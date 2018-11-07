@@ -47,6 +47,7 @@
                 android:layout_toRightOf="@id/img_title_search"
                 android:gravity="center_vertical"
                 android:hint="搜索高端红酒..."
+                android:textColorHint="@color/t_gray"
                 android:paddingRight="10dp"
                 android:singleLine="true"
                 android:textColor="@color/t_black"

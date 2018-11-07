@@ -70,6 +70,7 @@
             android:layout_toRightOf="@id/img_title_search"
             android:background="@null"
             android:hint="请输入搜索关键字"
+            android:textColorHint="@color/t_gray"
             android:imeOptions="actionSearch"
             android:paddingRight="10dp"
             android:singleLine="true"

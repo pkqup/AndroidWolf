@@ -139,6 +139,7 @@
                     android:background="@color/transparent"
                     android:gravity="end|center_vertical"
                     android:hint="请输入"
+                    android:textColorHint="@color/t_gray"
                     android:inputType="text"
                     android:maxLines="1"
                     android:paddingEnd="12dp"

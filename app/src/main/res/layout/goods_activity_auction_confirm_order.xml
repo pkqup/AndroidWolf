@@ -259,6 +259,7 @@
                         android:digits="0123456789."
                         android:gravity="center_vertical|right"
                         android:hint="请输入金额"
+                        android:textColorHint="@color/t_gray"
                         android:singleLine="true"
                         android:textColor="@color/t_black"
                         android:textSize="@dimen/sp_mid" />
@@ -299,6 +300,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="40dp"
                     android:hint="请选择"
+                    android:textColorHint="@color/t_gray"
                     android:textColor="@color/t_red"
                     android:textSize="@dimen/sp_mid" />
             </RelativeLayout>
@@ -332,6 +334,7 @@
                     android:layout_toRightOf="@id/tv_tips"
                     android:background="@null"
                     android:hint="请填写"
+                    android:textColorHint="@color/t_gray"
                     android:minHeight="48dp"
                     android:paddingBottom="8dp"
                     android:paddingRight="15dp"

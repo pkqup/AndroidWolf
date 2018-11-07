@@ -150,6 +150,7 @@ public class OrderDetailBean {
     private AuctionBean auction;
     private PaymentsBean payments;
     private String paymentId;
+    private String info;
 
     public long getTid() {
         return tid;
@@ -973,6 +974,14 @@ public class OrderDetailBean {
 
     public void setPaymentId(String paymentId) {
         this.paymentId = paymentId;
+    }
+
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
     }
 
     public static class LogiBean {

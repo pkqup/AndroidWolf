@@ -39,6 +39,7 @@
                     android:layout_toRightOf="@id/tvCompanyName"
                     android:background="@null"
                     android:hint="请输入"
+                    android:textColorHint="@color/t_gray"
                     android:paddingRight="10dp"
                     android:singleLine="true"
                     android:textColor="@color/t_black"
@@ -75,6 +76,7 @@
                     android:layout_toRightOf="@id/tvPersonName"
                     android:background="@null"
                     android:hint="请输入"
+                    android:textColorHint="@color/t_gray"
                     android:paddingRight="10dp"
                     android:singleLine="true"
                     android:textColor="@color/t_black"
@@ -110,6 +112,7 @@
                     android:layout_toRightOf="@id/tvSellCard"
                     android:background="@null"
                     android:hint="请输入"
+                    android:textColorHint="@color/t_gray"
                     android:paddingRight="10dp"
                     android:singleLine="true"
                     android:textColor="@color/t_black"
@@ -146,6 +149,7 @@
                     android:layout_marginLeft="36dp"
                     android:layout_toRightOf="@id/tvTimeStr"
                     android:hint="请选择"
+                    android:textColorHint="@color/t_gray"
                     android:textColor="@color/t_black"
                     android:textSize="@dimen/sp_mid" />
 
@@ -188,6 +192,7 @@
                     android:layout_marginLeft="36dp"
                     android:layout_toRightOf="@id/tvAreaStr"
                     android:hint="请选择"
+                    android:textColorHint="@color/t_gray"
                     android:textColor="@color/t_black"
                     android:textSize="@dimen/sp_mid" />
 
@@ -229,6 +234,7 @@
                     android:layout_toRightOf="@id/tvAddressStr"
                     android:background="@null"
                     android:hint="请输入"
+                    android:textColorHint="@color/t_gray"
                     android:paddingRight="10dp"
                     android:singleLine="true"
                     android:textColor="@color/t_black"
@@ -264,6 +270,7 @@
                     android:layout_toRightOf="@id/tvPhoneStr"
                     android:background="@null"
                     android:hint="请输入"
+                    android:textColorHint="@color/t_gray"
                     android:inputType="number"
                     android:paddingRight="10dp"
                     android:singleLine="true"
@@ -356,6 +363,61 @@
                         android:layout_height="match_parent"
                         android:scaleType="centerCrop" />
                 </RelativeLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llPicTwo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal">
+
+                <RelativeLayout
+                    android:id="@+id/rlAllowCard"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_dark_gray_stroke">
+
+                    <LinearLayout
+                        android:id="@+id/llAllowCard"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:layout_width="33dp"
+                            android:layout_height="29dp"
+                            android:background="@mipmap/camera" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="13dp"
+                            android:paddingLeft="10dp"
+                            android:paddingRight="10dp"
+                            android:text="食品流通许可证/酒类经营许可证"
+                            android:textColor="@color/t_gray"
+                            android:textSize="@dimen/sp_small" />
+
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/imgAllowCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rlFour"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
