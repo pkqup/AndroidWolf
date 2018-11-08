@@ -485,9 +485,9 @@ public class OrderDetailActivity extends BaseActivity {
                             break;
                         case OrderParams.TRADE_CLOSED_BY_SYSTEM:
                             if (0 == type) {
-                                tv1.setText("删除订单");
-                                tv2.setText("重新购买");
-                                tv1.setVisibility(View.VISIBLE);
+                                tv1.setText("");
+                                tv2.setText("删除订单");
+                                tv1.setVisibility(View.GONE);
                                 tv2.setVisibility(View.VISIBLE);
                             } else {
                                 tv1.setVisibility(View.GONE);
