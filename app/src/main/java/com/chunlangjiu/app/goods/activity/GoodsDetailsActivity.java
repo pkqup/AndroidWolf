@@ -32,15 +32,12 @@ import com.chunlangjiu.app.util.ShareUtils;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
+import com.pkqup.commonlibrary.util.SPUtils;
 import com.pkqup.commonlibrary.util.ToastUtils;
-import com.socks.library.KLog;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.umeng.socialize.editorpage.ShareActivity;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
-
-import org.reactivestreams.Publisher;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -213,7 +210,7 @@ public class GoodsDetailsActivity extends BaseActivity {
 
     private void getGoodsDetail() {
         showLoadingDialog();
-        disposable.add(ApiUtils.getInstance().getGoodsDetail(itemId)
+        disposable.add(ApiUtils.getInstance().getGoodsDetailWithToken(itemId, (String) SPUtils.get("token", ""))
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean<GoodsDetailBean>>() {
