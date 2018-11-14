@@ -3,6 +3,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:paddingTop="8dp">
 
     <TextView
@@ -10,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="15dp"
-        android:text="18588990000"
+        tools:text="18588990000"
         android:textColor="@color/t_black"
         android:textSize="@dimen/sp_small" />
 
@@ -24,7 +25,7 @@
         android:clickable="true"
         android:isIndicator="false"
         android:numStars="5"
-        android:rating="3"
+        android:rating="1"
         android:stepSize="1" />
 
     <TextView
@@ -35,7 +36,7 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="4dp"
-        android:text="商品评价"
+        tools:text="商品评价"
         android:textColor="@color/t_gray"
         android:textSize="@dimen/sp_small" />
 
@@ -48,7 +49,7 @@
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
         android:layout_marginTop="4dp"
-        android:text="2018-7-1"
+        tools:text="2018-7-1"
         android:textColor="@color/t_gray"
         android:textSize="@dimen/sp_small" />
 

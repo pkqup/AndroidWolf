@@ -112,7 +112,9 @@ public class GoodsCommentFragment extends BaseFragment {
 
     private void getListSuccess(ResultBean<EvaluateListBean> evaluateListBeanResultBean, boolean isRefresh) {
         List<EvaluateListBean.EvaluateDetailBean> newLists = evaluateListBeanResultBean.getData().getList();
-        if (newLists == null) newLists = new ArrayList<>();
+        if (newLists == null) {
+            newLists = new ArrayList<>();
+        }
         if (isRefresh) {
             pageNo = 1;
             lists = newLists;
@@ -144,7 +146,14 @@ public class GoodsCommentFragment extends BaseFragment {
             helper.setText(R.id.tvContent, item.getContent());
             helper.setText(R.id.tvTime, TimeUtils.millisToYearMD(item.getCreated_time() + "000"));
             RatingBar ratingBar = helper.getView(R.id.ratingBar);
-            ratingBar.setRating(3);
+            String result = item.getResult();
+            if ("good".equals(result)) {
+                ratingBar.setRating(5);
+            } else if ("neutral".equals(result)) {
+                ratingBar.setRating(3);
+            } else {
+                ratingBar.setRating(2);
+            }
         }
     }
 

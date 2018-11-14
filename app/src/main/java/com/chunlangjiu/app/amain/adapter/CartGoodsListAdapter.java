@@ -58,7 +58,7 @@ public class CartGoodsListAdapter extends BaseQuickAdapter<CartGoodsBean, BaseVi
 
                     ImageView img_store = viewHolder.getView(R.id.img_store);
                     ImageView check_store = viewHolder.getView(R.id.check_store);
-                    GlideUtils.loadImage(context, item.getStoreLogo(), img_store);
+                    GlideUtils.loadImageShop(context, item.getStoreLogo(), img_store);
                     viewHolder.setText(R.id.tv_store_name, item.getStoreName());
                     check_store.setSelected(item.isStoreCheck());
                     viewHolder.addOnClickListener(R.id.check_store);

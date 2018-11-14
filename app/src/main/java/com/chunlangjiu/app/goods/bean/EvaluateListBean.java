@@ -22,7 +22,7 @@ public class EvaluateListBean {
         private String rate_id;
         private String result;
         private String content;
-        private String rate_pic;
+        private List<String> rate_pic;
         private String is_reply;
         private String reply_content;
         private String reply_time;
@@ -56,11 +56,11 @@ public class EvaluateListBean {
             this.content = content;
         }
 
-        public String getRate_pic() {
+        public List<String> getRate_pic() {
             return rate_pic;
         }
 
-        public void setRate_pic(String rate_pic) {
+        public void setRate_pic(List<String> rate_pic) {
             this.rate_pic = rate_pic;
         }
 
