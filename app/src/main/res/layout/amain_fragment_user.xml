@@ -566,15 +566,15 @@
 
                 <TextView
                     android:id="@+id/tvSellOrderOneNum"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginLeft="-15dp"
+                    android:layout_width="13dp"
+                    android:layout_height="13dp"
+                    android:layout_marginLeft="-10dp"
                     android:layout_marginTop="8dp"
                     android:layout_toRightOf="@id/imgSellOrderOne"
                     android:background="@drawable/cart_num_bg"
                     android:gravity="center"
                     android:textColor="@color/t_white"
-                    android:textSize="10sp"
+                    android:textSize="8sp"
                     android:visibility="gone"
                     tools:text="1" />
             </RelativeLayout>
@@ -607,53 +607,11 @@
 
                 <TextView
                     android:id="@+id/tvSellOrderTwoNum"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginLeft="-15dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_toRightOf="@id/imgSellOrderTwo"
-                    android:background="@drawable/cart_num_bg"
-                    android:gravity="center"
-                    android:textColor="@color/t_white"
-                    android:textSize="10sp"
-                    android:visibility="gone"
-                    tools:text="1" />
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/rlSellOrderFive"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/imgSellOrderFive"
-                    android:layout_width="24dp"
-                    android:layout_height="22dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="14dp"
-                    android:src="@mipmap/order_icon_two" />
-
-                <TextView
-                    android:id="@+id/tvSellOrderFive"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/imgSellOrderFive"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="10dp"
-                    android:text="待收货"
-                    android:textColor="@color/t_black"
-                    android:textSize="@dimen/sp_small" />
-
-                <TextView
-                    android:id="@+id/tvSellOrderFiveNum"
                     android:layout_width="13dp"
                     android:layout_height="13dp"
                     android:layout_marginLeft="-10dp"
                     android:layout_marginTop="8dp"
-                    android:layout_toRightOf="@id/tvSellOrderFive"
+                    android:layout_toRightOf="@id/imgSellOrderTwo"
                     android:background="@drawable/cart_num_bg"
                     android:gravity="center"
                     android:textColor="@color/t_white"
@@ -676,7 +634,7 @@
                     android:layout_height="22dp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="14dp"
-                    android:src="@mipmap/order_icon_four" />
+                    android:src="@mipmap/order_icon_two" />
 
                 <TextView
                     android:id="@+id/tvSellOrderThree"
@@ -685,21 +643,21 @@
                     android:layout_below="@id/imgSellOrderThree"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
-                    android:text="售后订单"
+                    android:text="待收货"
                     android:textColor="@color/t_black"
                     android:textSize="@dimen/sp_small" />
 
                 <TextView
                     android:id="@+id/tvSellOrderThreeNum"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginLeft="-15dp"
+                    android:layout_width="13dp"
+                    android:layout_height="13dp"
+                    android:layout_marginLeft="-10dp"
                     android:layout_marginTop="8dp"
                     android:layout_toRightOf="@id/imgSellOrderThree"
                     android:background="@drawable/cart_num_bg"
                     android:gravity="center"
                     android:textColor="@color/t_white"
-                    android:textSize="10sp"
+                    android:textSize="8sp"
                     android:visibility="gone"
                     tools:text="1" />
 
@@ -718,7 +676,7 @@
                     android:layout_height="22dp"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="14dp"
-                    android:src="@mipmap/order_icon_five" />
+                    android:src="@mipmap/order_icon_four" />
 
                 <TextView
                     android:id="@+id/tvSellOrderFour"
@@ -727,21 +685,63 @@
                     android:layout_below="@id/imgSellOrderFour"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="10dp"
-                    android:text="取消订单"
+                    android:text="售后订单"
                     android:textColor="@color/t_black"
                     android:textSize="@dimen/sp_small" />
 
                 <TextView
                     android:id="@+id/tvSellOrderFourNum"
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:layout_marginLeft="-15dp"
+                    android:layout_width="13dp"
+                    android:layout_height="13dp"
+                    android:layout_marginLeft="-10dp"
                     android:layout_marginTop="8dp"
                     android:layout_toRightOf="@id/imgSellOrderFour"
                     android:background="@drawable/cart_num_bg"
                     android:gravity="center"
                     android:textColor="@color/t_white"
-                    android:textSize="10sp"
+                    android:textSize="8sp"
+                    android:visibility="gone"
+                    tools:text="1" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rlSellOrderFive"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/imgSellOrderFive"
+                    android:layout_width="24dp"
+                    android:layout_height="22dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="14dp"
+                    android:src="@mipmap/order_icon_five" />
+
+                <TextView
+                    android:id="@+id/tvSellOrderFive"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/imgSellOrderFive"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:text="取消订单"
+                    android:textColor="@color/t_black"
+                    android:textSize="@dimen/sp_small" />
+
+                <TextView
+                    android:id="@+id/tvSellOrderFiveNum"
+                    android:layout_width="13dp"
+                    android:layout_height="13dp"
+                    android:layout_marginLeft="-10dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_toRightOf="@id/imgSellOrderFive"
+                    android:background="@drawable/cart_num_bg"
+                    android:gravity="center"
+                    android:textColor="@color/t_white"
+                    android:textSize="8sp"
                     android:visibility="gone"
                     tools:text="1" />
 

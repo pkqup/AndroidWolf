@@ -39,7 +39,6 @@ import com.lzy.imagepicker.view.CropImageView;
 import com.pkqup.commonlibrary.dialog.ChoicePhotoDialog;
 import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.glide.GlideUtils;
-import com.pkqup.commonlibrary.net.HttpUtils;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.pkqup.commonlibrary.util.FileUtils;
 import com.pkqup.commonlibrary.util.SPUtils;
@@ -122,6 +121,7 @@ public class UserFragment extends BaseFragment {
     private RelativeLayout rlSellOrderFour;
     private TextView tvSellOrderFourNum;
     private RelativeLayout rlSellOrderFive;
+    private TextView tvSellOrderFiveNum;
     //-----------卖家中心------------//
     /*订单管理*/
 
@@ -251,14 +251,14 @@ public class UserFragment extends BaseFragment {
                 case R.id.rlSellOrderTwo:// 卖家待发货
                     toOrderMainActivity(3, 2);
                     break;
-                case R.id.rlSellOrderThree:// 卖家售后订单
+                case R.id.rlSellOrderThree:// 卖家待收货
+                    toOrderMainActivity(3, 3);
+                    break;
+                case R.id.rlSellOrderFour:// 卖家售后订单
                     toOrderMainActivity(4, 0);
                     break;
-                case R.id.rlSellOrderFour:// 卖家取消订单
+                case R.id.rlSellOrderFive://  卖家取消订单
                     toOrderMainActivity(5, 0);
-                    break;
-                case R.id.rlSellOrderFive://卖家待收货
-                    toOrderMainActivity(3, 3);
                     break;
                 case R.id.rlAuctionManager:// 竞拍订单管理
                     toOrderMainActivity(1, 0);
@@ -421,6 +421,7 @@ public class UserFragment extends BaseFragment {
         tvSellOrderFourNum = rootView.findViewById(R.id.tvSellOrderFourNum);
         rlSellOrderFive = rootView.findViewById(R.id.rlSellOrderFive);
         rlSellOrderFive.setOnClickListener(onClickListener);
+        tvSellOrderFiveNum = rootView.findViewById(R.id.tvSellOrderFiveNum);
 
         llAuctionContent = rootView.findViewById(R.id.llAuctionContent);
         rlAuctionManager = rootView.findViewById(R.id.rlAuctionManager);
@@ -592,7 +593,8 @@ public class UserFragment extends BaseFragment {
         initImagePicker();
         if (BaseApplication.isLogin()) {
             getUserInfo();
-            getOrderNumIndex();
+            getBuyerOrderNumIndex();
+            getSellerOrderNumIndex();
             getPersonAndCompanyAuthStatus();
         }
     }
@@ -634,8 +636,8 @@ public class UserFragment extends BaseFragment {
                 }));
     }
 
-    private void getOrderNumIndex() {
-        disposable.add(ApiUtils.getInstance().getMyNumFlag()
+    private void getBuyerOrderNumIndex() {
+        disposable.add(ApiUtils.getInstance().getMyNumFlag("user")
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<ResultBean<MyNumBean>>() {
@@ -654,6 +656,53 @@ public class UserFragment extends BaseFragment {
                             tvOrderThreeNum.setText(data.getWait_confirm_goods_num());
                             tvOrderThreeNum.setVisibility(TextUtils.isEmpty(data.getWait_confirm_goods_num()) ||
                                     "0".equals(data.getWait_confirm_goods_num()) ? View.GONE : View.VISIBLE);
+
+                            tvOrderFourNum.setText(data.getAfter_sale_num());
+                            tvOrderFourNum.setVisibility(TextUtils.isEmpty(data.getAfter_sale_num()) ||
+                                    "0".equals(data.getAfter_sale_num()) ? View.GONE : View.VISIBLE);
+
+                            tvCanUseMoney.setText(TextUtils.isEmpty(data.getMoney()) ? "0" : data.getMoney());
+                            tvNotUseMoney.setText(TextUtils.isEmpty(data.getMoney_frozen()) ? "0" : data.getMoney_frozen());
+                            tvMessageNum.setText(TextUtils.isEmpty(data.getInformation()) ? "0" : data.getInformation());
+                        }
+                    }
+                }, new Consumer<Throwable>() {
+                    @Override
+                    public void accept(Throwable throwable) throws Exception {
+                    }
+                }));
+    }
+
+
+    private void getSellerOrderNumIndex() {
+        disposable.add(ApiUtils.getInstance().getMyNumFlag("shop")
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResultBean<MyNumBean>>() {
+                    @Override
+                    public void accept(ResultBean<MyNumBean> myNumBeanResultBean) throws Exception {
+                        MyNumBean data = myNumBeanResultBean.getData();
+                        if (data != null) {
+                            tvSellOrderOneNum.setText(data.getWait_pay_num());
+                            tvSellOrderOneNum.setVisibility(TextUtils.isEmpty(data.getWait_pay_num()) ||
+                                    "0".equals(data.getWait_pay_num()) ? View.GONE : View.VISIBLE);
+
+                            tvSellOrderTwoNum.setText(data.getWait_send_goods_num());
+                            tvSellOrderTwoNum.setVisibility(TextUtils.isEmpty(data.getWait_send_goods_num()) ||
+                                    "0".equals(data.getWait_send_goods_num()) ? View.GONE : View.VISIBLE);
+
+                            tvSellOrderThreeNum.setText(data.getWait_confirm_goods_num());
+                            tvSellOrderThreeNum.setVisibility(TextUtils.isEmpty(data.getWait_confirm_goods_num()) ||
+                                    "0".equals(data.getWait_confirm_goods_num()) ? View.GONE : View.VISIBLE);
+
+                            tvSellOrderFourNum.setText(data.getAfter_sale_num());
+                            tvSellOrderFourNum.setVisibility(TextUtils.isEmpty(data.getAfter_sale_num()) ||
+                                    "0".equals(data.getAfter_sale_num()) ? View.GONE : View.VISIBLE);
+
+                            tvSellOrderFiveNum.setText(data.getCanceled_num());
+                            tvSellOrderFiveNum.setVisibility(TextUtils.isEmpty(data.getCanceled_num()) ||
+                                    "0".equals(data.getCanceled_num()) ? View.GONE : View.VISIBLE);
+
 
                             tvCanUseMoney.setText(TextUtils.isEmpty(data.getMoney()) ? "0" : data.getMoney());
                             tvNotUseMoney.setText(TextUtils.isEmpty(data.getMoney_frozen()) ? "0" : data.getMoney_frozen());
@@ -994,7 +1043,8 @@ public class UserFragment extends BaseFragment {
         if (eventTag.equals(ConstantMsg.LOGIN_SUCCESS)) {
             checkLogin();
             getUserInfo();
-            getOrderNumIndex();
+            getBuyerOrderNumIndex();
+            getSellerOrderNumIndex();
             getPersonAndCompanyAuthStatus();
         }
     }

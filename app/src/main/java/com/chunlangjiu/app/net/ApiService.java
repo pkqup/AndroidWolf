@@ -220,7 +220,7 @@ public interface ApiService {
     //获取我的页面数据个数的统计
     @POST("index.php/topapi")
     @FormUrlEncoded
-    Flowable<ResultBean<MyNumBean>> getMyNumFlag(@Field("method") String method, @Field("v") String v);
+    Flowable<ResultBean<MyNumBean>> getMyNumFlag(@Field("method") String method, @Field("v") String v,@Field("type") String type);
 
 
     //获取名庄分类

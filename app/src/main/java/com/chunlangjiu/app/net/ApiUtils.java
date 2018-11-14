@@ -212,8 +212,8 @@ public class ApiUtils {
     }
 
     //获取我的模块的数量上标
-    public Flowable<ResultBean<MyNumBean>> getMyNumFlag() {
-        return apiService.getMyNumFlag("member.index", "v1");
+    public Flowable<ResultBean<MyNumBean>> getMyNumFlag(String type) {
+        return apiService.getMyNumFlag("member.index", "v1",type);
     }
 
     public Flowable<ResultBean<StoreClassListBean>> getStoreClass() {

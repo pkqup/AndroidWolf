@@ -10,11 +10,20 @@ public class MyNumBean {
     private String wait_send_goods_num;//待发货订单数量
     private String wait_confirm_goods_num;//待确认收货订单数量
     private String canceled_num;//已取消订单数量
+    private String after_sale_num ;//售后订单数量
     private String notrate_num;//待评价订单数量
 
     private String money;//余额
     private String money_frozen;//冻结金额
     private String information;//消息
+
+    public String getAfter_sale_num() {
+        return after_sale_num;
+    }
+
+    public void setAfter_sale_num(String after_sale_num) {
+        this.after_sale_num = after_sale_num;
+    }
 
     public String getMoney() {
         return money;
