@@ -1,7 +1,6 @@
 package com.chunlangjiu.app.amain.adapter;
 
 import android.content.Context;
-import android.graphics.Paint;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
@@ -58,7 +57,7 @@ public class AuctionListAdapter extends BaseQuickAdapter<AuctionListBean.Auction
         if (TextUtils.isEmpty(item.getMax_price())) {
             helper.setText(R.id.tvSellPrice, "暂无出价");
         } else {
-            helper.setText(R.id.tvSellPrice, "¥" + item.getAuction_starting_price());
+            helper.setText(R.id.tvSellPrice, "¥" + item.getMax_price());
         }
 
         TextView tvLabel = helper.getView(R.id.tvLabel);
