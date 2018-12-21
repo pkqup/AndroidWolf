@@ -22,9 +22,6 @@ import com.chunlangjiu.app.abase.BaseActivity;
 import com.chunlangjiu.app.abase.BaseApplication;
 import com.chunlangjiu.app.abase.BaseFragmentAdapter;
 import com.chunlangjiu.app.amain.activity.LoginActivity;
-import com.chunlangjiu.app.amain.bean.AuctionListBean;
-import com.chunlangjiu.app.cart.ChoiceNumDialog;
-import com.chunlangjiu.app.goods.bean.CreateAuctionBean;
 import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
 import com.chunlangjiu.app.goods.bean.PaymentBean;
 import com.chunlangjiu.app.goods.dialog.CallDialog;
@@ -44,7 +41,6 @@ import com.pkqup.commonlibrary.eventmsg.EventManager;
 import com.pkqup.commonlibrary.net.bean.ResultBean;
 import com.pkqup.commonlibrary.util.SPUtils;
 import com.pkqup.commonlibrary.util.ToastUtils;
-import com.pkqup.commonlibrary.view.MyViewPager;
 import com.tencent.mm.opensdk.modelpay.PayReq;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
@@ -536,8 +532,15 @@ public class AuctionDetailActivity extends BaseActivity {
             changeSlide(object, eventTag);
             detailCountEnd(eventTag);
             weixinPaySuccess(object, eventTag);
+            createOrderSuccess(eventTag);
         }
     };
+
+    private void createOrderSuccess(String eventTag) {
+        if (eventTag.equals(ConstantMsg.AUCTION_CREATE_ORDER_SUCCESS)) {
+            getGoodsDetail();
+        }
+    }
 
     private void detailCountEnd(String eventTag) {
         if (eventTag.equals(ConstantMsg.DETAIL_COUNT_END)) {

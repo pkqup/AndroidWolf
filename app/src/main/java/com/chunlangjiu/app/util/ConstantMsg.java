@@ -27,6 +27,7 @@ public class ConstantMsg {
     public static final String HOME_COUNT_END = "home_count_end";//首页倒计时完成
     public static final String AUCTION_COUNT_END = "auction_count_end";//竞拍倒计时完成
     public static final String DETAIL_COUNT_END = "detail_count_end";//详情倒计时完成
+    public static final String AUCTION_CREATE_ORDER_SUCCESS = "auction_create_order_success";//创建竞拍订单成功
 
 
     public static final String WEB_URL_MESSAGE = HttpUtils.BASE_URL + "index.php/wap/app-information.html?apitoken=";//消息

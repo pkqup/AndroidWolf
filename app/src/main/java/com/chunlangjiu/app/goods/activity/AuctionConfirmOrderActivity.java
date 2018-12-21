@@ -18,9 +18,7 @@ import android.widget.Toast;
 import com.alipay.sdk.app.PayTask;
 import com.chunlangjiu.app.R;
 import com.chunlangjiu.app.abase.BaseActivity;
-import com.chunlangjiu.app.amain.bean.AuctionListBean;
 import com.chunlangjiu.app.goods.bean.CreateAuctionBean;
-import com.chunlangjiu.app.goods.bean.CreateOrderBean;
 import com.chunlangjiu.app.goods.bean.GoodsDetailBean;
 import com.chunlangjiu.app.goods.bean.PaymentBean;
 import com.chunlangjiu.app.goods.dialog.PayDialog;
@@ -175,7 +173,7 @@ public class AuctionConfirmOrderActivity extends BaseActivity {
     private void initData() {
         goodsDetailBean = (GoodsDetailBean) getIntent().getSerializableExtra("goodsDetailBean");
 
-        GlideUtils.loadImage(this, goodsDetailBean.getShop().getShop_logo(), img_store);
+        GlideUtils.loadImageShop(this, goodsDetailBean.getShop().getShop_logo(), img_store);
         tv_store_name.setText(goodsDetailBean.getShop().getShop_name());
 
         GlideUtils.loadImage(this, goodsDetailBean.getItem().getImage_default_id(), img_pic);
@@ -184,9 +182,13 @@ public class AuctionConfirmOrderActivity extends BaseActivity {
         tvGivePrice.setText("¥" + goodsDetailBean.getItem().getAuction().getPledge());
         tvPayPrice.setText(goodsDetailBean.getItem().getAuction().getPledge());
 
-        if ("true".equals(goodsDetailBean.getItem().getAuction().getStatus())) {
+        if ("true".equals(goodsDetailBean.getItem().getAuction().getAuction_status())) {
             //明拍
-            etPrice.setHint("目前最高出价为¥" + goodsDetailBean.getItem().getAuction().getMax_price());
+            if (TextUtils.isEmpty(goodsDetailBean.getItem().getAuction().getMax_price())) {
+                etPrice.setHint("暂无出价");
+            } else {
+                etPrice.setHint("目前最高出价为¥" + goodsDetailBean.getItem().getAuction().getMax_price());
+            }
         } else {
             //暗拍
             etPrice.setHint("暗拍商品，其他出价保密");
@@ -303,6 +305,7 @@ public class AuctionConfirmOrderActivity extends BaseActivity {
                     public void accept(ResultBean resultBean) throws Exception {
                         hideLoadingDialog();
                         invokePay(resultBean);
+                        EventManager.getInstance().notify(null, ConstantMsg.AUCTION_CREATE_ORDER_SUCCESS);
                     }
                 }, new Consumer<Throwable>() {
                     @Override
