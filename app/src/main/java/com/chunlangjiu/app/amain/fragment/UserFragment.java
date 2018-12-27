@@ -186,6 +186,7 @@ public class UserFragment extends BaseFragment {
     public static final int REQUEST_CODE_CHOICE_HEAD = 1001;
 
     private CompositeDisposable disposable;
+    private String token = "";
 
     private String loginAccount;
     private String personName;
@@ -287,50 +288,50 @@ public class UserFragment extends BaseFragment {
                 case R.id.rlSellAuctionFour:// 卖家竞拍订单-全部订单
                     break;
                 case R.id.rlGoodsManager:// 商品管理
-                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_GOODS_MANAGER + BaseApplication.getToken(), "商品管理");
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_GOODS_MANAGER + token, "商品管理");
                     break;
                 case R.id.rlAddGoods:// 添加商品
                     startActivity(new Intent(getActivity(), AddGoodsActivity.class));
                     break;
                 case R.id.rlSellGoods:// 在售商品
-                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_SELL_GOODS + BaseApplication.getToken(), "在售商品");
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_SELL_GOODS + token, "在售商品");
                     break;
                 case R.id.rlAuctionGoods:// 竞拍商品
-                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_ACTION_GOODS + BaseApplication.getToken(), "竞拍商品");
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_ACTION_GOODS + token, "竞拍商品");
                     break;
                 case R.id.rlWareHouseGoods:// 仓库商品
-                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_STORE_GOODS + BaseApplication.getToken(), "仓库商品");
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_STORE_GOODS + token, "仓库商品");
                     break;
                 case R.id.rlCheckGoods:// 审核商品
-                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_AUTH_GOODS + BaseApplication.getToken(), "审核商品");
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_AUTH_GOODS + token, "审核商品");
                     break;
                 case R.id.rlMoneyManager:// 资金管理
-                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_MONEY_MANAGER + BaseApplication.getToken(), "资金管理");
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_MONEY_MANAGER + token, "资金管理");
                     break;
                 case R.id.rlShare:// 分享
                     showShareDialog();
                     break;
                 case R.id.rlCollect:// 我的收藏
-                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_COLLECT + BaseApplication.getToken(), "我的收藏");
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_COLLECT + token, "我的收藏");
                     break;
                 case R.id.rlVip:// 会员资料
                     if (userType == TYPE_BUYER) {
-                        WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_VIP_INFO + BaseApplication.getToken(), "会员资料");
+                        WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_VIP_INFO + token, "会员资料");
                     } else {
-                        WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_SHOP_INFO + BaseApplication.getToken(), "店铺资料");
+                        WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_SHOP_INFO + token, "店铺资料");
                     }
                     break;
                 case R.id.rlAddress:// 地址管理
                     startActivity(new Intent(getActivity(), AddressListActivity.class));
                     break;
                 case R.id.rlBankCard:// 银行卡管理
-                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_BANK_CARD + BaseApplication.getToken(), "银行卡管理");
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_BANK_CARD + token, "银行卡管理");
                     break;
                 case R.id.rlBankCardSecond:// 银行卡管理
-                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_BANK_CARD + BaseApplication.getToken(), "银行卡管理");
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_BANK_CARD + token, "银行卡管理");
                     break;
                 case R.id.rlMyEvaluate:// 我的估价
-                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_EVALUATE + BaseApplication.getToken(), "我的估价");
+                    WebViewActivity.startWebViewActivity(getActivity(), ConstantMsg.WEB_URL_EVALUATE + token, "我的估价");
                     break;
             }
         }
@@ -505,7 +506,8 @@ public class UserFragment extends BaseFragment {
     }
 
     private void checkLogin() {
-        if (BaseApplication.isLogin()) {
+        token = (String) SPUtils.get("token", "");
+        if (!TextUtils.isEmpty(token)) {
             tvToLogin.setVisibility(View.GONE);
             rlHead.setVisibility(View.VISIBLE);
             showUserTypeView();
