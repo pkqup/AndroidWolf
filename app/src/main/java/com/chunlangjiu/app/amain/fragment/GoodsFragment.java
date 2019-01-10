@@ -1,7 +1,6 @@
 package com.chunlangjiu.app.amain.fragment;
 
 import android.content.Intent;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -744,7 +743,7 @@ public class GoodsFragment extends BaseFragment {
                 if (TextUtils.isEmpty(item.getAuction().getAuctionitem_id())) {
                     //普通商品
                     imgAuction.setVisibility(View.GONE);
-                    llStartPrice.setVisibility(View.GONE);
+                    llStartPrice.setVisibility(View.INVISIBLE);
                     llHighPrice.setVisibility(View.VISIBLE);
                     tvAnPaiStr.setVisibility(View.GONE);
                     helper.setText(R.id.tvSellPriceStr, "");
@@ -844,7 +843,7 @@ public class GoodsFragment extends BaseFragment {
                 helper.setText(R.id.tvLabel, item.getLabel());
                 TextView tvLabel = helper.getView(R.id.tvLabel);
                 if (TextUtils.isEmpty(item.getLabel())) {
-                    tvLabel.setVisibility(View.GONE);
+                    tvLabel.setVisibility(View.INVISIBLE);
                 } else {
                     tvLabel.setVisibility(View.VISIBLE);
                 }

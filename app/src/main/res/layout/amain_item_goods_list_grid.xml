@@ -29,23 +29,23 @@
         <TextView
             android:id="@+id/tv_name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="42dp"
+            android:layout_below="@id/img_pic"
             android:layout_alignLeft="@id/img_pic"
             android:layout_alignRight="@id/img_pic"
-            android:layout_below="@id/img_pic"
             android:layout_marginTop="8dp"
             android:ellipsize="end"
             android:maxLines="2"
             android:textColor="@color/t_black"
             android:textSize="@dimen/sp_mid"
-            tools:text="法国凡特纳酒庄 全都是系列 康帝" />
+            tools:text="法国凡特纳酒庄 全都是系列全都是系列全都是系列 康帝" />
 
         <LinearLayout
             android:id="@+id/llFlag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/img_pic"
             android:layout_below="@id/tv_name"
+            android:layout_alignLeft="@id/img_pic"
             android:layout_marginTop="2dp"
             android:orientation="horizontal">
 
@@ -55,10 +55,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
                 android:background="@color/bg_gray"
-                android:paddingBottom="2dp"
+                android:ellipsize="end"
                 android:paddingLeft="5dp"
-                android:paddingRight="5dp"
                 android:paddingTop="2dp"
+                android:paddingRight="5dp"
+                android:paddingBottom="2dp"
+                android:singleLine="true"
                 android:textColor="@color/t_black"
                 android:textSize="12sp"
                 tools:text="法国" />
@@ -68,10 +70,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@color/bg_gray"
-                android:paddingBottom="2dp"
                 android:paddingLeft="5dp"
-                android:paddingRight="5dp"
                 android:paddingTop="2dp"
+                android:paddingRight="5dp"
+                android:paddingBottom="2dp"
                 android:textColor="@color/t_black"
                 android:textSize="12sp"
                 android:visibility="gone"
@@ -82,8 +84,8 @@
             android:id="@+id/llStartPrice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/img_pic"
             android:layout_below="@id/llFlag"
+            android:layout_alignLeft="@id/img_pic"
             android:layout_marginTop="2dp"
             android:orientation="horizontal">
 
@@ -108,8 +110,8 @@
             android:id="@+id/ll_flag"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/img_pic"
             android:layout_below="@id/llStartPrice"
+            android:layout_alignLeft="@id/img_pic"
             android:orientation="vertical">
 
             <LinearLayout
@@ -151,10 +153,10 @@
             android:id="@+id/tvAttention"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/img_pic"
             android:layout_below="@id/ll_flag"
-            android:layout_marginBottom="5dp"
+            android:layout_alignLeft="@id/img_pic"
             android:layout_marginTop="4dp"
+            android:layout_marginBottom="5dp"
             android:textColor="@color/t_gray"
             android:textSize="10sp"
             tools:text="300人关注" />
@@ -164,9 +166,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/ll_flag"
-            android:layout_marginBottom="5dp"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="4dp"
+            android:layout_marginBottom="5dp"
             android:layout_toRightOf="@id/tvAttention"
             android:textColor="@color/t_gray"
             android:textSize="10sp"
